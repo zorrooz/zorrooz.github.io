@@ -13,7 +13,5 @@ export default defineConfig({
     },
   },
   assetsInclude: ['**/*.md'],
-  ase: process.env.NODE_ENV === 'production'
-    ? '/zorrooz/'
-    : '/',
+  base: '/zorrooz/'
 })
