@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { RouterLink } from 'vue-router'
 
 import App from './App.vue'
 import router from './router'
@@ -9,6 +10,8 @@ import 'bootstrap'
 import i18n from './i18n'
 
 const app = createApp(App)
+
+app.component('RouterLink', RouterLink)
 
 app.use(createPinia())
 app.use(router)

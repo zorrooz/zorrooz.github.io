@@ -5,9 +5,9 @@
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex">
           <!-- Logo -->
-          <a class="navbar-brand" href="/" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle">
+          <RouterLink class="navbar-brand" to="/" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle">
             <img src="@/assets/icons/gblog.svg" alt="gblog" class="logo-icon" height="40">
-          </a>
+          </RouterLink>
 
           <!-- ========== 移动端按钮 ========== -->
           <div class="d-flex d-lg-none ms-auto">
@@ -23,14 +23,14 @@
             </button>
           </div>
 
-          <!-- ========== 导航菜单（移动端折叠内容） ========== -->
+          <!-- ========== 导航菜单（移动端折叠内容）========== -->
           <div :class="['navbar-collapse collapse', { 'show': mobileMenuOpen }]">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item" v-for="item in navItems" :key="item.text">
-                <a class="nav-link px-3 py-2 rounded d-flex align-items-center" :href="item.href">
+                <RouterLink class="nav-link px-3 py-2 rounded d-flex align-items-center" :to="item.href">
                   <i :class="['fas', item.icon]" style="flex-shrink: 0; width: 20px; margin-right: 8px;"></i>
                   {{ item.text }}
-                </a>
+                </RouterLink>
               </li>
             </ul>
           </div>
