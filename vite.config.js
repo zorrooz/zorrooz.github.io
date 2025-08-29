@@ -13,5 +13,5 @@ export default defineConfig({
     },
   },
   assetsInclude: ['**/*.md'],
-  base: '/zorrooz/'
+  base: '/'
 })
