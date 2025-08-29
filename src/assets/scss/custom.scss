@@ -1,0 +1,23 @@
+// 1. 自定义颜色变量
+$primary: #6f42c1; // 紫色
+$secondary: #fd7e14; // 橙色
+$success: #198754; // 绿色（保持不变）
+$danger: #dc3545; // 红色（保持不变）
+
+// 2. 可选：修改深色模式下的背景和文字颜色
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "danger": $danger
+);
+// 深色模式下的自定义
+[data-bs-theme="dark"] {
+  --bs-primary: #d397f7; // 浅紫色
+  --bs-secondary: #f0ad70; // 浅橙色
+  --bs-body-bg: #121212;
+  --bs-body-color: #e9ecef;
+  --bs-card-bg: #2a2a2a;
+}
+// 3. 强制 Bootstrap 重新编译所有变量和组件
+// @import "bootstrap/scss/bootstrap";

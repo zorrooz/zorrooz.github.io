@@ -1,0 +1,44 @@
+{
+  "name": "gblog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/",
+    "deploy": "vite build && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@tailwindcss/cli": "^4.1.12",
+    "bootstrap": "^5.3.7",
+    "markdown-it": "^14.1.0",
+    "markdown-it-highlightjs": "^4.2.0",
+    "markdown-it-toc-and-anchor": "^4.2.0",
+    "pinia": "^3.0.3",
+    "sass": "^1.90.0",
+    "tailwindcss": "^4.1.12",
+    "vue": "^3.5.18",
+    "vue-i18n": "^12.0.0-alpha.3",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@rollup/plugin-url": "^8.0.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "eslint": "^9.31.0",
+    "eslint-plugin-vue": "~10.3.0",
+    "gh-pages": "^6.3.0",
+    "globals": "^16.3.0",
+    "prettier": "3.6.2",
+    "vite": "^7.0.6",
+    "vite-plugin-vue-devtools": "^8.0.0"
+  }
+}
