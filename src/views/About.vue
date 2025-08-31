@@ -13,6 +13,7 @@
           <h2 class="h4 fw-semibold text-dark border-bottom pb-2 mb-3">自我介绍</h2>
           <p class="text-secondary mb-0">
             这是自我介绍的占位符...
+            我在这里更新了一下哦！
           </p>
         </section>
 
@@ -100,7 +101,7 @@
 
 <script>
 export default {
-  name: 'AboutMeView',
+  name: 'AboutView',
   data() {
     return {
       education: [

@@ -3,6 +3,7 @@ import HomeView from '@/views/Home.vue'
 import CategoryView from '@/views/Category.vue'
 import ResourceView from '@/views/Resource.vue'
 import AboutView from '@/views/About.vue'
+import ArticleView from '@/views/Article.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -22,7 +23,12 @@ const router = createRouter({
     path: '/about',
     name: 'About',
     component: AboutView
-  }],
+  }, {
+    path: '/article',
+    name: 'Article',
+    component: ArticleView
+  }
+  ],
 })
 
 export default router

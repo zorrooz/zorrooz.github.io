@@ -53,7 +53,7 @@
 
 <script>
 export default {
-  name: 'CategoriesView',
+  name: 'CategoryView',
   data() {
     return {
       categories: [
