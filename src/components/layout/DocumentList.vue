@@ -1,17 +1,16 @@
-<!-- DocumentCardList.vue -->
+<!-- DocumentList.vue -->
 <template>
   <div>
     <!-- 卡片列表 -->
     <div class="row g-3">
       <div v-for="doc in currentPageDocs" :key="doc.id" class="col-12">
-        <div class="d-flex flex-column flex-lg-row bg-white border rounded shadow-sm overflow-hidden h-100">
+        <div class="d-flex flex-column flex-lg-row border rounded shadow-sm overflow-hidden h-100">
 
-          <!-- 左侧元信息区：30% -->
+          <!-- 左侧元信息区 -->
           <div
-            class="col-12 col-lg-3 bg-light text-center text-lg-start p-3 d-flex flex-column align-items-center align-items-lg-start">
+            class="col-12 col-lg-4 bg-white text-center text-lg-start p-3 d-flex flex-column align-items-center align-items-lg-start">
             <!-- 发布/更新日期 -->
             <div class="mb-3 text-dark">
-              <div class="fw-bold fs-5">{{ day(doc.date) }}</div>
               <div class="text-muted small">{{ monthYear(doc.date) }}</div>
             </div>
 
@@ -27,15 +26,15 @@
 
             <!-- 标签 -->
             <div class="d-flex flex-wrap gap-1 justify-content-center justify-content-lg-start">
-              <span v-for="tag in doc.tags" :key="tag" class="badge bg-light text-dark border"
-                style="font-size: 0.75rem; padding: 0.25em 0.4em;">
-                {{ tag }}
+              <span v-for="tag in doc.tags" :key="tag" class="badge bg-light text-dark"
+                style="font-size: 0.75rem; padding: 0.25em 0.4em; font-weight: normal; border: none;">
+                # {{ tag }}
               </span>
             </div>
           </div>
 
-          <!-- 右侧内容区：70% -->
-          <div class="col-12 col-lg-7 p-3 d-flex flex-column">
+          <!-- 右侧内容区 -->
+          <div class="col-12 col-lg-8 p-3 d-flex flex-column bg-light">
             <!-- 标题 -->
             <h5 class="fw-bold text-dark mb-2 line-clamp-1">
               {{ doc.title }}

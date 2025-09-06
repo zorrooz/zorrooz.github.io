@@ -33,7 +33,7 @@
 import ProfileCard from '@/components/layout/ProfileCard.vue'
 import TagCloud from '@/components/layout/TagCloud.vue'
 // import MD from '@/components/layout/MD.vue'
-import markdownContent from '@/content/intro.md?raw'
+import markdownContent from '@/content/demo.md?raw'
 import DocumentList from '@/components/layout/DocumentList.vue'
 
 export default {
@@ -52,7 +52,7 @@ export default {
           id: 1,
           title: "Vue 3 入门指南",
           description: "介绍 Vue 3 的基本语法和组合式 API 使用方法。",
-          category: "前端",
+          category: ["前端", "Vue", "gblog"],
           date: "2025-03-10",
           tags: ["Vue", "Composition API", "新手"]
         },

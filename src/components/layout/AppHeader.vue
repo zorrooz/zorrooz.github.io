@@ -91,7 +91,7 @@ export default {
 }
 
 .btn:hover {
-  color: #047AFF !important;
+  color: theme_colors("primary") !important;
   background-color: #E6F0FF !important;
   border-radius: 0.375rem;
 }
