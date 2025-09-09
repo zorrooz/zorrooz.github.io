@@ -1,3 +1,4 @@
+<!-- AppHeader.vue -->
 <template>
   <!-- 外层负责定位和全宽 -->
   <header class="bg-white shadow-sm">
@@ -11,13 +12,13 @@
 
           <!-- ========== 移动端按钮 ========== -->
           <div class="d-flex d-lg-none ms-auto">
-            <button class="btn btn-sm mx-1 p-2" @click="toggleTheme" @focus="$event.target.blur()">
+            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="$event.target.blur()">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
             </button>
-            <button class="btn btn-sm mx-1 p-2" @click="toggleLanguage" @focus="$event.target.blur()">
-              <img src="@/assets/icons/change-language.png" alt="切换主题" width="20" height="20">
+            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleLanguage" @focus="$event.target.blur()">
+              <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
             </button>
-            <button class="btn btn-sm mx-1 p-2" @click="mobileMenuOpen = !mobileMenuOpen"
+            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="mobileMenuOpen = !mobileMenuOpen"
               style="font-size: 1.2em; background: none; border: none;" @focus="$event.target.blur()">
               <img src="@/assets/icons/menu.png" alt="菜单" width="20" height="20">
             </button>
@@ -27,7 +28,8 @@
           <div :class="['navbar-collapse collapse', { 'show': mobileMenuOpen }]">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item" v-for="item in navItems" :key="item.text">
-                <RouterLink class="nav-link px-3 py-2 rounded d-flex align-items-center" :to="item.href">
+                <RouterLink class="nav-link px-3 py-2 rounded d-flex align-items-center" :to="item.href"
+                  @click="mobileMenuOpen = false">
                   <i :class="['fas', item.icon]" style="flex-shrink: 0; width: 20px; margin-right: 8px;"></i>
                   {{ item.text }}
                 </RouterLink>
@@ -37,11 +39,11 @@
 
           <!-- ========== 桌面端按钮 ========== -->
           <div class="d-none d-lg-flex ms-auto">
-            <button class="btn btn-sm me-2" @click="toggleTheme" @focus="$event.target.blur()">
+            <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="$event.target.blur()">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
             </button>
-            <button class="btn btn-sm" @click="toggleLanguage" @focus="$event.target.blur()">
-              <img src="@/assets/icons/change-language.png" alt="切换主题" width="20" height="20">
+            <button class="btn btn-sm btn-icon" @click="toggleLanguage" @focus="$event.target.blur()">
+              <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
             </button>
           </div>
         </div>
@@ -90,9 +92,9 @@ export default {
   background-color: #E6F0FF !important;
 }
 
-.btn:hover {
-  color: theme_colors("primary") !important;
-  background-color: #E6F0FF !important;
-  border-radius: 0.375rem;
+.btn-icon:hover,
+.btn-icon:focus {
+  background-color: transparent !important;
+  color: inherit !important;
 }
 </style>

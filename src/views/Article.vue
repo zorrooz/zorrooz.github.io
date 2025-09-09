@@ -1,40 +1,27 @@
 <!-- Article.vue -->
 <template>
-  <div class="container py-5">
+  <div class="container">
     <div class="row justify-content-center">
-      <div class="col-lg-2 d-none d-lg-block">
-        <NavigationTree />
-      </div>
-      <div class="col-lg-10 col-xl-8">
-        你好啊
-        <Markdown :content="markdownContent" />
-      </div>
-      <div class="col-lg-2 d-none d-lg-block">
-        <OnThisPage />
+      <div class="col-12 col-lg-8">
+        <RenderMarkdown :rawMarkdown="rawMarkdown" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import NavigationTree from '@/components/layout/NavigationTree.vue'
-import OnThisPage from '@/components/layout/OnThisPage.vue'
-import Markdown from '@/components/layout/Markdown.vue'
-import markdownContent from '@/content/demo.md?raw'
+import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
+import rawMarkdown from '@/content/demo.md?raw'
 
 export default {
-  name: 'ArticleView',
+  name: 'App',
   components: {
-    NavigationTree,
-    OnThisPage,
-    Markdown,
+    RenderMarkdown
   },
   data() {
     return {
-      markdownContent
+      rawMarkdown
     }
   }
 }
 </script>
-
-<style scoped></style>

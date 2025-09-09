@@ -1,0 +1,59 @@
+{
+  "pageTitle": "关于我",
+  "introduction": "这是自我介绍的占位符... 我在这里更新了一下哦！",
+  "education": [
+    {
+      "degree": "本科 · 生物信息学",
+      "institution": "兰州大学",
+      "duration": "2021 – 2025",
+      "desc": "GPA: 3.8/5.0"
+    }
+  ],
+  "skills": [
+    {
+      "name": "编程语言",
+      "level": "熟练掌握",
+      "tools": "Python, R, Bash"
+    },
+    {
+      "name": "结构生物学工具",
+      "level": "熟练",
+      "tools": "PyMOL, AlphaFold2, ChimeraX"
+    },
+    {
+      "name": "数据分析与可视化",
+      "level": "熟练",
+      "tools": "Pandas, NumPy, Matplotlib, ggplot2"
+    }
+  ],
+  "projects": [
+    {
+      "title": "这是一个项目",
+      "role": "项目角色",
+      "duration": "2024.03 – 2024.06",
+      "desc": "项目具体描述..."
+    }
+  ],
+  "awards": [
+    {
+      "title": "优秀毕业生",
+      "org": "兰州大学",
+      "year": "2025"
+    }
+  ],
+  "contacts": [
+    {
+      "label": "邮箱",
+      "value": "zorrooz@163.com",
+      "link": "mailto:zorrooz@163.com",
+      "icon": "fas fa-envelope"
+    },
+    {
+      "label": "GitHub",
+      "value": "zorrooz",
+      "link": "https://github.com/zorrooz",
+      "icon": "fab fa-github"
+    }
+  ],
+  "footerText": "感谢您的关注！"
+}

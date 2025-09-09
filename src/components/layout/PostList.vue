@@ -1,0 +1,262 @@
+<!-- PostList.vue -->
+<template>
+  <div>
+    <!-- 文章列表 -->
+    <div v-for="post in displayedPosts" :key="post.id" class="col-12 mb-3">
+      <div class="card shadow-sm border-0 bg-white">
+        <div class="card-body p-4 d-flex flex-column flex-md-row gap-4">
+          <!-- 内容区域 -->
+          <div class="flex-grow-1">
+            <!-- 日期 -->
+            <small class="text-muted mb-2 d-block">
+              {{ formatDate(post.date) }}
+            </small>
+
+            <!-- 标题 -->
+            <h5 class="fw-bold mb-2 text-dark">
+              {{ post.title }}
+            </h5>
+
+            <!-- 分类 -->
+            <div class="mb-2">
+              <small class="text-secondary">
+                {{ post.category.join(' / ') }}
+              </small>
+            </div>
+
+            <!-- 预览内容 -->
+            <p class="text-secondary mb-3 small lh-lg">
+              {{ post.preview }}
+            </p>
+
+            <!-- 标签 -->
+            <div class="d-flex flex-wrap gap-2">
+              <span v-for="tag in post.tags" :key="tag" class="badge bg-light text-dark fw-medium small py-1 px-2">
+                # {{ tag }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 分页组件 -->
+    <div class="row mt-4" v-if="totalPages > 1">
+      <div class="col-12">
+        <nav aria-label="文章列表分页">
+          <ul class="pagination justify-content-between align-items-center mb-0">
+            <!-- 上一页按钮 -->
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <button class="page-link d-flex align-items-center border-0 bg-transparent text-secondary px-3 py-2"
+                @click="prevPage" :disabled="currentPage === 1" aria-label="上一页">
+                <span class="me-1">&lt;</span>
+                <span>上一页</span>
+              </button>
+            </li>
+
+            <!-- 页码 -->
+            <li class="page-item">
+              <div class="d-flex gap-2">
+                <!-- 第一页 -->
+                <button v-if="showFirstPage" class="page-link d-inline-flex align-items-center justify-content-center"
+                  :class="{ 'current-page': currentPage === 1 }" @click="goToPage(1)">
+                  1
+                </button>
+
+                <!-- 前面的省略号 -->
+                <span class="d-flex align-items-center" v-if="showFirstEllipsis">...</span>
+
+                <!-- 中间的页码 -->
+                <button v-for="page in middlePages" :key="page"
+                  class="page-link d-inline-flex align-items-center justify-content-center"
+                  :class="{ 'current-page': currentPage === page }" @click="goToPage(page)">
+                  {{ page }}
+                </button>
+
+                <!-- 后面的省略号 -->
+                <span class="d-flex align-items-center" v-if="showLastEllipsis">...</span>
+
+                <!-- 最后一页 -->
+                <button v-if="showLastPage && totalPages > 1"
+                  class="page-link d-inline-flex align-items-center justify-content-center"
+                  :class="{ 'current-page': currentPage === totalPages }" @click="goToPage(totalPages)">
+                  {{ totalPages }}
+                </button>
+              </div>
+            </li>
+
+            <!-- 下一页按钮 -->
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+              <button class="page-link d-flex align-items-center border-0 bg-transparent text-secondary px-3 py-2"
+                @click="nextPage" :disabled="currentPage === totalPages" aria-label="下一页">
+                <span>下一页</span>
+                <span class="ms-1">&gt;</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'PostList',
+  props: {
+    docs: {
+      type: Array,
+      required: true,
+      default: () => []
+    },
+    perPage: {
+      type: Number,
+      default: 6
+    }
+  },
+  data() {
+    return {
+      currentPage: 1,
+      maxVisiblePages: 5
+    }
+  },
+  computed: {
+    totalPages() {
+      return Math.max(1, Math.ceil(this.docs.length / this.perPage))
+    },
+    displayedPosts() {
+      const start = (this.currentPage - 1) * this.perPage
+      const end = start + this.perPage
+      return this.docs.slice(start, end)
+    },
+    allVisiblePages() {
+      const pages = []
+      const total = this.totalPages
+      const current = this.currentPage
+      const maxShow = this.maxVisiblePages
+
+      if (total <= maxShow) {
+        for (let i = 1; i <= total; i++) {
+          pages.push(i)
+        }
+        return pages
+      }
+
+      pages.push(current)
+
+      let i = 1
+      while (pages.length < maxShow) {
+        if (current - i >= 1 && !pages.includes(current - i)) {
+          pages.push(current - i)
+        }
+        if (pages.length >= maxShow) break
+
+        if (current + i <= total && !pages.includes(current + i)) {
+          pages.push(current + i)
+        }
+        i++
+      }
+
+      if (!pages.includes(1)) {
+        pages.pop()
+        pages.push(1)
+      }
+      if (pages.length < maxShow && !pages.includes(total)) {
+        pages.push(total)
+      } else if (pages.length >= maxShow && !pages.includes(total)) {
+        pages.pop()
+        pages.push(total)
+      }
+
+      return pages.sort((a, b) => a - b)
+    },
+    middlePages() {
+      return this.allVisiblePages.filter(page =>
+        page !== 1 && page !== this.totalPages
+      )
+    },
+    showFirstPage() {
+      return this.allVisiblePages.includes(1)
+    },
+    showLastPage() {
+      return this.allVisiblePages.includes(this.totalPages)
+    },
+    showFirstEllipsis() {
+      return this.totalPages > this.maxVisiblePages && this.allVisiblePages[1] > 2
+    },
+    showLastEllipsis() {
+      return this.totalPages > this.maxVisiblePages &&
+        this.allVisiblePages[this.allVisiblePages.length - 2] < this.totalPages - 1
+    }
+  },
+  methods: {
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' }
+      return new Date(dateString).toLocaleDateString('zh-CN', options)
+    },
+    goToPage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+      }
+    },
+    handleResize() {
+      this.maxVisiblePages = window.innerWidth < 480 ? 3 : 5
+    }
+  },
+  watch: {
+    docs() {
+      this.currentPage = 1
+    }
+  },
+  mounted() {
+    this.handleResize()
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  }
+}
+</script>
+
+<style scoped>
+.page-link {
+  transition: all 0.2s ease;
+  color: #495057;
+  background-color: white;
+  border: none;
+  outline: none;
+  font-weight: 500;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-link:hover {
+  background-color: #E6F0FF;
+  color: #047AFF;
+}
+
+.current-page {
+  background-color: #047AFF !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.page-link:focus {
+  box-shadow: none;
+  outline: none;
+}
+</style>

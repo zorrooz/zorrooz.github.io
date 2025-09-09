@@ -1,0 +1,79 @@
+{
+    "categoryList": [
+        {
+            "title": "笔记",
+            "items": [
+                {
+                    "name": "生物信息学基础",
+                    "desc": "涵盖序列比对、数据库使用、基因组分析等核心知识点，包含BLAST、FASTA等工具实操教程与常见问题解决方案。",
+                    "url": "/notes/bioinfo-basics",
+                    "type": "internal"
+                },
+                {
+                    "name": "结构生物学导论",
+                    "desc": "蛋白质结构解析流程、PDB数据库数据筛选、PyMOL分子可视化工具实践，附常见结构分析案例（如酶活性位点预测）。",
+                    "url": "/notes/structural-bio",
+                    "type": "internal"
+                },
+                {
+                    "name": "Python 科研脚本",
+                    "desc": "基于Pandas的实验数据清洗、Matplotlib绘图自动化、Biopython库的序列处理脚本，含完整代码示例与注释。",
+                    "url": "/notes/python-for-research",
+                    "type": "internal"
+                }
+            ]
+        },
+        {
+            "title": "项目",
+            "items": [
+                {
+                    "name": "AlphaFold2 应用实践",
+                    "desc": "使用Colab或本地部署AlphaFold2，预测未知蛋白结构并通过结构比对工具（TM-align）分析功能相关性。",
+                    "url": "/projects/alphafold-practice",
+                    "type": "internal"
+                },
+                {
+                    "name": "RNA-seq 差异分析流程",
+                    "desc": "从原始测序数据（FASTQ）质控、比对（HISAT2）、定量（featureCounts）到差异基因筛选（DESeq2）与GO/KEGG富集分析。",
+                    "url": "https://github.com/example/rnaseq-pipeline",
+                    "type": "external"
+                },
+                {
+                    "name": "分子对接模拟",
+                    "desc": "基于AutoDock Vina的小分子库筛选、蛋白-小分子对接参数优化、结合能分析与可视化结果解读。",
+                    "url": "/projects/docking-study",
+                    "type": "internal"
+                }
+            ]
+        },
+        {
+            "title": "课题",
+            "items": [
+                {
+                    "name": "膜蛋白结构与功能研究",
+                    "desc": "聚焦GPCR家族蛋白与离子通道的结构动态变化，结合分子动力学模拟分析药物结合对蛋白构象的影响。",
+                    "url": "/topics/membrane-protein-study",
+                    "type": "internal"
+                },
+                {
+                    "name": "AI 在结构预测中的应用",
+                    "desc": "探索ESMFold、RoseTTAFold等深度学习模型在蛋白质折叠预测中的精度对比，及在未知蛋白设计中的应用。",
+                    "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10085225/",
+                    "type": "external"
+                },
+                {
+                    "name": "进化与结构关系分析",
+                    "desc": "通过多序列比对（ClustalW）构建进化树，结合同源蛋白结构保守性分析，解析序列变异对蛋白功能的影响。",
+                    "url": "/topics/evolution-structure",
+                    "type": "internal"
+                }
+            ]
+        }
+    ],
+    "categoryHelper": {
+        "pageTitle": "分类",
+        "updateTip": "内容持续更新中，欢迎关注最新动态",
+        "updateUrl": "/updates",
+        "updateUrlType": "internal"
+    }
+}
