@@ -1,6 +1,7 @@
+<!-- Home.vue -->
 <template>
   <div class="container">
-    <div class="row py-4">
+    <div class="row pt-4 px-3">
       <!-- 中间主内容区域 -->
       <div class="col-12 col-lg-9 order-1 order-lg-2" ref="mainContent">
         <div class="row">
@@ -14,7 +15,7 @@
       <!-- </div> -->
 
       <!-- 左侧边栏 -->
-      <div class="col-12 col-lg-3 order-2 order-lg-1" ref="sidebarContainer">
+      <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2 px-3" ref="sidebarContainer">
         <div class="sticky-sidebar">
           <div class="sidebar-content" ref="sidebarContent">
             <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-3">

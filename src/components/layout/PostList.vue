@@ -41,7 +41,7 @@
     </div>
 
     <!-- 分页组件 -->
-    <div class="row mt-4" v-if="totalPages > 1">
+    <div class="row mt-4 pb-4" v-if="totalPages > 1">
       <div class="col-12">
         <nav aria-label="文章列表分页">
           <ul class="pagination justify-content-between align-items-center mb-0">

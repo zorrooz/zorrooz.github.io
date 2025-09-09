@@ -72,3 +72,14 @@ print(greet('Vue Markdown'))
 
 ---
 以上是Markdown渲染的基本功能演示。
+
+```vue
+<style>
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+</style>
+```

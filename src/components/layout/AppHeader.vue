@@ -6,7 +6,8 @@
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex">
           <!-- Logo -->
-          <RouterLink class="navbar-brand" to="/" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle">
+          <RouterLink class="navbar-brand" to="/" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle"
+            @click="mobileMenuOpen = false">
             <img src="@/assets/icons/gblog.svg" alt="gblog" class="logo-icon" height="40">
           </RouterLink>
 
@@ -29,7 +30,7 @@
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item" v-for="item in navItems" :key="item.text">
                 <RouterLink class="nav-link px-3 py-2 rounded d-flex align-items-center" :to="item.href"
-                  @click="mobileMenuOpen = false">
+                  @click="mobileMenuOpen = false" :class="{ 'active': $route.path === item.href }">
                   <i :class="['fas', item.icon]" style="flex-shrink: 0; width: 20px; margin-right: 8px;"></i>
                   {{ item.text }}
                 </RouterLink>
@@ -87,6 +88,12 @@ export default {
 </script>
 
 <style scoped>
+.nav-link.active {
+  color: #047AFF !important;
+  background-color: transparent !important;
+  font-weight: 500;
+}
+
 .nav-link:hover {
   color: #047AFF !important;
   background-color: #E6F0FF !important;

@@ -1,6 +1,6 @@
 <!-- About.vue -->
 <template>
-  <div class="container py-4">
+  <div class="container py-4 px-3">
     <div class="row justify-content-center">
       <div class="col-lg-10 col-xl-8">
 
