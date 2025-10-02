@@ -1,25 +1,36 @@
+//@/utils/markdownProcessor.js
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
-import remarkGfm from 'remark-gfm'     // 支持表格、任务列表等
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkParseFrontmatter from 'remark-parse-frontmatter'
+import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import remarkBreaks from 'remark-breaks'
 import remarkRehype from 'remark-rehype'
-import remarkBreaks from 'remark-breaks' // 新增：处理换行
+// import remarkToc from 'remark-toc'
+import rehypeHighlight from 'rehype-highlight'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
+
+import { common } from 'lowlight'
+import julia from 'highlight.js/lib/languages/julia'
+import dockerfile from 'highlight.js/lib/languages/dockerfile'
+const languages = { ...common, julia, dockerfile }
 
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
-  .use(remarkBreaks)        // 新增：启用换行处理
+  .use(remarkBreaks)
   .use(remarkMath)
+  // .use(remarkToc)
   .use(remarkRehype)
-  .use(rehypeKatex, {
-    throwOnError: false,
-    errorColor: '#cc0000'
-  })
+  .use(rehypeHighlight, { languages })
+  .use(rehypeKatex, { throwOnError: false, errorColor: '#cc0000' })
   .use(rehypeStringify)
-
+  .use(remarkFrontmatter, ['yaml', 'toml'])
+  .use(remarkParseFrontmatter)
 export async function renderMarkdown(markdown) {
+
   const result = await processor.process(markdown)
   return String(result)
 }

@@ -1,79 +1,54 @@
-# Markdown内容demo
+# Markdown 语法示例
 
-这是一段普通文本，**加粗文本**，*斜体文本*，以及[链接](https://vuejs.org)。
+以下是对常见 Markdown 语法功能的演示。
 
-## 代码高亮
+## 1. 基础文本样式
 
-行内代码是：`console.log('Hello, Vue Markdown!');`。
+### 三级标题
 
-```javascrip
-// JavaScript代码示例
-function greet(name) {
-  return 'Hello, ' + name + '!';
-}
+#### 四级标题
 
-console.log(greet('Vue Markdown'));
-```
+##### 五级标题
 
-## 数学公式
+###### 六级标题
 
-行内公式：$E = mc^2$
+普通段落文本示例。
 
-块级公式：
-$$E=mc^2$$
+1. 粗体文本
+    - **星号形式**
+    - **下划线形式**
+2. 斜体文本
+    - *星号形式*
+    - *下划线形式*
 
-$$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$
+## 2. 链接与图片
 
-$$
-\int_a^b f(x) \, \mathrm{d}x = F(b) - F(a)
-$$
+这是一个行内链接示例：[Vue 官网](https://vuejs.org)
 
-## 表格示例
-
-| 功能        | 支持情况   | 备注          |
-| ----------- | ---------- | ------------- |
-| 标题        | 支持       | 最多支持六级标题 |
-| 代码块      | 支持       | 支持语法高亮    |
-| 数学公式    | 支持       | 使用KaTeX渲染  |
-| 表格        | 支持       | 标准表格语法    |
-| 图片        | 支持       | 本地和网络图片  |
-
-## 图片示例
-
+以下是嵌入图片的示例：  
 ![Vue Logo](https://vuejs.org/images/logo.png)
 
-## 引用块
->
-> 这是一个引用块示例
-> 它可以包含多行内容
+## 3. 块引用
 
-## 列表
+> 这是一个块引用。  
+> 块引用常用于强调某些内容或展示他人的陈述。
 
-### 有序列表
+## 4. 表格与行内代码
 
-1. 第一项
-2. 第二项
-3. 第三项
+| 样式类型          | 示例 |
+| ----------------- | ---- |
+| 行内代码          | `console.log("Hello World")` |
+| 行内数学公式      | $f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$ |
 
-### 无序列表
+## 5. 代码块
 
-- Vue
-- Markdown
-- KaTeX
-- Highlight.js
+缩进式代码块：
 
-```python
-def greet(name):
-    return 'Hello, ' + name + '!'
+    console.log("Hello_World");
 
-print(greet('Vue Markdown'))
-1 + 1
-```
+围栏式代码块：
 
----
-以上是Markdown渲染的基本功能演示。
-
-```vue
+```html
 <style>
 .markdown-body img {
   max-width: 100%;
@@ -83,3 +58,14 @@ print(greet('Vue Markdown'))
 }
 </style>
 ```
+
+## 6. 数学公式
+
+块级数学公式示例：
+
+$$
+\int_a^b f(x) \, \mathrm{d}x = F(b) - F(a)
+$$
+
+---
+以上是常用的 Markdown 语法功能示例。

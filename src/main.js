@@ -10,7 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import i18n from './i18n'
 import 'katex/dist/katex.min.css'
-import 'highlight.js/styles/github.css';
+// import 'highlight.js/styles/github.css';
+import '@/assets/css/gblog.css'
 
 const app = createApp(App)
 

@@ -1,21 +1,20 @@
 <!-- Home.vue -->
 <template>
   <div class="container">
-    <div class="row pt-4 px-3">
+    <div class="row pt-4 px-0">
       <!-- 中间主内容区域 -->
       <div class="col-12 col-lg-9 order-1 order-lg-2" ref="mainContent">
         <div class="row">
           <div class="col">
             <p class="mb-2">abcd 测试</p>
             <h3 class="mb-4">文档中心</h3>
-            <PostList :docs="postData" :perPage="3" />
+            <PostList :docs="postData" :perPage="5" />
           </div>
         </div>
       </div>
-      <!-- </div> -->
 
       <!-- 左侧边栏 -->
-      <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2 px-3" ref="sidebarContainer">
+      <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2 px-2" ref="sidebarContainer">
         <div class="sticky-sidebar">
           <div class="sidebar-content" ref="sidebarContent">
             <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-3">
@@ -33,7 +32,7 @@
 import ProfileCard from '@/components/layout/ProfileCard.vue'
 import TagCloud from '@/components/layout/TagCloud.vue'
 import PostList from '@/components/layout/PostList.vue'
-import postData from '@/content/posts.json'
+import postData from '@/content/posts_test.json'
 
 export default {
   name: 'HomeView',
