@@ -1,8 +1,8 @@
 <template>
-  <div class="app-container bg-light">
+  <div class="app-container bg-body">
     <AppHeader />
 
-    <main class="main-content">
+    <main class="main-content bg-light">
       <router-view />
     </main>
 

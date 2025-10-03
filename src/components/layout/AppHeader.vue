@@ -1,7 +1,7 @@
 <!-- AppHeader.vue -->
 <template>
   <!-- 外层负责定位和全宽 -->
-  <header class="bg-white shadow-sm">
+  <header class="site-header shadow-sm">
     <div class="container px-0">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex">
@@ -78,10 +78,18 @@ export default {
       this.logoStyle = {};
     },
     toggleTheme() {
-      console.log('切换主题');
+      const html = document.documentElement
+      const current = html.getAttribute('data-bs-theme') || 'light'
+      const next = current === 'light' ? 'dark' : 'light'
+      html.setAttribute('data-bs-theme', next)
+      localStorage.setItem('theme', next)
     },
     toggleLanguage() {
-      console.log('切换语言');
+      const current = this.$i18n.locale.value || 'zh-CN'
+      const next = current === 'zh-CN' ? 'en-US' : 'zh-CN'
+      this.$i18n.locale.value = next
+      localStorage.setItem('locale', next)
+      document.documentElement.lang = next
     }
   }
 }
@@ -96,7 +104,7 @@ export default {
 
 .nav-link:hover {
   color: #047AFF !important;
-  background-color: #E6F0FF !important;
+  background-color: transparent !important; /* 交由主题文件控制 */
 }
 
 .btn-icon:hover,

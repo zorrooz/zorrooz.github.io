@@ -83,9 +83,9 @@ export default {
   right: 30px;
   width: 40px;
   height: 40px;
-  background: #fff;
-  color: #495057;
-  border: none;
+  background-color: var(--bs-card-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -93,7 +93,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   z-index: 1000;
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -101,8 +101,8 @@ export default {
 }
 
 .back-to-top:hover {
-  background: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  background-color: var(--bs-secondary-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 .back-to-top:active {

@@ -15,12 +15,10 @@
 
       <!-- 左侧边栏 -->
       <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2 px-2" ref="sidebarContainer">
-        <div class="sticky-sidebar">
-          <div class="sidebar-content" ref="sidebarContent">
-            <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-3">
-              <ProfileCard class="w-100" />
-              <TagCloud class="w-100" />
-            </div>
+        <div class="sticky-sidebar" ref="sidebarContent">
+          <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-3">
+            <ProfileCard class="w-100" />
+            <TagCloud class="w-100" />
           </div>
         </div>
       </div>
@@ -32,7 +30,7 @@
 import ProfileCard from '@/components/layout/ProfileCard.vue'
 import TagCloud from '@/components/layout/TagCloud.vue'
 import PostList from '@/components/layout/PostList.vue'
-import postData from '@/content/posts_test.json'
+import postData from '@/content/posts.json'
 
 export default {
   name: 'HomeView',
@@ -92,14 +90,9 @@ export default {
 <style scoped>
 .sticky-sidebar {
   position: sticky;
-  top: 10px;
+  top: 30px;
   box-sizing: border-box;
   width: 100%;
-}
-
-.sidebar-content {
-  width: 100%;
-  box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   transition: max-height 0.2s ease;
 }
@@ -109,9 +102,6 @@ export default {
     position: static;
     top: auto;
     bottom: auto !important;
-  }
-
-  .sidebar-content {
     max-height: none !important;
     overflow-y: visible !important;
   }

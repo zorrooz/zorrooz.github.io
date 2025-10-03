@@ -1,9 +1,24 @@
-// 1. 先自定义变量
-$primary: #6f42c1;
-$theme-colors: (
-  "primary": #6f42c1,
-  "custom": #ff6b35
-);
+:root,
+[data-bs-theme="light"] {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
 
-// 2. 再导入 Bootstrap（它会使用你定义的值）
-@import "bootstrap/scss/bootstrap";
+  --bs-link-color: #0d6efd;
+  --bs-link-hover-color: #0b5ed7;
+
+  --bs-border-color: #dee2e6;
+
+  --brand-primary: #047AFF;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #0f1115;
+  --bs-body-color: #e6e6e6;
+
+  --bs-link-color: #66b2ff;
+  --bs-link-hover-color: #99ccff;
+
+  --bs-border-color: #2b2f36;
+
+  --brand-primary: #66b2ff;
+}

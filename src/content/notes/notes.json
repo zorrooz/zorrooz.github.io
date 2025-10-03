@@ -1,0 +1,144 @@
+{
+  "notes": [
+    {
+      "name": "生物信息学",
+      "children": [
+        {
+          "name": "序列比对",
+          "files": [
+            {
+              "title": "BLAST 序列比对基础",
+              "path": "notes/Bioinformatics/alignment/25-09-19--blast-basics.md"
+            }
+          ]
+        },
+        {
+          "name": "结构分析",
+          "files": [
+            {
+              "title": "PyMOL 分子结构可视化",
+              "path": "notes/Bioinformatics/structure/25-09-19--pymol-visualization.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "数据科学",
+      "children": [
+        {
+          "name": "机器学习",
+          "files": [
+            {
+              "title": "Python 机器学习入门",
+              "path": "notes/DataScience/machinelearning/25-09-19--ml-python.md"
+            }
+          ]
+        },
+        {
+          "name": "统计分析",
+          "files": [
+            {
+              "title": "R语言统计分析基础",
+              "path": "notes/DataScience/statistics/25-09-19--statistics-r.md"
+            }
+          ]
+        },
+        {
+          "name": "数据可视化",
+          "files": [
+            {
+              "title": "Python 数据可视化工具",
+              "path": "notes/DataScience/visualization/25-09-19--visualization-python.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "组学技术",
+      "children": [
+        {
+          "name": "基因组学",
+          "files": [
+            {
+              "title": "BWA MEM 比对人类基因组实战",
+              "path": "notes/Omics/genomics/25-09-19--genomics-bwa.md"
+            }
+          ]
+        },
+        {
+          "name": "蛋白质组学",
+          "files": [
+            {
+              "title": "MaxQuant 蛋白质组学分析工作流",
+              "path": "notes/Omics/proteomics/25-09-19--maxquant.md"
+            }
+          ]
+        },
+        {
+          "name": "转录组学",
+          "files": [
+            {
+              "title": "RNA-Seq 分析：HISAT2 比对流程",
+              "path": "notes/Omics/transcriptomics/25-09-19--rnaseq-hisat2.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "编程语言",
+      "children": [
+        {
+          "name": "JavaScript",
+          "files": [
+            {
+              "title": "Vue.js 前端开发入门",
+              "path": "notes/Programming/javascript/25-09-19--javascript-vue.md"
+            }
+          ]
+        },
+        {
+          "name": "Python",
+          "files": [
+            {
+              "title": "Biopython 生物信息学应用",
+              "path": "notes/Programming/python/25-09-19--python-biopython.md"
+            },
+            {
+              "title": "用 Pandas 处理 FASTQ 质量统计",
+              "path": "notes/Programming/python/25-09-19--python-fastq.md"
+            },
+            {
+              "title": "Python Pandas 数据处理实战",
+              "path": "notes/Programming/python/25-09-19--python-pandas.md"
+            }
+          ]
+        },
+        {
+          "name": "R语言",
+          "files": [
+            {
+              "title": "R语言数据处理示例",
+              "path": "notes/Programming/r/25-09-19--r-demo.md"
+            },
+            {
+              "title": "R语言 ggplot2 数据可视化",
+              "path": "notes/Programming/r/25-09-19--r-ggplot2.md"
+            }
+          ]
+        },
+        {
+          "name": "Shell",
+          "files": [
+            {
+              "title": "Bash Shell 脚本编程",
+              "path": "notes/Programming/shell/25-09-19--shell-bash.md"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

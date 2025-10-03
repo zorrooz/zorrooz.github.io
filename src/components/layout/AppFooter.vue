@@ -1,6 +1,6 @@
 <!-- AppFooter.vue -->
 <template>
-  <footer class="py-4" style="background-color: #e9ecef">
+  <footer class="py-4 bg-body-secondary site-footer">
     <div class=" container">
       <div class="d-flex justify-content-between align-items-center">
         <div>Copyright © 2025 gblog</div>

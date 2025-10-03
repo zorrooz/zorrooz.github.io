@@ -1,18 +1,34 @@
 ---
-title: "MaxQuant 分析 DIA 数据参数详解"
-date: "2025-09-14"
+title: "MaxQuant 蛋白质组学分析工作流"
+date: "2025-09-19"
 author: "zorrooz"
-tags: ["MaxQuant", "蛋白质组", "DIA", "质谱", "参数配置", "定量分析"]
+tags: ["MaxQuant", "蛋白质组学", "质谱分析", "生物信息学", "定量分析"]
 draft: false
-description: "详解 MaxQuant 处理 DIA 蛋白质组数据时的关键参数设置与常见坑点。"
+description: "详细记录 MaxQuant 在蛋白质组学数据分析中的标准流程与参数设置"
 ---
 
-# MaxQuant 分析 DIA 数据参数详解
+# MaxQuant 蛋白质组学分析工作流
 
-关键参数：
+## 基本配置
 
-- `Match between runs`: ✅ 启用提升定量覆盖
-- `LFQ`: ✅ 标记用于无标定量
-- `Enzyme`: Trypsin/P
+1. **输入文件设置**
+   - RAW 文件：质谱原始数据
+   - FASTA 文件：蛋白质数据库
 
-建议使用默认 FDR 0.01，避免过度放宽。
+2. **主要参数**
+   - 酶切方式：Trypsin/P
+   - 最大漏切位点：2
+   - 前体质量容差：20 ppm（一级）
+   - 碎片离子容差：0.5 Da（二级）
+
+## 分析流程
+
+```bash
+# 运行 MaxQuant
+mono MaxQuantCmd.exe mqpar.xml
+```
+
+典型输出文件：
+- evidence.txt：肽段鉴定结果
+- proteinGroups.txt：蛋白质定量结果
+- summary.txt：分析统计摘要

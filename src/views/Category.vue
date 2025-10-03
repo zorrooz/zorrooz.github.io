@@ -12,7 +12,7 @@
         <div class="d-flex flex-column" style="gap: 2rem;">
           <section v-for="(category, index) in categoryList" :key="index">
             <!-- 一级分类标题：浅灰下划线 -->
-            <h2 class="h5 fw-semibold text-dark pb-2 mb-3" style="border-bottom: 1px solid #dee2e6;">
+            <h2 class="h5 fw-semibold text-body-emphasis pb-2 mb-3" style="border-bottom: 1px solid var(--bs-border-color);">
               {{ category.title }}
             </h2>
 
@@ -22,18 +22,18 @@
                 <div class="card h-100 shadow-sm border-0 bg-white">
                   <div class="card-body p-4 d-flex flex-column">
                     <!-- 标题 -->
-                    <h3 class="h6 fw-semibold text-dark mb-2">
+                    <h3 class="h6 fw-semibold text-body-emphasis mb-2">
                       {{ item.name }}
                     </h3>
 
                     <!-- 简介 -->
                     <p class="text-muted mb-3 flex-grow-1"
-                      style="font-size: 0.875rem; line-height: 1.5; color: #6c757d;">
+                      style="font-size: 0.875rem; line-height: 1.5;">
                       {{ item.desc }}
                     </p>
 
                     <!-- 分隔线：更浅的灰色 -->
-                    <hr class="my-2" style="height: 1px; background-color: #dee2e6; opacity: 1; border: none;" />
+                    <hr class="my-2" />
 
                     <!-- 查看更多 -->
                     <div class="text-end">

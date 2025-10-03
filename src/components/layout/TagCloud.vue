@@ -1,12 +1,12 @@
 <!-- TagCloud.vue -->
 <template>
-  <div class="card shadow-sm border-0 bg-white mb-3">
-    <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
+  <div class="card shadow-sm border-0 mb-3">
+    <div class="card-header border-0 pt-3 px-4 pb-2" :style="{ backgroundColor: 'var(--bs-card-bg)' }">
       <h6 class="text-secondary m-0 small">标签</h6>
     </div>
     <div class="card-body p-4">
       <div class="d-flex flex-wrap gap-2">
-        <span v-for="tag in tags" :key="tag.id" class="badge bg-light text-dark fw-normal py-1 px-2 small">
+        <span v-for="tag in tags" :key="tag.id" class="badge bg-body-tertiary text-body fw-normal py-1 px-2 small">
           # {{ tag.name }}
         </span>
       </div>

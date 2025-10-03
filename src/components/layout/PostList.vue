@@ -13,8 +13,10 @@
             </small>
 
             <!-- 标题 -->
-            <h5 class="fw-bold mb-2 text-dark">
-              {{ post.title }}
+            <h5 class="fw-bold mb-2 text-body">
+              <router-link :to="getArticlePath(post)" class="text-decoration-none text-body">
+                {{ post.title }}
+              </router-link>
             </h5>
 
             <!-- 分类 -->
@@ -31,7 +33,7 @@
 
             <!-- 标签 -->
             <div class="d-flex flex-wrap gap-2">
-              <span v-for="tag in post.tags" :key="tag" class="badge bg-light text-dark fw-medium small py-1 px-2">
+              <span v-for="tag in post.tags" :key="tag" class="badge bg-body-tertiary text-body fw-medium small py-1 px-2">
                 # {{ tag }}
               </span>
             </div>
@@ -101,6 +103,8 @@
 </template>
 
 <script>
+import notesData from '@/content/notes/notes.json'
+
 export default {
   name: 'PostList',
   props: {
@@ -193,6 +197,23 @@ export default {
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' }
       return new Date(dateString).toLocaleDateString('zh-CN', options)
+    },
+    getArticlePath(post) {
+      // 根据文章标题从notes.json中查找对应的文件路径
+      let articlePath = 'notes/Programming/python/25-09-19--python-fastq.md' // 默认路径
+      
+      // 遍历notes.json查找匹配的文章
+      for (const category of notesData.notes) {
+        for (const subcategory of category.children) {
+          const foundFile = subcategory.files.find(file => file.title === post.title)
+          if (foundFile) {
+            articlePath = foundFile.path
+            break
+          }
+        }
+      }
+      
+      return `/article/${articlePath.replace(/\.md$/, '')}`
     },
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages) {

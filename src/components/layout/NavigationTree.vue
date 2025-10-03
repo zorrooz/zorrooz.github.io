@@ -1,287 +1,238 @@
 <template>
-  <div class="article-tree">
-    <!-- 二级分类标题 -->
-    <h2 class="category-title">{{ currentCategory.title }}</h2>
+  <div class="navigation-tree">
+    <!-- 只显示当前文章所在的一级分类 -->
+    <div v-if="currentCategoryData" class="category-section">
 
-    <!-- 分类描述（可选） -->
-    <p v-if="currentCategory.desc" class="category-desc">{{ currentCategory.desc }}</p>
+      <!-- 一级分类标题 -->
+      <div class="category-header">
+        <h3 class="category-title">{{ currentCategoryData.name }}</h3>
+      </div>
 
-    <!-- 文章列表 -->
-    <div class="article-list">
-      <div v-for="item in currentCategory.items" :key="item.name" class="article-item"
-        :class="{ 'external-link': item.type === 'external' }" @click="handleItemClick(item)">
-        <div class="article-header">
-          <h3 class="article-title">{{ item.name }}</h3>
-          <span v-if="item.type === 'external'" class="external-badge" title="外部链接">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
-            </svg>
-          </span>
-        </div>
-
-        <p class="article-desc">{{ item.desc }}</p>
-
-        <div class="article-footer">
-          <span class="article-type" :class="item.type">
-            {{ item.type === 'internal' ? '内部资源' : '外部资源' }}
-          </span>
-          <button class="view-btn" :class="{ 'external-btn': item.type === 'external' }">
-            {{ item.type === 'internal' ? '查看详情' : '访问链接' }}
-          </button>
+      <!-- 二级分类和文章列表 -->
+      <div class="category-content">
+        <div v-for="subcategory in currentCategoryData.children" :key="subcategory.name" class="subcategory-section">
+          <!-- 二级分类标题 -->
+          <div class="subcategory-header">
+            <h4 class="subcategory-title" :class="{ 'current-subcategory': isCurrentSubcategory(subcategory.name) }">
+              {{ subcategory.name }}
+            </h4>
+          </div>
+          
+          <!-- 文章列表 -->
+          <div class="article-list-container">
+            <ul class="article-list">
+              <li v-for="file in subcategory.files" :key="file.title" class="article-item">
+                <router-link :to="getArticlePath(file)" class="article-link" :class="{ 'current-article': isCurrentArticle(file) }">
+                  <span class="article-title">{{ file.title }}</span>
+                </router-link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- 更新提示 -->
-    <div v-if="showUpdateTip" class="update-tip">
-      <p>{{ categoryHelper.updateTip }}</p>
-      <router-link v-if="categoryHelper.updateUrlType === 'internal'" :to="categoryHelper.updateUrl"
-        class="update-link">
-        查看更新
-      </router-link>
-      <a v-else :href="categoryHelper.updateUrl" target="_blank" rel="noopener noreferrer" class="update-link">
-        查看更新
-      </a>
+    
+    <!-- 如果没有当前文章分类，显示提示 -->
+    <div v-else class="no-category-message">
+      <p class="text-muted">请选择一篇文章查看目录</p>
     </div>
   </div>
 </template>
 
 <script>
+import notesData from '@/content/notes/notes.json'
+
 export default {
   name: 'NavigationTree',
-  props: {
-    // 接收一个二级分类对象（来自categoryList中的一个对象）
-    category: {
-      type: Object,
-      required: true,
-      validator(value) {
-        return value.title && Array.isArray(value.items);
-      }
-    },
-    // 接收categoryHelper对象
-    categoryHelper: {
-      type: Object,
-      required: true
-    },
-    // 是否显示更新提示
-    showUpdateTip: {
-      type: Boolean,
-      default: true
+  data() {
+    return {
+      notesData: notesData.notes || [],
+      expandedSubcategories: {},
+      currentCategory: '',
+      currentSubcategory: '',
+      currentArticle: ''
     }
   },
   computed: {
-    currentCategory() {
-      return this.category;
+    currentCategoryData() {
+      if (!this.currentCategory) return null
+      return this.notesData.find(cat => cat.name === this.currentCategory)
+    }
+  },
+  mounted() {
+    // 根据当前路由确定当前文章的分类
+    this.determineCurrentArticle()
+    
+    // 默认所有二级分类都折叠，只有当前文章所在的二级分类展开
+    if (this.currentCategoryData) {
+      this.currentCategoryData.children.forEach(subcat => {
+        this.expandedSubcategories[subcat.name] = true
+      })
+    }
+  },
+  watch: {
+    '$route': {
+      handler() {
+        this.determineCurrentArticle()
+        // 更新展开状态
+        if (this.currentCategoryData) {
+          this.currentCategoryData.children.forEach(subcat => {
+            this.expandedSubcategories[subcat.name] = true
+          })
+        }
+      },
+      immediate: true,
+      deep: true
     }
   },
   methods: {
-    handleItemClick(item) {
-      if (item.type === 'internal') {
-        // 内部链接，使用Vue Router导航
-        this.$router.push(item.url);
-      } else {
-        // 外部链接，在新窗口打开
-        window.open(item.url, '_blank', 'noopener,noreferrer');
+    toggleSubcategory(subcategoryName) {
+      // 切换指定二级分类的展开状态
+      this.expandedSubcategories[subcategoryName] = !this.expandedSubcategories[subcategoryName]
+    },
+    getArticlePath(file) {
+      // 生成完整的路由路径
+      const path = file.path.replace(/\.md$/, '')
+      return `/article/${path}`
+    },
+    isCurrentArticle(file) {
+      return file.path === this.currentArticle
+    },
+    isCurrentSubcategory(subcategoryName) {
+      return subcategoryName === this.currentSubcategory
+    },
+    determineCurrentArticle() {
+      // 根据当前路由参数确定当前文章
+      const route = this.$route
+      // The path param is an array of segments, join them
+      const path = route.params.path ? route.params.path.join('/') : ''
+      
+      if (path) {
+        // 查找匹配的文章路径
+        for (const category of this.notesData) {
+          for (const subcategory of category.children) {
+            const foundFile = subcategory.files.find(file => 
+              file.path.replace(/\.md$/, '') === path
+            )
+            if (foundFile) {
+              this.currentCategory = category.name
+              this.currentSubcategory = subcategory.name
+              this.currentArticle = foundFile.path
+              return
+            }
+          }
+        }
       }
-
-      // 发出点击事件，供父组件监听
-      this.$emit('item-click', item);
+      
+      // 如果没有路由参数或未找到匹配，默认显示FASTQ文章
+      const programmingCategory = this.notesData.find(cat => cat.name === "编程语言")
+      if (programmingCategory) {
+        const pythonSubcat = programmingCategory.children.find(sub => sub.name === "Python")
+        if (pythonSubcat) {
+          const fastqFile = pythonSubcat.files.find(file => 
+            file.path.includes('python-fastq')
+          )
+          if (fastqFile) {
+            this.currentCategory = "编程语言"
+            this.currentSubcategory = "Python"
+            this.currentArticle = fastqFile.path
+            return
+          }
+        }
+      }
+      
+      // 如果连FASTQ都找不到，使用第一个可用的文章
+      if (this.notesData.length > 0 && this.notesData[0].children.length > 0) {
+        const firstSubcat = this.notesData[0].children[0]
+        if (firstSubcat.files.length > 0) {
+          this.currentCategory = this.notesData[0].name
+          this.currentSubcategory = firstSubcat.name
+          this.currentArticle = firstSubcat.files[0].path
+        }
+      }
     }
   }
-};
+}
 </script>
 
 <style scoped>
-.article-tree {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+.navigation-tree {
+  font-family: inherit;
+}
+
+.category-header {
+  margin-bottom: 0.5rem;
 }
 
 .category-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #3498db;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--bs-secondary-color);
+  margin: 0;
 }
 
-.category-desc {
-  font-size: 1rem;
-  color: #7f8c8d;
-  margin-bottom: 24px;
-  line-height: 1.6;
+.subcategory-section {
+  margin-bottom: 0rem;
+}
+
+.subcategory-header {
+  cursor: default;
+  padding: 0.25rem 0;
+}
+
+.subcategory-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--bs-body-color);
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.article-list-container {
+  padding: 0.1rem 0 0 0;
+  margin-left: 0.5rem;
 }
 
 .article-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .article-item {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  margin-bottom: 0.25rem;
 }
 
-.article-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #3498db;
+.article-link {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  color: var(--bs-body-color);
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  margin-left: 0.25rem;
 }
 
-.article-item.external-link {
-  border-left: 4px solid #e74c3c;
-}
 
-.article-item.external-link:hover {
-  border-color: #e74c3c;
-}
 
-.article-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+.article-link.current-article {
+  color: var(--bs-primary);
+  font-weight: 700;
 }
 
 .article-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #2c3e50;
   margin: 0;
   line-height: 1.4;
 }
 
-.external-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: #e74c3c;
-  color: white;
-  border-radius: 50%;
-  cursor: help;
-}
-
-.article-desc {
-  font-size: 0.95rem;
-  color: #555;
-  margin: 16px 0;
-  line-height: 1.6;
-}
-
-.article-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.article-type {
-  font-size: 0.85rem;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-.article-type.internal {
-  background: #d5e8f8;
-  color: #2980b9;
-}
-
-.article-type.external {
-  background: #fadbd8;
-  color: #c0392b;
-}
-
-.view-btn {
-  padding: 8px 16px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-.view-btn:hover {
-  background: #2980b9;
-}
-
-.view-btn.external-btn {
-  background: #e74c3c;
-}
-
-.view-btn.external-btn:hover {
-  background: #c0392b;
-}
-
-.update-tip {
-  margin-top: 32px;
-  padding: 16px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #3498db;
+.no-category-message {
   text-align: center;
-}
-
-.update-tip p {
-  margin: 0 0 8px 0;
-  color: #555;
-  font-size: 0.95rem;
-}
-
-.update-link {
-  color: #3498db;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.update-link:hover {
-  color: #2980b9;
-  text-decoration: underline;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .article-tree {
-    padding: 16px;
-  }
-
-  .category-title {
-    font-size: 1.5rem;
-  }
-
-  .article-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .article-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .view-btn {
-    width: 100%;
-  }
+  padding: 2rem 1rem;
+  color: var(--bs-secondary-color);
+  font-size: 0.9rem;
 }
 </style>
