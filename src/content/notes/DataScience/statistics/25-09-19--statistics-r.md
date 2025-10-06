@@ -1,7 +1,6 @@
 ---
 title: "R语言统计分析基础"
 date: "2025-09-19"
-author: "zorrooz"
 tags: ["R语言", "统计分析", "假设检验", "回归分析", "数据科学"]
 draft: false
 description: "R语言在生物统计学和数据分析中的基本统计方法"

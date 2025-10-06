@@ -1,238 +1,225 @@
 <template>
   <div class="navigation-tree">
-    <!-- 只显示当前文章所在的一级分类 -->
-    <div v-if="currentCategoryData" class="category-section">
-
-      <!-- 一级分类标题 -->
-      <div class="category-header">
-        <h3 class="category-title">{{ currentCategoryData.name }}</h3>
-      </div>
-
-      <!-- 二级分类和文章列表 -->
-      <div class="category-content">
-        <div v-for="subcategory in currentCategoryData.children" :key="subcategory.name" class="subcategory-section">
-          <!-- 二级分类标题 -->
-          <div class="subcategory-header">
-            <h4 class="subcategory-title" :class="{ 'current-subcategory': isCurrentSubcategory(subcategory.name) }">
-              {{ subcategory.name }}
-            </h4>
-          </div>
-          
-          <!-- 文章列表 -->
-          <div class="article-list-container">
-            <ul class="article-list">
-              <li v-for="file in subcategory.files" :key="file.title" class="article-item">
-                <router-link :to="getArticlePath(file)" class="article-link" :class="{ 'current-article': isCurrentArticle(file) }">
-                  <span class="article-title">{{ file.title }}</span>
+    <div v-for="category in navigationTree" :key="category.name" class="category-group">
+      <h3 class="category-name">{{ category.name }}</h3>
+      <ul class="article-list article-list-root">
+        <!-- 二级分类（与一级对齐，不缩进） -->
+        <li v-if="category.children && category.children.length" v-for="dir in category.children" :key="dir.name" class="article-item">
+          <div class="directory-node">
+            <span class="directory-name level-2">{{ dir.name }}</span>
+            <!-- 三级文章（有缩进） -->
+            <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
+              <li v-for="file in dir.files" :key="file.path" class="article-item">
+                <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
+                  {{ file.title }}
                 </router-link>
               </li>
             </ul>
+            <!-- 更深层子目录 -->
+            <ul v-if="dir.children && dir.children.length" class="article-list sub-list">
+              <li v-for="sub in dir.children" :key="sub.name" class="article-item">
+                <div class="directory-node">
+                  <span class="directory-name level-2">{{ sub.name }}</span>
+                  <ul v-if="sub.files && sub.files.length" class="article-list sub-list files-level">
+                    <li v-for="file in sub.files" :key="file.path" class="article-item">
+                      <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
+                        {{ file.title }}
+                      </router-link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
           </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 如果没有当前文章分类，显示提示 -->
-    <div v-else class="no-category-message">
-      <p class="text-muted">请选择一篇文章查看目录</p>
+        </li>
+        <!-- 若一级分类下直接存在文件，也作为三级文章处理 -->
+        <li v-if="category.files && category.files.length" v-for="file in category.files" :key="file.path" class="article-item">
+          <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
+            {{ file.title }}
+          </router-link>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-import notesData from '@/content/notes/notes.json'
+import notesData from '@/content/notes/notes.json';
+import projectsData from '@/content/projects/projects.json';
+import topicsData from '@/content/topics/topics.json';
 
 export default {
   name: 'NavigationTree',
   data() {
     return {
-      notesData: notesData.notes || [],
-      expandedSubcategories: {},
-      currentCategory: '',
-      currentSubcategory: '',
-      currentArticle: ''
-    }
-  },
-  computed: {
-    currentCategoryData() {
-      if (!this.currentCategory) return null
-      return this.notesData.find(cat => cat.name === this.currentCategory)
-    }
-  },
-  mounted() {
-    // 根据当前路由确定当前文章的分类
-    this.determineCurrentArticle()
-    
-    // 默认所有二级分类都折叠，只有当前文章所在的二级分类展开
-    if (this.currentCategoryData) {
-      this.currentCategoryData.children.forEach(subcat => {
-        this.expandedSubcategories[subcat.name] = true
-      })
-    }
+      navigationTree: [],
+      currentPath: ''
+    };
   },
   watch: {
     '$route': {
-      handler() {
-        this.determineCurrentArticle()
-        // 更新展开状态
-        if (this.currentCategoryData) {
-          this.currentCategoryData.children.forEach(subcat => {
-            this.expandedSubcategories[subcat.name] = true
-          })
-        }
+      handler(to) {
+        this.currentPath = to.params.path ? to.params.path.join('/') : '';
+        this.buildTree();
       },
       immediate: true,
       deep: true
     }
   },
+  mounted() {
+    // buildTree is called by the route watcher on initialization
+  },
   methods: {
-    toggleSubcategory(subcategoryName) {
-      // 切换指定二级分类的展开状态
-      this.expandedSubcategories[subcategoryName] = !this.expandedSubcategories[subcategoryName]
+    toArticle(path) {
+      return { name: 'Article', params: { path: path.replace(/\.md$/, '').split('/') } };
     },
-    getArticlePath(file) {
-      // 生成完整的路由路径
-      const path = file.path.replace(/\.md$/, '')
-      return `/article/${path}`
+    isActive(path) {
+      return this.currentPath === path.replace(/\.md$/, '');
     },
-    isCurrentArticle(file) {
-      return file.path === this.currentArticle
-    },
-    isCurrentSubcategory(subcategoryName) {
-      return subcategoryName === this.currentSubcategory
-    },
-    determineCurrentArticle() {
-      // 根据当前路由参数确定当前文章
-      const route = this.$route
-      // The path param is an array of segments, join them
-      const path = route.params.path ? route.params.path.join('/') : ''
-      
-      if (path) {
-        // 查找匹配的文章路径
-        for (const category of this.notesData) {
-          for (const subcategory of category.children) {
-            const foundFile = subcategory.files.find(file => 
-              file.path.replace(/\.md$/, '') === path
-            )
-            if (foundFile) {
-              this.currentCategory = category.name
-              this.currentSubcategory = subcategory.name
-              this.currentArticle = foundFile.path
-              return
+    buildTree() {
+      // Build the full navigation data structure
+      const notesTree = JSON.parse(JSON.stringify(notesData.notes));
+      const projectsTree = { name: '项目', type: 'directory', children: JSON.parse(JSON.stringify(projectsData)) };
+      const topicsTree = { name: '专题', type: 'directory', children: JSON.parse(JSON.stringify(topicsData)) };
+      const combinedTree = [...notesTree, projectsTree, topicsTree];
+
+      const processNode = (node) => {
+        // 排序目录下的子目录与文件
+        if (node.children) {
+          node.children.forEach(processNode);
+          node.children.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        }
+        if (node.files) {
+          node.files.sort((a, b) => (a.title || a.path).localeCompare(b.title || b.path));
+        }
+        return node;
+      };
+      const fullTree = combinedTree.map(processNode);
+
+      // Filter the tree based on the current route
+      if (!this.currentPath) {
+        this.navigationTree = []; // Show nothing if not in a specific content path
+        return;
+      }
+
+      const pathSegments = this.currentPath.split('/');
+      const topLevel = pathSegments[0];
+
+      const findContainingRoot = (nodes, targetPath) => {
+        for (const node of nodes) {
+          const searchDescendants = (currentNode) => {
+            // 在 files 中查找
+            if (currentNode.files && currentNode.files.length) {
+              if (currentNode.files.some(f => f.path.replace(/\.md$/, '') === targetPath)) {
+                return true;
+              }
             }
+            // 递归 children
+            if (currentNode.children && currentNode.children.length) {
+              return currentNode.children.some(child => searchDescendants(child));
+            }
+            return false;
+          };
+          if (searchDescendants(node)) {
+            return node;
           }
         }
-      }
-      
-      // 如果没有路由参数或未找到匹配，默认显示FASTQ文章
-      const programmingCategory = this.notesData.find(cat => cat.name === "编程语言")
-      if (programmingCategory) {
-        const pythonSubcat = programmingCategory.children.find(sub => sub.name === "Python")
-        if (pythonSubcat) {
-          const fastqFile = pythonSubcat.files.find(file => 
-            file.path.includes('python-fastq')
-          )
-          if (fastqFile) {
-            this.currentCategory = "编程语言"
-            this.currentSubcategory = "Python"
-            this.currentArticle = fastqFile.path
-            return
+        return null;
+      };
+
+      if (topLevel === 'notes') {
+        const notesRootNodes = fullTree.filter(node => node.name !== '项目' && node.name !== '专题');
+        if (this.currentPath === 'notes') {
+          this.navigationTree = notesRootNodes;
+          return;
+        }
+        const activeRoot = findContainingRoot(notesRootNodes, this.currentPath);
+        this.navigationTree = activeRoot ? [activeRoot] : [];
+      } else if (topLevel === 'projects') {
+        const projectsRoot = fullTree.find(node => node.name === '项目');
+        if (projectsRoot) {
+          const slug = pathSegments[1];
+          const activeProject = projectsRoot.children.find(p => p.name === slug);
+          if (activeProject) {
+            this.navigationTree = [{ ...projectsRoot, children: [activeProject] }];
+          } else {
+            this.navigationTree = [projectsRoot];
           }
+        } else {
+          this.navigationTree = [];
         }
-      }
-      
-      // 如果连FASTQ都找不到，使用第一个可用的文章
-      if (this.notesData.length > 0 && this.notesData[0].children.length > 0) {
-        const firstSubcat = this.notesData[0].children[0]
-        if (firstSubcat.files.length > 0) {
-          this.currentCategory = this.notesData[0].name
-          this.currentSubcategory = firstSubcat.name
-          this.currentArticle = firstSubcat.files[0].path
+      } else if (topLevel === 'topics') {
+        const topicsRoot = fullTree.find(node => node.name === '专题');
+        if (topicsRoot) {
+          const slug = pathSegments[1];
+          const activeTopic = topicsRoot.children.find(t => t.name === slug);
+          if (activeTopic) {
+            this.navigationTree = [{ ...topicsRoot, children: [activeTopic] }];
+          } else {
+            this.navigationTree = [topicsRoot];
+          }
+        } else {
+          this.navigationTree = [];
         }
+      } else {
+        this.navigationTree = []; // Default to showing nothing
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
 .navigation-tree {
-  font-family: inherit;
-}
-
-.category-header {
-  margin-bottom: 0.5rem;
-}
-
-.category-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--bs-secondary-color);
-  margin: 0;
-}
-
-.subcategory-section {
-  margin-bottom: 0rem;
-}
-
-.subcategory-header {
-  cursor: default;
-  padding: 0.25rem 0;
-}
-
-.subcategory-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--bs-body-color);
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: color 0.2s ease;
-}
-
-.article-list-container {
-  padding: 0.1rem 0 0 0;
-  margin-left: 0.5rem;
-}
-
-.article-list {
-  list-style: none;
   padding: 0;
-  margin: 0;
+  font-size: 0.95rem;
 }
 
-.article-item {
-  margin-bottom: 0.25rem;
+/* 包裹每个一级分类组 */
+.category-group { margin-bottom: 1rem; }
+
+/* 一级分类：灰色粗体 */
+.category-name {
+  font-size: 1.1rem;
+  font-weight: 700;               /* 粗体 */
+  color: var(--bs-gray-600);      /* 更浅灰色 */
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+
 }
 
+/* 根列表不缩进，让二级分类对齐一级分类 */
+.article-list { list-style: none; padding-left: 0; }
+.article-list-root { padding-left: 0; }
+
+/* 二级分类：黑色正常体，并与一级对齐 */
+.directory-node { padding: 0.25rem 0; }
+.directory-name.level-2 {
+  font-weight: 700;               /* 加粗 */
+  color: var(--bs-body-color);    /* 黑色（正文颜色） */
+  margin-left: 0;                 /* 与一级对齐 */
+}
+
+/* 三级文章：有缩进，黑色或灰色；当前文章蓝色粗体 */
+.sub-list { padding-left: 0.75rem; margin-top: 0.5rem; }
+.files-level { padding-left: 0.75rem; } /* 三级文章缩进 */
+
+.article-item { margin-bottom: 0.3rem; }
 .article-link {
   display: block;
-  padding: 0.4rem 0.75rem;
-  color: var(--bs-body-color);
+  padding: 0.25rem 0.5rem;
   text-decoration: none;
+  color: var(--bs-gray-700);      /* 默认灰/黑 */
   border-radius: 0.25rem;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-  margin-left: 0.25rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
-
-
-
-.article-link.current-article {
-  color: var(--bs-primary);
-  font-weight: 700;
+.article-link:hover {
+  background-color: var(--bs-light);
+  color: var(--bs-body-color);    /* 悬停黑色 */
 }
-
-.article-title {
-  margin: 0;
-  line-height: 1.4;
-}
-
-.no-category-message {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: var(--bs-secondary-color);
-  font-size: 0.9rem;
+.article-link.active {
+  background-color: transparent;  /* 去背景，强调纯文字样式 */
+  color: var(--bs-primary);       /* 蓝色 */
+  font-weight: 700;               /* 粗体 */
 }
 </style>

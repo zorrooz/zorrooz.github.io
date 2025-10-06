@@ -1,7 +1,6 @@
 ---
 title: "Python 数据可视化工具"
 date: "2025-09-19"
-author: "zorrooz"
 tags: ["Python", "数据可视化", "Matplotlib", "Seaborn", "Plotly"]
 draft: false
 description: "Python 生态中的数据可视化库比较和应用"

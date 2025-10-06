@@ -1,4 +1,3 @@
-<!-- OnThisPage.vue (Unified: MarkdownToc + OnThisPage) -->
 <template>
   <nav class="on-this-page">
     <div class="otp-header">
@@ -26,17 +25,14 @@
 export default {
   name: 'OnThisPage',
   props: {
-    // 正文容器选择器，默认存量 RenderMarkdown 输出使用 .markdown-body
     containerSelector: {
       type: String,
       default: '.markdown-body'
     },
-    // 生成目录的标题层级
     levels: {
       type: Array,
       default: () => [2, 3, 4, 5, 6]
     },
-    // 滚动偏移（如有固定头部）
     offset: {
       type: Number,
       default: 8
@@ -47,79 +43,145 @@ export default {
       toc: [],
       activeId: '',
       _otpObserver: null,
-      _otpObserverTimer: null
+      _otpObserverTimer: null,
+      _otpPoller: null
     }
   },
   mounted() {
     this.buildToc();
     this.bindScrollSpy();
-    // 文章渲染后可能才有标题，延迟一次重建
+    
     this.$nextTick(() => {
-      setTimeout(() => {
-        this.buildToc();
-      }, 0);
-      setTimeout(() => {
-        this.buildToc();
-      }, 200);
-      setTimeout(() => {
-        this.buildToc();
-      }, 500);
-
-      const root = document.querySelector(this.containerSelector);
-      if (root && !this._otpObserver) {
-        this._otpObserver = new MutationObserver(() => {
-          clearTimeout(this._otpObserverTimer);
-          this._otpObserverTimer = setTimeout(() => this.buildToc(), 100);
-        });
-        this._otpObserver.observe(root, { childList: true, subtree: true });
-      }
+      this.setupContainerObserver();
     });
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.onScrollSpy);
     window.removeEventListener('resize', this.onScrollSpy);
-    if (this._otpObserver) {
-      this._otpObserver.disconnect();
-      this._otpObserver = null;
-    }
-    if (this._otpObserverTimer) {
-      clearTimeout(this._otpObserverTimer);
-      this._otpObserverTimer = null;
-    }
+    this.cleanupObservers();
   },
   methods: {
+    // 新增：重置目录状态
+    resetToc() {
+      this.toc = [];
+      this.activeId = '';
+      this.cleanupObservers();
+      this.$nextTick(() => this.setupContainerObserver());
+    },
+    
+    // 刷新目录内容
+    refreshToc() {
+      this.buildToc();
+      this.onScrollSpy();
+    },
+    
+    // 清理所有观察者
+    cleanupObservers() {
+      if (this._otpObserver) {
+        this._otpObserver.disconnect();
+        this._otpObserver = null;
+      }
+      if (this._otpObserverTimer) {
+        clearTimeout(this._otpObserverTimer);
+        this._otpObserverTimer = null;
+      }
+      if (this._otpPoller) {
+        clearInterval(this._otpPoller);
+        this._otpPoller = null;
+      }
+    },
+    
+    // 设置容器观察者
+    setupContainerObserver() {
+      // 多次重试确保目录能正确生成
+      [0, 200, 500, 1000].forEach(delay => {
+        setTimeout(() => this.refreshToc(), delay);
+      });
+
+      // 轮询检查容器是否存在
+      const checkContainer = () => {
+        const root = document.querySelector(this.containerSelector);
+        if (root) {
+          // 清除轮询
+          if (this._otpPoller) {
+            clearInterval(this._otpPoller);
+            this._otpPoller = null;
+          }
+
+          // 监听容器变化
+          if (!this._otpObserver) {
+            this._otpObserver = new MutationObserver(() => {
+              clearTimeout(this._otpObserverTimer);
+              this._otpObserverTimer = setTimeout(() => this.refreshToc(), 100);
+            });
+            this._otpObserver.observe(root, {
+              childList: true,
+              subtree: true,
+              attributes: true,
+              attributeFilter: ['id']
+            });
+          }
+
+          this.refreshToc();
+        }
+      };
+
+      checkContainer();
+      // 启动轮询（每200ms一次，直到找到容器）
+      if (!this._otpPoller && !document.querySelector(this.containerSelector)) {
+        this._otpPoller = setInterval(checkContainer, 200);
+      }
+    },
+    
+    getHeadingText(h) {
+      try {
+        const clone = h.cloneNode(true);
+        clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove());
+        let text = clone.textContent || '';
+        text = text.replace(/\s*#\s*$/, '').trim();
+        return text;
+      } catch (e) {
+        return (h.textContent || '').replace(/\s*#\s*$/, '').trim();
+      }
+    },
+    
     buildToc() {
       const root = document.querySelector(this.containerSelector);
       if (!root) {
         this.toc = [];
         return;
       }
+      
       const selector = this.levels.map(l => `h${l}`).join(',');
       const headings = Array.from(root.querySelectorAll(selector));
+      
+      if (headings.length === 0) {
+        this.toc = [];
+        return;
+      }
 
-      // 确保每个标题都有 id（若没有则根据文本生成）
+      // 确保每个标题都有唯一id
       headings.forEach(h => {
         if (!h.id) {
-          let safe = h.textContent.trim().toLowerCase()
-            .replace(/[^\p{L}\p{N}\s-]/gu, '') // Keep Unicode letters, numbers, whitespace, hyphen
-            .replace(/\s+/g, '-'); // Replace whitespace with hyphen
+          let safeId = h.textContent.trim().toLowerCase()
+            .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s-]/g, '')
+            .replace(/\s+/g, '-');
 
-          if (!safe) {
-            // Fallback for empty IDs (e.g., from headers with only symbols)
-            safe = `section-${Math.random().toString(36).substring(2, 9)}`;
+          if (!safeId) {
+            safeId = `section-${Math.random().toString(36).substring(2, 9)}`;
           }
           
-          // 避免重复
-          let id = safe;
-          let n = 1;
-          while (document.getElementById(id)) {
-            id = `${safe}-${n++}`;
+          // 处理ID重复
+          let finalId = safeId;
+          let count = 1;
+          while (document.getElementById(finalId)) {
+            finalId = `${safeId}-${count++}`;
           }
-          h.id = id;
+          h.id = finalId;
         }
       });
 
-      // 构建二级/三级嵌套（h2 -> children: h3/h4...）
+      // 构建二级/三级嵌套目录
       const levelSet = new Set(this.levels);
       const topLevel = Math.min(...this.levels);
       const secondLevel = topLevel + 1;
@@ -133,7 +195,7 @@ export default {
 
         const node = {
           id: h.id,
-          text: h.textContent.trim(),
+          text: this.getHeadingText(h),
           level,
           children: []
         };
@@ -144,32 +206,35 @@ export default {
         } else if (currentTop && level >= secondLevel) {
           currentTop.children.push(node);
         } else {
-          // 如果没有 topLevel，直接平铺为顶层
           toc.push(node);
         }
       }
 
       this.toc = toc;
     },
+    
     bindScrollSpy() {
       window.addEventListener('scroll', this.onScrollSpy, { passive: true });
       window.addEventListener('resize', this.onScrollSpy);
       this.onScrollSpy();
     },
+    
     onScrollSpy() {
       const root = document.querySelector(this.containerSelector);
       if (!root) return;
+      
       const selector = this.levels.map(l => `h${l}`).join(',');
       const headings = Array.from(root.querySelectorAll(selector));
       if (headings.length === 0) {
+        this.activeId = '';
         return;
       }
+      
       const scrollY = window.scrollY || window.pageYOffset;
 
       let current = '';
       for (const h of headings) {
         const top = h.getBoundingClientRect().top + scrollY;
-        // Add a 1px tolerance to handle rounding errors in scroll position
         if (top - this.offset <= scrollY + 1) {
           current = h.id;
         } else {
@@ -178,6 +243,7 @@ export default {
       }
       this.activeId = current || (headings[0]?.id || '');
     },
+    
     scrollToId(id) {
       const el = document.getElementById(id);
       if (!el) {
@@ -194,6 +260,7 @@ export default {
 </script>
 
 <style scoped>
+/* 样式保持不变 */
 .on-this-page {
   --otp-border: var(--bs-border-color, #dee2e6);
   --otp-muted: var(--bs-secondary-color, #6c757d);
@@ -224,13 +291,13 @@ export default {
 
 .otp-item {
   margin: 0.125rem 0;
-  padding-left: 0.5rem;
+  padding-left: 0;
 }
 
 .otp-link {
   display: block;
   padding: 0.3rem 0.5rem;
-  color: var(--bs-body-color);
+  color: var(--bs-gray-700);
   text-decoration: none;
   border-radius: 0.25rem;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -254,7 +321,7 @@ export default {
 .otp-subitem .otp-sublink {
   display: block;
   padding: 0.25rem 0.5rem;
-  color: var(--bs-body-color);
+  color: var(--bs-gray-700);
   text-decoration: none;
   border-radius: 0.25rem;
   transition: background-color 0.15s ease, color 0.15s ease;

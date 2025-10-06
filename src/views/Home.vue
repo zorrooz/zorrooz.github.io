@@ -3,7 +3,7 @@
   <div class="container">
     <div class="row pt-4 px-0">
       <!-- 中间主内容区域 -->
-      <div class="col-12 col-lg-9 order-1 order-lg-2" ref="mainContent">
+      <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body" ref="mainContent">
         <div class="row">
           <div class="col">
             <p class="mb-2">abcd 测试</p>

@@ -1,7 +1,6 @@
 ---
 title: "BLAST 序列比对基础"
 date: "2025-09-19"
-author: "zorrooz"
 tags: ["BLAST", "序列比对", "数据库搜索", "同源性", "生物信息学"]
 draft: false
 description: "BLAST 工具在序列比对和同源性分析中的基本应用"

@@ -1,7 +1,6 @@
 ---
 title: "Python 机器学习入门"
 date: "2025-09-19"
-author: "zorrooz"
 tags: ["Python", "机器学习", "scikit-learn", "分类", "回归"]
 draft: false
 description: "使用 scikit-learn 进行生物数据机器学习分析"

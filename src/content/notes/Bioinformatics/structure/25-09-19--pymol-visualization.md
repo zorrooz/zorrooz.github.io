@@ -1,7 +1,6 @@
 ---
 title: "PyMOL 分子结构可视化"
 date: "2025-09-19"
-author: "zorrooz"
 tags: ["PyMOL", "分子可视化", "蛋白质结构", "3D结构", "结构生物学"]
 draft: false
 description: "PyMOL 在蛋白质三维结构可视化和分析中的应用"

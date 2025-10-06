@@ -1,7 +1,6 @@
 ---
 title: "BWA MEM 比对人类基因组实战"
 date: "2025-09-19"
-author: "zorrooz"
 tags: ["BWA", "基因组比对", "NGS", "命令行", "人类基因组", "SAM/BAM"]
 draft: false
 description: "记录 BWA MEM 在人类 WGS 数据中的标准使用流程与参数调优"

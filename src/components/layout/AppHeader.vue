@@ -1,7 +1,7 @@
 <!-- AppHeader.vue -->
 <template>
   <!-- 外层负责定位和全宽 -->
-  <header class="site-header shadow-sm">
+  <header class="bg-white shadow-sm">
     <div class="container px-0">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex">
@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { setTheme } from '@/utils/themeManager'
+
 export default {
   name: 'AppHeader',
   data() {
@@ -64,7 +66,8 @@ export default {
         { icon: 'fa-folder-open', text: '资源', href: '/resource' },
         { icon: 'fa-info-circle', text: '关于', href: '/about' },
       ],
-      logoStyle: {}
+      logoStyle: {},
+      theme: 'light'
     }
   },
   methods: {
@@ -78,19 +81,17 @@ export default {
       this.logoStyle = {};
     },
     toggleTheme() {
-      const html = document.documentElement
-      const current = html.getAttribute('data-bs-theme') || 'light'
-      const next = current === 'light' ? 'dark' : 'light'
-      html.setAttribute('data-bs-theme', next)
-      localStorage.setItem('theme', next)
+      this.theme = this.theme === 'light' ? 'dark' : 'light';
+      setTheme(this.theme);
     },
     toggleLanguage() {
-      const current = this.$i18n.locale.value || 'zh-CN'
-      const next = current === 'zh-CN' ? 'en-US' : 'zh-CN'
-      this.$i18n.locale.value = next
-      localStorage.setItem('locale', next)
-      document.documentElement.lang = next
+      console.log('切换语言');
     }
+  },
+  mounted() {
+    const saved = localStorage.getItem('theme');
+    if (saved) this.theme = saved;
+    // main.js 已在启动时初始化主题，这里仅同步本地状态即可。
   }
 }
 </script>
@@ -104,7 +105,7 @@ export default {
 
 .nav-link:hover {
   color: #047AFF !important;
-  background-color: transparent !important; /* 交由主题文件控制 */
+  background-color: #E6F0FF !important;
 }
 
 .btn-icon:hover,

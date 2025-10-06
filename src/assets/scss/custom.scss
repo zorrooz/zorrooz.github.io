@@ -1,24 +1,28 @@
-:root,
-[data-bs-theme="light"] {
-  --bs-body-bg: #ffffff;
-  --bs-body-color: #212529;
+@import "./variables";
+@import "bootstrap/scss/bootstrap";
 
-  --bs-link-color: #0d6efd;
-  --bs-link-hover-color: #0b5ed7;
-
-  --bs-border-color: #dee2e6;
-
-  --brand-primary: #047AFF;
+// 3) 主题块：仅编辑此文件即可修改样式
+:root[data-bs-theme="light"] {
+  --bg-primary: #ffffff;
+  --text-primary: #212529;
+  --badge-bg: #f8f9fa;
+  --badge-text: #212529;
 }
 
-[data-bs-theme="dark"] {
-  --bs-body-bg: #0f1115;
-  --bs-body-color: #e6e6e6;
+:root[data-bs-theme="dark"] {
+  --bg-primary: #121212;
+  --text-primary: #e9ecef;
+  --badge-bg: #333333;
+  --badge-text: #e9ecef;
+}
 
-  --bs-link-color: #66b2ff;
-  --bs-link-hover-color: #99ccff;
+// 4) 示例：应用变量到常用区域
+.app-container {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
 
-  --bs-border-color: #2b2f36;
-
-  --brand-primary: #66b2ff;
+.badge {
+  background-color: var(--badge-bg) !important;
+  color: var(--badge-text) !important;
 }

@@ -10,8 +10,8 @@
     </div>
 
     <!-- 个人信息区域 -->
-    <div class="card-body p-4 text-center">
-      <h6 class="card-title mb-1 fw-bold fs-5">zorrooz</h6>
+    <div class="card-body p-4 text-center typography-body">
+      <h3 class="card-title mb-1 fw-bold">zorrooz</h3>
       <p class="card-text text-muted mb-4">
         开发者
       </p>
@@ -20,15 +20,15 @@
       <div class="row g-0 text-center">
         <div class="col border-end">
           <div class="fw-bold">128</div>
-          <div class="text-muted small">文章</div>
+          <div class="text-muted">文章</div>
         </div>
         <div class="col border-end">
           <div class="fw-bold">42</div>
-          <div class="text-muted small">标签</div>
+          <div class="text-muted">标签</div>
         </div>
         <div class="col">
           <div class="fw-bold">999K</div>
-          <div class="text-muted small">字数</div>
+          <div class="text-muted">字数</div>
         </div>
       </div>
     </div>
