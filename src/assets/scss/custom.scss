@@ -1,5 +1,5 @@
-@import "./variables";
-@import "bootstrap/scss/bootstrap";
+@use "./variables";
+@use "bootstrap/scss/bootstrap";
 
 // 3) 主题块：仅编辑此文件即可修改样式
 :root[data-bs-theme="light"] {

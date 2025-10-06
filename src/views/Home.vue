@@ -8,7 +8,7 @@
           <div class="col">
             <p class="mb-2">abcd 测试</p>
             <h3 class="mb-4">文档中心</h3>
-            <PostList :docs="postData" :perPage="5" />
+            <PostList :docs="filteredDocs" :perPage="5" />
           </div>
         </div>
       </div>
@@ -18,7 +18,7 @@
         <div class="sticky-sidebar" ref="sidebarContent">
           <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-3">
             <ProfileCard class="w-100" />
-            <TagCloud class="w-100" />
+            <TagCloud class="w-100" :tagData="tagList" />
           </div>
         </div>
       </div>
@@ -36,6 +36,19 @@ export default {
   name: 'HomeView',
   components: { ProfileCard, TagCloud, PostList },
   data() { return { postData } },
+  computed: {
+    currentTag() { return this.$route.query.tag || '' },
+    filteredDocs() {
+      const tag = this.currentTag
+      if (!tag) return this.postData
+      return this.postData.filter(p => Array.isArray(p.tags) && p.tags.includes(tag))
+    },
+    tagList() {
+      const set = new Set()
+      this.postData.forEach(p => (p.tags || []).forEach(t => set.add(t)))
+      return Array.from(set).sort()
+    }
+  },
   mounted() {
     this.updateSidebarDimensions()
     window.addEventListener('scroll', this.updateSidebarDimensions)

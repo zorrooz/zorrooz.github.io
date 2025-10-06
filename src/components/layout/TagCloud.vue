@@ -6,8 +6,8 @@
     </div>
     <div class="card-body p-4">
       <div class="d-flex flex-wrap gap-2">
-        <span v-for="tag in tags" :key="tag.id" class="badge bg-light text-body fw-normal py-1 px-2 rounded-3">
-          # {{ tag.name }}
+        <span v-for="t in cloudTags" :key="t.name" class="badge bg-light text-body fw-normal py-1 px-2 rounded-3" style="cursor: pointer" @click="goTag(t.name)">
+          # {{ t.name }} <span class="text-secondary ms-1">({{ t.count }})</span>
         </span>
       </div>
     </div>
@@ -25,29 +25,38 @@ export default {
   },
   data() {
     return {
-      tags: [
-        { id: 1, name: 'Vue.js' },
-        { id: 2, name: 'JavaScript' },
-        { id: 3, name: 'Vue.js' },
-        { id: 4, name: 'JavaScript' },
-        { id: 5, name: 'Vue.js' },
-        { id: 6, name: 'JavaScript' },
-        { id: 7, name: 'Vue.js' },
-        { id: 8, name: 'JavaScript' },
-        { id: 9, name: 'Vue.js' },
-        { id: 10, name: 'JavaScript' },
-        // 其他标签可扩展
-      ]
+      tags: []
+    }
+  },
+  computed: {
+    cloudTags() {
+      const src = Array.isArray(this.tagData) && this.tagData.length ? this.tagData : this.tags;
+      const map = new Map();
+      src.forEach(t => {
+        const name = typeof t === 'string' ? t : t.name;
+        if (!name) return;
+        map.set(name, (map.get(name) || 0) + 1);
+      });
+      return Array.from(map.entries()).map(([name, count]) => ({ name, count }))
+        .sort((a, b) => a.name.localeCompare(b.name));
     }
   },
   mounted() {
     if (this.tagData.length) {
       this.tags = this.tagData
     }
+  },
+  methods: {
+    goTag(name) {
+      if (!name) return;
+      const q = { ...this.$route.query, tag: name, page: '1' };
+      this.$router.push({ path: '/', query: q }).catch(() => {});
+      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
   }
 }
 </script>
 
 <style scoped>
-.card .badge { font-size: 1rem; font-weight: 500; }
+.card .badge { font-size: 0.95rem; font-weight: 500; }
 </style>

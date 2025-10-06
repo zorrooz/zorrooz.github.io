@@ -8,32 +8,32 @@
           <!-- 内容区域 -->
           <div class="flex-grow-1">
             <!-- 日期 -->
-            <small class="text-muted mb-2 d-block">
+            <small class="text-muted meta-text mb-2 d-block">
               {{ formatDate(post.date) }}
             </small>
 
             <!-- 标题 -->
-            <h5 class="fw-bold mb-2 text-body">
-              <router-link :to="getArticlePath(post)" class="text-decoration-none text-body">
+            <h5 class="post-title fw-bold text-dark mb-2">
+              <router-link :to="getArticlePath(post)" class="text-decoration-none text-dark">
                 {{ post.title }}
               </router-link>
             </h5>
 
             <!-- 分类 -->
             <div class="mb-2">
-              <small class="text-secondary">
+              <small class="text-secondary meta-text">
                 {{ post.category.join(' / ') }}
               </small>
             </div>
 
             <!-- 预览内容 -->
-            <p class="text-secondary mb-3 small lh-lg">
+            <p class="text-secondary mb-3 desc-text">
               {{ post.preview }}
             </p>
 
             <!-- 标签 -->
             <div class="d-flex flex-wrap gap-2">
-              <span v-for="tag in post.tags" :key="tag" class="badge bg-body-tertiary text-body fw-medium small py-1 px-2">
+              <span v-for="tag in post.tags" :key="tag" class="badge bg-light text-body fw-normal py-1 px-2 rounded-3">
                 # {{ tag }}
               </span>
             </div>
@@ -217,17 +217,28 @@ export default {
     },
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page
+        this.currentPage = page;
+        const q = { ...this.$route.query, page: String(page) };
+        this.$router.push({ path: this.$route.path, query: q }).catch(() => {});
+        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
     },
     prevPage() {
       if (this.currentPage > 1) {
-        this.currentPage--
+        const page = this.currentPage - 1;
+        this.currentPage = page;
+        const q = { ...this.$route.query, page: String(page) };
+        this.$router.push({ path: this.$route.path, query: q }).catch(() => {});
+        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.currentPage++
+        const page = this.currentPage + 1;
+        this.currentPage = page;
+        const q = { ...this.$route.query, page: String(page) };
+        this.$router.push({ path: this.$route.path, query: q }).catch(() => {});
+        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
     },
     handleResize() {
@@ -237,11 +248,21 @@ export default {
   watch: {
     docs() {
       this.currentPage = 1
+    },
+    '$route.query.page'(newVal) {
+      const p = parseInt(newVal);
+      const page = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
+      if (page !== this.currentPage) {
+        this.currentPage = page;
+        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
     }
   },
   mounted() {
-    this.handleResize()
-    window.addEventListener('resize', this.handleResize)
+    const p = parseInt(this.$route.query.page);
+    this.currentPage = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.handleResize)
@@ -250,6 +271,18 @@ export default {
 </script>
 
 <style scoped>
+/* 标题提升 1-2 级，与文章页 h3 视觉一致 */
+.post-title { font-size: 1.4rem; font-weight: 700; }
+
+/* 描述文本与文章页正文一致 */
+.desc-text { font-size: 1rem; line-height: 1.8; color: #6c757d; }
+
+/* 日期与分类统一为 1rem */
+.meta-text { font-size: 0.95rem; }
+
+/* 标签样式与文章页面完全一致 */
+.badge { font-size: 0.95rem; font-weight: 500; }
+
 .page-link {
   transition: all 0.2s ease;
   color: #495057;

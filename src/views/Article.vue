@@ -82,7 +82,7 @@ import notesData from '@/content/notes/notes.json'
 import projectsData from '@/content/projects/projects.json'
 import topicsData from '@/content/topics/topics.json'
 
-const markdownModules = import.meta.glob('../content/**/*.md', { as: 'raw', eager: false });
+const markdownModules = import.meta.glob('../content/**/*.md', { query: '?raw', import: 'default', eager: false });
 const keys = Object.keys(markdownModules);
 
 export default {
@@ -342,7 +342,7 @@ export default {
 
 .article-title { font-size: 2.1rem; font-weight: 700; }
 .article-meta .text-secondary { font-size: 1rem; }
-.article-meta .badge { font-size: 1rem; font-weight: 500; }
+.article-meta .badge { font-size: 0.95rem; font-weight: 500; }
 
 :deep(.markdown-body) {
   font-size: 1.125rem; line-height: 1.8; color: var(--bs-gray-800);
