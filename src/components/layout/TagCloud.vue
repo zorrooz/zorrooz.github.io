@@ -6,8 +6,8 @@
     </div>
     <div class="card-body p-4">
       <div class="d-flex flex-wrap gap-2">
-        <span v-for="t in cloudTags" :key="t.name" class="badge bg-light text-body fw-normal py-1 px-2 rounded-3" style="cursor: pointer" @click="goTag(t.name)">
-          # {{ t.name }} <span class="text-secondary ms-1">({{ t.count }})</span>
+        <span v-for="t in cloudTags" :key="t.name" class="badge tag-badge fw-normal py-1 px-2 rounded-3" style="cursor: pointer" @click="goTag(t.name)">
+          # {{ t.name }}
         </span>
       </div>
     </div>
@@ -58,5 +58,9 @@ export default {
 </script>
 
 <style scoped>
-.card .badge { font-size: 0.95rem; font-weight: 500; }
+.card .badge { font-size: 0.85rem; font-weight: 500; }
+.tag-badge { 
+  color: #212529 !important; 
+  background-color: #f1f3f5 !important; 
+}
 </style>

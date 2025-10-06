@@ -6,9 +6,15 @@
       <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body" ref="mainContent">
         <div class="row">
           <div class="col">
-            <p class="mb-2">abcd 测试</p>
-            <h3 class="mb-4">文档中心</h3>
-            <PostList :docs="filteredDocs" :perPage="5" />
+
+
+            <div v-if="currentTag" class="mb-3">
+              <span class="current-tag-chip d-inline-flex">
+                <span>标签：# {{ currentTag }}</span>
+                <button class="chip-close" @click="clearTag" aria-label="清除筛选" title="清除筛选">×</button>
+              </span>
+            </div>
+            <PostList :docs="filteredDocs" :perPage="10" />
           </div>
         </div>
       </div>
@@ -95,6 +101,13 @@ export default {
           ? `${sidebarBottom - maxStickyBottom}px`
           : ''
       }
+    },
+    clearTag() {
+      const q = { ...this.$route.query }
+      delete q.tag
+      q.page = '1'
+      this.$router.push({ path: this.$route.path, query: q }).catch(() => {})
+      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
     }
   }
 }
@@ -118,5 +131,37 @@ export default {
     max-height: none !important;
     overflow-y: visible !important;
   }
+}
+.current-tag-chip {
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: #000; /* 纯黑色显示 */
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  align-items: baseline; /* 与文字基线对齐 */
+  gap: 0.2rem; /* 更紧凑的间距 */
+}
+
+.chip-close {
+  font-size: 1.6rem; /* 更大一点，与文字同水平更醒目 */
+  line-height: 1;
+  background: transparent;
+  border: none;
+  color: #6c757d; /* 与全局 text-secondary 接近 */
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.current-tag-chip:hover .chip-close {
+  opacity: 1;
+}
+
+.chip-close:hover {
+  color: #047AFF; /* 与全局主色一致的悬停色 */
 }
 </style>

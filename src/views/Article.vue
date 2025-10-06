@@ -23,7 +23,7 @@
               <span v-if="readingMinutes"><i class="bi bi-clock me-1"></i>阅读约 {{ readingMinutes }} 分钟</span>
             </div>
             <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
-              <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="badge bg-light text-body fw-normal py-1 px-2 rounded-3">
+              <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="badge tag-badge fw-normal py-1 px-2 rounded-3">
                 # {{ tag }}
               </span>
             </div>
@@ -343,6 +343,10 @@ export default {
 .article-title { font-size: 2.1rem; font-weight: 700; }
 .article-meta .text-secondary { font-size: 1rem; }
 .article-meta .badge { font-size: 0.95rem; font-weight: 500; }
+.article-meta .tag-badge { 
+  color: #212529 !important; 
+  background-color: #f1f3f5 !important; 
+}
 
 :deep(.markdown-body) {
   font-size: 1.125rem; line-height: 1.8; color: var(--bs-gray-800);

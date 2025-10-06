@@ -33,7 +33,7 @@
 
             <!-- 标签 -->
             <div class="d-flex flex-wrap gap-2">
-              <span v-for="tag in post.tags" :key="tag" class="badge bg-light text-body fw-normal py-1 px-2 rounded-3">
+              <span v-for="tag in post.tags" :key="tag" class="badge tag-badge fw-normal py-1 px-2 rounded-3" style="cursor: pointer" @click="goTag(tag)">
                 # {{ tag }}
               </span>
             </div>
@@ -241,6 +241,12 @@ export default {
         this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
     },
+    goTag(tag) {
+      if (!tag) return;
+      const q = { ...this.$route.query, tag: tag, page: '1' };
+      this.$router.push({ path: '/', query: q }).catch(() => {});
+      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    },
     handleResize() {
       this.maxVisiblePages = window.innerWidth < 480 ? 3 : 5
     }
@@ -281,7 +287,11 @@ export default {
 .meta-text { font-size: 0.95rem; }
 
 /* 标签样式与文章页面完全一致 */
-.badge { font-size: 0.95rem; font-weight: 500; }
+.badge { font-size: 0.85rem; font-weight: 500; }
+.tag-badge { 
+  color: #212529 !important; 
+  background-color: #f1f3f5 !important; 
+}
 
 .page-link {
   transition: all 0.2s ease;
