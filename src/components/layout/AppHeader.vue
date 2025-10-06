@@ -102,6 +102,7 @@ export default {
     return {
       mobileMenuOpen: false,
       showMobileSidebar: false,
+      _scrollY: 0,
       navItems: [
         { icon: 'fa-layer-group', text: '分类', href: '/category' },
         { icon: 'fa-folder-open', text: '资源', href: '/resource' },
@@ -140,16 +141,44 @@ export default {
       }
     },
     openMobileSidebar() {
+      this.lockScroll();
       this.showMobileSidebar = true;
     },
     closeMobileSidebar() {
       this.showMobileSidebar = false;
+      this.unlockScroll();
     },
     handleDirectoryClick(event) {
       // If a link inside the tree is clicked, close the sidebar.
       if (event.target.closest('a')) {
         this.closeMobileSidebar();
       }
+    },
+    lockScroll() {
+      // 使用 overflow 锁滚，避免打断 window.scrollTo 的导航
+      const docEl = document.documentElement;
+      const body = document.body;
+      if (docEl) {
+        docEl.style.overflow = 'hidden';
+        docEl.style.overscrollBehavior = 'contain';
+      }
+      if (body) {
+        body.style.overflow = 'hidden';
+        body.style.overscrollBehavior = 'contain';
+      }
+    },
+    unlockScroll() {
+      const docEl = document.documentElement;
+      const body = document.body;
+      if (docEl) {
+        docEl.style.overflow = '';
+        docEl.style.overscrollBehavior = '';
+      }
+      if (body) {
+        body.style.overflow = '';
+        body.style.overscrollBehavior = '';
+      }
+      // 不主动恢复 scrollTop，避免“顶部→区域”的跳动
     }
   },
   mounted() {
@@ -166,6 +195,7 @@ export default {
       window.removeEventListener('open-mobile-sidebar', this._openSidebarHandler);
       this._openSidebarHandler = null;
     }
+    this.unlockScroll();
   }
 }
 </script>

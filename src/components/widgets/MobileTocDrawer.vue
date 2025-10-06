@@ -37,7 +37,7 @@ export default {
   },
   mounted() {
     // 监听按钮触发事件
-    this._openHandler = () => { this.show = true; };
+    this._openHandler = () => { this.lockScroll(); this.show = true; };
     window.addEventListener('open-mobile-toc-drawer', this._openHandler);
   },
   beforeUnmount() {
@@ -45,10 +45,39 @@ export default {
       window.removeEventListener('open-mobile-toc-drawer', this._openHandler);
       this._openHandler = null;
     }
+    // 组件卸载时确保滚动状态恢复
+    this.unlockScroll();
   },
   methods: {
     close() {
       this.show = false;
+      this.unlockScroll();
+    },
+    lockScroll() {
+      // 使用 overflow 锁滚，保留滚动坐标，确保 OnThisPage 导航正常工作
+      const docEl = document.documentElement;
+      const body = document.body;
+      if (docEl) {
+        docEl.style.overflow = 'hidden';
+        docEl.style.overscrollBehavior = 'contain';
+      }
+      if (body) {
+        body.style.overflow = 'hidden';
+        body.style.overscrollBehavior = 'contain';
+      }
+    },
+    unlockScroll() {
+      const docEl = document.documentElement;
+      const body = document.body;
+      if (docEl) {
+        docEl.style.overflow = '';
+        docEl.style.overscrollBehavior = '';
+      }
+      if (body) {
+        body.style.overflow = '';
+        body.style.overscrollBehavior = '';
+      }
+      // 不主动恢复 scrollTop，避免视觉跳动
     }
   }
 };

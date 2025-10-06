@@ -74,6 +74,8 @@ export default {
       }
     },
     onTouchStart(e) {
+      // 阻止默认触摸行为，避免浏览器合成点击导致页面滚动
+      e.preventDefault();
       this.isDragging = true;
       this.touchMoved = false;
       this.startY = e.touches[0].clientY;
@@ -95,7 +97,9 @@ export default {
 
       e.preventDefault();
     },
-    onTouchEnd() {
+    onTouchEnd(e) {
+      // 阻止默认触摸结束产生的幽灵点击
+      e.preventDefault();
       this.isDragging = false;
       if (!this.touchMoved) this.openDrawer();
     }

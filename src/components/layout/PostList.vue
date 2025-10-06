@@ -247,6 +247,13 @@ export default {
       this.$router.push({ path: '/', query: q }).catch(() => {});
       this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
     },
+    clearTag() {
+      const q = { ...this.$route.query };
+      delete q.tag;
+      q.page = '1';
+      this.$router.push({ path: '/', query: q }).catch(() => {});
+      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    },
     handleResize() {
       this.maxVisiblePages = window.innerWidth < 480 ? 3 : 5
     }
@@ -323,4 +330,12 @@ export default {
   box-shadow: none;
   outline: none;
 }
+.tag-close {
+  color: #adb5bd;
+  margin-left: 6px;
+  font-size: 0.9em;
+  line-height: 1;
+  display: inline-block;
+}
+
 </style>

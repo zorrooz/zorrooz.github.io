@@ -8,9 +8,10 @@
           <div class="col">
 
 
-            <div v-if="currentTag" class="mb-3">
+            <div v-if="currentTag" class="mb-3 d-flex align-items-center gap-2">
+              <span>标签：</span>
               <span class="current-tag-chip d-inline-flex">
-                <span>标签：# {{ currentTag }}</span>
+                <span># {{ currentTag }}</span>
                 <button class="chip-close" @click="clearTag" aria-label="清除筛选" title="清除筛选">×</button>
               </span>
             </div>
@@ -137,32 +138,29 @@ export default {
   }
 }
 .current-tag-chip {
-  font-size: 1.35rem;
-  font-weight: 400;
-  color: #000; /* 纯黑色显示 */
-  background: transparent;
-  padding: 0;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  align-items: baseline; /* 与文字基线对齐 */
-  gap: 0.2rem; /* 更紧凑的间距 */
+  font-size: 1rem; /* 与卡片标签更一致 */
+  font-weight: 500;
+  color: #212529;
+  background: #fff; /* 白色背底 */
+  padding: 0.25rem 0.5rem; /* 适度内边距 */
+  border: 1px solid #e9ecef; /* 细边框 */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04); /* 轻微卡片感 */
+  border-radius: 12px; /* 圆角矩形 */
+  align-items: center; /* 垂直居中 */
+  gap: 0.4rem;
 }
 
 .chip-close {
-  font-size: 1.6rem; /* 更大一点，与文字同水平更醒目 */
+  font-size: 1.2rem; /* 与芯片字体更协调 */
   line-height: 1;
   background: transparent;
   border: none;
   color: #6c757d; /* 与全局 text-secondary 接近 */
   padding: 0;
+  margin-left: 2px; /* 与文字间距更自然 */
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.current-tag-chip:hover .chip-close {
-  opacity: 1;
+  opacity: 1; /* 常驻显示 */
+  transition: color 0.2s ease;
 }
 
 .chip-close:hover {
