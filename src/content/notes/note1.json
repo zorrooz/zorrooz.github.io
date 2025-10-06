@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "title": "这是第一篇笔记",
+    "date": "",
+    "author": "",
+    "tags": [],
+    "category": [],
+    "draft": false,
+    "slug": "note1-md"
+  },
+  "contentHtml": "<h1>这是第一篇笔记</h1>\n<p>笔记内容。</p>\n"
+}

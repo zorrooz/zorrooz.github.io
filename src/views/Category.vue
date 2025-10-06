@@ -213,6 +213,6 @@ export default {
 }
 
 .card { border-radius: 0.75rem; }
-.card-body { padding: 1.125rem !important; }
+.card-body { padding: 1.5rem !important; }
 
 </style>

@@ -1,21 +1,22 @@
 <template>
   <div class="container">
+
     <div class="row py-4 px-0">
       <!-- 左侧：根目录（2列） -->
-      <div class="col-12 col-lg-2 order-2 order-lg-1 px-2" ref="leftSidebarContainer">
+      <div class="col-12 col-lg-2 order-2 order-lg-1" ref="leftSidebarContainer">
         <div class="sticky-sidebar" ref="leftSidebarContent">
-          <button class="btn btn-sm btn-outline-secondary d-lg-none mb-2 w-100" @click="showLeft = !showLeft">
-            <i class="bi bi-list"></i> {{ showLeft ? '隐藏目录' : '显示目录' }}
-          </button>
-          <div v-show="showLeft || isDesktop" class="navigation-container">
+
+          <div v-if="isDesktop" class="navigation-container">
             <NavigationTree />
           </div>
         </div>
       </div>
 
       <!-- 中间：正文（8列） -->
-      <div class="col-12 col-lg-8 order-1 order-lg-2 px-0 bg-white rounded-3" ref="mainContent">
-        <div class="article-content">
+      <div class="col-12 col-lg-8 order-1 order-lg-2" ref="mainContent">
+        <div class="card shadow-sm border-0 bg-white rounded-3">
+          <div class="card-body p-4">
+            <div class="article-content">
           <div v-if="currentPost" class="article-meta pb-2 mb-0">
             <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
             <div class="text-secondary d-flex flex-wrap gap-3 align-items-center">
@@ -52,16 +53,16 @@
               <div class="nav-arrow">></div>
             </router-link>
           </nav>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- 右侧：本页目录（2列） -->
-      <div class="col-12 col-lg-2 order-3 px-2" ref="rightSidebarContainer">
+      <div class="col-12 col-lg-2 order-3" ref="rightSidebarContainer">
         <div class="sticky-sidebar" ref="rightSidebarContent">
-          <button class="btn btn-sm btn-outline-secondary d-lg-none mb-2 w-100" @click="showRight = !showRight">
-            <i class="bi bi-bookmark"></i> {{ showRight ? '隐藏本页目录' : '显示本页目录' }}
-          </button>
-          <div v-show="showRight || isDesktop" class="toc-container">
+
+          <div v-if="isDesktop" class="toc-container">
             <OnThisPage 
               ref="onThisPageRef"
               containerSelector=".markdown-body" 
@@ -71,12 +72,17 @@
         </div>
       </div>
     </div>
+    <!-- 移动端：TOC抽屉按钮和右侧抽屉（全局一致样式，从右侧弹出） -->
+    <TocDrawerButton v-if="rawMarkdown" />
+    <MobileTocDrawer v-if="rawMarkdown" />
   </div>
 </template>
 
 <script>
 import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
+import TocDrawerButton from '@/components/widgets/TocDrawerButton.vue'
+import MobileTocDrawer from '@/components/widgets/MobileTocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import notesData from '@/content/notes/notes.json'
 import projectsData from '@/content/projects/projects.json'
@@ -87,7 +93,7 @@ const keys = Object.keys(markdownModules);
 
 export default {
   name: 'ArticleView',
-  components: { RenderMarkdown, OnThisPage, NavigationTree },
+  components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawerButton, MobileTocDrawer },
   props: { path: { type: [String, Array], default: '' } },
   data() {
     return { rawMarkdown: '', showLeft: false, showRight: false, currentPath: '', allArticles: [], groupedArticles: {} }
@@ -135,6 +141,8 @@ export default {
         if (oldPath !== newPath) {
           this.$refs.onThisPageRef?.resetToc();
           this.loadArticleContent();
+          // 移动端：路由变更后自动关闭左侧抽屉
+          if (this.showMobileSidebar) this.closeMobileSidebar();
         }
       },
       immediate: false, deep: true
@@ -152,6 +160,35 @@ export default {
     toArticle(p) {
       return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } };
     },
+
+    // 移动端与桌面端不同处理：移动端打开统一抽屉，桌面端切换本页侧栏
+    onMobileOrDesktopToggle(side) {
+      if (!this.isDesktop) {
+        // 通知 Header 打开移动端抽屉（带灰色半透明遮罩）
+        window.dispatchEvent(new Event('open-mobile-sidebar'));
+        return;
+      }
+      if (side === 'left') this.showLeft = !this.showLeft;
+      if (side === 'right') this.showRight = !this.showRight;
+    },
+    iconFor(side) {
+      if (!this.isDesktop) {
+        // 移动端始终显示打开图标，抽屉内使用叉关闭
+        return side === 'left' ? 'bi bi-list' : 'bi bi-bookmark';
+      }
+      return side === 'left'
+        ? (this.showLeft ? 'bi bi-x-lg' : 'bi bi-list')
+        : (this.showRight ? 'bi bi-x-lg' : 'bi bi-bookmark');
+    },
+    labelFor(side) {
+      if (!this.isDesktop) {
+        return side === 'left' ? '显示目录' : '显示本页目录';
+      }
+      return side === 'left'
+        ? (this.showLeft ? '隐藏目录' : '显示目录')
+        : (this.showRight ? '隐藏本页目录' : '显示本页目录');
+    },
+
     onResize() {
       this.showLeft = this.showRight = this.isDesktop;
       this.updateSidebarDimensions();
@@ -337,7 +374,7 @@ export default {
 }
 .navigation-container { margin-bottom: 0; }
 .toc-container { margin-top: 0; }
-.article-content { min-height: 400px; padding: 0.75rem 1rem; }
+.article-content { min-height: 400px; padding: 0; }
 .article-meta { padding-bottom: 0.75rem !important; }
 
 .article-title { font-size: 2.1rem; font-weight: 700; }
@@ -465,6 +502,30 @@ export default {
   }
   .navigation-container { margin-bottom: 1rem; }
   .toc-container { margin-top: 1rem; }
-  .article-content { padding: 0 0.5rem; }
+  .article-content { padding: 1rem; }
 }
+
+
+/* 移动端侧栏按钮：与 Header 扁平风格一致 */
+.sidebar-toggle {
+  background: transparent !important;
+  border: none !important;
+  color: var(--bs-body-color);
+  transition: color 0.15s ease-in-out, transform 0.1s ease-in-out;
+}
+.sidebar-toggle:hover,
+.sidebar-toggle:focus {
+  background-color: transparent !important;
+  color: var(--bs-primary);
+}
+.sidebar-toggle i {
+  font-size: 1.05rem;
+  vertical-align: middle;
+}
+
+/* 保持与 Header 一致的交互反馈 */
+.sidebar-toggle:active {
+  transform: scale(0.98);
+}
+
 </style>

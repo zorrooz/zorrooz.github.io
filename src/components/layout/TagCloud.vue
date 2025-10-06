@@ -1,7 +1,7 @@
 <!-- TagCloud.vue -->
 <template>
   <div class="card shadow-sm border-0 bg-white mb-3">
-    <div class="card-header bg-white border-0 pt-3 px-4 pb-2">
+    <div class="card-header bg-white border-0 px-4 py-3">
       <h6 class="text-secondary m-0">标签</h6>
     </div>
     <div class="card-body p-4">

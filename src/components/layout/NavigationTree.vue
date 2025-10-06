@@ -185,6 +185,7 @@ export default {
   color: var(--bs-gray-600);      /* 更浅灰色 */
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
+  padding-left: 0.75rem;
 
 }
 
@@ -195,9 +196,11 @@ export default {
 /* 二级分类：黑色正常体，并与一级对齐 */
 .directory-node { padding: 0.25rem 0; }
 .directory-name.level-2 {
+  display: block;
   font-weight: 700;               /* 加粗 */
   color: var(--bs-body-color);    /* 黑色（正文颜色） */
   margin-left: 0;                 /* 与一级对齐 */
+  padding-left: 0.75rem;
 }
 
 /* 三级文章：有缩进，黑色或灰色；当前文章蓝色粗体 */
@@ -207,7 +210,7 @@ export default {
 .article-item { margin-bottom: 0.3rem; }
 .article-link {
   display: block;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 0.75rem;
   text-decoration: none;
   color: var(--bs-gray-700);      /* 默认灰/黑 */
   border-radius: 0.25rem;

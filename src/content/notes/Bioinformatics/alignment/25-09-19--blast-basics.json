@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "BLAST 序列比对基础",
+    "date": "2025-09-19",
+    "author": "zorrooz",
+    "tags": [
+      "BLAST",
+      "序列比对",
+      "数据库搜索",
+      "同源性",
+      "生物信息学"
+    ],
+    "category": [
+      "Bioinformatics",
+      "alignment"
+    ],
+    "draft": false,
+    "slug": "25-09-19-blast-basics-md"
+  },
+  "contentHtml": "<h1>BLAST 序列比对基础</h1>\n<h2>BLAST 类型</h2>\n<ul>\n<li><strong>blastn</strong>: 核酸序列比对核酸数据库</li>\n<li><strong>blastp</strong>: 蛋白序列比对蛋白数据库  </li>\n<li><strong>blastx</strong>: 核酸序列翻译后比对蛋白数据库</li>\n<li><strong>tblastn</strong>: 蛋白序列比对翻译的核酸数据库</li>\n</ul>\n<h2>基本命令</h2>\n<pre><code class=\"language-bash\"># 本地BLAST搜索\nblastp -query protein.fa -db nr -out results.txt\n</code></pre>\n"
+}

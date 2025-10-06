@@ -21,16 +21,29 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('floating-buttons-base-top', this.syncBaseTop)
     this.handleScroll()
     this.buttonTop = window.innerHeight - 100
+    // 初始同步：派发当前作为“下方按钮”的基准位置
+    window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: this.buttonTop } }))
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('floating-buttons-base-top', this.syncBaseTop)
   },
   methods: {
+    // 接收“下方按钮”的基准位置（BackToTop 自己就是下方按钮），直接对齐
+    syncBaseTop(e) {
+      const base = e?.detail?.baseTop
+      if (typeof base === 'number') this.buttonTop = base
+    },
     handleScroll() {
       if (!this.isDragging) {
         this.showBackToTop = window.scrollY > 180
+        // 当置顶按钮可见时，持续派发基准位置，保证两按钮间距始终一致
+        if (this.showBackToTop) {
+          window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: this.buttonTop } }))
+        }
       }
     },
     backToTop() {
@@ -56,13 +69,18 @@ export default {
       let newTop = this.initialTop + diffY
 
       const buttonHeight = 40
-      const minTop = 20
+      const GAP = 48
+      // 下方按钮需要预留 GAP 的上方空间，避免与 TOC 重合
+      const minTop = 20 + GAP
       const maxTop = window.innerHeight - buttonHeight - 20
 
       newTop = Math.max(minTop, newTop)
       newTop = Math.min(maxTop, newTop)
 
       this.buttonTop = newTop
+
+      // BackToTop 为下方按钮：派发自身作为基准位置
+      window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: newTop } }))
 
       e.preventDefault()
     },
@@ -83,7 +101,7 @@ export default {
   right: 30px;
   width: 40px;
   height: 40px;
-  background-color: var(--bs-card-bg);
+  background-color: #fff; /* 纯白 */
   color: var(--bs-body-color);
   border: 1px solid var(--bs-border-color);
   border-radius: 8px;
@@ -101,7 +119,7 @@ export default {
 }
 
 .back-to-top:hover {
-  background-color: var(--bs-secondary-bg);
+  background-color: #fff; /* hover 仍保持纯白 */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 

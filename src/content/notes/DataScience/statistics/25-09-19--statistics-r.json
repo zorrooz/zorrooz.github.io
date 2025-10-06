@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "R语言统计分析基础",
+    "date": "2025-09-19",
+    "author": "zorrooz",
+    "tags": [
+      "R语言",
+      "统计分析",
+      "假设检验",
+      "回归分析",
+      "数据科学"
+    ],
+    "category": [
+      "DataScience",
+      "statistics"
+    ],
+    "draft": false,
+    "slug": "25-09-19-statistics-r-md"
+  },
+  "contentHtml": "<h1>R语言统计分析基础</h1>\n<h2>描述性统计</h2>\n<pre><code class=\"language-r\"># 基本统计量\nsummary(data)\n\n# 相关性分析\ncor(data$var1, data$var2)\n\n# t检验\nt.test(group1, group2)\n</code></pre>\n<h2>假设检验</h2>\n<ul>\n<li>正态性检验：<code>shapiro.test()</code></li>\n<li>方差齐性检验：<code>bartlett.test()</code></li>\n<li>卡方检验：<code>chisq.test()</code></li>\n</ul>\n"
+}

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "R语言数据处理示例",
+    "date": "2025-09-19",
+    "author": "zorrooz",
+    "tags": [
+      "R语言",
+      "数据处理",
+      "统计分析",
+      "数据可视化",
+      "生物信息学"
+    ],
+    "category": [
+      "Programming",
+      "r"
+    ],
+    "draft": false,
+    "slug": "25-09-19-r-demo-md"
+  },
+  "contentHtml": "<h1>R语言数据处理示例</h1>\n<h2>数据读取与基本操作</h2>\n<pre><code class=\"language-r\"># 读取 CSV 文件\ndata &lt;- read.csv(&quot;expression_data.csv&quot;)\n\n# 查看数据结构\nstr(data)\nhead(data)\n\n# 基本统计\nsummary(data)\n</code></pre>\n<h2>数据可视化</h2>\n<pre><code class=\"language-r\"># 安装并加载 ggplot2\ninstall.packages(&quot;ggplot2&quot;)\nlibrary(ggplot2)\n\n# 创建散点图\nggplot(data, aes(x = Condition, y = Expression)) +\n  geom_boxplot() +\n  theme_minimal() +\n  labs(title = &quot;基因表达水平比较&quot;)\n</code></pre>\n<h2>统计分析</h2>\n<pre><code class=\"language-r\"># t检验\nt_test_result &lt;- t.test(Expression ~ Condition, data = data)\nprint(t_test_result)\n</code></pre>\n"
+}

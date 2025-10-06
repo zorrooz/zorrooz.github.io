@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "title": "这是项目A",
+    "date": "",
+    "author": "",
+    "tags": [],
+    "category": [],
+    "draft": false,
+    "slug": "project-a-md"
+  },
+  "contentHtml": "<h1>这是项目A</h1>\n<p>项目A的描述。</p>\n"
+}

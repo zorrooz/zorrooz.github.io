@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "R语言 ggplot2 数据可视化",
+    "date": "2025-09-19",
+    "author": "zorrooz",
+    "tags": [
+      "R语言",
+      "ggplot2",
+      "数据可视化",
+      "统计图表",
+      "生物信息学"
+    ],
+    "category": [
+      "Programming",
+      "r"
+    ],
+    "draft": false,
+    "slug": "25-09-19-r-ggplot2-md"
+  },
+  "contentHtml": "<h1>R语言 ggplot2 数据可视化</h1>\n<h2>基本语法</h2>\n<pre><code class=\"language-r\">library(ggplot2)\n\n# 创建散点图\nggplot(data, aes(x = expression, y = condition)) +\n  geom_point() +\n  theme_minimal() +\n  labs(title = &quot;基因表达散点图&quot;)\n</code></pre>\n<h2>常用图表类型</h2>\n<ul>\n<li>箱线图：<code>geom_boxplot()</code></li>\n<li>柱状图：<code>geom_bar()</code></li>\n<li>线图：<code>geom_line()</code></li>\n</ul>\n"
+}

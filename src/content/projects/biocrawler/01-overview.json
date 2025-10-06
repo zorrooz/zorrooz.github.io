@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "title": "设计概览与架构",
+    "date": "2025-09-21T00:00:00.000Z",
+    "author": "",
+    "tags": [
+      "架构",
+      "设计",
+      "可扩展性"
+    ],
+    "category": [
+      "biocrawler"
+    ],
+    "draft": false,
+    "slug": "01-overview-md"
+  },
+  "contentHtml": "<h1>设计概览与架构</h1>\n<p>本文介绍 BioCrawler 的核心模块、依赖关系与可扩展点。</p>\n<h2>核心模块</h2>\n<ol>\n<li>Scheduler：任务调度与重试</li>\n<li>Fetcher：请求发送与代理池</li>\n<li>Parser：结构化解析</li>\n<li>Pipeline：数据清洗</li>\n<li>Exporter：数据落地</li>\n</ol>\n<h2>可扩展点</h2>\n<ul>\n<li>自定义解析器</li>\n<li>自定义清洗规则</li>\n<li>多种导出格式</li>\n</ul>\n"
+}

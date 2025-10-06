@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "title": "Markdown 语法示例",
+    "date": "",
+    "author": "",
+    "tags": [],
+    "category": [],
+    "draft": false,
+    "slug": "demo-md"
+  },
+  "contentHtml": "<h1>Markdown 语法示例</h1>\n<p>以下是对常见 Markdown 语法功能的演示。</p>\n<h2>1. 基础文本样式</h2>\n<h3>三级标题</h3>\n<h4>四级标题</h4>\n<h5>五级标题</h5>\n<h6>六级标题</h6>\n<p>普通段落文本示例。</p>\n<ol>\n<li>粗体文本<ul>\n<li><strong>星号形式</strong></li>\n<li><strong>下划线形式</strong></li>\n</ul>\n</li>\n<li>斜体文本<ul>\n<li><em>星号形式</em></li>\n<li><em>下划线形式</em></li>\n</ul>\n</li>\n</ol>\n<h2>2. 链接与图片</h2>\n<p>这是一个行内链接示例：<a href=\"https://vuejs.org\">Vue 官网</a></p>\n<p>以下是嵌入图片的示例：<br><img src=\"https://vuejs.org/images/logo.png\" alt=\"Vue Logo\"></p>\n<h2>3. 块引用</h2>\n<blockquote>\n<p>这是一个块引用。<br>块引用常用于强调某些内容或展示他人的陈述。</p>\n</blockquote>\n<h2>4. 表格与行内代码</h2>\n<table>\n<thead>\n<tr>\n<th>样式类型</th>\n<th>示例</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>行内代码</td>\n<td><code>console.log(&quot;Hello World&quot;)</code></td>\n</tr>\n<tr>\n<td>行内数学公式</td>\n<td>$f&#39;(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$</td>\n</tr>\n</tbody></table>\n<h2>5. 代码块</h2>\n<p>缩进式代码块：</p>\n<pre><code>console.log(&quot;Hello_World&quot;);\n</code></pre>\n<p>围栏式代码块：</p>\n<pre><code class=\"language-html\">&lt;style&gt;\n.markdown-body img {\n  max-width: 100%;\n  height: auto;\n  display: block;\n  margin: 1em auto;\n}\n&lt;/style&gt;\n</code></pre>\n<h2>6. 数学公式</h2>\n<p>块级数学公式示例：</p>\n<p>$$\n\\int_a^b f(x) , \\mathrm{d}x = F(b) - F(a)\n$$</p>\n<hr>\n<p>以上是常用的 Markdown 语法功能示例。</p>\n"
+}

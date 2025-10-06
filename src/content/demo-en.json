@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "title": "Markdown Syntax Examples",
+    "date": "",
+    "author": "",
+    "tags": [],
+    "category": [],
+    "draft": false,
+    "slug": "demo-en-md"
+  },
+  "contentHtml": "<h1>Markdown Syntax Examples</h1>\n<p>The following is a demonstration of common Markdown syntax features.</p>\n<h2>1. Basic Text Styles</h2>\n<h3>Level 3 Heading</h3>\n<h4>Level 4 Heading</h4>\n<h5>Level 5 Heading</h5>\n<h6>Level 6 Heading</h6>\n<p>Example of regular paragraph text.</p>\n<ol>\n<li>Bold Text<ul>\n<li><strong>Asterisk form</strong></li>\n<li><strong>Underscore form</strong></li>\n</ul>\n</li>\n<li>Italic Text<ul>\n<li><em>Asterisk form</em></li>\n<li><em>Underscore form</em></li>\n</ul>\n</li>\n</ol>\n<h2>2. Links and Images</h2>\n<p>This is an inline link example: <a href=\"https://vuejs.org\">Vue Official Website</a></p>\n<p>Below is an example of embedding an image:<br><img src=\"https://vuejs.org/images/logo.png\" alt=\"Vue Logo\"></p>\n<h2>3. Blockquotes</h2>\n<blockquote>\n<p>This is a blockquote.<br>Blockquotes are often used to emphasize certain content or display someone else&#39;s statement.</p>\n</blockquote>\n<h2>4. Tables and Inline Code</h2>\n<table>\n<thead>\n<tr>\n<th>Style Type</th>\n<th>Example</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Inline Code</td>\n<td><code>console.log(&quot;Hello World&quot;)</code></td>\n</tr>\n<tr>\n<td>Inline Math Formula</td>\n<td>$f&#39;(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$</td>\n</tr>\n</tbody></table>\n<h2>5. Code Blocks</h2>\n<p>Indented code block:</p>\n<pre><code>console.log(&quot;Hello_World&quot;);\n</code></pre>\n<p>Fenced code block:</p>\n<pre><code class=\"language-html\">&lt;style&gt;\n.markdown-body img {\n  max-width: 100%;\n  height: auto;\n  display: block;\n  margin: 1em auto;  \n}\n&lt;/style&gt;\n</code></pre>\n<h2>6. Mathematical Formulas</h2>\n<p>Block-level mathematical formula example:</p>\n<p>$$\n\\int_a^b f(x) , \\mathrm{d}x = F(b) - F(a)\n$$</p>\n<hr>\n<p>The above are examples of commonly used Markdown syntax features.</p>\n"
+}

@@ -1,7 +1,7 @@
 <!-- Home.vue -->
 <template>
   <div class="container">
-    <div class="row pt-4 px-0">
+    <div class="row py-4 px-0">
       <!-- 中间主内容区域 -->
       <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body" ref="mainContent">
         <div class="row">
@@ -20,11 +20,15 @@
       </div>
 
       <!-- 左侧边栏 -->
-      <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2 px-2" ref="sidebarContainer">
-        <div class="sticky-sidebar" ref="sidebarContent">
-          <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-3">
-            <ProfileCard class="w-100" />
-            <TagCloud class="w-100" :tagData="tagList" />
+      <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2" ref="sidebarContainer">
+        <div class="row">
+          <div class="col">
+            <div class="sticky-sidebar" ref="sidebarContent">
+              <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-0">
+                <ProfileCard class="w-100" />
+                <TagCloud class="w-100" :tagData="tagList" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

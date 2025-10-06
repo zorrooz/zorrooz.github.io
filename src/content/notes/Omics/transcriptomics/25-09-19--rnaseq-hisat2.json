@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "RNA-Seq 分析：HISAT2 比对流程",
+    "date": "2025-09-19",
+    "author": "zorrooz",
+    "tags": [
+      "RNA-Seq",
+      "HISAT2",
+      "转录组",
+      "比对",
+      "生物信息学"
+    ],
+    "category": [
+      "Omics",
+      "transcriptomics"
+    ],
+    "draft": false,
+    "slug": "25-09-19-rnaseq-hisat2-md"
+  },
+  "contentHtml": "<h1>RNA-Seq 分析：HISAT2 比对流程</h1>\n<h2>HISAT2 特点</h2>\n<ul>\n<li>支持拼接感知的比对</li>\n<li>高效的索引结构</li>\n<li>适用于各种长度的RNA-Seq reads</li>\n</ul>\n<h2>基本命令</h2>\n<pre><code class=\"language-bash\"># 构建索引\nhisat2-build ref.fa ref_index\n\n# 比对RNA-Seq数据\nhisat2 -x ref_index -1 read1.fq -2 read2.fq -S output.sam\n</code></pre>\n"
+}

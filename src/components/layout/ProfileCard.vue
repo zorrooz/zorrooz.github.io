@@ -1,8 +1,8 @@
 <!-- ProfileCard.vue -->
 <template>
-  <div class="card shadow-sm border-0 bg-white">
+  <div class="card shadow-sm border-0 bg-white mb-3">
     <!-- 头像区域 -->
-    <div class="text-center mt-4">
+    <div class="text-center px-4 pt-4 pb-0">
       <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
         style="width: 80px; height: 80px;">
         <span class="text-muted">头像</span>

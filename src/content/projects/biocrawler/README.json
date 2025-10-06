@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "title": "BioCrawler 项目说明",
+    "date": "2025-09-20T00:00:00.000Z",
+    "author": "",
+    "tags": [
+      "生物信息学",
+      "爬虫",
+      "数据获取"
+    ],
+    "category": [
+      "biocrawler"
+    ],
+    "draft": false,
+    "slug": "readme-md"
+  },
+  "contentHtml": "<h1>BioCrawler 项目说明</h1>\n<p>BioCrawler 是一个用于生物数据网站的通用抓取与清洗工具，支持任务编排、断点续抓与结构化导出。</p>\n<h2>功能特点</h2>\n<ul>\n<li>灵活的任务编排与多站点适配</li>\n<li>丰富的抓取策略（分页、并发、重试、代理池）</li>\n<li>数据清洗与校验流水线</li>\n<li>结构化导出（CSV/JSON/SQLite）</li>\n</ul>\n<h2>快速开始</h2>\n<pre><code class=\"language-bash\"># 安装依赖与启动\npip install -r requirements.txt\npython -m biocrawler run --job ncbi-pubmed\n</code></pre>\n<h2>目录结构</h2>\n<ul>\n<li>jobs/ 任务配置</li>\n<li>spiders/ 站点适配</li>\n<li>pipelines/ 数据清洗</li>\n<li>exporters/ 导出器</li>\n</ul>\n"
+}
