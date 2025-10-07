@@ -21,15 +21,11 @@
       </div>
 
       <!-- 左侧边栏 -->
-      <div class="col-12 col-lg-3 order-2 order-lg-1 pb-2" ref="sidebarContainer">
-        <div class="row">
-          <div class="col">
-            <div class="sticky-sidebar" ref="sidebarContent">
-              <div class="d-flex flex-column align-items-center align-items-lg-end w-100 gap-0">
-                <ProfileCard class="w-100" />
-                <TagCloud class="w-100" :tagData="tagList" />
-              </div>
-            </div>
+      <div class="col-12 col-lg-3 order-2 order-lg-1" ref="sidebarContainer">
+        <div class="sticky-sidebar" ref="sidebarContent">
+          <div class="d-flex flex-column w-100 gap-4">
+            <ProfileCard class="w-100" />
+            <TagCloud class="w-100" :tagData="tagList" />
           </div>
         </div>
       </div>
@@ -93,19 +89,8 @@ export default {
         remainingPageHeight
       )
 
-      const containerTop = sidebarContainer.getBoundingClientRect().top + scrollTop
-      const maxStickyBottom = documentHeight - footerHeight - 20
-
       content.style.maxHeight = `${availableHeight}px`
       content.style.overflowY = content.scrollHeight > availableHeight ? 'auto' : 'visible'
-
-      const sidebar = content.parentElement
-      if (sidebar) {
-        const sidebarBottom = containerTop + availableHeight
-        sidebar.style.bottom = sidebarBottom > maxStickyBottom
-          ? `${sidebarBottom - maxStickyBottom}px`
-          : ''
-      }
     },
     clearTag() {
       const q = { ...this.$route.query }

@@ -186,6 +186,24 @@
           ]
         },
         {
+          "name": "python",
+          "type": "directory",
+          "files": [
+            {
+              "title": "python biopython",
+              "path": "notes/Programming/python/25-09-19--python-biopython.md"
+            },
+            {
+              "title": "python fastq",
+              "path": "notes/Programming/python/25-09-19--python-fastq.md"
+            },
+            {
+              "title": "python pandas",
+              "path": "notes/Programming/python/25-09-19--python-pandas.md"
+            }
+          ]
+        },
+        {
           "name": "r",
           "type": "directory",
           "files": [

@@ -6,7 +6,7 @@
 
         <!-- 页面标题 -->
         <div class="text-center mb-4">
-          <h1 class="article-title text-primary mb-3">{{ data.pageTitle }}</h1>
+          <h1 class="article-title text-primary mb-3">{{ pageTitle }}</h1>
         </div>
 
         <!-- 内容区块 -->
@@ -22,63 +22,15 @@
             </p>
           </section>
 
-          <!-- 教育经历 -->
-          <section>
+          <!-- 通用分组（统一 section 列表） -->
+          <section v-for="(entry, idx) in data.section" :key="idx">
             <h2 class="h4 fw-semibold text-dark pb-2 mb-3" style="border-bottom: 1px solid #dee2e6;">
-              教育经历
+              {{ entry.title }}
             </h2>
             <div class="ms-3">
-              <div v-for="(edu, idx) in data.education" :key="idx" class="mb-4">
-                <h3 class="h5 fw-semibold text-dark mb-1">{{ edu.degree }}</h3>
-                <p class="text-muted mb-1">
-                  <strong>{{ edu.institution }}</strong> · {{ edu.duration }}
-                </p>
-                <p class="text-muted mb-0">{{ edu.desc }}</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- 专业技能 -->
-          <section>
-            <h2 class="h4 fw-semibold text-dark pb-2 mb-3" style="border-bottom: 1px solid #dee2e6;">
-              专业技能
-            </h2>
-            <div class="ms-3">
-              <div v-for="(skill, idx) in data.skills" :key="idx" class="mb-4">
-                <h3 class="h5 fw-semibold text-dark mb-1">{{ skill.name }}</h3>
-                <p class="text-muted mb-1">{{ skill.level }}</p>
-                <p class="text-muted mb-0">{{ skill.tools }}</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- 项目经历 -->
-          <section>
-            <h2 class="h4 fw-semibold text-dark pb-2 mb-3" style="border-bottom: 1px solid #dee2e6;">
-              项目经历
-            </h2>
-            <div class="ms-3">
-              <div v-for="(project, idx) in data.projects" :key="idx" class="mb-4">
-                <h3 class="h5 fw-semibold text-dark mb-1">{{ project.title }}</h3>
-                <p class="text-muted mb-1">
-                  <strong>{{ project.role }}</strong> · {{ project.duration }}
-                </p>
-                <p class="text-muted mb-0" style="color: #6c757d;">{{ project.desc }}</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- 荣誉与奖项 -->
-          <section>
-            <h2 class="h4 fw-semibold text-dark pb-2 mb-3" style="border-bottom: 1px solid #dee2e6;">
-              荣誉与奖项
-            </h2>
-            <div class="ms-3">
-              <div v-for="(award, idx) in data.awards" :key="idx" class="mb-3">
-                <h3 class="h5 fw-semibold text-dark mb-0">{{ award.title }}</h3>
-                <p class="text-muted mb-0">
-                  {{ award.org }} · {{ award.year }}
-                </p>
+              <div v-for="(it, j) in entry.items" :key="j" class="mb-4">
+                <p class="text-muted fw-bold mb-1">{{ it.item }}</p>
+                <p v-if="it.desc" class="text-muted mb-0">{{ it.desc }}</p>
               </div>
             </div>
           </section>
@@ -109,7 +61,7 @@
         <div class="text-center mt-5 pt-4" style="border-top: 1px solid #dee2e6;">
           <p class="text-muted mb-0">
             <i class="fas fa-star me-1"></i>
-            {{ data.footerText }}
+            {{ footerText }}
           </p>
         </div>
 
@@ -125,7 +77,9 @@ export default {
   name: 'AboutView',
   data() {
     return {
-      data: aboutData
+      data: aboutData,
+      pageTitle: '关于我',
+      footerText: '感谢您的关注！'
     }
   }
 }
