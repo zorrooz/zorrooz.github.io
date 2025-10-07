@@ -1,6 +1,7 @@
 const n=`---
 title: "MaxQuant 蛋白质组学分析工作流"
 date: "2025-09-19"
+author: "zorrooz"
 tags: ["MaxQuant", "蛋白质组学", "质谱分析", "生物信息学", "定量分析"]
 draft: false
 description: "详细记录 MaxQuant 在蛋白质组学数据分析中的标准流程与参数设置"
