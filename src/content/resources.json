@@ -1,97 +1,97 @@
 [
-    {
-        "title": "编程基础",
-        "children": [
-            {
-                "title": "Python 编程",
-                "items": [
-                    {
-                        "name": "Python 官方文档",
-                        "url": "https://docs.python.org/zh-cn/3/",
-                        "desc": "权威的 Python 3 文档，包含教程、库参考和语言参考"
-                    },
-                    {
-                        "name": "Real Python",
-                        "url": "https://realpython.com/",
-                        "desc": "高质量的 Python 教程和实战项目，适合各个水平的学习者"
-                    }
-                ]
-            },
-            {
-                "title": "前端开发",
-                "items": [
-                    {
-                        "name": "MDN Web Docs",
-                        "url": "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript",
-                        "desc": "最权威的 Web 技术文档，涵盖 HTML、CSS、JavaScript 等"
-                    }
-                ]
-            }
+  {
+    "title": "编程基础",
+    "children": [
+      {
+        "title": "Python 编程",
+        "items": [
+          {
+            "name": "Python 官方文档",
+            "url": "https://docs.python.org/zh-cn/3/",
+            "desc": "权威的 Python 3 文档，包含教程、库参考和语言参考"
+          },
+          {
+            "name": "Real Python",
+            "url": "https://realpython.com/",
+            "desc": "高质量的 Python 教程和实战项目，适合各个水平的学习者"
+          }
         ]
-    },
-    {
-        "title": "组学",
-        "children": [
-            {
-                "title": "基因组学",
-                "items": [
-                    {
-                        "name": "NCBI",
-                        "url": "https://www.ncbi.nlm.nih.gov/",
-                        "desc": "美国国家生物技术信息中心，提供 GenBank 等重要数据库"
-                    },
-                    {
-                        "name": "Ensembl",
-                        "url": "https://www.ensembl.org/",
-                        "desc": "基因组浏览器和生物数据库，提供基因注释和变异分析工具"
-                    }
-                ]
-            },
-            {
-                "title": "转录组学",
-                "items": [
-                    {
-                        "name": "ENCODE 项目",
-                        "url": "https://www.encodeproject.org/",
-                        "desc": "DNA 元件百科全书，提供人类和小鼠基因组的功能注释数据"
-                    }
-                ]
-            }
+      },
+      {
+        "title": "前端开发",
+        "items": [
+          {
+            "name": "MDN Web Docs",
+            "url": "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript",
+            "desc": "最权威的 Web 技术文档，涵盖 HTML、CSS、JavaScript 等"
+          }
         ]
-    },
-    {
-        "title": "电镜结构解析",
-        "children": [
-            {
-                "title": "软件工具",
-                "items": [
-                    {
-                        "name": "RELION",
-                        "url": "https://www3.mrc-lmb.cam.ac.uk/groups/scheres/index.php",
-                        "desc": "基于贝叶斯方法的冷冻电镜三维重构软件，广泛应用于高分辨率结构解析"
-                    },
-                    {
-                        "name": "cryoSPARC",
-                        "url": "https://cryoem.slac.stanford.edu/",
-                        "desc": "高性能的冷冻电镜数据处理平台，提供直观的用户界面"
-                    }
-                ]
-            },
-            {
-                "title": "数据库资源",
-                "items": [
-                    {
-                        "name": "EMDB",
-                        "url": "https://www.ebi.ac.uk/emdb/",
-                        "desc": "电子显微镜数据银行，存储和分发冷冻电镜三维密度图"
-                    },
-                    {
-                        "name": "RCSB PDB",
-                        "url": "https://www.rcsb.org/",
-                        "desc": "蛋白质数据银行，包含通过X射线、NMR和冷冻电镜确定的生物大分子结构"
-                    }
-                ]
-            }
+      }
+    ]
+  },
+  {
+    "title": "组学",
+    "children": [
+      {
+        "title": "基因组学",
+        "items": [
+          {
+            "name": "NCBI",
+            "url": "https://www.ncbi.nlm.nih.gov/",
+            "desc": "美国国家生物技术信息中心，提供 GenBank 等重要数据库"
+          },
+          {
+            "name": "Ensembl",
+            "url": "https://www.ensembl.org/",
+            "desc": "基因组浏览器和生物数据库，提供基因注释和变异分析工具"
+          }
         ]
-    }
+      },
+      {
+        "title": "转录组学",
+        "items": [
+          {
+            "name": "ENCODE 项目",
+            "url": "https://www.encodeproject.org/",
+            "desc": "DNA 元件百科全书，提供人类和小鼠基因组的功能注释数据"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "电镜结构解析",
+    "children": [
+      {
+        "title": "软件工具",
+        "items": [
+          {
+            "name": "RELION",
+            "url": "https://www3.mrc-lmb.cam.ac.uk/groups/scheres/index.php",
+            "desc": "基于贝叶斯方法的冷冻电镜三维重构软件，广泛应用于高分辨率结构解析"
+          },
+          {
+            "name": "cryoSPARC",
+            "url": "https://cryoem.slac.stanford.edu/",
+            "desc": "高性能的冷冻电镜数据处理平台，提供直观的用户界面"
+          }
+        ]
+      },
+      {
+        "title": "数据库资源",
+        "items": [
+          {
+            "name": "EMDB",
+            "url": "https://www.ebi.ac.uk/emdb/",
+            "desc": "电子显微镜数据银行，存储和分发冷冻电镜三维密度图"
+          },
+          {
+            "name": "RCSB PDB",
+            "url": "https://www.rcsb.org/",
+            "desc": "蛋白质数据银行，包含通过X射线、NMR和冷冻电镜确定的生物大分子结构"
+          }
+        ]
+      }
+    ]
+  }
 ]
