@@ -73,16 +73,14 @@
       </div>
     </div>
     <!-- 移动端：TOC抽屉按钮和右侧抽屉（全局一致样式，从右侧弹出） -->
-    <TocDrawerButton v-if="rawMarkdown" />
-    <MobileTocDrawer v-if="rawMarkdown" />
+    <TocDrawer v-if="rawMarkdown" />
   </div>
 </template>
 
 <script>
 import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
-import TocDrawerButton from '@/components/widgets/TocDrawerButton.vue'
-import MobileTocDrawer from '@/components/widgets/MobileTocDrawer.vue'
+import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import categoryData from '@/content/categories.json'
 
@@ -92,7 +90,7 @@ const keys = Object.keys(markdownModules);
 
 export default {
   name: 'ArticleView',
-  components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawerButton, MobileTocDrawer },
+  components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawer },
   props: { path: { type: [String, Array], default: '' } },
   data() {
     return { rawMarkdown: '', currentPath: '', allArticles: [], groupedArticles: {}, viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024) }

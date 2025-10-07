@@ -1,6 +1,6 @@
 <template>
   <button v-show="showBackToTop" class="back-to-top" @click="handleClick" aria-label="回到顶部"
-    @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"
+    @touchstart.prevent.stop="handleTouchStart" @touchmove.prevent.stop="handleTouchMove" @touchend.prevent.stop="handleTouchEnd"
     :style="{ top: buttonTop + 'px' }">
     <i class="fas fa-arrow-up"></i>
   </button>
@@ -11,6 +11,11 @@ export default {
   name: 'BackToTop',
   data() {
     return {
+      // 事件源标识与 raf 派发节流
+      sourceId: 'btt',
+      rafPending: false,
+      rafLastBaseTop: null,
+
       showBackToTop: false,
       isDragging: false,
       startY: 0,
@@ -25,24 +30,53 @@ export default {
     this.handleScroll()
     this.buttonTop = window.innerHeight - 100
     // 初始同步：派发当前作为“下方按钮”的基准位置
-    window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: this.buttonTop } }))
+    this.rafDispatchBaseTop(this.buttonTop)
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll)
     window.removeEventListener('floating-buttons-base-top', this.syncBaseTop)
   },
   methods: {
-    // 接收“下方按钮”的基准位置（BackToTop 自己就是下方按钮），直接对齐
+    // 工具：统一边界
+    getBounds() {
+      const BUTTON_HEIGHT = 40
+      const GAP = 48
+      const MARGIN = 20
+      return {
+        gap: GAP,
+        minTop: MARGIN + GAP, // 作为下方按钮，需要为上方按钮预留 GAP
+        maxTop: window.innerHeight - BUTTON_HEIGHT - MARGIN
+      }
+    },
+    clampTop(top) {
+      const { minTop, maxTop } = this.getBounds()
+      return Math.max(minTop, Math.min(maxTop, top))
+    },
+    // raf 节流派发，避免频繁互相抖动
+    rafDispatchBaseTop(baseTop) {
+      this.rafLastBaseTop = baseTop
+      if (this.rafPending) return
+      this.rafPending = true
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new CustomEvent('floating-buttons-base-top', {
+          detail: { baseTop: this.rafLastBaseTop, source: this.sourceId }
+        }))
+        this.rafPending = false
+      })
+    },
+    // 接收“下方按钮”的基准位置（BackToTop 自己就是下方按钮），对齐但不回收自身派发
     syncBaseTop(e) {
       const base = e?.detail?.baseTop
-      if (typeof base === 'number') this.buttonTop = base
+      const source = e?.detail?.source
+      if (source === this.sourceId) return
+      if (typeof base === 'number') this.buttonTop = this.clampTop(base)
     },
     handleScroll() {
       if (!this.isDragging) {
         this.showBackToTop = window.scrollY > 180
-        // 当置顶按钮可见时，持续派发基准位置，保证两按钮间距始终一致
+        // 当置顶按钮可见时，通过 raf 节流派发基准位置
         if (this.showBackToTop) {
-          window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: this.buttonTop } }))
+          this.rafDispatchBaseTop(this.buttonTop)
         }
       }
     },
@@ -55,6 +89,7 @@ export default {
       }
     },
     handleTouchStart(e) {
+      e.preventDefault()
       this.isDragging = true
       this.touchMoved = false
       this.startY = e.touches[0].clientY
@@ -66,25 +101,17 @@ export default {
       const currentY = e.touches[0].clientY
       const diffY = currentY - this.startY
 
-      let newTop = this.initialTop + diffY
-
-      const buttonHeight = 40
-      const GAP = 48
-      // 下方按钮需要预留 GAP 的上方空间，避免与 TOC 重合
-      const minTop = 20 + GAP
-      const maxTop = window.innerHeight - buttonHeight - 20
-
-      newTop = Math.max(minTop, newTop)
-      newTop = Math.min(maxTop, newTop)
+      let newTop = this.clampTop(this.initialTop + diffY)
 
       this.buttonTop = newTop
 
       // BackToTop 为下方按钮：派发自身作为基准位置
-      window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: newTop } }))
+      this.rafDispatchBaseTop(newTop)
 
       e.preventDefault()
     },
-    handleTouchEnd() {
+    handleTouchEnd(e) {
+      e.preventDefault()
       this.isDragging = false
 
       if (!this.touchMoved) {
