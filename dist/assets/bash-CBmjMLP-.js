@@ -1,6 +1,7 @@
 const n=`---
 title: "Bash Shell 脚本编程"
 date: "2025-09-19"
+author: "zorrooz"
 tags: ["Shell", "Bash", "命令行", "脚本编程", "自动化"]
 draft: false
 description: "Bash Shell 脚本在生物信息学数据处理中的自动化应用"

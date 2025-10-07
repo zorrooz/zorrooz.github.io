@@ -1,6 +1,7 @@
 const n=`---
 title: "RNA-Seq 分析：HISAT2 比对流程"
 date: "2025-09-19"
+author: "zorrooz"
 tags: ["RNA-Seq", "HISAT2", "转录组", "比对", "生物信息学"]
 draft: false
 description: "使用 HISAT2 进行 RNA-Seq 数据比对的标准工作流程"

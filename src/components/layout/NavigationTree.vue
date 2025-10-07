@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import notesFlat from '@/content/notes.json';
+import categoryData from '@/content/categories.json';
 
 export default {
   name: 'NavigationTree',
@@ -75,138 +75,91 @@ export default {
       return this.currentPath === path.replace(/\.md$/, '');
     },
     buildTree() {
-      // 从扁平 notes.json 动态构建 notesTree
-      const buildTreeFromFlat = (items) => {
-        const rootChildren = new Map(); // categoryName -> node
-        const nameMap = {
-          'Programming': '编程语言',
-          'Bioinformatics': '生物信息学',
-          'Omics': '组学技术',
-          'DataScience': '数据科学',
-          'python': 'Python',
-          'r': 'R语言',
-          'shell': 'Shell',
-          'javascript': 'JavaScript',
-          'alignment': '序列比对',
-          'structure': '结构分析',
-          'genomics': '基因组学',
-          'proteomics': '蛋白质组学',
-          'transcriptomics': '转录组学',
-          'statistics': '统计分析',
-          'machinelearning': '机器学习',
-          'visualization': '数据可视化'
-        };
-        const formatName = (n) => nameMap[n] || n;
+      // 根据当前路由，按 categories.json 原顺序构建导航树
+      // currentPath 形如 notes/Programming/python/biopython/biopython
+      const path = this.currentPath;
+      if (!path) { this.navigationTree = []; return; }
 
-        const ensureNode = (parent, name) => {
-          if (!parent.children) parent.children = [];
-          let node = parent.children.find(n => n._rawName === name || n.name === formatName(name));
-          if (!node) {
-            node = { name: formatName(name), _rawName: name, type: 'directory', children: [], files: [] };
-            parent.children.push(node);
-          }
-          return node;
-        };
+      const segs = path.split('/').filter(Boolean);
+      if (segs.length < 2) { this.navigationTree = []; return; }
 
-        const virtualRoot = { children: [] };
-        if (Array.isArray(items)) {
-          items.forEach(it => {
-            const rel = it.relativePath || '';
-            const segs = rel.split('/').filter(Boolean);
-            if (segs.length === 0) return;
+      const type = segs[0];  // notes | projects | topics
+      const group = segs[1]; // Omics | Programming | biocrawler | demo ...
 
-            // 如果末两段相同（如 bwa/bwa），跳过倒数第二层冗余目录
-            const end = (segs.length >= 2 && segs[segs.length - 1] === segs[segs.length - 2])
-              ? segs.length - 2
-              : segs.length - 1;
+      // 1) 在 categories.json 中定位到对应 item（保持 JSON 顺序）
+      let targetItem = null;
+      if (Array.isArray(categoryData)) {
+        outer:
+        for (const section of categoryData) {
+          if (!Array.isArray(section.items)) continue;
+          for (const item of section.items) {
+            if (item?.name !== group) continue;
 
-            let current = ensureNode(virtualRoot, segs[0]);
-            for (let i = 1; i <= end - 1; i++) {
-              current = ensureNode(current, segs[i]);
+            // 确认该 item 下存在属于当前 type 的文章（兼容老结构与新结构）
+            let hasTypeMatch = false;
+
+            if (Array.isArray(item.articles)) {
+              hasTypeMatch = item.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/`));
+            }
+            if (!hasTypeMatch && Array.isArray(item.categories)) {
+              hasTypeMatch = item.categories.some(cat =>
+                Array.isArray(cat.articles) &&
+                cat.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/${group}/`))
+              );
             }
 
-            // 文件节点
-            const fileTitle = it.title || segs[segs.length - 1];
-            const filePath = `notes/${rel}.md`;
-            if (!current.files) current.files = [];
-            current.files.push({ title: fileTitle, path: filePath });
-          });
-        }
-
-        // 清理辅助字段并返回
-        const clean = (node) => {
-          if (!node) return node;
-          const copy = { ...node };
-          delete copy._rawName;
-          if (copy.children && copy.children.length) {
-            copy.children = copy.children.map(clean);
-          } else {
-            delete copy.children;
+            if (hasTypeMatch) {
+              targetItem = item;
+              break outer;
+            }
           }
-          if (copy.files && copy.files.length === 0) delete copy.files;
-          return copy;
-        };
-        return (virtualRoot.children || []).map(clean);
+        }
+      }
+      if (!targetItem) { this.navigationTree = []; return; }
+
+      // 2) 生成根层文件（老结构）与子分类（新结构），严格按 JSON 顺序
+      const rootFiles = [];
+      const children = [];
+
+      const toFile = (title, articleUrl) => {
+        const parts = String(articleUrl).replace(/^\/+/, '').split('/');
+        const i0 = parts[0] === 'article' ? 1 : 0;
+        const t = parts[i0];
+        const g = parts[i0 + 1];
+        const rest = parts.slice(i0 + 2); // [subKey, ..., fileName]
+        const pathNoExt = `${t}/${g}/${rest.join('/')}`;
+        return { title, path: `${pathNoExt}.md` };
       };
 
-      const notesTree = buildTreeFromFlat(notesFlat);
-      const combinedTree = [...notesTree];
-
-      const processNode = (node) => {
-        // 排序目录下的子目录与文件
-        if (node.children) {
-          node.children.forEach(processNode);
-          node.children.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-        }
-        if (node.files) {
-          node.files.sort((a, b) => (a.title || a.path).localeCompare(b.title || b.path));
-        }
-        return node;
-      };
-      const fullTree = combinedTree.map(processNode);
-
-      // Filter the tree based on the current route
-      if (!this.currentPath) {
-        this.navigationTree = []; // Show nothing if not in a specific content path
-        return;
+      // 老结构：item.articles 直接挂根层
+      if (Array.isArray(targetItem.articles)) {
+        targetItem.articles.forEach(a => { if (a?.articleUrl) rootFiles.push(toFile(a.title, a.articleUrl)); });
       }
 
-      const pathSegments = this.currentPath.split('/');
-      const topLevel = pathSegments[0];
-
-      const findContainingRoot = (nodes, targetPath) => {
-        for (const node of nodes) {
-          const searchDescendants = (currentNode) => {
-            // 在 files 中查找
-            if (currentNode.files && currentNode.files.length) {
-              if (currentNode.files.some(f => f.path.replace(/\.md$/, '') === targetPath)) {
-                return true;
-              }
-            }
-            // 递归 children
-            if (currentNode.children && currentNode.children.length) {
-              return currentNode.children.some(child => searchDescendants(child));
-            }
-            return false;
-          };
-          if (searchDescendants(node)) {
-            return node;
+      // 新结构：item.categories[].articles -> children
+      if (Array.isArray(targetItem.categories)) {
+        targetItem.categories.forEach(cat => {
+          const files = [];
+          if (Array.isArray(cat.articles)) {
+            cat.articles.forEach(a => { if (a?.articleUrl) files.push(toFile(a.title, a.articleUrl)); });
           }
-        }
-        return null;
-      };
-
-      if (topLevel === 'notes') {
-        const notesRootNodes = fullTree; // 仅 notes
-        if (this.currentPath === 'notes') {
-          this.navigationTree = notesRootNodes;
-          return;
-        }
-        const activeRoot = findContainingRoot(notesRootNodes, this.currentPath);
-        this.navigationTree = activeRoot ? [activeRoot] : [];
-      } else {
-        this.navigationTree = []; // 仅支持 notes
+          // 只在该子分类下有文件时渲染
+          if (files.length) {
+            children.push({
+              name: cat.title || cat.key,
+              type: 'directory',
+              files
+            });
+          }
+        });
       }
+
+      // 3) 设定导航树根节点。根名使用 item.title（如“组学”、“编程”等）
+      this.navigationTree = [{
+        name: targetItem.title || targetItem.name || group,
+        files: rootFiles,
+        children
+      }];
     }
   }
 };

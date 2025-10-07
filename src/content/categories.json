@@ -6,7 +6,6 @@
         "name": "Omics",
         "title": "组学",
         "desc": "组学相关的学习记录与资料汇总",
-        "date": "2025-09-19",
         "tags": [
           "BWA",
           "基因组比对",
@@ -24,34 +23,86 @@
           "转录组",
           "比对"
         ],
-        "postsCount": 3,
-        "words": 233,
-        "articles": [
+        "stats": {
+          "postsCount": 3,
+          "totalWords": 233,
+          "latestDate": "2025-09-19"
+        },
+        "categories": [
           {
-            "title": "BWA MEM 比对人类基因组实战",
-            "articleUrl": "/article/notes/Omics/genomics/bwa/bwa"
+            "key": "genomics",
+            "title": "基因组学",
+            "articles": [
+              {
+                "title": "BWA MEM 比对人类基因组实战",
+                "articleUrl": "/article/notes/Omics/genomics/bwa/bwa",
+                "tags": [
+                  "BWA",
+                  "基因组比对",
+                  "NGS",
+                  "命令行",
+                  "人类基因组",
+                  "SAM/BAM"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 46,
+              "latestDate": "2025-09-19"
+            }
           },
           {
-            "title": "MaxQuant 蛋白质组学分析工作流",
-            "articleUrl": "/article/notes/Omics/proteomics/maxquant/maxquant"
+            "key": "proteomics",
+            "title": "蛋白质组学",
+            "articles": [
+              {
+                "title": "MaxQuant 蛋白质组学分析工作流",
+                "articleUrl": "/article/notes/Omics/proteomics/maxquant/maxquant",
+                "tags": [
+                  "MaxQuant",
+                  "蛋白质组学",
+                  "质谱分析",
+                  "生物信息学",
+                  "定量分析"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 114,
+              "latestDate": "2025-09-19"
+            }
           },
           {
-            "title": "RNA-Seq 分析：HISAT2 比对流程",
-            "articleUrl": "/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2"
+            "key": "transcriptomics",
+            "title": "转录组学",
+            "articles": [
+              {
+                "title": "RNA-Seq 分析：HISAT2 比对流程",
+                "articleUrl": "/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2",
+                "tags": [
+                  "RNA-Seq",
+                  "HISAT2",
+                  "转录组",
+                  "比对",
+                  "生物信息学"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 73,
+              "latestDate": "2025-09-19"
+            }
           }
         ],
-        "root": "/article/notes/Omics/genomics/bwa/bwa",
-        "categories": {
-          "genomics": "基因组学",
-          "proteomics": "蛋白质组学",
-          "transcriptomics": "转录组学"
-        }
+        "root": "/article/notes/Omics/genomics/bwa/bwa"
       },
       {
         "name": "Programming",
         "title": "编程",
         "desc": "编程相关的学习记录与资料汇总",
-        "date": "2025-09-19",
         "tags": [
           "JavaScript",
           "Vue.js",
@@ -81,45 +132,136 @@
           "脚本编程",
           "自动化"
         ],
-        "postsCount": 7,
-        "words": 671,
-        "articles": [
+        "stats": {
+          "postsCount": 7,
+          "totalWords": 671,
+          "latestDate": "2025-09-19"
+        },
+        "categories": [
           {
-            "title": "Vue.js 前端开发入门",
-            "articleUrl": "/article/notes/Programming/javascript/vue/vue"
+            "key": "python",
+            "title": "Python",
+            "articles": [
+              {
+                "title": "Biopython 生物信息学应用",
+                "articleUrl": "/article/notes/Programming/python/biopython/biopython",
+                "tags": [
+                  "Python",
+                  "Biopython",
+                  "生物信息学",
+                  "序列分析",
+                  "基因组学"
+                ]
+              },
+              {
+                "title": "用 Pandas 处理 FASTQ 质量统计",
+                "articleUrl": "/article/notes/Programming/python/fastq/fastq",
+                "tags": [
+                  "Python",
+                  "Pandas",
+                  "FASTQ",
+                  "数据清洗",
+                  "生物信息",
+                  "入门"
+                ]
+              },
+              {
+                "title": "Python Pandas 数据处理实战",
+                "articleUrl": "/article/notes/Programming/python/pandas/pandas",
+                "tags": [
+                  "Python",
+                  "Pandas",
+                  "数据处理",
+                  "数据分析",
+                  "数据清洗"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 3,
+              "totalWords": 113,
+              "latestDate": "2025-09-19"
+            }
           },
           {
-            "title": "Biopython 生物信息学应用",
-            "articleUrl": "/article/notes/Programming/python/biopython/biopython"
+            "key": "javascript",
+            "title": "JavaScript",
+            "articles": [
+              {
+                "title": "Vue.js 前端开发入门",
+                "articleUrl": "/article/notes/Programming/javascript/vue/vue",
+                "tags": [
+                  "JavaScript",
+                  "Vue.js",
+                  "前端开发",
+                  "组件化",
+                  "响应式"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 456,
+              "latestDate": "2025-09-19"
+            }
           },
           {
-            "title": "用 Pandas 处理 FASTQ 质量统计",
-            "articleUrl": "/article/notes/Programming/python/fastq/fastq"
+            "key": "r",
+            "title": "R语言",
+            "articles": [
+              {
+                "title": "R语言数据处理示例",
+                "articleUrl": "/article/notes/Programming/r/demo/demo",
+                "tags": [
+                  "R语言",
+                  "数据处理",
+                  "统计分析",
+                  "数据可视化",
+                  "生物信息学"
+                ]
+              },
+              {
+                "title": "R语言 ggplot2 数据可视化",
+                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2",
+                "tags": [
+                  "R语言",
+                  "ggplot2",
+                  "数据可视化",
+                  "统计图表",
+                  "生物信息学"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 71,
+              "latestDate": "2025-09-19"
+            }
           },
           {
-            "title": "Python Pandas 数据处理实战",
-            "articleUrl": "/article/notes/Programming/python/pandas/pandas"
-          },
-          {
-            "title": "R语言数据处理示例",
-            "articleUrl": "/article/notes/Programming/r/demo/demo"
-          },
-          {
-            "title": "R语言 ggplot2 数据可视化",
-            "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2"
-          },
-          {
-            "title": "Bash Shell 脚本编程",
-            "articleUrl": "/article/notes/Programming/shell/bash/bash"
+            "key": "shell",
+            "title": "Shell",
+            "articles": [
+              {
+                "title": "Bash Shell 脚本编程",
+                "articleUrl": "/article/notes/Programming/shell/bash/bash",
+                "tags": [
+                  "Shell",
+                  "Bash",
+                  "命令行",
+                  "脚本编程",
+                  "自动化"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 31,
+              "latestDate": "2025-09-19"
+            }
           }
         ],
-        "root": "/article/notes/Programming/javascript/vue/vue",
-        "categories": {
-          "python": "Python",
-          "javascript": "JavaScript",
-          "r": "R语言",
-          "shell": "Shell"
-        }
+        "root": "/article/notes/Programming/python/biopython/biopython"
       }
     ]
   },
@@ -130,42 +272,77 @@
         "name": "biocrawler",
         "title": "BioCrawler",
         "desc": "面向生物数据抓取与处理的工具集",
-        "date": "2025-08-01",
         "tags": [
           "Crawler",
           "API",
           "Bioinformatics"
         ],
-        "postsCount": 5,
-        "words": 20,
-        "articles": [
+        "stats": {
+          "postsCount": 5,
+          "totalWords": 30,
+          "latestDate": "2025-08-01"
+        },
+        "categories": [
           {
-            "title": "API",
-            "articleUrl": "/article/projects/biocrawler/API/API1/API1"
+            "key": "API",
+            "title": "接口",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/API/API1/API1",
+                "tags": []
+              },
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/API/API2/API2",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 19,
+              "latestDate": ""
+            }
           },
           {
-            "title": "API",
-            "articleUrl": "/article/projects/biocrawler/API/API2/API2"
+            "key": "get_start",
+            "title": "入门",
+            "articles": [
+              {
+                "title": "get start",
+                "articleUrl": "/article/projects/biocrawler/get_start/get_start",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 2,
+              "latestDate": ""
+            }
           },
           {
-            "title": "get start",
-            "articleUrl": "/article/projects/biocrawler/get_start/get_start"
-          },
-          {
-            "title": "API",
-            "articleUrl": "/article/projects/biocrawler/test/test1/test1"
-          },
-          {
-            "title": "API",
-            "articleUrl": "/article/projects/biocrawler/test/test2/test2"
+            "key": "test",
+            "title": "测试",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/test/test1/test1",
+                "tags": []
+              },
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/test/test2/test2",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 9,
+              "latestDate": ""
+            }
           }
         ],
         "root": "/article/projects/biocrawler/API/API1/API1",
-        "categories": {
-          "API": "接口",
-          "get_start": "入门",
-          "test": "测试"
-        },
         "github": "https://github.com/example/biocrawler"
       }
     ]
@@ -177,32 +354,55 @@
         "name": "demo",
         "title": "Demo课题",
         "desc": "课题结构与流程示例集合",
-        "date": "2025-07-01",
         "tags": [
           "Demo",
           "Workflow"
         ],
-        "postsCount": 3,
-        "words": 17,
-        "articles": [
+        "stats": {
+          "postsCount": 3,
+          "totalWords": 17,
+          "latestDate": "2025-07-01"
+        },
+        "categories": [
           {
-            "title": "API",
-            "articleUrl": "/article/topics/demo/test/test1/test1"
+            "key": "test",
+            "title": "测试",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/topics/demo/test/test1/test1",
+                "tags": []
+              },
+              {
+                "title": "API",
+                "articleUrl": "/article/topics/demo/test/test2/test2",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 9,
+              "latestDate": ""
+            }
           },
           {
-            "title": "API",
-            "articleUrl": "/article/topics/demo/test/test2/test2"
-          },
-          {
-            "title": "API",
-            "articleUrl": "/article/topics/demo/tt/tt"
+            "key": "tt",
+            "title": "示例",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/topics/demo/tt/tt",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 8,
+              "latestDate": ""
+            }
           }
         ],
         "root": "/article/topics/demo/test/test1/test1",
-        "categories": {
-          "test": "测试",
-          "tt": "示例"
-        },
         "doi": "www.tt.org"
       }
     ]

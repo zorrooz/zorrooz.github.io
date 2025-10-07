@@ -26,13 +26,13 @@
                       {{ item.title || item.name }}
                     </h3>
                     <!-- 信息行：日期紧跟图标（项目/课题），笔记仅日期 -->
-                    <div v-if="item.date" class="d-inline-flex align-items-center gap-2 mb-2">
+                    <div v-if="getLatestDate(item)" class="d-inline-flex align-items-center gap-2 mb-2">
                       <i class="fas fa-calendar-alt meta-icon"></i>
-                      <small class="text-muted meta-text">{{ formatMonth(item.date) }}</small>
+                      <small class="text-muted meta-text">{{ formatMonth(getLatestDate(item)) }}</small>
                       <!-- 项目：GitHub 图标紧跟日期 -->
                       <a
                         v-if="category.title === '项目' && item.github"
-                        :href="item.github"
+                        :href="normalizeUrl(item.github)"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="icon-link"
@@ -44,7 +44,7 @@
                       <!-- 课题：链接图标紧跟日期 -->
                       <a
                         v-else-if="category.title === '课题' && item.doi"
-                        :href="item.doi"
+                        :href="normalizeUrl(item.doi)"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="icon-link"
@@ -75,12 +75,12 @@
                         <div class="fw-bold stat-num">{{ item.tags.length }}</div>
                         <div class="text-muted stat-label">标签</div>
                       </div>
-                      <div v-if="item.postsCount" class="col border-end">
-                        <div class="fw-bold stat-num">{{ item.postsCount }}</div>
+                      <div v-if="item.stats && item.stats.postsCount" class="col border-end">
+                        <div class="fw-bold stat-num">{{ item.stats.postsCount }}</div>
                         <div class="text-muted stat-label">文章</div>
                       </div>
-                      <div v-if="item.words" class="col">
-                        <div class="fw-bold stat-num">{{ formatWords(item.words) }}</div>
+                      <div v-if="item.stats && item.stats.totalWords" class="col">
+                        <div class="fw-bold stat-num">{{ formatWords(item.stats.totalWords) }}</div>
                         <div class="text-muted stat-label">字数</div>
                       </div>
                     </div>
@@ -137,6 +137,14 @@ export default {
     this.categoryList = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || []);
   },
   methods: {
+    getLatestDate(item) {
+      return (item && item.stats && item.stats.latestDate) || '';
+    },
+    normalizeUrl(u) {
+      if (typeof u !== 'string' || !u.trim()) return '';
+      if (/^https?:\/\//i.test(u)) return u;
+      return 'https://' + u.replace(/^\/+/, '');
+    },
     formatMonth(dateStr) {
       // 仅显示到月份：YYYY-MM
       const d = new Date(dateStr);
@@ -163,9 +171,9 @@ export default {
         return;
       }
 
-      // 无 root 时，若有 doi 外链则打开
-      const doi = item?.doi;
-      if (typeof doi === 'string' && /^https?:\/\//i.test(doi)) {
+      // 无 root 时，若有 doi 外链则打开（自动补协议）
+      const doi = this.normalizeUrl(item?.doi);
+      if (doi) {
         window.open(doi, '_blank', 'noopener,noreferrer');
       }
     }

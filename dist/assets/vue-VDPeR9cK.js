@@ -1,6 +1,7 @@
 const n=`---
 title: "Vue.js 前端开发入门"
 date: "2025-09-19"
+author: "zorrooz"
 tags: ["JavaScript", "Vue.js", "前端开发", "组件化", "响应式"]
 draft: false
 description: "Vue.js 框架在科学数据可视化前端开发中的应用"
@@ -89,7 +90,9 @@ export default {
 
 这是一个行内链接示例：[Vue 官网](https://vuejs.org)
 
-以下是嵌入图片的示例：  
+以下是嵌入图片的示例：
+
+ ![city](./city.png)
 ![Vue Logo](https://vuejs.org/images/logo.png)
 
 ## 3. 块引用
@@ -132,4 +135,5 @@ $$
 $$
 
 ---
-以上是常用的 Markdown 语法功能示例。`;export{n as default};
+以上是常用的 Markdown 语法功能示例。
+`;export{n as default};

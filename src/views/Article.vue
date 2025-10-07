@@ -84,9 +84,7 @@ import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawerButton from '@/components/widgets/TocDrawerButton.vue'
 import MobileTocDrawer from '@/components/widgets/MobileTocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
-import notesFlat from '@/content/notes.json'
-import projectsFlat from '@/content/projects.json'
-import topicsFlat from '@/content/topics.json'
+import categoryData from '@/content/categories.json'
 
 const markdownModules = import.meta.glob('../content-src/**/*.md', { query: '?raw', import: 'default', eager: false });
 const assetModules = import.meta.glob('../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true });
@@ -97,13 +95,11 @@ export default {
   components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawerButton, MobileTocDrawer },
   props: { path: { type: [String, Array], default: '' } },
   data() {
-    return { rawMarkdown: '', showLeft: false, showRight: false, currentPath: '', allArticles: [], groupedArticles: {} }
+    return { rawMarkdown: '', currentPath: '', allArticles: [], groupedArticles: {}, viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024) }
   },
   computed: {
-    isDesktop() { return window.innerWidth >= 992 },
-    isProject() {
-      return !!(this.currentPost?.path && this.currentPost.path.startsWith('projects/'));
-    },
+    isDesktop() { return this.viewportWidth >= 992 },
+
     isNote() {
       return !!(this.currentPost?.path && this.currentPost.path.startsWith('notes/'));
     },
@@ -111,18 +107,63 @@ export default {
       if (!this.currentPath) return null;
       return this.allArticles.find(article => article.path.replace(/\.md$/, '') === this.currentPath.replace(/\.md$/, ''));
     },
-    currentCategoryArticles() {
-      return this.currentPost ? this.groupedArticles[this.currentPost.category] || [] : [];
+    // 基于 categories.json 的“当前组线性文章列表”，顺序与左侧导航树一致（跨子分类连续）
+    groupLinearArticles() {
+      if (!this.currentPost) return [];
+      // 当前文章的类型与组，如 notes / Omics
+      const [type, group] = this.currentPost.path.replace(/\.md$/, '').split('/');
+
+      const linear = [];
+      const pushFromUrl = (title, articleUrl) => {
+        if (!articleUrl) return;
+        const parts = String(articleUrl).replace(/^\/+/, '').split('/');
+        const i0 = parts[0] === 'article' ? 1 : 0;
+        const t = parts[i0];
+        const g = parts[i0 + 1];
+        if (t !== type || g !== group) return; // 只收集同组
+        const rest = parts.slice(i0 + 2); // [subKey, ..., fileName]
+        const pathNoExt = `${t}/${g}/${rest.join('/')}`;
+        linear.push({ title, path: `${pathNoExt}.md` });
+      };
+
+      if (Array.isArray(categoryData)) {
+        for (const section of categoryData) {
+          if (!Array.isArray(section.items)) continue;
+          for (const item of section.items) {
+            if (item?.name !== group) continue;
+
+            // 老结构：根层文章
+            if (Array.isArray(item.articles)) {
+              item.articles.forEach(a => pushFromUrl(a.title, a.articleUrl));
+            }
+            // 新结构：子分类文章
+            if (Array.isArray(item.categories)) {
+              item.categories.forEach(cat => {
+                if (Array.isArray(cat.articles)) {
+                  cat.articles.forEach(a => pushFromUrl(a.title, a.articleUrl));
+                }
+              });
+            }
+          }
+        }
+      }
+
+      return linear;
     },
-    currentCategoryIndex() {
-      return this.currentPost ? this.currentCategoryArticles.findIndex(article => article.path === this.currentPost.path) : -1;
+    // 当前在线性序列中的索引
+    currentLinearIndex() {
+      if (!this.currentPost) return -1;
+      const idx = this.groupLinearArticles.findIndex(a => a.path.replace(/\.md$/, '') === this.currentPost.path.replace(/\.md$/, ''));
+      return idx;
     },
     prevPost() {
-      return this.currentCategoryIndex > 0 ? this.currentCategoryArticles[this.currentCategoryIndex - 1] : null;
+      const idx = this.currentLinearIndex;
+      return idx > 0 ? this.groupLinearArticles[idx - 1] : null;
     },
     nextPost() {
-      const lastIdx = this.currentCategoryArticles.length - 1;
-      return this.currentCategoryIndex >= 0 && this.currentCategoryIndex < lastIdx ? this.currentCategoryArticles[this.currentCategoryIndex + 1] : null;
+      const idx = this.currentLinearIndex;
+      const last = this.groupLinearArticles.length - 1;
+      return idx >= 0 && idx < last ? this.groupLinearArticles[idx + 1] : null;
     },
     readingMinutes() {
       if (!this.rawMarkdown) return 0;
@@ -131,11 +172,11 @@ export default {
     }
   },
   created() {
-    this.initAllArticles();
+    this.buildFromCategories();
     this.loadArticleContent();
   },
   mounted() {
-    this.showLeft = this.showRight = this.isDesktop;
+    this.viewportWidth = window.innerWidth;
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.updateSidebarDimensions);
     window.addEventListener('resize', this.updateSidebarDimensions);
@@ -148,8 +189,6 @@ export default {
         if (oldPath !== newPath) {
           this.$refs.onThisPageRef?.resetToc();
           this.loadArticleContent();
-          // 移动端：路由变更后自动关闭左侧抽屉
-          if (this.showMobileSidebar) this.closeMobileSidebar();
         }
       },
       immediate: false, deep: true
@@ -168,36 +207,70 @@ export default {
       return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } };
     },
 
-    // 移动端与桌面端不同处理：移动端打开统一抽屉，桌面端切换本页侧栏
-    onMobileOrDesktopToggle(side) {
-      if (!this.isDesktop) {
-        // 通知 Header 打开移动端抽屉（带灰色半透明遮罩）
-        window.dispatchEvent(new Event('open-mobile-sidebar'));
-        return;
+    // 基于 categories.json 统一构建文章列表与分组顺序（用于上下翻页）
+    buildFromCategories() {
+      const all = [];
+      const grouped = {};
+
+      const pushArticle = (artTitle, articleUrl, tags = [], dateStr = '') => {
+        // articleUrl 形如 /article/notes/Programming/python/biopython/biopython
+        if (typeof articleUrl !== 'string' || !articleUrl.trim()) return;
+        const parts = articleUrl.replace(/^\/+/, '').split('/');
+        const idxArticle = parts[0] === 'article' ? 1 : 0;
+        const t = parts[idxArticle];           // notes | projects | topics
+        const g = parts[idxArticle + 1];       // 例如 Omics / Programming / demo 等
+        const restParts = parts.slice(idxArticle + 2); // [subKey, ..., fileName]
+        const subKey = restParts[0] || '__root__';
+        const rest = restParts.join('/'); // 子路径（含子分类目录及文件名）
+        const pathNoExt = `${t}/${g}/${rest}`;
+
+        const art = {
+          title: artTitle,
+          path: `${pathNoExt}.md`,
+          date: dateStr || '',
+          tags: Array.isArray(tags) ? tags : [],
+          preview: '',
+          // 分组键：限制在同一子分类内翻页
+          category: `${t}/${g}/${subKey}`
+        };
+
+        if (!grouped[art.category]) grouped[art.category] = [];
+        grouped[art.category].push(art);
+        all.push(art);
+      };
+
+      if (Array.isArray(categoryData)) {
+        categoryData.forEach(section => {
+          if (!Array.isArray(section.items)) return;
+          section.items.forEach(item => {
+            // 兼容两种结构：
+            // 1) 老结构：item.articles 在 items 下直接挂载（日期取 item.stats.latestDate）
+            if (Array.isArray(item.articles)) {
+              const itemLatest = item?.stats?.latestDate || '';
+              item.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest));
+            }
+            // 2) 新结构：item.categories[].articles 深层挂载（日期优先取 cat.stats.latestDate，回退 item.stats.latestDate）
+            if (Array.isArray(item.categories)) {
+              const itemLatest = item?.stats?.latestDate || '';
+              item.categories.forEach(cat => {
+                const catLatest = cat?.stats?.latestDate || itemLatest || '';
+                if (Array.isArray(cat.articles)) {
+                  cat.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest));
+                }
+              });
+            }
+          });
+        });
       }
-      if (side === 'left') this.showLeft = !this.showLeft;
-      if (side === 'right') this.showRight = !this.showRight;
-    },
-    iconFor(side) {
-      if (!this.isDesktop) {
-        // 移动端始终显示打开图标，抽屉内使用叉关闭
-        return side === 'left' ? 'bi bi-list' : 'bi bi-bookmark';
-      }
-      return side === 'left'
-        ? (this.showLeft ? 'bi bi-x-lg' : 'bi bi-list')
-        : (this.showRight ? 'bi bi-x-lg' : 'bi bi-bookmark');
-    },
-    labelFor(side) {
-      if (!this.isDesktop) {
-        return side === 'left' ? '显示目录' : '显示本页目录';
-      }
-      return side === 'left'
-        ? (this.showLeft ? '隐藏目录' : '显示目录')
-        : (this.showRight ? '隐藏本页目录' : '显示本页目录');
+
+      this.allArticles = all;
+      this.groupedArticles = grouped;
     },
 
+
+
     onResize() {
-      this.showLeft = this.showRight = this.isDesktop;
+      this.viewportWidth = window.innerWidth;
       this.updateSidebarDimensions();
     },
     getMatchedKey(rel) {
@@ -587,30 +660,7 @@ export default {
   }
   .navigation-container { margin-bottom: 1rem; }
   .toc-container { margin-top: 1rem; }
-  .article-content { padding: 1rem; }
+  .card-body { padding: 0.75rem !important; }
+  .article-content { padding: 0.25rem; }
 }
-
-
-/* 移动端侧栏按钮：与 Header 扁平风格一致 */
-.sidebar-toggle {
-  background: transparent !important;
-  border: none !important;
-  color: var(--bs-body-color);
-  transition: color 0.15s ease-in-out, transform 0.1s ease-in-out;
-}
-.sidebar-toggle:hover,
-.sidebar-toggle:focus {
-  background-color: transparent !important;
-  color: var(--bs-primary);
-}
-.sidebar-toggle i {
-  font-size: 1.05rem;
-  vertical-align: middle;
-}
-
-/* 保持与 Header 一致的交互反馈 */
-.sidebar-toggle:active {
-  transform: scale(0.98);
-}
-
 </style>
