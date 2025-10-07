@@ -109,11 +109,5 @@
         }
       ]
     }
-  ],
-  "categoryHelper": {
-    "pageTitle": "分类",
-    "updateTip": "内容持续更新中，欢迎关注最新动态",
-    "updateUrl": "/updates",
-    "updateUrlType": "internal"
-  }
+  ]
 }

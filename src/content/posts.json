@@ -1,186 +1,7 @@
 [
   {
-    "id": 14,
-    "title": "Vue.js 前端开发入门",
-    "date": "2025-09-19",
-    "category": [
-      "Programming",
-      "javascript"
-    ],
-    "tags": [
-      "JavaScript",
-      "Vue.js",
-      "前端开发",
-      "组件化",
-      "响应式"
-    ],
-    "preview": "Vue.js 框架在科学数据可视化前端开发中的应用",
-    "path": "notes/Programming/javascript/25-09-19--javascript-vue.json"
-  },
-  {
-    "id": 13,
-    "title": "RNA-Seq 分析：HISAT2 比对流程",
-    "date": "2025-09-19",
-    "category": [
-      "Omics",
-      "transcriptomics"
-    ],
-    "tags": [
-      "RNA-Seq",
-      "HISAT2",
-      "转录组",
-      "比对",
-      "生物信息学"
-    ],
-    "preview": "使用 HISAT2 进行 RNA-Seq 数据比对的标准工作流程",
-    "path": "notes/Omics/transcriptomics/25-09-19--rnaseq-hisat2.json"
-  },
-  {
-    "id": 8,
-    "title": "R语言统计分析基础",
-    "date": "2025-09-19",
-    "category": [
-      "DataScience",
-      "statistics"
-    ],
-    "tags": [
-      "R语言",
-      "统计分析",
-      "假设检验",
-      "回归分析",
-      "数据科学"
-    ],
-    "preview": "R语言在生物统计学和数据分析中的基本统计方法",
-    "path": "notes/DataScience/statistics/25-09-19--statistics-r.json"
-  },
-  {
-    "id": 18,
-    "title": "R语言数据处理示例",
-    "date": "2025-09-19",
-    "category": [
-      "Programming",
-      "r"
-    ],
-    "tags": [
-      "R语言",
-      "数据处理",
-      "统计分析",
-      "数据可视化",
-      "生物信息学"
-    ],
-    "preview": "展示 R 语言在生物信息学数据处理中的基本应用",
-    "path": "notes/Programming/r/25-09-19--r-demo.json"
-  },
-  {
-    "id": 19,
-    "title": "R语言 ggplot2 数据可视化",
-    "date": "2025-09-19",
-    "category": [
-      "Programming",
-      "r"
-    ],
-    "tags": [
-      "R语言",
-      "ggplot2",
-      "数据可视化",
-      "统计图表",
-      "生物信息学"
-    ],
-    "preview": "ggplot2 在生物信息学数据可视化中的应用",
-    "path": "notes/Programming/r/25-09-19--r-ggplot2.json"
-  },
-  {
-    "id": 17,
-    "title": "Python Pandas 数据处理实战",
-    "date": "2025-09-19",
-    "category": [
-      "Programming",
-      "python"
-    ],
-    "tags": [
-      "Python",
-      "Pandas",
-      "数据处理",
-      "数据分析",
-      "数据清洗"
-    ],
-    "preview": "Pandas 库在生物信息学数据处理中的常用操作和技巧",
-    "path": "notes/Programming/python/25-09-19--python-pandas.json"
-  },
-  {
-    "id": 9,
-    "title": "Python 数据可视化工具",
-    "date": "2025-09-19",
-    "category": [
-      "DataScience",
-      "visualization"
-    ],
-    "tags": [
-      "Python",
-      "数据可视化",
-      "Matplotlib",
-      "Seaborn",
-      "Plotly"
-    ],
-    "preview": "Python 生态中的数据可视化库比较和应用",
-    "path": "notes/DataScience/visualization/25-09-19--visualization-python.json"
-  },
-  {
-    "id": 7,
-    "title": "Python 机器学习入门",
-    "date": "2025-09-19",
-    "category": [
-      "DataScience",
-      "machinelearning"
-    ],
-    "tags": [
-      "Python",
-      "机器学习",
-      "scikit-learn",
-      "分类",
-      "回归"
-    ],
-    "preview": "使用 scikit-learn 进行生物数据机器学习分析",
-    "path": "notes/DataScience/machinelearning/25-09-19--ml-python.json"
-  },
-  {
-    "id": 6,
-    "title": "PyMOL 分子结构可视化",
-    "date": "2025-09-19",
-    "category": [
-      "Bioinformatics",
-      "structure"
-    ],
-    "tags": [
-      "PyMOL",
-      "分子可视化",
-      "蛋白质结构",
-      "3D结构",
-      "结构生物学"
-    ],
-    "preview": "PyMOL 在蛋白质三维结构可视化和分析中的应用",
-    "path": "notes/Bioinformatics/structure/25-09-19--pymol-visualization.json"
-  },
-  {
-    "id": 12,
-    "title": "MaxQuant 蛋白质组学分析工作流",
-    "date": "2025-09-19",
-    "category": [
-      "Omics",
-      "proteomics"
-    ],
-    "tags": [
-      "MaxQuant",
-      "蛋白质组学",
-      "质谱分析",
-      "生物信息学",
-      "定量分析"
-    ],
-    "preview": "详细记录 MaxQuant 在蛋白质组学数据分析中的标准流程与参数设置",
-    "path": "notes/Omics/proteomics/25-09-19--maxquant.json"
-  },
-  {
-    "id": 11,
+    "id": 1,
+    "no": 1,
     "title": "BWA MEM 比对人类基因组实战",
     "date": "2025-09-19",
     "category": [
@@ -196,28 +17,68 @@
       "SAM/BAM"
     ],
     "preview": "记录 BWA MEM 在人类 WGS 数据中的标准使用流程与参数调优",
-    "path": "notes/Omics/genomics/25-09-19--genomics-bwa.json"
+    "wordCount": 46
+  },
+  {
+    "id": 2,
+    "no": 2,
+    "title": "MaxQuant 蛋白质组学分析工作流",
+    "date": "2025-09-19",
+    "category": [
+      "Omics",
+      "proteomics"
+    ],
+    "tags": [
+      "MaxQuant",
+      "蛋白质组学",
+      "质谱分析",
+      "生物信息学",
+      "定量分析"
+    ],
+    "preview": "详细记录 MaxQuant 在蛋白质组学数据分析中的标准流程与参数设置",
+    "wordCount": 114
+  },
+  {
+    "id": 3,
+    "no": 3,
+    "title": "RNA-Seq 分析：HISAT2 比对流程",
+    "date": "2025-09-19",
+    "category": [
+      "Omics",
+      "transcriptomics"
+    ],
+    "tags": [
+      "RNA-Seq",
+      "HISAT2",
+      "转录组",
+      "比对",
+      "生物信息学"
+    ],
+    "preview": "使用 HISAT2 进行 RNA-Seq 数据比对的标准工作流程",
+    "wordCount": 73
+  },
+  {
+    "id": 4,
+    "no": 4,
+    "title": "Vue.js 前端开发入门",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "javascript"
+    ],
+    "tags": [
+      "JavaScript",
+      "Vue.js",
+      "前端开发",
+      "组件化",
+      "响应式"
+    ],
+    "preview": "Vue.js 框架在科学数据可视化前端开发中的应用",
+    "wordCount": 456
   },
   {
     "id": 5,
-    "title": "BLAST 序列比对基础",
-    "date": "2025-09-19",
-    "category": [
-      "Bioinformatics",
-      "alignment"
-    ],
-    "tags": [
-      "BLAST",
-      "序列比对",
-      "数据库搜索",
-      "同源性",
-      "生物信息学"
-    ],
-    "preview": "BLAST 工具在序列比对和同源性分析中的基本应用",
-    "path": "notes/Bioinformatics/alignment/25-09-19--blast-basics.json"
-  },
-  {
-    "id": 15,
+    "no": 5,
     "title": "Biopython 生物信息学应用",
     "date": "2025-09-19",
     "category": [
@@ -232,28 +93,11 @@
       "基因组学"
     ],
     "preview": "Biopython 库在序列分析和基因组数据处理中的应用",
-    "path": "notes/Programming/python/25-09-19--python-biopython.json"
+    "wordCount": 54
   },
   {
-    "id": 20,
-    "title": "Bash Shell 脚本编程",
-    "date": "2025-09-19",
-    "category": [
-      "Programming",
-      "shell"
-    ],
-    "tags": [
-      "Shell",
-      "Bash",
-      "命令行",
-      "脚本编程",
-      "自动化"
-    ],
-    "preview": "Bash Shell 脚本在生物信息学数据处理中的自动化应用",
-    "path": "notes/Programming/shell/25-09-19--shell-bash.json"
-  },
-  {
-    "id": 16,
+    "id": 6,
+    "no": 6,
     "title": "用 Pandas 处理 FASTQ 质量统计",
     "date": "2025-09-19",
     "category": [
@@ -269,15 +113,82 @@
       "入门"
     ],
     "preview": "演示如何用 Python Pandas 快速分析测序数据质量报告。",
-    "path": "notes/Programming/python/25-09-19--python-fastq.json"
+    "wordCount": 22
+  },
+  {
+    "id": 7,
+    "no": 7,
+    "title": "Python Pandas 数据处理实战",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "python"
+    ],
+    "tags": [
+      "Python",
+      "Pandas",
+      "数据处理",
+      "数据分析",
+      "数据清洗"
+    ],
+    "preview": "Pandas 库在生物信息学数据处理中的常用操作和技巧",
+    "wordCount": 37
+  },
+  {
+    "id": 8,
+    "no": 8,
+    "title": "R语言数据处理示例",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "r"
+    ],
+    "tags": [
+      "R语言",
+      "数据处理",
+      "统计分析",
+      "数据可视化",
+      "生物信息学"
+    ],
+    "preview": "展示 R 语言在生物信息学数据处理中的基本应用",
+    "wordCount": 44
+  },
+  {
+    "id": 9,
+    "no": 9,
+    "title": "R语言 ggplot2 数据可视化",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "r"
+    ],
+    "tags": [
+      "R语言",
+      "ggplot2",
+      "数据可视化",
+      "统计图表",
+      "生物信息学"
+    ],
+    "preview": "ggplot2 在生物信息学数据可视化中的应用",
+    "wordCount": 27
   },
   {
     "id": 10,
-    "title": "这是第一篇笔记",
-    "date": "",
-    "category": [],
-    "tags": [],
-    "preview": "这是第一篇笔记",
-    "path": "notes/note1.json"
+    "no": 10,
+    "title": "Bash Shell 脚本编程",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "shell"
+    ],
+    "tags": [
+      "Shell",
+      "Bash",
+      "命令行",
+      "脚本编程",
+      "自动化"
+    ],
+    "preview": "Bash Shell 脚本在生物信息学数据处理中的自动化应用",
+    "wordCount": 31
   }
 ]

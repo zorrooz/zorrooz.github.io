@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import notesData from '@/content/notes/notes.json'
+import notesFlat from '@/content/notes.json'
 
 export default {
   name: 'PostList',
@@ -202,17 +202,11 @@ export default {
       // 根据文章标题从notes.json中查找对应的文件路径
       let articlePath = 'notes/Programming/python/25-09-19--python-fastq.md' // 默认路径
       
-      // 遍历notes.json查找匹配的文章
-      for (const category of notesData.notes) {
-        for (const subcategory of category.children) {
-          const foundFile = subcategory.files.find(file => file.title === post.title)
-          if (foundFile) {
-            articlePath = foundFile.path
-            break
-          }
-        }
+      // 在扁平 notes.json 中查找匹配的文章
+      const found = Array.isArray(notesFlat) ? notesFlat.find(item => item.title === post.title) : null
+      if (found && found.relativePath) {
+        articlePath = `notes/${found.relativePath}.md`
       }
-      
       return `/article/${articlePath.replace(/\.md$/, '')}`
     },
     goToPage(page) {

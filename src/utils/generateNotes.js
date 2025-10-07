@@ -1,100 +1,175 @@
 import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
-import { fileURLToPath, pathToFileURL } from 'url';
-
-/**
- * 生成 src/content/notes/notes.json
- * - 正确解析 Markdown frontmatter 元信息
- * - 保留目录树结构（children + files）
- * - 路径相对 src/content，分隔符标准化为 /
- */
+import { fileURLToPath } from 'url';
+import yaml from 'js-yaml';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const contentDir = path.join(__dirname, '../content');
-const notesDir = path.join(contentDir, 'notes');
+const contentSrcDir = path.join(__dirname, '../content-src');
+const notesSrcDir = path.join(contentSrcDir, 'notes');
+const contentOutputDir = path.join(__dirname, '../content');
+const outputPath = path.join(contentOutputDir, 'notes.json');
 
-/** 规范化相对路径为 posix 风格 */
-function toPosixRelative(filePath) {
-  return path.relative(contentDir, filePath).replace(/\\/g, '/');
+function ensureDirectoryExistence(filePath) {
+  const dirname = path.dirname(filePath);
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname, { recursive: true });
+  }
 }
 
-/** 从文件解析元数据，带稳健回退 */
-function getFileMetadata(filePath) {
-  const raw = fs.readFileSync(filePath, 'utf-8');
-  const parsed = matter(raw || '');
-  const data = parsed.data || {};
-  const fileName = path.basename(filePath);
-
-  // 依据文件名生成默认标题（去掉日期前缀与扩展名）
-  const defaultTitle = fileName
-    .replace(/\.md$/i, '')
-    .replace(/^\d{2}-\d{2}-\d{2}--/, '')
-    .replace(/[-_]+/g, ' ')
-    .trim();
-
-  const meta = {
-    title: data.title || defaultTitle,
-    path: toPosixRelative(filePath),
-  };
-
-  // 可选字段（若存在则保留）
-  if (data.date) meta.date = data.date;
-  if (data.tags) meta.tags = Array.isArray(data.tags)
-    ? data.tags
-    : String(data.tags).split(',').map(s => s.trim()).filter(Boolean);
-  if (data.summary) meta.summary = data.summary;
-  if (data.slug) meta.slug = data.slug;
-
-  return meta;
-}
-
-/** 构建目录树：目录节点含 children，文件集合放入 files */
-function buildDirectoryTree(dir) {
+// Recursively list files under dir that match predicate
+function walk(dir, predicate = () => true, acc = []) {
+  if (!fs.existsSync(dir)) return acc;
   const items = fs.readdirSync(dir, { withFileTypes: true });
+  for (const it of items) {
+    const full = path.join(dir, it.name);
+    if (it.isDirectory()) walk(full, predicate, acc);
+    else if (predicate(full)) acc.push(full);
+  }
+  return acc;
+}
 
-  const children = [];
-  const files = [];
+function normalizeTags(tags) {
+  if (Array.isArray(tags)) {
+    return tags
+      .map(t => (typeof t === 'string' ? t.trim() : ''))
+      .filter(Boolean);
+  }
+  if (typeof tags === 'string') {
+    // support comma/space separated
+    return tags
+      .split(/[,，]/g)
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
 
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      children.push(buildDirectoryTree(fullPath));
-    } else if (item.isFile() && /\.md$/i.test(item.name)) {
-      files.push(getFileMetadata(fullPath));
+function parseFrontMatterAndBody(raw) {
+  // Support YAML frontmatter delimited by --- at start of file
+  if (raw.startsWith('---')) {
+    const lines = raw.split(/\r?\n/);
+    let endIdx = -1;
+    for (let i = 1; i < lines.length; i++) {
+      if (lines[i].trim() === '---') {
+        endIdx = i;
+        break;
+      }
+    }
+    if (endIdx !== -1) {
+      const fmText = lines.slice(1, endIdx).join('\n');
+      let fm = {};
+      try {
+        fm = yaml.load(fmText) || {};
+      } catch (e) {
+        console.warn('Warn: failed to parse frontmatter YAML. Using empty object.', e?.message || e);
+      }
+      const body = lines.slice(endIdx + 1).join('\n');
+      return { frontmatter: fm || {}, body };
     }
   }
+  return { frontmatter: {}, body: raw };
+}
 
-  const node = {
-    name: path.basename(dir),
-    type: 'directory',
+// Crude markdown -> plain text for counting words
+function markdownToPlain(text) {
+  // remove code fences first
+  let t = text.replace(/```[\s\S]*?```/g, ' ');
+  // remove inline code
+  t = t.replace(/`[^`]*`/g, ' ');
+  // remove images ![alt](url)
+  t = t.replace(/!\[[^\]]*]\([^)]+\)/g, ' ');
+  // remove links [text](url)
+  t = t.replace(/\[[^\]]*]\([^)]+\)/g, ' ');
+  // remove html tags
+  t = t.replace(/<[^>]+>/g, ' ');
+  // remove headings/bold/italic/quotes/lists/tables markers
+  t = t.replace(/^#{1,6}\s+/gm, ' ');
+  t = t.replace(/[*_~`>#|-]{1,}/g, ' ');
+  // remove reference links [id]: url
+  t = t.replace(/^\s*\[[^\]]+]:\s+\S+.*$/gm, ' ');
+  // collapse whitespace
+  t = t.replace(/\s+/g, ' ').trim();
+  return t;
+}
+
+function countWordsSmart(text) {
+  // Separate CJK chars and non-CJK words
+  const cjk = (text.match(/[\u4E00-\u9FFF\u3400-\u4DBF]/g) || []).length;
+  const words = (text.match(/[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?/g) || []).length;
+  return cjk + words;
+}
+
+function toPosixRelativeNoExt(fullPath, baseDir) {
+  const rel = path.relative(baseDir, fullPath);
+  const noExt = rel.replace(/\.[^/.]+$/, '');
+  // normalize to POSIX style
+  return noExt.split(path.sep).join('/');
+}
+
+function buildNoteItem(mdPath) {
+  const raw = fs.readFileSync(mdPath, 'utf-8');
+  const { frontmatter, body } = parseFrontMatterAndBody(raw);
+
+  const title = typeof frontmatter?.title === 'string' ? frontmatter.title : '';
+  const date = typeof frontmatter?.date === 'string' ? frontmatter.date : '';
+  const description = typeof frontmatter?.description === 'string' ? frontmatter.description : '';
+  const draft = typeof frontmatter?.draft === 'boolean' ? frontmatter.draft : false;
+  const tags = normalizeTags(frontmatter?.tags);
+
+  const plain = markdownToPlain(body);
+  const wordCount = countWordsSmart(plain);
+  const tagCount = tags.length;
+
+  const relativePath = toPosixRelativeNoExt(mdPath, notesSrcDir);
+
+  return {
+    title,
+    date,
+    tags,
+    draft,
+    description,
+    relativePath,
+    wordCount,
+    tagCount
   };
-  if (children.length) node.children = children;
-  if (files.length) node.files = files;
-
-  return node;
 }
 
-/** 主入口：生成 notes.json */
-export function generateNotes() {
-  if (!fs.existsSync(notesDir)) {
-    throw new Error(`Notes 目录不存在：${notesDir}`);
+function generateNotesJson() {
+  if (!fs.existsSync(notesSrcDir)) {
+    console.warn(`Warn: notes source directory not found at ${notesSrcDir}`);
   }
+  const mdFiles = walk(notesSrcDir, p => /\.md$/i.test(p));
 
-  const treeRoot = buildDirectoryTree(notesDir);
+  const items = mdFiles.map(buildNoteItem);
 
-  // 与现有使用保持一致：仅输出子节点
-  const output = { notes: treeRoot.children || [] };
+  // Optional: sort by date desc if date comparable, fallback by path
+  items.sort((a, b) => {
+    const ad = Date.parse(a.date || '') || 0;
+    const bd = Date.parse(b.date || '') || 0;
+    if (ad !== bd) return bd - ad;
+    return a.relativePath.localeCompare(b.relativePath);
+  });
 
-  const outputPath = path.join(notesDir, 'notes.json');
-  fs.writeFileSync(outputPath, JSON.stringify(output, null, 2), 'utf-8');
-
-  console.log('notes.json 已生成：', outputPath);
+  try {
+    ensureDirectoryExistence(outputPath);
+    fs.writeFileSync(outputPath, JSON.stringify(items, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${outputPath} (${items.length} notes)`);
+  } catch (e) {
+    console.error('Failed to write notes.json:', e);
+  }
 }
 
-/** 直接执行文件时运行（ESM 环境下的标准判断） */
-if (import.meta.url === pathToFileURL(__filename).href) {
-  generateNotes();
+function main() {
+  console.log('Starting notes.json generation script...');
+  generateNotesJson();
+  console.log('notes.json generation complete.');
 }
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // executed directly
+  main();
+}
+
+export { generateNotesJson };

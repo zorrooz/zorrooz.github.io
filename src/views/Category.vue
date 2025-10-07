@@ -5,7 +5,7 @@
       <div class="col-lg-10 col-xl-8 typography-body">
         <!-- 页面标题 -->
         <div class="text-center mb-4">
-          <h1 class="article-title text-primary mb-3">{{ helper.pageTitle }}</h1>
+          <h1 class="article-title text-primary mb-3">{{ pageTitle }}</h1>
         </div>
 
         <!-- 分类模块 -->
@@ -129,12 +129,11 @@ export default {
   data() {
     return {
       categoryList: [],
-      helper: {}
+      pageTitle: '分类'
     };
   },
   created() {
     this.categoryList = categoryData.categoryList;
-    this.helper = categoryData.categoryHelper;
   },
   methods: {
     formatMonth(dateStr) {

@@ -44,9 +44,7 @@
 </template>
 
 <script>
-import notesData from '@/content/notes/notes.json';
-import projectsData from '@/content/projects/projects.json';
-import topicsData from '@/content/topics/topics.json';
+import notesFlat from '@/content/notes.json';
 
 export default {
   name: 'NavigationTree',
@@ -77,11 +75,82 @@ export default {
       return this.currentPath === path.replace(/\.md$/, '');
     },
     buildTree() {
-      // Build the full navigation data structure
-      const notesTree = JSON.parse(JSON.stringify(notesData.notes));
-      const projectsTree = { name: '项目', type: 'directory', children: JSON.parse(JSON.stringify(projectsData)) };
-      const topicsTree = { name: '专题', type: 'directory', children: JSON.parse(JSON.stringify(topicsData)) };
-      const combinedTree = [...notesTree, projectsTree, topicsTree];
+      // 从扁平 notes.json 动态构建 notesTree
+      const buildTreeFromFlat = (items) => {
+        const rootChildren = new Map(); // categoryName -> node
+        const nameMap = {
+          'Programming': '编程语言',
+          'Bioinformatics': '生物信息学',
+          'Omics': '组学技术',
+          'DataScience': '数据科学',
+          'python': 'Python',
+          'r': 'R语言',
+          'shell': 'Shell',
+          'javascript': 'JavaScript',
+          'alignment': '序列比对',
+          'structure': '结构分析',
+          'genomics': '基因组学',
+          'proteomics': '蛋白质组学',
+          'transcriptomics': '转录组学',
+          'statistics': '统计分析',
+          'machinelearning': '机器学习',
+          'visualization': '数据可视化'
+        };
+        const formatName = (n) => nameMap[n] || n;
+
+        const ensureNode = (parent, name) => {
+          if (!parent.children) parent.children = [];
+          let node = parent.children.find(n => n._rawName === name || n.name === formatName(name));
+          if (!node) {
+            node = { name: formatName(name), _rawName: name, type: 'directory', children: [], files: [] };
+            parent.children.push(node);
+          }
+          return node;
+        };
+
+        const virtualRoot = { children: [] };
+        if (Array.isArray(items)) {
+          items.forEach(it => {
+            const rel = it.relativePath || '';
+            const segs = rel.split('/').filter(Boolean);
+            if (segs.length === 0) return;
+
+            // 如果末两段相同（如 bwa/bwa），跳过倒数第二层冗余目录
+            const end = (segs.length >= 2 && segs[segs.length - 1] === segs[segs.length - 2])
+              ? segs.length - 2
+              : segs.length - 1;
+
+            let current = ensureNode(virtualRoot, segs[0]);
+            for (let i = 1; i <= end - 1; i++) {
+              current = ensureNode(current, segs[i]);
+            }
+
+            // 文件节点
+            const fileTitle = it.title || segs[segs.length - 1];
+            const filePath = `notes/${rel}.md`;
+            if (!current.files) current.files = [];
+            current.files.push({ title: fileTitle, path: filePath });
+          });
+        }
+
+        // 清理辅助字段并返回
+        const clean = (node) => {
+          if (!node) return node;
+          const copy = { ...node };
+          delete copy._rawName;
+          if (copy.children && copy.children.length) {
+            copy.children = copy.children.map(clean);
+          } else {
+            delete copy.children;
+          }
+          if (copy.files && copy.files.length === 0) delete copy.files;
+          return copy;
+        };
+        return (virtualRoot.children || []).map(clean);
+      };
+
+      const notesTree = buildTreeFromFlat(notesFlat);
+      const combinedTree = [...notesTree];
 
       const processNode = (node) => {
         // 排序目录下的子目录与文件
@@ -128,41 +197,15 @@ export default {
       };
 
       if (topLevel === 'notes') {
-        const notesRootNodes = fullTree.filter(node => node.name !== '项目' && node.name !== '专题');
+        const notesRootNodes = fullTree; // 仅 notes
         if (this.currentPath === 'notes') {
           this.navigationTree = notesRootNodes;
           return;
         }
         const activeRoot = findContainingRoot(notesRootNodes, this.currentPath);
         this.navigationTree = activeRoot ? [activeRoot] : [];
-      } else if (topLevel === 'projects') {
-        const projectsRoot = fullTree.find(node => node.name === '项目');
-        if (projectsRoot) {
-          const slug = pathSegments[1];
-          const activeProject = projectsRoot.children.find(p => p.name === slug);
-          if (activeProject) {
-            this.navigationTree = [{ ...projectsRoot, children: [activeProject] }];
-          } else {
-            this.navigationTree = [projectsRoot];
-          }
-        } else {
-          this.navigationTree = [];
-        }
-      } else if (topLevel === 'topics') {
-        const topicsRoot = fullTree.find(node => node.name === '专题');
-        if (topicsRoot) {
-          const slug = pathSegments[1];
-          const activeTopic = topicsRoot.children.find(t => t.name === slug);
-          if (activeTopic) {
-            this.navigationTree = [{ ...topicsRoot, children: [activeTopic] }];
-          } else {
-            this.navigationTree = [topicsRoot];
-          }
-        } else {
-          this.navigationTree = [];
-        }
       } else {
-        this.navigationTree = []; // Default to showing nothing
+        this.navigationTree = []; // 仅支持 notes
       }
     }
   }

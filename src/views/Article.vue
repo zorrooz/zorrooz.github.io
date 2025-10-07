@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="container">
 
     <div class="row py-4 px-0">
@@ -20,7 +20,7 @@
           <div v-if="currentPost" class="article-meta pb-2 mb-0">
             <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
             <div class="text-secondary d-flex flex-wrap gap-3 align-items-center">
-              <span><i class="bi bi-calendar3 me-1"></i>更新于 {{ currentPost.date }}</span>
+              <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>更新于 {{ currentPost.date }}</span>
               <span v-if="readingMinutes"><i class="bi bi-clock me-1"></i>阅读约 {{ readingMinutes }} 分钟</span>
             </div>
             <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
@@ -84,11 +84,12 @@ import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawerButton from '@/components/widgets/TocDrawerButton.vue'
 import MobileTocDrawer from '@/components/widgets/MobileTocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
-import notesData from '@/content/notes/notes.json'
-import projectsData from '@/content/projects/projects.json'
-import topicsData from '@/content/topics/topics.json'
+import notesFlat from '@/content/notes.json'
+import projectsFlat from '@/content/projects.json'
+import topicsFlat from '@/content/topics.json'
 
-const markdownModules = import.meta.glob('../content/**/*.md', { query: '?raw', import: 'default', eager: false });
+const markdownModules = import.meta.glob('../content-src/**/*.md', { query: '?raw', import: 'default', eager: false });
+const assetModules = import.meta.glob('../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true });
 const keys = Object.keys(markdownModules);
 
 export default {
@@ -100,6 +101,12 @@ export default {
   },
   computed: {
     isDesktop() { return window.innerWidth >= 992 },
+    isProject() {
+      return !!(this.currentPost?.path && this.currentPost.path.startsWith('projects/'));
+    },
+    isNote() {
+      return !!(this.currentPost?.path && this.currentPost.path.startsWith('notes/'));
+    },
     currentPost() {
       if (!this.currentPath) return null;
       return this.allArticles.find(article => article.path.replace(/\.md$/, '') === this.currentPath.replace(/\.md$/, ''));
@@ -194,8 +201,17 @@ export default {
       this.updateSidebarDimensions();
     },
     getMatchedKey(rel) {
-      const suffixes = [`/content/${rel}`, rel, `/content/${rel}?raw`, `${rel}?raw`, `../content/${rel}`, `../content/${rel}?raw`];
-      return keys.find(k => suffixes.some(suf => k.endsWith(suf)));
+      // 文章路径为 notes/xxx/xxx.md，真实文件在 content-src/notes 下
+      const normalized = rel.replace(/^notes\//, 'notes/');
+      const candidates = [
+        `/content-src/${normalized}`,
+        `${normalized}`,
+        `/content-src/${normalized}?raw`,
+        `${normalized}?raw`,
+        `../content-src/${normalized}`,
+        `../content-src/${normalized}?raw`
+      ];
+      return keys.find(k => candidates.some(suf => k.endsWith(suf)));
     },
     normalizeRoutePathParam(p) {
       if (Array.isArray(p)) return p.join('/');
@@ -206,59 +222,86 @@ export default {
       const allArticlesList = [];
       const groupedArticlesMap = {};
 
-      const getArticlesFromNode = (node) => {
-        const articles = [];
-        // 收集当前目录的文件
-        if (node.files && Array.isArray(node.files)) {
-          articles.push(...node.files);
-        }
-        // 递归子目录
-        if (node.children && Array.isArray(node.children)) {
-          for (const child of node.children) {
-            articles.push(...getArticlesFromNode(child));
-          }
-        }
-        return articles;
+      // 名称映射（与 contentGenerator 保持一致）
+      const nameMap = {
+        'Programming': '编程语言',
+        'Bioinformatics': '生物信息学',
+        'Omics': '组学技术',
+        'DataScience': '数据科学',
+        'python': 'Python',
+        'r': 'R语言',
+        'shell': 'Shell',
+        'javascript': 'JavaScript',
+        'alignment': '序列比对',
+        'structure': '结构分析',
+        'genomics': '基因组学',
+        'proteomics': '蛋白质组学',
+        'transcriptomics': '转录组学',
+        'statistics': '统计分析',
+        'machinelearning': '机器学习',
+        'visualization': '数据可视化'
       };
+      const formatName = (n) => nameMap[n] || n;
 
-      // 与导航树一致的节点排序：children 按 name，files 按 title（回退 path）
-      const processNode = (node) => {
-        if (!node || typeof node !== 'object') return node;
-        const copy = { ...node };
-        if (Array.isArray(copy.children)) {
-          copy.children = copy.children.map(processNode)
-            .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-        }
-        if (Array.isArray(copy.files)) {
-          copy.files = copy.files.slice()
-            .sort((a, b) => (a.title || a.path).localeCompare(b.title || b.path));
-        }
-        return copy;
-      };
+      // 从扁平 notes.json 生成 Article 使用的条目
+      if (Array.isArray(notesFlat)) {
+        notesFlat.forEach(item => {
+          const pathWithMd = `notes/${item.relativePath}.md`;
+          const seg0 = item.relativePath.split('/')[0] || 'notes';
+          const categoryName = formatName(seg0);
+          const art = {
+            title: item.title || item.relativePath.split('/').pop(),
+            path: pathWithMd,
+            date: item.date || '',
+            tags: item.tags || [],
+            preview: item.description || '',
+            category: categoryName
+          };
+          if (!groupedArticlesMap[categoryName]) groupedArticlesMap[categoryName] = [];
+          groupedArticlesMap[categoryName].push(art);
+          allArticlesList.push(art);
+        });
+      }
 
-      // Notes
-      notesData.notes.forEach(category => {
-        const sortedCategory = processNode(category);
-        const articles = getArticlesFromNode(sortedCategory).map(art => ({ ...art, category: category.name }));
-        groupedArticlesMap[category.name] = articles;
-        allArticlesList.push(...articles);
-      });
+      // 从 projects.json 生成项目条目（仅标题，日期/标签为空）
+      if (Array.isArray(projectsFlat)) {
+        projectsFlat.forEach(item => {
+          const pathWithMd = `projects/${item.relativePath}.md`;
+          const seg0 = item.relativePath.split('/')[0] || 'projects';
+          const categoryName = formatName(seg0);
+          const art = {
+            title: item.title || item.relativePath.split('/').pop(),
+            path: pathWithMd,
+            date: '',
+            tags: [],
+            preview: '',
+            category: categoryName
+          };
+          if (!groupedArticlesMap[categoryName]) groupedArticlesMap[categoryName] = [];
+          groupedArticlesMap[categoryName].push(art);
+          allArticlesList.push(art);
+        });
+      }
 
-      // Projects
-      projectsData.forEach(project => {
-        const sortedProject = processNode(project);
-        const articles = getArticlesFromNode(sortedProject).map(art => ({ ...art, category: project.name }));
-        groupedArticlesMap[project.name] = articles;
-        allArticlesList.push(...articles);
-      });
-
-      // Topics
-      topicsData.forEach(topic => {
-        const sortedTopic = processNode(topic);
-        const articles = getArticlesFromNode(sortedTopic).map(art => ({ ...art, category: topic.name }));
-        groupedArticlesMap[topic.name] = articles;
-        allArticlesList.push(...articles);
-      });
+      // 从 topics.json 生成主题条目（同项目：无日期/标签，仅标题）
+      if (Array.isArray(topicsFlat)) {
+        topicsFlat.forEach(item => {
+          const pathWithMd = `topics/${item.relativePath}.md`;
+          const seg0 = item.relativePath.split('/')[0] || 'topics';
+          const categoryName = formatName(seg0);
+          const art = {
+            title: item.title || item.relativePath.split('/').pop(),
+            path: pathWithMd,
+            date: '',
+            tags: [],
+            preview: '',
+            category: categoryName
+          };
+          if (!groupedArticlesMap[categoryName]) groupedArticlesMap[categoryName] = [];
+          groupedArticlesMap[categoryName].push(art);
+          allArticlesList.push(art);
+        });
+      }
 
       this.allArticles = allArticlesList;
       this.groupedArticles = groupedArticlesMap;
@@ -268,15 +311,16 @@ export default {
       try {
         const currentPathClean = this.normalizeRoutePathParam(this.$route.params.path);
         const matchedPost = this.allArticles.find(article => article.path.replace(/\.md$/, '') === currentPathClean);
-        
+
         if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`);
         this.currentPath = matchedPost.path;
-        
+
         const matchedKey = this.getMatchedKey(this.currentPath);
         if (!matchedKey) throw new Error(`Markdown not found: ${this.currentPath}`);
-        
+
         const markdownModule = await markdownModules[matchedKey]();
-        this.rawMarkdown = markdownModule;
+        const rewritten = this.rewriteImageLinks(markdownModule, this.currentPath);
+        this.rawMarkdown = rewritten;
 
         this.$nextTick(() => {
           this.updateSidebarDimensions();
@@ -313,6 +357,47 @@ export default {
         el.style.maxHeight = `${availableH}px`;
         el.style.overflowY = el.scrollHeight > availableH ? 'auto' : 'visible';
       });
+    },
+
+    // 将 Markdown 中的相对图片路径重写为可访问的打包 URL
+    // articlePath 形如 'notes/Programming/javascript/vue/vue.md'
+    rewriteImageLinks(md, articlePath) {
+      try {
+        const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/');
+        // 在 assetModules 中，key 形如 '../content-src/notes/.../image.png'
+        const toAssetUrl = (relPath) => {
+          // 忽略外链与以 / 开头的绝对路径
+          if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath;
+          // 归一化 ./ ../
+          const parts = (articleDir + '/' + relPath).split('/').filter(p => p && p !== '.');
+          const stack = [];
+          parts.forEach(p => {
+            if (p === '..') stack.pop();
+            else stack.push(p);
+          });
+          const normalized = stack.join('/');
+          const candidateKey = `../content-src/${normalized}`;
+          const url = assetModules[candidateKey];
+          return url || relPath; // 找不到则保留原样
+        };
+
+        // 替换图片语法与 HTML img
+        const mdReplaced = md
+          .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => {
+            const clean = src.trim().replace(/^<|>|&/g, '');
+            const url = toAssetUrl(clean);
+            return `![${alt}](${url})`;
+          })
+          .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) => {
+            const url = toAssetUrl(src.trim());
+            return `<img ${pre}src="${url}"${post}>`;
+          });
+
+        return mdReplaced;
+      } catch (e) {
+        console.warn('rewriteImageLinks failed', e);
+        return md;
+      }
     },
     handleMarkdownRendered() {
       this.enhanceHeadings();
