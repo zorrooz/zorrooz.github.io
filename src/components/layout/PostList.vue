@@ -27,7 +27,7 @@
             </div>
 
             <!-- 预览内容 -->
-            <p class="text-secondary mb-3 desc-text">
+            <p class="mb-3 desc-text">
               {{ post.preview }}
             </p>
 
@@ -282,7 +282,7 @@ export default {
 .post-title { font-size: 1.4rem; font-weight: 700; }
 
 /* 描述文本与文章页正文一致 */
-.desc-text { font-size: 1rem; line-height: 1.8; color: #6c757d; }
+.desc-text { font-size: 1rem; line-height: 1.8; color: #212529; }
 
 /* 日期与分类统一为 1rem */
 .meta-text { font-size: 0.95rem; }

@@ -23,7 +23,7 @@
                   <div class="card-body p-4 d-flex flex-column">
                     <!-- 标题 -->
                     <h3 class="h5 fw-semibold text-dark mb-1">
-                      {{ item.name }}
+                      {{ item.title || item.name }}
                     </h3>
                     <!-- 信息行：日期紧跟图标（项目/课题），笔记仅日期 -->
                     <div v-if="item.date" class="d-inline-flex align-items-center gap-2 mb-2">
@@ -31,8 +31,8 @@
                       <small class="text-muted meta-text">{{ formatMonth(item.date) }}</small>
                       <!-- 项目：GitHub 图标紧跟日期 -->
                       <a
-                        v-if="category.title === '项目' && /github\.com/i.test(item.url || '')"
-                        :href="item.url"
+                        v-if="category.title === '项目' && item.github"
+                        :href="item.github"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="icon-link"
@@ -43,8 +43,8 @@
                       </a>
                       <!-- 课题：链接图标紧跟日期 -->
                       <a
-                        v-else-if="category.title === '课题' && item.url"
-                        :href="item.url"
+                        v-else-if="category.title === '课题' && item.doi"
+                        :href="item.doi"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="icon-link"
@@ -103,7 +103,7 @@
                     <!-- 查看更多 -->
                     <div class="text-end">
                       <span class="text-primary fw-medium d-inline-flex align-items-center gap-1 cursor-pointer see-more-text"
-                        :style="{ transition: 'transform 0.2s ease' }" @click="() => handleJump(item.url, item.type)"
+                        :style="{ transition: 'transform 0.2s ease' }" @click="() => handleSeeMore(item)"
                         @mouseenter="e => e.target.style.transform = 'translateX(2px)'"
                         @mouseleave="e => e.target.style.transform = 'translateX(0)'">
                         查看更多
@@ -133,7 +133,8 @@ export default {
     };
   },
   created() {
-    this.categoryList = categoryData.categoryList;
+    // 适配新的 JSON：顶层直接是数组
+    this.categoryList = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || []);
   },
   methods: {
     formatMonth(dateStr) {
@@ -151,17 +152,21 @@ export default {
       if (num >= 10000) return Math.round(num / 1000) + 'k';
       return String(num);
     },
-    handleJump(url, type) {
-      if (!url) return;
-
-      if (type === 'internal') {
-        this.$router.push(url).catch(err => {
+    handleSeeMore(item) {
+      const root = item?.root;
+      if (root) {
+        this.$router.push(root).catch(err => {
           if (err.name !== 'NavigationDuplicated' && !err.toString().includes('Navigation cancelled')) {
             console.error('Navigation error:', err);
           }
         });
-      } else if (type === 'external') {
-        window.open(url, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      // 无 root 时，若有 doi 外链则打开
+      const doi = item?.doi;
+      if (typeof doi === 'string' && /^https?:\/\//i.test(doi)) {
+        window.open(doi, '_blank', 'noopener,noreferrer');
       }
     }
   }

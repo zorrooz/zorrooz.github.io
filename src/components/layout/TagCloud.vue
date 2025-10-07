@@ -1,10 +1,10 @@
 <!-- TagCloud.vue -->
 <template>
   <div class="card shadow-sm border-0 bg-white mb-3">
-    <div class="card-header bg-white border-0 px-4 py-3">
+    <div class="card-header bg-white border-0 px-4 py-2">
       <h6 class="text-secondary m-0">标签</h6>
     </div>
-    <div class="card-body p-4">
+    <div class="card-body px-4 pt-2 pb-3">
       <div class="d-flex flex-wrap gap-2">
         <span v-for="t in cloudTags" :key="t.name" class="badge tag-badge fw-normal py-1 px-2 rounded-3" style="cursor: pointer" @click="goTag(t.name)">
           # {{ t.name }}

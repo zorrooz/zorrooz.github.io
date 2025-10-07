@@ -19,15 +19,15 @@
       <!-- 统计数据 -->
       <div class="row g-0 text-center">
         <div class="col border-end">
-          <div class="fw-bold">128</div>
+          <div class="fw-bold">{{ postCount }}</div>
           <div class="text-muted">文章</div>
         </div>
         <div class="col border-end">
-          <div class="fw-bold">42</div>
+          <div class="fw-bold">{{ tagCount }}</div>
           <div class="text-muted">标签</div>
         </div>
         <div class="col">
-          <div class="fw-bold">999K</div>
+          <div class="fw-bold">{{ totalWordsDisplay }}</div>
           <div class="text-muted">字数</div>
         </div>
       </div>
@@ -36,8 +36,35 @@
 </template>
 
 <script>
+import posts from '@/content/posts.json'
+import tags from '@/content/tags.json'
+
 export default {
-  name: 'ProfileCard'
+  name: 'ProfileCard',
+  data() {
+    return { posts, tags }
+  },
+  computed: {
+    postCount() {
+      return Array.isArray(this.posts) ? this.posts.length : 0
+    },
+    tagCount() {
+      return Array.isArray(this.tags) ? this.tags.length : 0
+    },
+    totalWords() {
+      if (!Array.isArray(this.posts)) return 0
+      return this.posts.reduce((sum, p) => {
+        const n = typeof p?.wordCount === 'number' ? p.wordCount : 0
+        return sum + (Number.isFinite(n) ? n : 0)
+      }, 0)
+    },
+    totalWordsDisplay() {
+      const n = this.totalWords
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 ? 1 : 0) + 'M'
+      if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 ? 1 : 0) + 'K'
+      return String(n)
+    }
+  }
 }
 </script>
 

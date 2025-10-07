@@ -12,8 +12,7 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "deploy": "vite build && gh-pages -d dist",
-    "generate-content": "node package-scripts/generate-content.js"
+    "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

@@ -5,8 +5,8 @@
     "title": "BWA MEM 比对人类基因组实战",
     "date": "2025-09-19",
     "category": [
-      "Omics",
-      "genomics"
+      "组学",
+      "基因组学"
     ],
     "tags": [
       "BWA",
@@ -25,8 +25,8 @@
     "title": "MaxQuant 蛋白质组学分析工作流",
     "date": "2025-09-19",
     "category": [
-      "Omics",
-      "proteomics"
+      "组学",
+      "蛋白质组学"
     ],
     "tags": [
       "MaxQuant",
@@ -44,8 +44,8 @@
     "title": "RNA-Seq 分析：HISAT2 比对流程",
     "date": "2025-09-19",
     "category": [
-      "Omics",
-      "transcriptomics"
+      "组学",
+      "转录组学"
     ],
     "tags": [
       "RNA-Seq",
@@ -63,8 +63,8 @@
     "title": "Vue.js 前端开发入门",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "javascript"
+      "编程",
+      "JavaScript"
     ],
     "tags": [
       "JavaScript",
@@ -82,8 +82,8 @@
     "title": "Biopython 生物信息学应用",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "python"
+      "编程",
+      "Python"
     ],
     "tags": [
       "Python",
@@ -101,8 +101,8 @@
     "title": "用 Pandas 处理 FASTQ 质量统计",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "python"
+      "编程",
+      "Python"
     ],
     "tags": [
       "Python",
@@ -121,8 +121,8 @@
     "title": "Python Pandas 数据处理实战",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "python"
+      "编程",
+      "Python"
     ],
     "tags": [
       "Python",
@@ -140,8 +140,8 @@
     "title": "R语言数据处理示例",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "r"
+      "编程",
+      "R语言"
     ],
     "tags": [
       "R语言",
@@ -159,8 +159,8 @@
     "title": "R语言 ggplot2 数据可视化",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "r"
+      "编程",
+      "R语言"
     ],
     "tags": [
       "R语言",
@@ -178,8 +178,8 @@
     "title": "Bash Shell 脚本编程",
     "date": "2025-09-19",
     "category": [
-      "Programming",
-      "shell"
+      "编程",
+      "Shell"
     ],
     "tags": [
       "Shell",
