@@ -4,7 +4,7 @@ import path from "path";
 
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: 'sk-226eb1f5e3b54cc4ad5480b59213d1b1' // 🔑 替换为你的实际 API Key
+  apiKey: '' // 🔑 替换为你的实际 API Key
 });
 
 async function translate(text) {

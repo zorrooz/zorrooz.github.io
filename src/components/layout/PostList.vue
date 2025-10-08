@@ -22,7 +22,7 @@
             <!-- 分类 -->
             <div class="mb-2">
               <small class="text-secondary meta-text">
-                {{ post.category.join(' / ') }}
+                {{ formatCategory(post.category) }}
               </small>
             </div>
 
@@ -104,6 +104,7 @@
 
 <script>
 import notesFlat from '@/content/notes.json'
+import categoriesData from '@/content/categories.json'
 
 export default {
   name: 'PostList',
@@ -191,6 +192,24 @@ export default {
     showLastEllipsis() {
       return this.totalPages > this.maxVisiblePages &&
         this.allVisiblePages[this.allVisiblePages.length - 2] < this.totalPages - 1
+    },
+    // 将 categories.json 扁平为 key -> title 映射，用于把二级分类 key 显示为中文标题
+    categoryTitleMap() {
+      const map = {}
+      try {
+        (categoriesData || []).forEach(section => {
+          (section.items || []).forEach(item => {
+            (item.categories || []).forEach(cat => {
+              if (cat && cat.key && cat.title) {
+                map[cat.key] = cat.title
+              }
+            })
+          })
+        })
+      } catch (e) {
+        // 静默失败，保持空映射
+      }
+      return map
     }
   },
   methods: {
@@ -250,6 +269,15 @@ export default {
     },
     handleResize() {
       this.maxVisiblePages = window.innerWidth < 480 ? 3 : 5
+    },
+    // 显示为 "顶级 / 二级中文标题"
+    formatCategory(catArr) {
+      if (!Array.isArray(catArr) || catArr.length === 0) return ''
+      const top = catArr[0] || ''
+      const subKey = catArr[1]
+      if (!subKey) return top
+      const subTitle = this.categoryTitleMap[subKey] || subKey
+      return `${top} / ${subTitle}`
     }
   },
   watch: {
