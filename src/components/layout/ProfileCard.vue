@@ -1,34 +1,34 @@
 <!-- ProfileCard.vue -->
 <template>
-  <div class="card shadow-sm border-0 bg-white mb-3">
+  <div class="card shadow-sm border-0 mb-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
     <!-- 头像区域 -->
     <div class="text-center px-4 pt-4 pb-0">
-      <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center"
-        style="width: 80px; height: 80px;">
-        <span class="text-muted">头像</span>
+      <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+        :style="{ width: '80px', height: '80px', backgroundColor: 'var(--app-bg-light)' }">
+        <span :style="{ color: 'var(--app-text-muted)' }">头像</span>
       </div>
     </div>
 
     <!-- 个人信息区域 -->
     <div class="card-body p-4 text-center typography-body">
-      <h3 class="card-title mb-1 fw-bold">zorrooz</h3>
-      <p class="card-text text-muted mb-4">
+      <h3 class="card-title mb-1 fw-bold" :style="{ color: 'var(--app-text)' }">zorrooz</h3>
+      <p class="card-text mb-4" :style="{ color: 'var(--app-text-muted)' }">
         开发者
       </p>
 
       <!-- 统计数据 -->
-      <div class="row g-0 text-center">
+      <div class="row g-0 text-center" :style="{ 'border-color': 'var(--app-border)' }">
         <div class="col border-end">
-          <div class="fw-bold">{{ postCount }}</div>
-          <div class="text-muted">文章</div>
+          <div class="fw-bold" :style="{ color: 'var(--app-stat-num-color)' }">{{ postCount }}</div>
+          <div :style="{ color: 'var(--app-text-muted)' }">文章</div>
         </div>
         <div class="col border-end">
-          <div class="fw-bold">{{ tagCount }}</div>
-          <div class="text-muted">标签</div>
+          <div class="fw-bold" :style="{ color: 'var(--app-stat-num-color)' }">{{ tagCount }}</div>
+          <div :style="{ color: 'var(--app-text-muted)' }">标签</div>
         </div>
         <div class="col">
-          <div class="fw-bold">{{ totalWordsDisplay }}</div>
-          <div class="text-muted">字数</div>
+          <div class="fw-bold" :style="{ color: 'var(--app-stat-num-color)' }">{{ totalWordsDisplay }}</div>
+          <div :style="{ color: 'var(--app-text-muted)' }">字数</div>
         </div>
       </div>
     </div>

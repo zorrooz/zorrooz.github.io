@@ -128,9 +128,9 @@ export default {
   right: 30px;
   width: 40px;
   height: 40px;
-  background-color: #fff; /* 纯白 */
-  color: var(--bs-body-color);
-  border: 1px solid var(--bs-border-color);
+  background-color: var(--app-btn-bg);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -138,7 +138,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--app-btn-shadow);
   z-index: 1000;
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -146,8 +146,8 @@ export default {
 }
 
 .back-to-top:hover {
-  background-color: #fff; /* hover 仍保持纯白 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  background-color: var(--app-btn-hover-bg);
+  box-shadow: var(--app-btn-hover-shadow);
 }
 
 .back-to-top:active {

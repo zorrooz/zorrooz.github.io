@@ -1,6 +1,6 @@
 <!-- AppFooter.vue -->
 <template>
-  <footer class="py-4 bg-body-secondary site-footer">
+  <footer class="py-4 site-footer" style="background-color: var(--app-footer-bg);">
     <div class=" container">
       <div class="d-flex justify-content-between align-items-center">
         <div>Copyright © 2025 gblog</div>
@@ -8,12 +8,12 @@
           <div> Designed by <span class="fw-bold">zorrooz</span></div>
           <div class="d-flex justify-content-around">
             <span>
-              <a href="https://github.com/zorrooz" class="text-muted me-3">
+              <a href="https://github.com/zorrooz" class="me-3" style="color: var(--app-text-muted);">
                 <i class="fab fa-github fa-lg"></i>
               </a>
             </span>
             <span>
-              <a href="mailto:zorrooz@163.com" class="text-muted">
+              <a href="mailto:zorrooz@163.com" style="color: var(--app-text-muted);">
                 <i class="fas fa-envelope fa-lg"></i>
               </a>
             </span>

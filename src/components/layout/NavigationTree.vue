@@ -178,7 +178,7 @@ export default {
 .category-name {
   font-size: 1.1rem;
   font-weight: 700;               /* 粗体 */
-  color: var(--bs-gray-600);      /* 更浅灰色 */
+  color: var(--app-text-muted);      /* 更浅灰色 */
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
   padding-left: 0.75rem;
@@ -194,7 +194,7 @@ export default {
 .directory-name.level-2 {
   display: block;
   font-weight: 700;               /* 加粗 */
-  color: var(--bs-body-color);    /* 黑色（正文颜色） */
+  color: var(--app-text-emphasis);
   margin-left: 0;                 /* 与一级对齐 */
   padding-left: 0.75rem;
 }
@@ -208,17 +208,17 @@ export default {
   display: block;
   padding: 0.5rem 0.75rem;
   text-decoration: none;
-  color: var(--bs-gray-700);      /* 默认灰/黑 */
+  color: var(--app-text-muted);
   border-radius: 0.25rem;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .article-link:hover {
-  background-color: var(--bs-light);
-  color: var(--bs-body-color);    /* 悬停黑色 */
+  background-color: var(--app-link-hover-bg);
+  color: var(--app-text-emphasis);
 }
 .article-link.active {
   background-color: transparent;  /* 去背景，强调纯文字样式 */
-  color: var(--bs-primary);       /* 蓝色 */
+  color: var(--app-primary);       /* 蓝色 */
   font-weight: 700;               /* 粗体 */
 }
 </style>

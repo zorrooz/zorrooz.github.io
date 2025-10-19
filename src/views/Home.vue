@@ -15,7 +15,7 @@
                 <button class="chip-close" @click="clearTag" aria-label="清除筛选" title="清除筛选">×</button>
               </span>
             </div>
-            <PostList :docs="filteredDocs" :perPage="10" />
+            <PostList :docs="filteredDocs" :perPage="5" />
           </div>
         </div>
       </div>
@@ -125,11 +125,11 @@ export default {
 .current-tag-chip {
   font-size: 1rem; /* 与卡片标签更一致 */
   font-weight: 500;
-  color: #212529;
-  background: #fff; /* 白色背底 */
+  color: var(--app-chip-text);
+  background: var(--app-chip-bg); /* 白色背底 */
   padding: 0.25rem 0.5rem; /* 适度内边距 */
-  border: 1px solid #e9ecef; /* 细边框 */
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04); /* 轻微卡片感 */
+  border: 1px solid var(--app-chip-border); /* 细边框 */
+  box-shadow: var(--app-card-shadow); /* 轻微卡片感 */
   border-radius: 12px; /* 圆角矩形 */
   align-items: center; /* 垂直居中 */
   gap: 0.4rem;
@@ -140,7 +140,7 @@ export default {
   line-height: 1;
   background: transparent;
   border: none;
-  color: #6c757d; /* 与全局 text-secondary 接近 */
+  color: var(--app-chip-close-text); /* 与全局 text-secondary 接近 */
   padding: 0;
   margin-left: 2px; /* 与文字间距更自然 */
   cursor: pointer;
@@ -149,6 +149,6 @@ export default {
 }
 
 .chip-close:hover {
-  color: #047AFF; /* 与全局主色一致的悬停色 */
+  color: var(--app-primary); /* 与全局主色一致的悬停色 */
 }
 </style>

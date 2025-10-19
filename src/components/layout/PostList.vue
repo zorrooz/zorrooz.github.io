@@ -3,25 +3,25 @@
   <div>
     <!-- 文章列表 -->
     <div v-for="post in displayedPosts" :key="post.id" class="col-12 mb-3">
-      <div class="card shadow-sm border-0 bg-white">
+      <div class="card shadow-sm border-0" :style="{ backgroundColor: 'var(--app-card-bg)' }">
         <div class="card-body p-4 d-flex flex-column flex-md-row gap-4">
           <!-- 内容区域 -->
           <div class="flex-grow-1">
             <!-- 日期 -->
-            <small class="text-muted meta-text mb-2 d-block">
+            <small class="meta-text mb-2 d-block" :style="{ color: 'var(--app-text-muted)' }">
               {{ formatDate(post.date) }}
             </small>
 
             <!-- 标题 -->
-            <h5 class="post-title fw-bold text-dark mb-2">
-              <router-link :to="getArticlePath(post)" class="text-decoration-none text-dark">
+            <h5 class="post-title fw-bold mb-2" :style="{ color: 'var(--app-text)' }">
+              <router-link :to="getArticlePath(post)" class="text-decoration-none" :style="{ color: 'var(--app-text)' }">
                 {{ post.title }}
               </router-link>
             </h5>
 
             <!-- 分类 -->
             <div class="mb-2">
-              <small class="text-secondary meta-text">
+              <small class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
                 {{ formatCategory(post.category) }}
               </small>
             </div>
@@ -49,7 +49,7 @@
           <ul class="pagination justify-content-between align-items-center mb-0">
             <!-- 上一页按钮 -->
             <li class="page-item" :class="{ disabled: currentPage === 1 }">
-              <button class="page-link d-flex align-items-center border-0 bg-transparent text-secondary px-3 py-2"
+              <button class="page-link d-flex align-items-center border-0 bg-transparent px-3 py-2" :style="{ color: 'var(--app-text-muted)' }"
                 @click="prevPage" :disabled="currentPage === 1" aria-label="上一页">
                 <span class="me-1">&lt;</span>
                 <span>上一页</span>
@@ -89,7 +89,7 @@
 
             <!-- 下一页按钮 -->
             <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-              <button class="page-link d-flex align-items-center border-0 bg-transparent text-secondary px-3 py-2"
+              <button class="page-link d-flex align-items-center border-0 bg-transparent px-3 py-2" :style="{ color: 'var(--app-text-muted)' }"
                 @click="nextPage" :disabled="currentPage === totalPages" aria-label="下一页">
                 <span>下一页</span>
                 <span class="ms-1">&gt;</span>
@@ -310,7 +310,7 @@ export default {
 .post-title { font-size: 1.4rem; font-weight: 700; }
 
 /* 描述文本与文章页正文一致 */
-.desc-text { font-size: 1rem; line-height: 1.8; color: #212529; }
+.desc-text { font-size: 1rem; line-height: 1.8; color: var(--app-text); }
 
 /* 日期与分类统一为 1rem */
 .meta-text { font-size: 0.95rem; }
@@ -318,14 +318,14 @@ export default {
 /* 标签样式与文章页面完全一致 */
 .badge { font-size: 0.85rem; font-weight: 500; }
 .tag-badge { 
-  color: #212529 !important; 
-  background-color: #f1f3f5 !important; 
+  color: var(--app-tag-text) !important; 
+  background-color: var(--app-tag-bg) !important; 
 }
 
 .page-link {
   transition: all 0.2s ease;
-  color: #495057;
-  background-color: white;
+  color: var(--app-pagination-link-text);
+  background-color: var(--app-pagination-link-bg);
   border: none;
   outline: none;
   font-weight: 500;
@@ -338,13 +338,13 @@ export default {
 }
 
 .page-link:hover {
-  background-color: #E6F0FF;
-  color: #047AFF;
+  background-color: var(--app-primary-bg-subtle);
+  color: var(--app-primary);
 }
 
 .current-page {
-  background-color: #047AFF !important;
-  color: white !important;
+  background-color: var(--app-primary) !important;
+  color: var(--app-pagination-current-text) !important;
   font-weight: 600 !important;
 }
 
@@ -352,12 +352,4 @@ export default {
   box-shadow: none;
   outline: none;
 }
-.tag-close {
-  color: #adb5bd;
-  margin-left: 6px;
-  font-size: 0.9em;
-  line-height: 1;
-  display: inline-block;
-}
-
 </style>

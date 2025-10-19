@@ -262,11 +262,11 @@ export default {
 <style scoped>
 /* 样式保持不变 */
 .on-this-page {
-  --otp-border: var(--bs-border-color, #dee2e6);
-  --otp-muted: var(--bs-secondary-color, #6c757d);
-  --otp-bg-hover: var(--bs-tertiary-bg, #f8f9fa);
-  --otp-active-bg: var(--bs-primary-bg-subtle, #e7f1ff);
-  --otp-active: var(--bs-primary, #0d6efd);
+  --otp-border: var(--app-border);
+  --otp-muted: var(--app-text-muted);
+  --otp-bg-hover: var(--app-bg-tertiary);
+  --otp-active-bg: var(--app-primary-bg-subtle);
+  --otp-active: var(--app-primary);
   padding: 0.25rem 0;
   font-size: 0.95rem;
 }
@@ -280,7 +280,7 @@ export default {
 
 .otp-title {
   font-weight: 600;
-  color: var(--bs-body-color);
+  color: var(--app-text-emphasis);
 }
 
 .otp-list {
@@ -297,14 +297,14 @@ export default {
 .otp-link {
   display: block;
   padding: 0.3rem 0.5rem;
-  color: var(--bs-gray-700);
+  color: var(--app-text-muted);
   text-decoration: none;
   border-radius: 0.25rem;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .otp-link:hover {
-  color: var(--bs-primary);
+  color: var(--app-primary);
 }
 
 .otp-item.active > .otp-link {
@@ -321,7 +321,7 @@ export default {
 .otp-subitem .otp-sublink {
   display: block;
   padding: 0.25rem 0.5rem;
-  color: var(--bs-gray-700);
+  color: var(--app-text-muted);
   text-decoration: none;
   border-radius: 0.25rem;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -329,7 +329,7 @@ export default {
 }
 
 .otp-sublink:hover {
-  color: var(--bs-primary);
+  color: var(--app-primary);
 }
 
 .otp-subitem.active > .otp-sublink {

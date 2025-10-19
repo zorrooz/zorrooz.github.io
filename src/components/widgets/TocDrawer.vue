@@ -207,9 +207,9 @@ export default {
   right: 30px;
   width: 40px;
   height: 40px;
-  background-color: #fff; /* 纯白 */
-  color: var(--bs-body-color);
-  border: 1px solid var(--bs-border-color);
+  background-color: var(--app-btn-bg);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -217,15 +217,15 @@ export default {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--app-btn-shadow);
   z-index: 1000;
   outline: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
 }
 .toc-drawer-btn:hover {
-  background-color: #fff; /* hover 仍保持纯白 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  background-color: var(--app-btn-hover-bg);
+  box-shadow: var(--app-btn-hover-shadow);
 }
 .toc-drawer-btn:active {
   transform: scale(0.95);
@@ -240,15 +240,15 @@ export default {
 .offcanvas-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.25);
+  background: var(--app-backdrop-bg);
   z-index: 1;
 }
 .offcanvas-panel {
   position: absolute;
   top: 0; bottom: 0;
   width: min(85vw, 320px);
-  background: #e9ecef;
-  box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.08);
+  background: var(--app-offcanvas-bg);
+  box-shadow: var(--app-offcanvas-shadow);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0.75rem 0.75rem 1rem;
@@ -264,12 +264,12 @@ export default {
 }
 .section-title {
   font-size: 0.95rem;
-  color: var(--bs-gray-700);
+  color: var(--app-text-muted);
   margin-bottom: 0.25rem;
   font-weight: 600;
 }
 .offcanvas-card {
-  background-color: #fff;
+  background-color: var(--app-card-bg);
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem;

@@ -1,8 +1,8 @@
 <template>
-  <div class="app-container bg-body">
+  <div class="app-container" style="background-color: var(--app-bg);">
     <AppHeader />
 
-    <main class="main-content bg-light">
+    <main class="main-content" style="background-color: var(--app-bg-tertiary);">
       <router-view />
     </main>
 

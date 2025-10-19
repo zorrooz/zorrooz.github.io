@@ -5,15 +5,12 @@ import { RouterLink } from 'vue-router'
 
 import App from './App.vue'
 import router from './router'
-import './assets/scss/custom.scss'
-// import './assets/scss/custom.scss';
 import 'bootstrap'
+import './assets/styles/global.scss'
 import i18n from './i18n'
 import 'katex/dist/katex.min.css'
-// import 'highlight.js/styles/github.css';
 
-
-import { initTheme } from './utils/themeManager'
+import { initTheme } from './utils/theme'
 
 const app = createApp(App)
 

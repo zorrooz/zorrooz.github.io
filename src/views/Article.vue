@@ -14,12 +14,12 @@
 
       <!-- 中间：正文（8列） -->
       <div class="col-12 col-lg-8 order-1 order-lg-2" ref="mainContent">
-        <div class="card shadow-sm border-0 bg-white rounded-3">
+        <div class="card shadow-sm border-0 rounded-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
           <div class="card-body p-4">
             <div class="article-content">
           <div v-if="currentPost" class="article-meta pb-2 mb-0">
             <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
-            <div class="text-secondary d-flex flex-wrap gap-3 align-items-center">
+            <div class="d-flex flex-wrap gap-3 align-items-center" :style="{ color: 'var(--app-text-muted)' }">
               <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>更新于 {{ currentPost.date }}</span>
               <span v-if="readingMinutes"><i class="bi bi-clock me-1"></i>阅读约 {{ readingMinutes }} 分钟</span>
             </div>
@@ -533,18 +533,22 @@ export default {
 .article-content { min-height: 400px; padding: 0; }
 .article-meta { padding-bottom: 0.75rem !important; }
 
-.article-title { font-size: 2.1rem; font-weight: 700; }
-.article-meta .text-secondary { font-size: 1rem; }
+.article-title { font-size: 2.1rem; font-weight: 700; color: var(--app-text-emphasis); }
+.article-meta .text-secondary { font-size: 1rem; color: var(--app-text-muted); }
 .article-meta .badge { font-size: 0.95rem; font-weight: 500; }
 .article-meta .tag-badge { 
-  color: #212529 !important; 
-  background-color: #f1f3f5 !important; 
+  color: var(--app-tag-text) !important; 
+  background-color: var(--app-tag-bg) !important; 
 }
 
 :deep(.markdown-body) {
-  font-size: 1.125rem; line-height: 1.8; color: var(--bs-gray-800);
+  font-size: 1.125rem; line-height: 1.8; color: var(--app-text);
 }
 :deep(.markdown-body p) { margin-bottom: 0.75rem; }
+
+:deep(.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6) {
+  color: var(--app-text-emphasis);
+}
 
 :deep(.markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6) {
   position: relative; padding-right: 0; display: inline-block; width: 100%;
@@ -555,7 +559,7 @@ export default {
   font-size: 1.8rem;
   font-weight: 700;
   margin-top: 0.5rem;
-  border-bottom: 1px solid var(--bs-border-color);
+  border-bottom: 1px solid var(--app-border);
 }
 :deep(.markdown-body h3) {
   font-size: 1.6rem;
@@ -578,7 +582,7 @@ export default {
   position: relative;
   display: inline-block;
   margin-left: 0.3em;
-  color: var(--bs-gray-600);
+  color: var(--app-text-muted);
   font-size: 0.9em;
   font-weight: 400;
   opacity: 0.6;
@@ -600,7 +604,7 @@ export default {
   .heading-anchor:focus
 ) {
   opacity: 1;
-  color: var(--bs-primary);
+  color: var(--app-primary);
 }
 :deep(.heading-anchor:focus) {
   outline: none;
@@ -612,42 +616,42 @@ export default {
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   margin-top: 2rem;
-  border-top: 1px solid var(--bs-border-color);
+  border-top: 1px solid var(--app-border);
   padding-top: 1rem;
 }
 .article-nav-item {
   display: flex;
   align-items: center;
   gap: 1rem;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--app-border);
   border-radius: .5rem;
   padding: 1rem;
   text-decoration: none;
-  color: var(--bs-body-color);
+  color: var(--app-text);
   transition: all 0.2s ease-in-out;
   min-width: 0;
 }
 .article-nav-item:hover {
-  border-color: var(--bs-primary);
-  color: var(--bs-primary);
+  border-color: var(--app-primary);
+  color: var(--app-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.1);
+  box-shadow: 0 4px 12px var(--app-primary-rgb-01);
 }
 .article-nav-item.prev { grid-column: 1; }
 .article-nav-item.next { grid-column: 2; justify-content: flex-end; text-align: right; }
 .nav-arrow {
   font-size: 1.5rem; font-weight: 300; line-height: 1;
-  color: var(--bs-gray-400); transition: color 0.2s ease-in-out;
+  color: var(--app-nav-arrow-color); transition: color 0.2s ease-in-out;
 }
-.article-nav-item:hover .nav-arrow { color: var(--bs-primary); }
+.article-nav-item:hover .nav-arrow { color: var(--app-primary); }
 .nav-details { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
 
 .article-nav-item.next .nav-details { align-items: flex-end; flex: 1 1 auto; }
 .nav-label {
-  font-size: 0.875rem; color: var(--bs-gray-600);
+  font-size: 0.875rem; color: var(--app-text-muted);
   transition: color 0.2s ease-in-out;
 }
-.article-nav-item:hover .nav-label { color: var(--bs-primary); }
+.article-nav-item:hover .nav-label { color: var(--app-primary); }
 .nav-title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; }
 .article-nav-item.next .nav-title { text-align: left; max-width: 100%; }
 
