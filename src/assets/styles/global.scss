@@ -32,6 +32,7 @@
   --app-text-emphasis: #000;
   --app-primary: #0d6efd;
   --app-primary-bg-subtle: #cfe2ff;
+  --app-primary-mid: #6ea8fe;
   --app-primary-rgb-01: rgba(13, 110, 253, 0.1);
   --app-border: #dee2e6;
   --app-card-bg: #ffffff;
@@ -66,6 +67,16 @@
   --app-bg-light: #f8f9fa;
   --app-custom-border-color: var(--app-border);
   --app-custom-icon-color: var(--app-icon-color);
+  --app-success: #198754;
+  
+  /* Markdown相关变量 */
+  --app-markdown-list-marker: var(--app-primary-bg-subtle);
+  --app-markdown-code-bg: #f1f3f5;
+  --app-markdown-code-color: var(--app-primary);
+  --app-markdown-external-link-color: var(--app-primary);
+  --app-code-header-text: var(--app-text-muted); /* 代码块头部文本色 */
+  --app-code-button-bg: rgba(255, 255, 255, 0.2); /* 代码块按钮背景 */
+  --app-markdown-code-header-bg: #e9ecef; /* 新增：代码块头部背景色 */
 }
 
 /* 深色主题变量定义 */
@@ -77,6 +88,7 @@
   --app-text-emphasis: #ffffff;
   --app-primary: #0d6efd;
   --app-primary-bg-subtle: rgba(13, 110, 253, 0.3);
+  --app-primary-mid: rgba(13, 110, 253, 0.6);
   --app-primary-rgb-01: rgba(13, 110, 253, 0.1);
   --app-border: rgba(255, 255, 255, 0.15);
   --app-card-bg: #000000;
@@ -106,4 +118,57 @@
   --app-stat-num-color: #e0e0e0;
   --app-nav-arrow-color: #757575;
   --app-bg-light: #121212;
+  --app-success: #198754;
+  
+  /* Markdown相关变量 */
+  --app-markdown-list-marker: var(--app-primary-bg-subtle);
+  --app-markdown-code-bg: #121212;
+  --app-markdown-code-color: var(--app-primary);
+  --app-markdown-external-link-color: var(--app-primary);
+  --app-code-header-text: #b0b0b0; /* 代码块头部文本色 */
+  --app-code-button-bg: rgba(255, 255, 255, 0.1); /* 代码块按钮背景 */
+  --app-markdown-code-header-bg: #1a1a1a; /* 新增：代码块头部背景色 */
+}
+
+/* 代码块头部样式优化 */
+.markdown-body .code-language {
+  color: var(--app-code-header-text) !important; /* 使用主题变量 */
+}
+
+/* 标题锚点链接样式 */
+.markdown-body h2 .heading-anchor,
+.markdown-body h3 .heading-anchor,
+.markdown-body h4 .heading-anchor,
+.markdown-body h5 .heading-anchor,
+.markdown-body h6 .heading-anchor {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.3em;
+  color: var(--app-text-muted);
+  font-size: 0.9em;
+  font-weight: 400;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  line-height: 1;
+}
+
+.markdown-body h2:hover .heading-anchor,
+.markdown-body h3:hover .heading-anchor,
+.markdown-body h4:hover .heading-anchor,
+.markdown-body h5:hover .heading-anchor,
+.markdown-body h6:hover .heading-anchor,
+.heading-anchor:focus {
+  opacity: 1;
+  color: var(--app-primary);
+}
+
+.heading-anchor:focus {
+  outline: none;
+  outline-offset: 0;
 }

@@ -212,9 +212,10 @@ export default {
   border-radius: 0.25rem;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.article-link:hover {
-  background-color: var(--app-link-hover-bg);
-  color: var(--app-text-emphasis);
+.article-link:hover,
+.article-link:focus {
+  background-color: var(--app-primary-bg-subtle);
+  color: var(--app-primary);
 }
 .article-link.active {
   background-color: transparent;  /* 去背景，强调纯文字样式 */

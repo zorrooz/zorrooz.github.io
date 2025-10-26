@@ -20,7 +20,6 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 
-/* 初始化主题（根据 localStorage 加载对应 CSS 文件） */
 initTheme()
 
 app.mount('#app')

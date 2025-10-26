@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "deploy": "vite build && gh-pages -d dist --repo https://github.com/zorrooz/zorrooz.github.io.git --branch gh-pages"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist --repo https://github.com/zorrooz/zorrooz.github.io"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

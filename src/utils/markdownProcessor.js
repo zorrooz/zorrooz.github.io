@@ -7,7 +7,6 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import remarkBreaks from 'remark-breaks'
 import remarkRehype from 'remark-rehype'
-// import remarkToc from 'remark-toc'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
@@ -15,6 +14,7 @@ import rehypeStringify from 'rehype-stringify'
 import { common } from 'lowlight'
 import julia from 'highlight.js/lib/languages/julia'
 import dockerfile from 'highlight.js/lib/languages/dockerfile'
+import 'highlight.js/styles/github.css'
 const languages = { ...common, julia, dockerfile }
 
 const processor = unified()
@@ -22,7 +22,6 @@ const processor = unified()
   .use(remarkGfm)
   .use(remarkBreaks)
   .use(remarkMath)
-  // .use(remarkToc)
   .use(remarkRehype)
   .use(rehypeHighlight, { languages })
   .use(rehypeKatex, { throwOnError: false, errorColor: '#cc0000' })
