@@ -19,6 +19,7 @@ coverage
 
 # Editor directories and files
 .vscode/*
+.codebuddy/*
 !.vscode/extensions.json
 .idea
 *.suo
@@ -26,5 +27,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-
 *.tsbuildinfo
