@@ -377,8 +377,8 @@ export default {
 
 @media (max-width: 991px) {
   .sticky-sidebar { position: static; top: auto; bottom: auto !important; max-height: none !important; overflow-y: visible !important; }
-  .navigation-container { margin-bottom: 1rem; }
-  .toc-container { margin-top: 1rem; }
+  .navigation-container { margin-bottom: 1rem; margin-top: 1rem; }
+  .toc-container { margin-top: 1rem; margin-bottom: 1rem; }
   .card-body { padding: 0.75rem !important; }
   .article-content { padding: 0.25rem; }
 }

@@ -55,12 +55,12 @@
   <!-- 移动端统一左侧抽屉：全站风格一致；文章页额外显示目录 -->
   <div v-if="showMobileSidebar" class="mobile-offcanvas d-lg-none" @click.self="closeMobileSidebar">
     <div class="offcanvas-panel border-end rounded-0" :style="{ 'border-color': 'var(--app-border)', 'box-shadow': 'var(--app-offcanvas-shadow)' }">
-      <div class="offcanvas-header d-flex align-items-center justify-content-between">
+      <!-- <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <div></div>
         <button class="btn btn-sm p-2 btn-icon" @click="closeMobileSidebar" @focus="$event.target.blur()" aria-label="关闭">
           <i class="bi bi-x-lg"></i>
         </button>
-      </div>
+      </div> -->
 
       <div class="offcanvas-section">
         <div class="offcanvas-card">
@@ -294,5 +294,6 @@ onBeforeUnmount(() => {
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem;
+  margin: 1rem 0;
 }
 </style>

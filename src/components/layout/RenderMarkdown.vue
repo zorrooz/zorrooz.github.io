@@ -249,7 +249,7 @@ export default {
 /* 代码块包装器 */
 .markdown-body .code-block-wrapper {
   position: relative;
-  margin: 1.5em 0;
+  margin: 1em 0;
   border-radius: 0.5em;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -304,11 +304,39 @@ export default {
 /* 段落和标题 */
 .markdown-body p { margin-top: 0; margin-bottom: 1em; }
 .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
   font-weight: 600;
   line-height: 1.25;
   color: var(--app-text-emphasis);
+}
+
+.markdown-body h1 {
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.markdown-body h2 {
+  margin-top: 1em;
+  margin-bottom: 0.4em;
+}
+
+.markdown-body h3 {
+  margin-top: 0.8em;
+  margin-bottom: 0.3em;
+}
+
+.markdown-body h4 {
+  margin-top: 0.6em;
+  margin-bottom: 0.2em;
+}
+
+.markdown-body h5 {
+  margin-top: 0.5em;
+  margin-bottom: 0.15em;
+}
+
+.markdown-body h6 {
+  margin-top: 0.4em;
+  margin-bottom: 0.1em;
 }
 .markdown-body h1 { font-size: 2em; }
 .markdown-body h2 { font-size: 1.5em; }
