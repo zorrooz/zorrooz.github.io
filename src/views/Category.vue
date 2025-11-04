@@ -31,7 +31,7 @@
                       <small class="meta-text" :style="{ color: 'var(--app-text-muted)' }">{{ formatMonth(getLatestDate(item)) }}</small>
                       <!-- 项目：GitHub 图标紧跟日期 -->
                       <a
-                        v-if="category.title === '项目' && item.github"
+                        v-if="category.title === projectsTitle && item.github"
                         :href="normalizeUrl(item.github)"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -43,7 +43,7 @@
                       </a>
                       <!-- 课题：链接图标紧跟日期 -->
                       <a
-                        v-else-if="category.title === '课题' && item.doi"
+                        v-else-if="category.title === topicsTitle && item.doi"
                         :href="normalizeUrl(item.doi)"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -58,30 +58,30 @@
                     <!-- 动作图标并入标题下方的信息行，此处移除 -->
 
                     <!-- 简介 -->
-                    <p class="mb-2 flex-grow-1 desc-text" :style="{ color: 'var(--app-text-muted)' }">
+                    <p class="mb-2 flex-grow-1 desc-text" :style="{ color: 'var(--app-text-secondary)' }">
                       {{ item.desc }}
                     </p>
 
                     <!-- 标签（项目与课题）：与 PostList 一致的轻胶囊 -->
-                    <div v-if="category.title !== '笔记' && Array.isArray(item.tags) && item.tags.length" class="d-flex flex-wrap gap-2 mb-2">
+                    <div v-if="category.title !== notesTitle && Array.isArray(item.tags) && item.tags.length" class="d-flex flex-wrap gap-2 mb-2">
                       <span v-for="(tag, tIdx) in item.tags" :key="tIdx" class="badge tag-badge fw-normal py-1 px-2 rounded-3">
                         # {{ tag }}
                       </span>
                     </div>
 
                     <!-- 指标区（笔记）：完全参考 ProfileCard 统计条风格 -->
-                    <div v-if="category.title === '笔记'" class="row g-0 text-center stats-row mb-2 w-100" :style="{ 'border-color': 'var(--app-border)' }">
+                    <div v-if="category.title === t('notes')" class="row g-0 text-center stats-row mb-2 w-100" :style="{ 'border-color': 'var(--app-border)' }">
                       <div v-if="Array.isArray(item.tags) && item.tags.length" class="col border-end">
                         <div class="fw-bold stat-num">{{ item.tags.length }}</div>
-                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">标签</div>
+                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">{{ t('tags') }}</div>
                       </div>
                       <div v-if="item.stats && item.stats.postsCount" class="col border-end">
                         <div class="fw-bold stat-num">{{ item.stats.postsCount }}</div>
-                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">文章</div>
+                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">{{ articlesText }}</div>
                       </div>
                       <div v-if="item.stats && item.stats.totalWords" class="col">
                         <div class="fw-bold stat-num">{{ formatWords(item.stats.totalWords) }}</div>
-                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">字数</div>
+                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">{{ wordsText }}</div>
                       </div>
                     </div>
 
@@ -99,7 +99,7 @@
                         :style="{ color: 'var(--app-primary)', transition: 'transform 0.2s ease' }" @click="() => handleSeeMore(item)"
                         @mouseenter="e => e.target.style.transform = 'translateX(2px)'"
                         @mouseleave="e => e.target.style.transform = 'translateX(0)'">
-                        查看更多
+                        {{ seeMoreText }}
                         <i class="bi bi-arrow-right"></i>
                       </span>
                     </div>
@@ -115,21 +115,67 @@
 </template>
 
 <script>
-import categoryData from '@/content/categories.json';
+import { useI18n } from 'vue-i18n';
+import { loadCategories } from '@/utils/contentLoader';
+
 
 export default {
   name: 'CategoryView',
+  setup() {
+    const { t, locale } = useI18n();
+    return { t, locale };
+  },
   data() {
     return {
-      categoryList: [],
-      pageTitle: '分类'
+      categoryList: []
     };
   },
-  created() {
-    // 适配新的 JSON：顶层直接是数组
-    this.categoryList = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || []);
+  computed: {
+    pageTitle() {
+      return this.t('categories');
+    },
+    notesTitle() {
+      return this.t('notes');
+    },
+    projectsTitle() {
+      return this.t('projects');
+    },
+    topicsTitle() {
+      return this.t('topics');
+    },
+    tagsText() {
+      return this.t('tags');
+    },
+    articlesText() {
+      return this.t('articles');
+    },
+    wordsText() {
+      return this.t('words');
+    },
+    seeMoreText() {
+      return this.t('seeMore');
+    }
   },
+  async created() {
+    await this.loadCategoryData();
+  },
+  
+  watch: {
+    locale() {
+      this.loadCategoryData();
+    }
+  },
+  
   methods: {
+    async loadCategoryData() {
+      try {
+        const categoryData = await loadCategories();
+        this.categoryList = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || []);
+      } catch (error) {
+        console.error('Failed to load category data:', error);
+        this.categoryList = [];
+      }
+    },
     getLatestDate(item) {
       return (item && item.stats && item.stats.latestDate) || '';
     },

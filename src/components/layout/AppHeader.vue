@@ -92,23 +92,33 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { setTheme } from '@/utils/theme';
+import { useI18n } from 'vue-i18n';
+import { useAppStore } from '@/stores/app';
 import NavigationTree from '@/components/layout/NavigationTree.vue';
 
 const route = useRoute();
+const { t, locale } = useI18n();
+const appStore = useAppStore();
 const mobileMenuOpen = ref(false);
 const showMobileSidebar = ref(false);
 const logoStyle = ref({});
 
-const navItems = [
-  { icon: 'fa-layer-group', text: '分类', href: '/category' },
-  { icon: 'fa-folder-open', text: '资源', href: '/resource' },
-  { icon: 'fa-info-circle', text: '关于', href: '/about' },
-];
+const navItems = ref([
+  { icon: 'fa-layer-group', text: t('categories'), href: '/category' },
+  { icon: 'fa-folder-open', text: t('resources'), href: '/resource' },
+  { icon: 'fa-info-circle', text: t('about'), href: '/about' },
+]);
 
-const currentTheme = ref(localStorage.getItem('theme') || 'auto');
+// 监听语言变化，更新导航项文本
+watch(locale, () => {
+  navItems.value = [
+    { icon: 'fa-layer-group', text: t('categories'), href: '/category' },
+    { icon: 'fa-folder-open', text: t('resources'), href: '/resource' },
+    { icon: 'fa-info-circle', text: t('about'), href: '/about' },
+  ];
+});
 
 const isArticle = computed(() => route.name === 'Article');
 
@@ -124,15 +134,11 @@ const resetLogo = () => {
 };
 
 const toggleTheme = () => {
-  const modes = ['auto', 'light', 'dark'];
-  const currentIndex = modes.indexOf(currentTheme.value);
-  const nextIndex = (currentIndex + 1) % modes.length;
-  currentTheme.value = modes[nextIndex];
-  setTheme(currentTheme.value);
+  appStore.toggleTheme();
 };
 
 const toggleLanguage = () => {
-  console.log('切换语言');
+  appStore.toggleLanguage();
 };
 
 const onMobileMenuClick = () => {
@@ -188,7 +194,8 @@ const handleDirectoryClick = (event) => {
 
 let _openSidebarHandler = null;
 onMounted(() => {
-  currentTheme.value = localStorage.getItem('theme') || 'auto';
+  appStore.initTheme();
+  appStore.initLocale();
 
   _openSidebarHandler = () => openMobileSidebar();
   window.addEventListener('open-mobile-sidebar', _openSidebarHandler);

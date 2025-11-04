@@ -2,7 +2,7 @@
 <template>
   <div class="card shadow-sm border-0 mb-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
     <div class="card-header border-0 px-4 py-2" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-      <h6 class="m-0" :style="{ color: 'var(--app-text-muted)' }">标签</h6>
+      <h6 class="m-0" :style="{ color: 'var(--app-text-muted)' }">{{ tagsText }}</h6>
     </div>
     <div class="card-body px-4 pt-2 pb-3">
       <div class="d-flex flex-wrap gap-2">
@@ -15,8 +15,20 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
+
 export default {
   name: 'TagCloud',
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  },
+  computed: {
+    tagsText() {
+      return this.t('tags')
+    }
+  },
   props: {
     tagData: {
       type: Array,

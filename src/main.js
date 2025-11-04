@@ -7,10 +7,10 @@ import App from './App.vue'
 import router from './router'
 import 'bootstrap'
 import './assets/styles/global.scss'
-import i18n from './i18n'
+import i18n from './stores/i18n'
 import 'katex/dist/katex.min.css'
 
-import { initTheme } from './utils/theme'
+import { useAppStore } from './stores/app'
 
 const app = createApp(App)
 
@@ -20,6 +20,9 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 
-initTheme()
+// 初始化应用状态
+const appStore = useAppStore()
+appStore.initTheme()
+appStore.initLocale()
 
 app.mount('#app')

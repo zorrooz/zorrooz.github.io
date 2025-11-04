@@ -4,7 +4,7 @@
     v-show="visible"
     class="toc-drawer-btn d-lg-none"
     @click="openDrawer"
-    aria-label="打开本页目录"
+    :aria-label="t('openToc')"
     @touchstart.prevent.stop="onTouchStart"
     @touchmove.prevent.stop="onTouchMove"
     @touchend.prevent.stop="onTouchEnd"
@@ -17,7 +17,7 @@
   <div v-if="show" class="mobile-offcanvas d-lg-none" @click.self="close">
     <div class="offcanvas-panel offcanvas-right border-start rounded-0 shadow-sm">
       <!-- <div class="offcanvas-header d-flex align-items-center justify-content-end">
-        <button class="btn btn-sm p-2 btn-icon" @click="close" @focus="$event.target.blur()" aria-label="关闭">
+        <button class="btn btn-sm p-2 btn-icon" @click="close" @focus="$event.target.blur()" :aria-label="t('close')">
           <i class="bi bi-x-lg"></i>
         </button>
       </div> -->
@@ -38,10 +38,15 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
 import OnThisPage from '@/components/layout/OnThisPage.vue';
 
 export default {
   name: 'TocDrawer',
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  },
   components: { OnThisPage },
   data() {
     return {

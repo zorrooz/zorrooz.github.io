@@ -1,7 +1,7 @@
 <template>
   <nav class="on-this-page">
     <div class="otp-header">
-      <span class="otp-title">本页目录</span>
+      <span class="otp-title">{{ t('tableOfContents') }}</span>
     </div>
 
     <ul class="otp-list">
@@ -22,8 +22,14 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'OnThisPage',
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  },
   props: {
     containerSelector: {
       type: String,

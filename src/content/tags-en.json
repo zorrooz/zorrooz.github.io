@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Alignment",
+    "count": 1
+  },
+  {
+    "name": "Automation",
+    "count": 1
+  },
+  {
+    "name": "Bash",
+    "count": 1
+  },
+  {
+    "name": "Beginner",
+    "count": 1
+  },
+  {
+    "name": "Bioinformatics",
+    "count": 6
+  },
+  {
+    "name": "Biopython",
+    "count": 1
+  },
+  {
+    "name": "BWA",
+    "count": 1
+  },
+  {
+    "name": "Command Line",
+    "count": 2
+  },
+  {
+    "name": "Componentization",
+    "count": 1
+  },
+  {
+    "name": "Data Analysis",
+    "count": 1
+  },
+  {
+    "name": "Data Cleaning",
+    "count": 2
+  },
+  {
+    "name": "Data Processing",
+    "count": 2
+  },
+  {
+    "name": "Data Visualization",
+    "count": 2
+  },
+  {
+    "name": "FASTQ",
+    "count": 1
+  },
+  {
+    "name": "Frontend Development",
+    "count": 1
+  },
+  {
+    "name": "Genome Alignment",
+    "count": 1
+  },
+  {
+    "name": "Genomics",
+    "count": 1
+  },
+  {
+    "name": "ggplot2",
+    "count": 1
+  },
+  {
+    "name": "HISAT2",
+    "count": 1
+  },
+  {
+    "name": "Human Genome",
+    "count": 1
+  },
+  {
+    "name": "JavaScript",
+    "count": 1
+  },
+  {
+    "name": "Mass Spectrometry Analysis",
+    "count": 1
+  },
+  {
+    "name": "MaxQuant",
+    "count": 1
+  },
+  {
+    "name": "NGS",
+    "count": 1
+  },
+  {
+    "name": "Pandas",
+    "count": 2
+  },
+  {
+    "name": "Proteomics",
+    "count": 1
+  },
+  {
+    "name": "Python",
+    "count": 3
+  },
+  {
+    "name": "Quantitative Analysis",
+    "count": 1
+  },
+  {
+    "name": "R Language",
+    "count": 2
+  },
+  {
+    "name": "Reactive",
+    "count": 1
+  },
+  {
+    "name": "RNA-Seq",
+    "count": 1
+  },
+  {
+    "name": "SAM/BAM",
+    "count": 1
+  },
+  {
+    "name": "Script Programming",
+    "count": 1
+  },
+  {
+    "name": "Sequence Analysis",
+    "count": 1
+  },
+  {
+    "name": "Shell",
+    "count": 1
+  },
+  {
+    "name": "Statistical Analysis",
+    "count": 1
+  },
+  {
+    "name": "Statistical Charts",
+    "count": 1
+  },
+  {
+    "name": "Transcriptomics",
+    "count": 1
+  },
+  {
+    "name": "Vue.js",
+    "count": 1
+  }
+]

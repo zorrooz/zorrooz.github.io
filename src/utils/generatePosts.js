@@ -6,9 +6,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const contentDir = path.join(__dirname, '../content');
-const notesJsonPath = path.join(contentDir, 'notes.json');
-const postsJsonPath = path.join(contentDir, 'posts.json');
-const categoriesJsonPath = path.join(contentDir, 'categories.json');
+
+// 根据语言获取对应的文件路径
+function getFilePaths(locale = 'zh-CN') {
+  const suffix = locale === 'zh-CN' ? '' : '-en';
+  return {
+    notesJsonPath: path.join(contentDir, `notes${suffix}.json`),
+    postsJsonPath: path.join(contentDir, `posts${suffix}.json`),
+    categoriesJsonPath: path.join(contentDir, `categories${suffix}.json`)
+  };
+}
 
 function ensureDirectoryExistence(filePath) {
   const dir = path.dirname(filePath);
@@ -90,25 +97,27 @@ function buildPostsFromNotes(notesArr, notesCategoryMap) {
   return posts;
 }
 
-function generatePostsJson() {
-  if (!fs.existsSync(notesJsonPath)) {
-    console.error(`notes.json not found at ${notesJsonPath}. Please run generateNotes.js first.`);
+function generatePostsJson(locale = 'zh-CN') {
+  const paths = getFilePaths(locale);
+  
+  if (!fs.existsSync(paths.notesJsonPath)) {
+    console.error(`notes${locale === 'zh-CN' ? '' : '-en'}.json not found at ${paths.notesJsonPath}. Please run generateNotes.js first.`);
     process.exitCode = 1;
     return;
   }
 
   let notesArr = [];
   try {
-    const raw = fs.readFileSync(notesJsonPath, 'utf-8').trim();
+    const raw = fs.readFileSync(paths.notesJsonPath, 'utf-8').trim();
     // notes.json 是数组
     notesArr = JSON.parse(raw);
     if (!Array.isArray(notesArr)) {
-      console.error('notes.json is not an array. Abort.');
+      console.error(`notes${locale === 'zh-CN' ? '' : '-en'}.json is not an array. Abort.`);
       process.exitCode = 1;
       return;
     }
   } catch (e) {
-    console.error('Failed to read/parse notes.json:', e?.message || e);
+    console.error(`Failed to read/parse notes${locale === 'zh-CN' ? '' : '-en'}.json:`, e?.message || e);
     process.exitCode = 1;
     return;
   }
@@ -116,8 +125,8 @@ function generatePostsJson() {
   // 读取 categories.json（若不存在则回退老逻辑）
   let categoriesArr = [];
   try {
-    if (fs.existsSync(categoriesJsonPath)) {
-      const rawCat = fs.readFileSync(categoriesJsonPath, 'utf-8').trim();
+    if (fs.existsSync(paths.categoriesJsonPath)) {
+      const rawCat = fs.readFileSync(paths.categoriesJsonPath, 'utf-8').trim();
       categoriesArr = JSON.parse(rawCat);
     }
   } catch {
@@ -128,18 +137,20 @@ function generatePostsJson() {
   const posts = buildPostsFromNotes(notesArr, notesCategoryMap);
 
   try {
-    ensureDirectoryExistence(postsJsonPath);
-    fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf-8');
-    console.log(`Successfully generated: ${postsJsonPath} (${posts.length} posts)`);
+    const targetPath = paths.postsJsonPath;
+    ensureDirectoryExistence(targetPath);
+    fs.writeFileSync(targetPath, JSON.stringify(posts, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${targetPath} (${posts.length} posts)`);
   } catch (e) {
-    console.error('Failed to write posts.json:', e?.message || e);
+    console.error(`Failed to write ${locale} posts.json:`, e?.message || e);
     process.exitCode = 1;
   }
 }
 
 function main() {
   console.log('Starting posts.json generation script...');
-  generatePostsJson();
+  generatePostsJson('zh-CN');
+  generatePostsJson('en-US');
   console.log('posts.json generation complete.');
 }
 

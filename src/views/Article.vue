@@ -18,8 +18,8 @@
               <div v-if="currentPost" class="article-meta pb-2 mb-0">
                 <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
                 <div class="d-flex flex-wrap gap-3 align-items-center" :style="{ color: 'var(--app-text-muted)' }">
-                  <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>更新于 {{ currentPost.date }}</span>
-                  <span v-if="readingMinutes"><i class="bi bi-clock me-1"></i>阅读约 {{ readingMinutes }} 分钟</span>
+                  <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>{{ updatedAtText }} {{ currentPost.date }}</span>
+                  <span v-if="readingMinutes > 0"><i class="bi bi-clock me-1"></i>{{ $t('readingTime', { minutes: readingMinutes }) }}</span>
                 </div>
                 <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
                   <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="badge tag-badge fw-normal py-1 px-2 rounded-3">
@@ -41,13 +41,13 @@
                 <router-link v-if="prevPost" :to="toArticle(prevPost.path)" class="article-nav-item prev">
                   <div class="nav-arrow"><</div>
                   <div class="nav-details">
-                    <div class="nav-label">上一页</div>
+                    <div class="nav-label">{{ prevPageText }}</div>
                     <div class="nav-title">{{ prevPost.title }}</div>
                   </div>
                 </router-link>
                 <router-link v-if="nextPost" :to="toArticle(nextPost.path)" class="article-nav-item next">
                   <div class="nav-details">
-                    <div class="nav-label">下一页</div>
+                    <div class="nav-label">{{ nextPageText }}</div>
                     <div class="nav-title">{{ nextPost.title }}</div>
                   </div>
                   <div class="nav-arrow">></div>
@@ -78,17 +78,24 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
 import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
-import categoryData from '@/content/categories.json'
+import { loadCategories, loadMarkdownContent } from '@/utils/contentLoader'
+
+
 
 const markdownModules = import.meta.glob('../content-src/**/*.md', { query: '?raw', import: 'default', eager: false });
 const keys = Object.keys(markdownModules);
 
 export default {
   name: 'ArticleView',
+  setup() {
+    const { t, locale } = useI18n()
+    return { t, locale }
+  },
   components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawer },
   props: { path: { type: [String, Array], default: '' } },
   data() {
@@ -96,17 +103,51 @@ export default {
       rawMarkdown: '', 
       currentPath: '', 
       allArticles: [], 
-      groupedArticles: {}, 
+      groupedArticles: {},
+      categoryList: [],
       viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024) 
     }
   },
   computed: {
     isDesktop() { return this.viewportWidth >= 992 },
     isNote() { return !!(this.currentPost?.path && this.currentPost.path.startsWith('notes/')); },
+    updatedAtText() {
+      return this.t('updatedAt')
+    },
+    readingTimeText() {
+      return this.t('readingTime');
+    },
+    prevPageText() {
+      return this.t('prevPage')
+    },
+    nextPageText() {
+      return this.t('nextPage')
+    },
     
     currentPost() {
       if (!this.currentPath) return null;
-      return this.allArticles.find(article => article.path.replace(/\.md$/, '') === this.currentPath.replace(/\.md$/, ''));
+      
+      // 根据当前语言构建正确的路径匹配逻辑
+      const locale = this.locale;
+      const isEnglish = locale === 'en-US';
+      
+      return this.allArticles.find(article => {
+        const articlePath = article.path.replace(/\.md$/, '');
+        const currentPath = this.currentPath.replace(/\.md$/, '');
+        
+        // 处理语言后缀匹配
+        if (isEnglish) {
+          // 英文环境：优先匹配带-en后缀的文章，如果没有则匹配无后缀的文章
+          return articlePath === currentPath || 
+                 articlePath === currentPath.replace(/-en$/, '') ||
+                 articlePath.replace(/-en$/, '') === currentPath;
+        } else {
+          // 中文环境：优先匹配无后缀的文章，如果没有则匹配带-en后缀的文章
+          return articlePath === currentPath || 
+                 articlePath === currentPath + '-en' ||
+                 articlePath.replace(/-en$/, '') === currentPath;
+        }
+      });
     },
 
     groupLinearArticles() {
@@ -125,8 +166,9 @@ export default {
         linear.push({ title, path: `${pathNoExt}.md` });
       };
 
-      if (Array.isArray(categoryData)) {
-        for (const section of categoryData) {
+      // 使用动态加载的分类数据
+      if (Array.isArray(this.categoryList)) {
+        for (const section of this.categoryList) {
           if (!Array.isArray(section.items)) continue;
           for (const item of section.items) {
             if (item?.name !== group) continue;
@@ -168,16 +210,23 @@ export default {
       return Math.max(1, Math.round(text.length / 800));
     }
   },
-  created() {
-    this.buildFromCategories();
+  async created() {
+    await this.buildFromCategories();
     this.loadArticleContent();
   },
-  mounted() {
-    this.viewportWidth = window.innerWidth;
-    window.addEventListener('resize', this.onResize);
-    window.addEventListener('scroll', this.updateSidebarDimensions);
-  },
   watch: {
+    locale: {
+      handler(newLocale, oldLocale) {
+        if (newLocale !== oldLocale) {
+          // 语言切换时重新构建分类数据并加载对应语言的文章内容
+          this.buildFromCategories().then(() => {
+            // 强制重新加载当前文章的内容
+            this.loadArticleContent();
+          });
+        }
+      },
+      immediate: false
+    },
     '$route': {
       handler(to, from) {
         const oldPath = this.normalizeRoutePathParam(from?.params?.path);
@@ -193,6 +242,11 @@ export default {
       this.$nextTick(() => this.updateSidebarDimensions());
     }
   },
+  mounted() {
+    this.viewportWidth = window.innerWidth;
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('scroll', this.updateSidebarDimensions);
+  },
   beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('scroll', this.updateSidebarDimensions);
@@ -202,7 +256,7 @@ export default {
       return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } };
     },
 
-    buildFromCategories() {
+    async buildFromCategories() {
       const all = [], grouped = {};
 
       const pushArticle = (artTitle, articleUrl, tags = [], dateStr = '') => {
@@ -221,28 +275,42 @@ export default {
         all.push(art);
       };
 
-      if (Array.isArray(categoryData)) {
-        categoryData.forEach(section => {
-          if (!Array.isArray(section.items)) return;
-          section.items.forEach(item => {
-            const itemLatest = item?.stats?.latestDate || '';
-            if (Array.isArray(item.articles)) {
-              item.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest));
-            }
-            if (Array.isArray(item.categories)) {
-              item.categories.forEach(cat => {
-                const catLatest = cat?.stats?.latestDate || itemLatest || '';
-                if (Array.isArray(cat.articles)) {
-                  cat.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest));
-                }
-              });
-            }
+      try {
+        // 使用新的内容加载工具函数
+        const categoryData = await loadCategories();
+        
+        if (Array.isArray(categoryData)) {
+          categoryData.forEach(section => {
+            if (!Array.isArray(section.items)) return;
+            section.items.forEach(item => {
+              const itemLatest = item?.stats?.latestDate || '';
+              if (Array.isArray(item.articles)) {
+                item.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest));
+              }
+              if (Array.isArray(item.categories)) {
+                item.categories.forEach(cat => {
+                  const catLatest = cat?.stats?.latestDate || itemLatest || '';
+                  if (Array.isArray(cat.articles)) {
+                    cat.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest));
+                  }
+                });
+              }
+            });
           });
-        });
-      }
+        }
 
-      this.allArticles = all;
-      this.groupedArticles = grouped;
+        this.allArticles = all;
+        this.groupedArticles = grouped;
+        this.categoryList = categoryData;
+      } catch (error) {
+        console.error('Failed to load category data:', error);
+        this.allArticles = [];
+        this.groupedArticles = {};
+        this.categoryList = [];
+      }
+      
+      // 返回Promise以便链式调用
+      return Promise.resolve();
     },
 
     onResize() {
@@ -250,6 +318,7 @@ export default {
       this.updateSidebarDimensions();
     },
 
+    // 此方法已不再需要，因为MD文件加载已由loadMarkdownContent函数处理
     getMatchedKey(rel) {
       const normalized = rel.replace(/^notes\//, 'notes/');
       const candidates = [
@@ -257,7 +326,15 @@ export default {
         `/content-src/${normalized}?raw`, `${normalized}?raw`,
         `../content-src/${normalized}`, `../content-src/${normalized}?raw`
       ];
-      return keys.find(k => candidates.some(suf => k.endsWith(suf)));
+      
+      // 优先查找英文版本的内容文件
+      if (this.locale === 'en-US') {
+        const enCandidates = candidates.map(candidate => candidate.replace('.md', '-en.md'));
+        const enKey = Object.keys(markdownModules).find(k => enCandidates.some(suf => k.endsWith(suf)));
+        if (enKey) return enKey;
+      }
+      
+      return Object.keys(markdownModules).find(k => candidates.some(suf => k.endsWith(suf)));
     },
 
     normalizeRoutePathParam(p) {
@@ -268,15 +345,41 @@ export default {
       this.rawMarkdown = '';
       try {
         const currentPathClean = this.normalizeRoutePathParam(this.$route.params.path);
-        const matchedPost = this.allArticles.find(article => article.path.replace(/\.md$/, '') === currentPathClean);
+        
+        // 根据当前语言动态匹配文章
+        const locale = this.locale;
+        const isEnglish = locale === 'en-US';
+        
+        // 优先在当前语言的文章列表中查找
+        let matchedPost = this.allArticles.find(article => {
+          const articlePath = article.path.replace(/\.md$/, '');
+          
+          if (isEnglish) {
+            // 英文环境：优先匹配带-en后缀的文章
+            return articlePath === currentPathClean || 
+                   articlePath === currentPathClean.replace(/-en$/, '') + '-en';
+          } else {
+            // 中文环境：优先匹配无后缀的文章
+            return articlePath === currentPathClean || 
+                   articlePath === currentPathClean.replace(/-en$/, '');
+          }
+        });
+        
+        // 如果没找到，放宽匹配条件
+        if (!matchedPost) {
+          matchedPost = this.allArticles.find(article => {
+            const articlePath = article.path.replace(/\.md$/, '');
+            const cleanCurrentPath = currentPathClean.replace(/-en$/, '');
+            return articlePath === cleanCurrentPath || 
+                   articlePath === cleanCurrentPath + '-en';
+          });
+        }
+        
         if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`);
         this.currentPath = matchedPost.path;
 
-        const matchedKey = this.getMatchedKey(this.currentPath);
-        if (!matchedKey) throw new Error(`Markdown not found: ${this.currentPath}`);
-
-        const markdownModule = await markdownModules[matchedKey]();
-        this.rawMarkdown = markdownModule;
+        // 强制重新加载Markdown内容
+        this.rawMarkdown = await loadMarkdownContent(this.currentPath);
 
         this.$nextTick(() => {
           this.updateSidebarDimensions();

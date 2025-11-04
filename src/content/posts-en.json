@@ -1,0 +1,194 @@
+[
+  {
+    "id": 1,
+    "no": 1,
+    "title": "BWA MEM Human Genome Alignment Practice",
+    "date": "2025-09-19",
+    "category": [
+      "Omics",
+      "genomics"
+    ],
+    "tags": [
+      "BWA",
+      "Genome Alignment",
+      "NGS",
+      "Command Line",
+      "Human Genome",
+      "SAM/BAM"
+    ],
+    "preview": "Recording standard usage workflow and parameter optimization of BWA MEM in human WGS data",
+    "wordCount": 28
+  },
+  {
+    "id": 2,
+    "no": 2,
+    "title": "MaxQuant Proteomics Analysis Workflow",
+    "date": "2025-09-19",
+    "category": [
+      "Omics",
+      "proteomics"
+    ],
+    "tags": [
+      "MaxQuant",
+      "Proteomics",
+      "Mass Spectrometry Analysis",
+      "Bioinformatics",
+      "Quantitative Analysis"
+    ],
+    "preview": "Detailed recording of standard workflow and parameter settings for MaxQuant in proteomics data analysis",
+    "wordCount": 64
+  },
+  {
+    "id": 3,
+    "no": 3,
+    "title": "RNA-Seq Analysis: HISAT2 Alignment Workflow",
+    "date": "2025-09-19",
+    "category": [
+      "Omics",
+      "transcriptomics"
+    ],
+    "tags": [
+      "RNA-Seq",
+      "HISAT2",
+      "Transcriptomics",
+      "Alignment",
+      "Bioinformatics"
+    ],
+    "preview": "Standard workflow for RNA-Seq data alignment using HISAT2",
+    "wordCount": 51
+  },
+  {
+    "id": 4,
+    "no": 4,
+    "title": "Vue.js Frontend Development Introduction",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "javascript"
+    ],
+    "tags": [
+      "JavaScript",
+      "Vue.js",
+      "Frontend Development",
+      "Componentization",
+      "Reactive"
+    ],
+    "preview": "Application of Vue.js framework in scientific data visualization frontend development",
+    "wordCount": 176
+  },
+  {
+    "id": 5,
+    "no": 5,
+    "title": "Biopython Bioinformatics Applications",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "python"
+    ],
+    "tags": [
+      "Python",
+      "Biopython",
+      "Bioinformatics",
+      "Sequence Analysis",
+      "Genomics"
+    ],
+    "preview": "Application of Biopython library in sequence analysis and genomic data processing",
+    "wordCount": 43
+  },
+  {
+    "id": 6,
+    "no": 6,
+    "title": "Processing FASTQ Quality Statistics with Pandas",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "python"
+    ],
+    "tags": [
+      "Python",
+      "Pandas",
+      "FASTQ",
+      "Data Cleaning",
+      "Bioinformatics",
+      "Beginner"
+    ],
+    "preview": "Demonstrating how to quickly analyze sequencing data quality reports using Python Pandas",
+    "wordCount": 31
+  },
+  {
+    "id": 7,
+    "no": 7,
+    "title": "Python Pandas Data Processing Practice",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "python"
+    ],
+    "tags": [
+      "Python",
+      "Pandas",
+      "Data Processing",
+      "Data Analysis",
+      "Data Cleaning"
+    ],
+    "preview": "Common operations and techniques of Pandas library in bioinformatics data processing",
+    "wordCount": 26
+  },
+  {
+    "id": 8,
+    "no": 8,
+    "title": "R Language Data Processing Example",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "r"
+    ],
+    "tags": [
+      "R Language",
+      "Data Processing",
+      "Statistical Analysis",
+      "Data Visualization",
+      "Bioinformatics"
+    ],
+    "preview": "Demonstrating basic applications of R language in bioinformatics data processing",
+    "wordCount": 30
+  },
+  {
+    "id": 9,
+    "no": 9,
+    "title": "R Language ggplot2 Data Visualization",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "r"
+    ],
+    "tags": [
+      "R Language",
+      "ggplot2",
+      "Data Visualization",
+      "Statistical Charts",
+      "Bioinformatics"
+    ],
+    "preview": "Application of ggplot2 in bioinformatics data visualization",
+    "wordCount": 16
+  },
+  {
+    "id": 10,
+    "no": 10,
+    "title": "Bash Shell Script Programming",
+    "date": "2025-09-19",
+    "category": [
+      "Programming",
+      "shell"
+    ],
+    "tags": [
+      "Shell",
+      "Bash",
+      "Command Line",
+      "Script Programming",
+      "Automation"
+    ],
+    "preview": "Automation applications of Bash Shell scripts in bioinformatics data processing",
+    "wordCount": 22
+  }
+]

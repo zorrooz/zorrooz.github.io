@@ -5,9 +5,9 @@
       <div class="col-lg-10 col-xl-8 typography-body">
         <!-- 页面标题 -->
         <div class="text-center mb-4">
-          <h1 class="article-title mb-3">资源</h1>
-          <p style="color: var(--app-text-muted); margin-top: 0.75rem; margin-bottom: 0;">
-            生物信息学与结构生物学领域常用工具
+          <h1 class="article-title mb-3">{{ pageTitle }}</h1>
+          <p style="color: var(--app-text-secondary); margin-top: 0.75rem; margin-bottom: 0;">
+            {{ pageSubtitle }}
           </p>
         </div>
 
@@ -22,7 +22,7 @@
             <div class="ms-3">
               <div v-for="sub in category.children" :key="sub.title" class="mb-4">
                 <!-- 二级分类 -->
-                <h3 class="h5 fw-semibold mb-3" style="color: var(--app-text-emphasis);">
+                <h3 class="h5 fw-semibold mb-3" style="color: var(--app-text-muted);">
                   {{ sub.title }}
                 </h3>
 
@@ -35,7 +35,7 @@
                       {{ item.name }}
                     </a>
                     <!-- 描述文字：标准博文大小 -->
-                    <p style="color: var(--app-text-muted); margin-bottom: 0; margin-left: 0.75rem;">
+                    <p style="color: var(--app-text-secondary); margin-bottom: 0; margin-left: 0.75rem;">
                       {{ item.desc }}
                     </p>
                   </li>
@@ -47,9 +47,9 @@
 
         <!-- 提示信息：使用相同浅灰线 -->
         <div class="text-center mt-5 pt-4" style="border-top: 1px solid var(--app-custom-border-color);">
-          <p style="color: var(--app-text-muted); margin-bottom: 0;">
+          <p style="color: var(--app-text-secondary); margin-bottom: 0;">
             <i class="bi bi-info-circle me-1"></i>
-            资源页面正在持续更新中，敬请期待更多优质内容
+            {{ footerText }}
           </p>
         </div>
       </div>
@@ -58,12 +58,47 @@
 </template>
 
 <script>
-import resources from '@/content/resources.json'
+import { useI18n } from 'vue-i18n'
+import { loadResources } from '@/utils/contentLoader'
+
 
 export default {
   name: 'ResourceView',
+  setup() {
+    const { t, locale } = useI18n()
+    return { t, locale }
+  },
   data() {
-    return { resources }
+    return { resources: [] }
+  },
+  computed: {
+    pageTitle() {
+      return this.t('resources')
+    },
+    pageSubtitle() {
+      return this.t('resourceSubtitle')
+    },
+    footerText() {
+      return this.t('updating')
+    }
+  },
+  created() {
+    this.loadResourcesData()
+  },
+  watch: {
+    locale() {
+      this.loadResourcesData()
+    }
+  },
+  methods: {
+    async loadResourcesData() {
+      try {
+        this.resources = await loadResources() || [];
+      } catch (error) {
+        console.error('Failed to load resources data:', error);
+        this.resources = [];
+      }
+    }
   }
 }
 </script>

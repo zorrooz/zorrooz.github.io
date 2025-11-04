@@ -8,7 +8,14 @@ const __dirname = path.dirname(__filename);
 const contentSrcDir = path.join(__dirname, '../content-src');
 const projectsSrcDir = path.join(contentSrcDir, 'projects');
 const contentOutputDir = path.join(__dirname, '../content');
-const outputPath = path.join(contentOutputDir, 'projects.json');
+
+// 根据语言获取对应的文件路径
+function getFilePaths(locale = 'zh-CN') {
+  const suffix = locale === 'zh-CN' ? '' : '-en';
+  return {
+    outputPath: path.join(contentOutputDir, `projects${suffix}.json`)
+  };
+}
 
 function ensureDirectoryExistence(filePath) {
   const dirname = path.dirname(filePath);
@@ -85,11 +92,23 @@ function buildProjectItem(mdPath) {
   return { title, relativePath, wordCount };
 }
 
-function generateProjectsJson() {
+function generateProjectsJson(locale = 'zh-CN') {
+  const paths = getFilePaths(locale);
+  
   if (!fs.existsSync(projectsSrcDir)) {
     console.warn(`Warn: projects source directory not found at ${projectsSrcDir}`);
   }
-  const mdFiles = walk(projectsSrcDir, p => /\.md$/i.test(p));
+  
+  // 根据语言过滤对应的markdown文件
+  const mdFiles = walk(projectsSrcDir, p => {
+    if (locale === 'zh-CN') {
+      // 中文版本：只包含非英文文件（不以-en.md结尾）
+      return /\.md$/i.test(p) && !p.endsWith('-en.md');
+    } else {
+      // 英文版本：只包含英文文件（以-en.md结尾）
+      return /-en\.md$/i.test(p);
+    }
+  });
 
   const items = mdFiles.map(buildProjectItem);
 
@@ -97,17 +116,19 @@ function generateProjectsJson() {
   items.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 
   try {
-    ensureDirectoryExistence(outputPath);
-    fs.writeFileSync(outputPath, JSON.stringify(items, null, 2), 'utf-8');
-    console.log(`Successfully generated: ${outputPath} (${items.length} projects)`);
+    const targetPath = paths.outputPath;
+    ensureDirectoryExistence(targetPath);
+    fs.writeFileSync(targetPath, JSON.stringify(items, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${targetPath} (${items.length} projects)`);
   } catch (e) {
-    console.error('Failed to write projects.json:', e);
+    console.error(`Failed to write ${locale} projects.json:`, e);
   }
 }
 
 function main() {
   console.log('Starting projects.json generation script...');
-  generateProjectsJson();
+  generateProjectsJson('zh-CN');
+  generateProjectsJson('en-US');
   console.log('projects.json generation complete.');
 }
 

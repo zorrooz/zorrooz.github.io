@@ -8,7 +8,14 @@ const __dirname = path.dirname(__filename);
 const contentSrcDir = path.join(__dirname, '../content-src');
 const topicsSrcDir = path.join(contentSrcDir, 'topics');
 const contentOutputDir = path.join(__dirname, '../content');
-const outputPath = path.join(contentOutputDir, 'topics.json');
+
+// 根据语言获取对应的文件路径
+function getFilePaths(locale = 'zh-CN') {
+  const suffix = locale === 'zh-CN' ? '' : '-en';
+  return {
+    outputPath: path.join(contentOutputDir, `topics${suffix}.json`)
+  };
+}
 
 function ensureDirectoryExistence(filePath) {
   const dirname = path.dirname(filePath);
@@ -69,25 +76,40 @@ function buildTopicItem(mdPath) {
   return { title, relativePath, wordCount };
 }
 
-function generateTopicsJson() {
+function generateTopicsJson(locale = 'zh-CN') {
+  const paths = getFilePaths(locale);
+  
   if (!fs.existsSync(topicsSrcDir)) {
     console.warn(`Warn: topics source directory not found at ${topicsSrcDir}`);
   }
-  const mdFiles = walk(topicsSrcDir, p => /\.md$/i.test(p));
+  
+  // 根据语言过滤对应的markdown文件
+  const mdFiles = walk(topicsSrcDir, p => {
+    if (locale === 'zh-CN') {
+      // 中文版本：只包含非英文文件（不以-en.md结尾）
+      return /\.md$/i.test(p) && !p.endsWith('-en.md');
+    } else {
+      // 英文版本：只包含英文文件（以-en.md结尾）
+      return /-en\.md$/i.test(p);
+    }
+  });
+  
   const items = mdFiles.map(buildTopicItem);
   items.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
   try {
-    ensureDirectoryExistence(outputPath);
-    fs.writeFileSync(outputPath, JSON.stringify(items, null, 2), 'utf-8');
-    console.log(`Successfully generated: ${outputPath} (${items.length} topics)`);
+    const targetPath = paths.outputPath;
+    ensureDirectoryExistence(targetPath);
+    fs.writeFileSync(targetPath, JSON.stringify(items, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${targetPath} (${items.length} topics)`);
   } catch (e) {
-    console.error('Failed to write topics.json:', e);
+    console.error(`Failed to write ${locale} topics.json:`, e);
   }
 }
 
 function main() {
   console.log('Starting topics.json generation script...');
-  generateTopicsJson();
+  generateTopicsJson('zh-CN');
+  generateTopicsJson('en-US');
   console.log('topics.json generation complete.');
 }
 

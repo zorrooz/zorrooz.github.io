@@ -39,19 +39,33 @@ function runStep(name, fn) {
 async function main() {
   console.log('== Generators: start ==');
 
-  // 1. basic indexes
-  await runStep('notes', generateNotesJson);
-  await runStep('projects', generateProjectsJson);
-  await runStep('topics', generateTopicsJson);
+  // 1. basic indexes - Chinese
+  await runStep('notes', () => generateNotesJson('zh-CN'));
+  await runStep('projects', () => generateProjectsJson('zh-CN'));
+  await runStep('topics', () => generateTopicsJson('zh-CN'));
 
-  // 2. categories depends on notes/projects/topics
-  await runStep('categories', generateCategoriesJson);
+  // 2. categories depends on notes/projects/topics - Chinese
+  await runStep('categories', () => generateCategoriesJson('zh-CN'));
 
-  // 3. posts depends on notes (and uses categories if present)
-  await runStep('posts', generatePostsJson);
+  // 3. posts depends on notes - Chinese
+  await runStep('posts', () => generatePostsJson('zh-CN'));
 
-  // 4. tags depends on posts
-  await runStep('tags', generateTagsJson);
+  // 4. tags depends on posts - Chinese
+  await runStep('tags', () => generateTagsJson('zh-CN'));
+
+  // 5. basic indexes - English
+  await runStep('notes-en', () => generateNotesJson('en-US'));
+  await runStep('projects-en', () => generateProjectsJson('en-US'));
+  await runStep('topics-en', () => generateTopicsJson('en-US'));
+
+  // 6. categories depends on notes/projects/topics - English
+  await runStep('categories-en', () => generateCategoriesJson('en-US'));
+
+  // 7. posts depends on notes - English
+  await runStep('posts-en', () => generatePostsJson('en-US'));
+
+  // 8. tags depends on posts - English
+  await runStep('tags-en', () => generateTagsJson('en-US'));
 
   console.log('== Generators: done ==');
 }

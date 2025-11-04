@@ -1,0 +1,409 @@
+[
+  {
+    "title": "Notes",
+    "items": [
+      {
+        "name": "Omics",
+        "title": "Omics",
+        "desc": "Learning records and resource collection related to omics",
+        "tags": [
+          "BWA",
+          "Genome Alignment",
+          "NGS",
+          "Command Line",
+          "Human Genome",
+          "SAM/BAM",
+          "MaxQuant",
+          "Proteomics",
+          "Mass Spectrometry Analysis",
+          "Bioinformatics",
+          "Quantitative Analysis",
+          "RNA-Seq",
+          "HISAT2",
+          "Transcriptomics",
+          "Alignment"
+        ],
+        "stats": {
+          "postsCount": 3,
+          "totalWords": 143,
+          "latestDate": "2025-09-19"
+        },
+        "categories": [
+          {
+            "key": "genomics",
+            "title": "Genomics",
+            "articles": [
+              {
+                "title": "BWA MEM Human Genome Alignment Practice",
+                "articleUrl": "/article/notes/Omics/genomics/bwa/bwa-en",
+                "tags": [
+                  "BWA",
+                  "Genome Alignment",
+                  "NGS",
+                  "Command Line",
+                  "Human Genome",
+                  "SAM/BAM"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 28,
+              "latestDate": "2025-09-19"
+            }
+          },
+          {
+            "key": "proteomics",
+            "title": "Proteomics",
+            "articles": [
+              {
+                "title": "MaxQuant Proteomics Analysis Workflow",
+                "articleUrl": "/article/notes/Omics/proteomics/maxquant/maxquant-en",
+                "tags": [
+                  "MaxQuant",
+                  "Proteomics",
+                  "Mass Spectrometry Analysis",
+                  "Bioinformatics",
+                  "Quantitative Analysis"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 64,
+              "latestDate": "2025-09-19"
+            }
+          },
+          {
+            "key": "transcriptomics",
+            "title": "Transcriptomics",
+            "articles": [
+              {
+                "title": "RNA-Seq Analysis: HISAT2 Alignment Workflow",
+                "articleUrl": "/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en",
+                "tags": [
+                  "RNA-Seq",
+                  "HISAT2",
+                  "Transcriptomics",
+                  "Alignment",
+                  "Bioinformatics"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 51,
+              "latestDate": "2025-09-19"
+            }
+          }
+        ],
+        "root": "/article/notes/Omics/genomics/bwa/bwa-en"
+      },
+      {
+        "name": "Programming",
+        "title": "Programming",
+        "desc": "Learning records and resource collection related to programming",
+        "tags": [
+          "JavaScript",
+          "Vue.js",
+          "Frontend Development",
+          "Componentization",
+          "Reactive",
+          "Python",
+          "Biopython",
+          "Bioinformatics",
+          "Sequence Analysis",
+          "Genomics",
+          "Pandas",
+          "FASTQ",
+          "Data Cleaning",
+          "Beginner",
+          "Data Processing",
+          "Data Analysis",
+          "R Language",
+          "Statistical Analysis",
+          "Data Visualization",
+          "ggplot2",
+          "Statistical Charts",
+          "Shell",
+          "Bash",
+          "Command Line",
+          "Script Programming",
+          "Automation"
+        ],
+        "stats": {
+          "postsCount": 7,
+          "totalWords": 344,
+          "latestDate": "2025-09-19"
+        },
+        "categories": [
+          {
+            "key": "python",
+            "title": "Python",
+            "articles": [
+              {
+                "title": "Biopython Bioinformatics Applications",
+                "articleUrl": "/article/notes/Programming/python/biopython/biopython-en",
+                "tags": [
+                  "Python",
+                  "Biopython",
+                  "Bioinformatics",
+                  "Sequence Analysis",
+                  "Genomics"
+                ]
+              },
+              {
+                "title": "Processing FASTQ Quality Statistics with Pandas",
+                "articleUrl": "/article/notes/Programming/python/fastq/fastq-en",
+                "tags": [
+                  "Python",
+                  "Pandas",
+                  "FASTQ",
+                  "Data Cleaning",
+                  "Bioinformatics",
+                  "Beginner"
+                ]
+              },
+              {
+                "title": "Python Pandas Data Processing Practice",
+                "articleUrl": "/article/notes/Programming/python/pandas/pandas-en",
+                "tags": [
+                  "Python",
+                  "Pandas",
+                  "Data Processing",
+                  "Data Analysis",
+                  "Data Cleaning"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 3,
+              "totalWords": 100,
+              "latestDate": "2025-09-19"
+            }
+          },
+          {
+            "key": "javascript",
+            "title": "JavaScript",
+            "articles": [
+              {
+                "title": "Vue.js Frontend Development Introduction",
+                "articleUrl": "/article/notes/Programming/javascript/vue/vue-en",
+                "tags": [
+                  "JavaScript",
+                  "Vue.js",
+                  "Frontend Development",
+                  "Componentization",
+                  "Reactive"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 176,
+              "latestDate": "2025-09-19"
+            }
+          },
+          {
+            "key": "r",
+            "title": "R Language",
+            "articles": [
+              {
+                "title": "R Language Data Processing Example",
+                "articleUrl": "/article/notes/Programming/r/demo/demo-en",
+                "tags": [
+                  "R Language",
+                  "Data Processing",
+                  "Statistical Analysis",
+                  "Data Visualization",
+                  "Bioinformatics"
+                ]
+              },
+              {
+                "title": "R Language ggplot2 Data Visualization",
+                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2-en",
+                "tags": [
+                  "R Language",
+                  "ggplot2",
+                  "Data Visualization",
+                  "Statistical Charts",
+                  "Bioinformatics"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 46,
+              "latestDate": "2025-09-19"
+            }
+          },
+          {
+            "key": "shell",
+            "title": "Shell",
+            "articles": [
+              {
+                "title": "Bash Shell Script Programming",
+                "articleUrl": "/article/notes/Programming/shell/bash/bash-en",
+                "tags": [
+                  "Shell",
+                  "Bash",
+                  "Command Line",
+                  "Script Programming",
+                  "Automation"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 22,
+              "latestDate": "2025-09-19"
+            }
+          }
+        ],
+        "root": "/article/notes/Programming/python/biopython/biopython-en"
+      }
+    ]
+  },
+  {
+    "title": "Projects",
+    "items": [
+      {
+        "name": "biocrawler",
+        "title": "BioCrawler",
+        "desc": "Toolset for biological data crawling and processing",
+        "tags": [
+          "Crawler",
+          "API",
+          "Bioinformatics"
+        ],
+        "stats": {
+          "postsCount": 5,
+          "totalWords": 23,
+          "latestDate": "2025-08-01"
+        },
+        "categories": [
+          {
+            "key": "API",
+            "title": "Interface",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/API/API1/API1-en",
+                "tags": []
+              },
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/API/API2/API2-en",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 13,
+              "latestDate": ""
+            }
+          },
+          {
+            "key": "get_start",
+            "title": "Getting Started",
+            "articles": [
+              {
+                "title": "Get Started",
+                "articleUrl": "/article/projects/biocrawler/get_start/get_start-en",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 2,
+              "latestDate": ""
+            }
+          },
+          {
+            "key": "test",
+            "title": "Testing",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/test/test1/test1-en",
+                "tags": []
+              },
+              {
+                "title": "API",
+                "articleUrl": "/article/projects/biocrawler/test/test2/test2-en",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 8,
+              "latestDate": ""
+            }
+          }
+        ],
+        "root": "/article/projects/biocrawler/API/API1/API1-en",
+        "github": "https://github.com/example/biocrawler"
+      }
+    ]
+  },
+  {
+    "title": "Topics",
+    "items": [
+      {
+        "name": "demo",
+        "title": "Demo Topic",
+        "desc": "Example collection of topic structures and workflows",
+        "tags": [
+          "Demo",
+          "Workflow"
+        ],
+        "stats": {
+          "postsCount": 3,
+          "totalWords": 15,
+          "latestDate": "2025-07-01"
+        },
+        "categories": [
+          {
+            "key": "test",
+            "title": "Testing",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/topics/demo/test/test1/test1-en",
+                "tags": []
+              },
+              {
+                "title": "API",
+                "articleUrl": "/article/topics/demo/test/test2/test2-en",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 8,
+              "latestDate": ""
+            }
+          },
+          {
+            "key": "tt",
+            "title": "Example",
+            "articles": [
+              {
+                "title": "API",
+                "articleUrl": "/article/topics/demo/tt/tt-en",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 7,
+              "latestDate": ""
+            }
+          }
+        ],
+        "root": "/article/topics/demo/test/test1/test1-en",
+        "doi": "www.tt.org"
+      }
+    ]
+  }
+]

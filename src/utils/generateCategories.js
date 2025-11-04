@@ -6,14 +6,21 @@ import yaml from 'js-yaml';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 路径配置（与原逻辑一致）
+// 路径配置（支持多语言）
 const contentDir = path.join(__dirname, '../content');
 const contentSrcDir = path.join(__dirname, '../content-src');
-const notesJsonPath = path.join(contentDir, 'notes.json');
-const projectsJsonPath = path.join(contentDir, 'projects.json');
-const topicsJsonPath = path.join(contentDir, 'topics.json');
-const categoriesYamlPath = path.join(contentSrcDir, 'categories.yaml');
-const categoriesJsonPath = path.join(contentDir, 'categories.json');
+
+// 根据语言获取对应的文件路径
+function getFilePaths(locale = 'zh-CN') {
+  const suffix = locale === 'zh-CN' ? '' : '-en';
+  return {
+    notesJsonPath: path.join(contentDir, `notes${suffix}.json`),
+    projectsJsonPath: path.join(contentDir, `projects${suffix}.json`),
+    topicsJsonPath: path.join(contentDir, `topics${suffix}.json`),
+    categoriesYamlPath: path.join(contentSrcDir, `categories${suffix}.yaml`),
+    categoriesJsonPath: path.join(contentDir, `categories${suffix}.json`)
+  };
+}
 
 
 // -------------------------- 辅助函数 --------------------------
@@ -316,15 +323,37 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type) {
 
 // -------------------------- 主流程函数 --------------------------
 /**
+ * 根据语言获取对应的分类标题
+ */
+function getCategoryTitles(locale = 'zh-CN') {
+  if (locale === 'en-US') {
+    return {
+      notes: 'Notes',
+      projects: 'Projects',
+      topics: 'Topics'
+    };
+  }
+  return {
+    notes: '笔记',
+    projects: '项目',
+    topics: '课题'
+  };
+}
+
+/**
  * 生成精细化分类的JSON文件
  */
-function generateCategoriesJson() {
+function generateCategoriesJson(locale = 'zh-CN') {
   try {
-    // 1. 读取原始数据
-    const noteArticles = readJsonArray(notesJsonPath);
-    const projectArticles = readJsonArray(projectsJsonPath);
-    const topicArticles = readJsonArray(topicsJsonPath);
-    const yamlConfig = readYaml(categoriesYamlPath);
+    // 1. 获取对应语言的路径
+    const paths = getFilePaths(locale);
+    const titles = getCategoryTitles(locale);
+    
+    // 2. 读取原始数据
+    const noteArticles = readJsonArray(paths.notesJsonPath);
+    const projectArticles = readJsonArray(paths.projectsJsonPath);
+    const topicArticles = readJsonArray(paths.topicsJsonPath);
+    const yamlConfig = readYaml(paths.categoriesYamlPath);
     const { notes: noteConfigs, projects: projectConfigs, topics: topicConfigs } = {
       notes: safeArray(yamlConfig?.notes),
       projects: safeArray(yamlConfig?.projects),
@@ -336,26 +365,27 @@ function generateCategoriesJson() {
     const detailedProjects = buildDetailedProjectTopicCategories(projectConfigs, projectArticles, 'project');
     const detailedTopics = buildDetailedProjectTopicCategories(topicConfigs, topicArticles, 'topic');
 
-    // 3. 合并为最终结构（保持原有的"笔记/项目/课题"三级分类）
+    // 3. 合并为最终结构（根据语言选择标题）
     const finalStructure = [
       {
-        title: '笔记',
-        items: detailedNotes.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN')) // 按名称排序
+        title: titles.notes,
+        items: detailedNotes.sort((a, b) => a.name.localeCompare(b.name, locale === 'zh-CN' ? 'zh-Hans-CN' : 'en')) // 按语言排序
       },
       {
-        title: '项目',
-        items: detailedProjects.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN'))
+        title: titles.projects,
+        items: detailedProjects.sort((a, b) => a.name.localeCompare(b.name, locale === 'zh-CN' ? 'zh-Hans-CN' : 'en'))
       },
       {
-        title: '课题',
-        items: detailedTopics.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN'))
+        title: titles.topics,
+        items: detailedTopics.sort((a, b) => a.name.localeCompare(b.name, locale === 'zh-CN' ? 'zh-Hans-CN' : 'en'))
       }
     ];
 
     // 4. 写入文件
-    ensureDirectoryExistence(categoriesJsonPath);
-    fs.writeFileSync(categoriesJsonPath, JSON.stringify(finalStructure, null, 2), 'utf-8');
-    console.log(`Successfully generated: ${categoriesJsonPath}`);
+    const targetPath = paths.categoriesJsonPath;
+    ensureDirectoryExistence(targetPath);
+    fs.writeFileSync(targetPath, JSON.stringify(finalStructure, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${targetPath}`);
   } catch (error) {
     console.error(`Failed to generate ${categoriesJsonPath}:`, error);
     process.exitCode = 1;
@@ -367,7 +397,8 @@ function generateCategoriesJson() {
  */
 function main() {
   console.log('Starting categories.json generation script...');
-  generateCategoriesJson();
+  generateCategoriesJson('zh-CN');
+  generateCategoriesJson('en-US');
   console.log('categories.json generation complete.');
 }
 

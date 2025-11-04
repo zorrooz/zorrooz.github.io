@@ -44,14 +44,20 @@
 </template>
 
 <script>
-import categoryData from '@/content/categories.json';
+import { useI18n } from 'vue-i18n'
+import { loadCategories } from '@/utils/contentLoader';
 
 export default {
   name: 'NavigationTree',
+  setup() {
+    const { locale } = useI18n()
+    return { locale }
+  },
   data() {
     return {
       navigationTree: [],
-      currentPath: ''
+      currentPath: '',
+      categoryData: []
     };
   },
   watch: {
@@ -62,17 +68,42 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    locale() {
+      this.loadCategoryData().then(() => {
+        // 语言切换时，需要重新获取当前路由路径并构建导航树
+        this.currentPath = this.$route.params.path ? this.$route.params.path.join('/') : '';
+        this.buildTree();
+      });
     }
   },
-  mounted() {
-    // buildTree is called by the route watcher on initialization
+  async mounted() {
+    await this.loadCategoryData();
+    this.buildTree();
   },
   methods: {
+    async loadCategoryData() {
+      try {
+        this.categoryData = await loadCategories() || [];
+      } catch (error) {
+        console.error('Failed to load category data:', error);
+        this.categoryData = [];
+      }
+      return Promise.resolve();
+    },
     toArticle(path) {
       return { name: 'Article', params: { path: path.replace(/\.md$/, '').split('/') } };
     },
     isActive(path) {
-      return this.currentPath === path.replace(/\.md$/, '');
+      const currentPath = this.currentPath.replace(/\.md$/, '');
+      const articlePath = path.replace(/\.md$/, '');
+      
+      // 处理语言后缀匹配
+      const cleanCurrentPath = currentPath.replace(/-en$/, '');
+      const cleanArticlePath = articlePath.replace(/-en$/, '');
+      
+      // 如果清理后的路径相同，则认为是同一篇文章
+      return cleanCurrentPath === cleanArticlePath;
     },
     buildTree() {
       // 根据当前路由，按 categories.json 原顺序构建导航树
@@ -88,9 +119,9 @@ export default {
 
       // 1) 在 categories.json 中定位到对应 item（保持 JSON 顺序）
       let targetItem = null;
-      if (Array.isArray(categoryData)) {
+      if (Array.isArray(this.categoryData)) {
         outer:
-        for (const section of categoryData) {
+        for (const section of this.categoryData) {
           if (!Array.isArray(section.items)) continue;
           for (const item of section.items) {
             if (item?.name !== group) continue;

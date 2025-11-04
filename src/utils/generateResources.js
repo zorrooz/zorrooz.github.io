@@ -16,18 +16,6 @@ function ensureDirectoryExistence(filePath) {
   }
 }
 
-// 数据结构（严格解析当前结构，仅做安全归一化）：
-// Array<{
-//   title: string,
-//   children: Array<{
-//     title: string,
-//     items: Array<{
-//       name: string,
-//       url: string,
-//       desc?: string
-//     }>
-//   }>
-// }>
 function normalize(raw) {
   const list = Array.isArray(raw) ? raw : [];
   return list.map(cat => {
@@ -47,9 +35,9 @@ function normalize(raw) {
   });
 }
 
-function generateResourcesJson() {
-  const yamlPath = path.join(contentSrcDir, 'resources.yaml');
-  const outputPath = path.join(contentOutputDir, 'resources.json');
+function generateResourcesJson(locale = 'zh-CN') {
+  const yamlPath = path.join(contentSrcDir, locale === 'zh-CN' ? 'resources.yaml' : 'resources-en.yaml');
+  const outputPath = path.join(contentOutputDir, locale === 'zh-CN' ? 'resources.json' : 'resources-en.json');
 
   let raw = [];
   if (fs.existsSync(yamlPath)) {
@@ -78,7 +66,8 @@ function generateResourcesJson() {
 
 function main() {
   console.log('Starting resources.json generation script...');
-  generateResourcesJson();
+  generateResourcesJson('zh-CN');
+  generateResourcesJson('en-US');
   console.log('resources.json generation complete.');
 }
 

@@ -1,0 +1,63 @@
+{
+  "introduction": "This is a placeholder for self-introduction. hello",
+  "section": [
+    {
+      "title": "Education",
+      "items": [
+        {
+          "item": "Lanzhou University · Bachelor's · Bioinformatics (2021 – 2025)",
+          "desc": "GPA: 3.8/5.0"
+        }
+      ]
+    },
+    {
+      "title": "Professional Skills",
+      "items": [
+        {
+          "item": "Programming Languages · Proficient",
+          "desc": "Python, R, Bash, JavaScript"
+        },
+        {
+          "item": "Data Analysis & Visualization · Proficient",
+          "desc": "Pandas, NumPy, Matplotlib, ggplot2, ECharts"
+        },
+        {
+          "item": "Structural Biology Tools · Proficient",
+          "desc": "PyMOL, AlphaFold2, ChimeraX"
+        }
+      ]
+    },
+    {
+      "title": "Project Experience",
+      "items": [
+        {
+          "item": "Example",
+          "desc": "Currently none"
+        }
+      ]
+    },
+    {
+      "title": "Honors & Awards",
+      "items": [
+        {
+          "item": "None yet",
+          "desc": "Testing"
+        }
+      ]
+    }
+  ],
+  "contacts": [
+    {
+      "label": "Email",
+      "value": "zorrooz@163.com",
+      "link": "mailto:zorrooz@163.com",
+      "icon": "fas fa-envelope"
+    },
+    {
+      "label": "GitHub",
+      "value": "zorrooz",
+      "link": "https://github.com/zorrooz",
+      "icon": "fab fa-github"
+    }
+  ]
+}

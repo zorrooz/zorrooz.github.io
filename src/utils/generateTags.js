@@ -6,8 +6,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const contentDir = path.join(__dirname, '../content');
-const postsJsonPath = path.join(contentDir, 'posts.json');
-const tagsJsonPath = path.join(contentDir, 'tags.json');
+
+// 根据语言获取对应的文件路径
+function getFilePaths(locale = 'zh-CN') {
+  const suffix = locale === 'zh-CN' ? '' : '-en';
+  return {
+    postsJsonPath: path.join(contentDir, `posts${suffix}.json`),
+    tagsJsonPath: path.join(contentDir, `tags${suffix}.json`)
+  };
+}
 
 function ensureDirectoryExistence(filePath) {
   const dir = path.dirname(filePath);
@@ -30,24 +37,26 @@ function generateTagsFromPosts(posts) {
     .sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN'));
 }
 
-function generateTagsJson() {
-  if (!fs.existsSync(postsJsonPath)) {
-    console.error(`posts.json not found at ${postsJsonPath}. Please generate posts.json first.`);
+function generateTagsJson(locale = 'zh-CN') {
+  const paths = getFilePaths(locale);
+  
+  if (!fs.existsSync(paths.postsJsonPath)) {
+    console.error(`posts${locale === 'zh-CN' ? '' : '-en'}.json not found at ${paths.postsJsonPath}. Please generate posts.json first.`);
     process.exitCode = 1;
     return;
   }
 
   let posts = [];
   try {
-    const raw = fs.readFileSync(postsJsonPath, 'utf-8').trim();
+    const raw = fs.readFileSync(paths.postsJsonPath, 'utf-8').trim();
     posts = JSON.parse(raw);
     if (!Array.isArray(posts)) {
-      console.error('posts.json is not an array. Abort.');
+      console.error(`posts${locale === 'zh-CN' ? '' : '-en'}.json is not an array. Abort.`);
       process.exitCode = 1;
       return;
     }
   } catch (e) {
-    console.error('Failed to read/parse posts.json:', e?.message || e);
+    console.error(`Failed to read/parse posts${locale === 'zh-CN' ? '' : '-en'}.json:`, e?.message || e);
     process.exitCode = 1;
     return;
   }
@@ -55,18 +64,20 @@ function generateTagsJson() {
   const tags = generateTagsFromPosts(posts);
 
   try {
-    ensureDirectoryExistence(tagsJsonPath);
-    fs.writeFileSync(tagsJsonPath, JSON.stringify(tags, null, 2), 'utf-8');
-    console.log(`Successfully generated: ${tagsJsonPath} (${tags.length} tags)`);
+    const targetPath = paths.tagsJsonPath;
+    ensureDirectoryExistence(targetPath);
+    fs.writeFileSync(targetPath, JSON.stringify(tags, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${targetPath} (${tags.length} tags)`);
   } catch (e) {
-    console.error('Failed to write tags.json:', e?.message || e);
+    console.error(`Failed to write ${locale} tags.json:`, e?.message || e);
     process.exitCode = 1;
   }
 }
 
 function main() {
   console.log('Starting tags.json generation script...');
-  generateTagsJson();
+  generateTagsJson('zh-CN');
+  generateTagsJson('en-US');
   console.log('tags.json generation complete.');
 }
 

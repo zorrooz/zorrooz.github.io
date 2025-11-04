@@ -1,0 +1,24 @@
+---
+title: "Biopython Bioinformatics Applications"
+date: "2025-09-19"
+author: "zorrooz"
+tags: ["Python", "Biopython", "Bioinformatics", "Sequence Analysis", "Genomics"]
+draft: false
+description: "Application of Biopython library in sequence analysis and genomic data processing"
+---
+
+# Biopython Bioinformatics Applications
+
+## Sequence Operations
+
+```python
+from Bio import SeqIO
+from Bio.Seq import Seq
+
+# Read FASTA file
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    print(record.id, len(record.seq))
+
+# Sequence translation
+dna_seq = Seq("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG")
+protein_seq = dna_seq.translate()

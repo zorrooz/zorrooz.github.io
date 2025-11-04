@@ -9,10 +9,10 @@
 
 
             <div v-if="currentTag" class="mb-3 d-flex align-items-center gap-2">
-              <span>标签：</span>
+              <span>{{ tagsText }}：</span>
               <span class="current-tag-chip d-inline-flex">
                 <span># {{ currentTag }}</span>
-                <button class="chip-close" @click="clearTag" aria-label="清除筛选" title="清除筛选">×</button>
+                <button class="chip-close" @click="clearTag" :aria-label="clearFilterText" :title="clearFilterText">×</button>
               </span>
             </div>
             <PostList :docs="filteredDocs" :perPage="5" />
@@ -37,12 +37,30 @@
 import ProfileCard from '@/components/layout/ProfileCard.vue'
 import TagCloud from '@/components/layout/TagCloud.vue'
 import PostList from '@/components/layout/PostList.vue'
-import postData from '@/content/posts.json'
+import { useI18n } from 'vue-i18n'
+import { loadPosts } from '@/utils/contentLoader'
+
 
 export default {
   name: 'HomeView',
+  setup() {
+    const { t, locale } = useI18n()
+    return { t, locale }
+  },
   components: { ProfileCard, TagCloud, PostList },
-  data() { return { postData } },
+  data() {
+    return {
+      postData: []
+    }
+  },
+  computed: {
+    tagsText() {
+      return this.t('tags')
+    },
+    clearFilterText() {
+      return this.t('clearFilter')
+    }
+  },
   computed: {
     currentTag() { return this.$route.query.tag || '' },
     filteredDocs() {
@@ -56,16 +74,28 @@ export default {
       return Array.from(set).sort()
     }
   },
+  async created() {
+    await this.loadPostData()
+  },
   mounted() {
     this.updateSidebarDimensions()
     window.addEventListener('scroll', this.updateSidebarDimensions)
     window.addEventListener('resize', this.updateSidebarDimensions)
   },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.updateSidebarDimensions)
-    window.removeEventListener('resize', this.updateSidebarDimensions)
+  watch: {
+    locale() {
+      this.loadPostData()
+    }
   },
   methods: {
+    async loadPostData() {
+      try {
+        this.postData = await loadPosts() || [];
+      } catch (error) {
+        console.error('Failed to load post data:', error);
+        this.postData = [];
+      }
+    },
     updateSidebarDimensions() {
       const header = document.querySelector('header')
       const footer = document.querySelector('footer')
@@ -99,6 +129,10 @@ export default {
       this.$router.push({ path: this.$route.path, query: q }).catch(() => {})
       this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
     }
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.updateSidebarDimensions)
+    window.removeEventListener('resize', this.updateSidebarDimensions)
   }
 }
 </script>

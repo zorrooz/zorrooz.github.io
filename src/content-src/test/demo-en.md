@@ -1,6 +1,6 @@
 # Markdown Syntax Examples
 
-The following is a demonstration of common Markdown syntax features.
+Below is a demonstration of common Markdown syntax features.
 
 ## 1. Basic Text Styles
 
@@ -12,26 +12,26 @@ The following is a demonstration of common Markdown syntax features.
 
 ###### Level 6 Heading
 
-Example of regular paragraph text.
+Regular paragraph text example.
 
 1. Bold Text
-   - **Asterisk form**
-   - **Underscore form**
+    - **Asterisk format**
+    - **Underscore format**
 2. Italic Text
-   - *Asterisk form*
-   - *Underscore form*
+    - *Asterisk format*
+    - *Underscore format*
 
 ## 2. Links and Images
 
 This is an inline link example: [Vue Official Website](https://vuejs.org)
 
-Below is an example of embedding an image:  
+Below are embedded image examples:  
 ![Vue Logo](https://vuejs.org/images/logo.png)
 
-## 3. Blockquotes
+## 3. Block Quotes
 
-> This is a blockquote.  
-> Blockquotes are often used to emphasize certain content or display someone else's statement.
+> This is a block quote.  
+> Block quotes are commonly used to emphasize certain content or display others' statements.
 
 ## 4. Tables and Inline Code
 
@@ -54,7 +54,7 @@ Fenced code block:
   max-width: 100%;
   height: auto;
   display: block;
-  margin: 1em auto;  
+  margin: 1em auto;
 }
 </style>
 ```
@@ -68,4 +68,4 @@ $$
 $$
 
 ---
-The above are examples of commonly used Markdown syntax features.
+Above are examples of commonly used Markdown syntax features.

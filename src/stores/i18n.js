@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
-import zhCN from '../locales/zh-CN.js'
-import enUS from '../locales/en-US.js'
+import zhCN from './locales/zh-CN.js'
+import enUS from './locales/en-US.js'
 
 // 从 localStorage 读取用户选择，或默认中文
 const savedLocale = localStorage.getItem('locale') || 'zh-CN'

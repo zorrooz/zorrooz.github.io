@@ -9,7 +9,14 @@ const __dirname = path.dirname(__filename);
 const contentSrcDir = path.join(__dirname, '../content-src');
 const notesSrcDir = path.join(contentSrcDir, 'notes');
 const contentOutputDir = path.join(__dirname, '../content');
-const outputPath = path.join(contentOutputDir, 'notes.json');
+
+// 根据语言获取对应的文件路径
+function getFilePaths(locale = 'zh-CN') {
+  const suffix = locale === 'zh-CN' ? '' : '-en';
+  return {
+    outputPath: path.join(contentOutputDir, `notes${suffix}.json`)
+  };
+}
 
 function ensureDirectoryExistence(filePath) {
   const dirname = path.dirname(filePath);
@@ -136,11 +143,23 @@ function buildNoteItem(mdPath) {
   };
 }
 
-function generateNotesJson() {
+function generateNotesJson(locale = 'zh-CN') {
+  const paths = getFilePaths(locale);
+  
   if (!fs.existsSync(notesSrcDir)) {
     console.warn(`Warn: notes source directory not found at ${notesSrcDir}`);
   }
-  const mdFiles = walk(notesSrcDir, p => /\.md$/i.test(p));
+  
+  // 根据语言过滤对应的markdown文件
+  const mdFiles = walk(notesSrcDir, p => {
+    if (locale === 'zh-CN') {
+      // 中文版本：只包含非英文文件（不以-en.md结尾）
+      return /\.md$/i.test(p) && !p.endsWith('-en.md');
+    } else {
+      // 英文版本：只包含英文文件（以-en.md结尾）
+      return /-en\.md$/i.test(p);
+    }
+  });
 
   const items = mdFiles.map(buildNoteItem);
 
@@ -153,17 +172,19 @@ function generateNotesJson() {
   });
 
   try {
-    ensureDirectoryExistence(outputPath);
-    fs.writeFileSync(outputPath, JSON.stringify(items, null, 2), 'utf-8');
-    console.log(`Successfully generated: ${outputPath} (${items.length} notes)`);
+    const targetPath = paths.outputPath;
+    ensureDirectoryExistence(targetPath);
+    fs.writeFileSync(targetPath, JSON.stringify(items, null, 2), 'utf-8');
+    console.log(`Successfully generated: ${targetPath} (${items.length} notes)`);
   } catch (e) {
-    console.error('Failed to write notes.json:', e);
+    console.error(`Failed to write ${locale} notes.json:`, e);
   }
 }
 
 function main() {
   console.log('Starting notes.json generation script...');
-  generateNotesJson();
+  generateNotesJson('zh-CN');
+  generateNotesJson('en-US');
   console.log('notes.json generation complete.');
 }
 

@@ -45,14 +45,14 @@
     <!-- 分页组件 -->
     <div class="row mt-4 pb-4" v-if="totalPages > 1">
       <div class="col-12">
-        <nav aria-label="文章列表分页">
+        <nav :aria-label="paginationLabel">
           <ul class="pagination justify-content-between align-items-center mb-0">
             <!-- 上一页按钮 -->
             <li class="page-item" :class="{ disabled: currentPage === 1 }">
               <button class="page-link d-flex align-items-center border-0 bg-transparent px-3 py-2" :style="{ color: 'var(--app-text-muted)' }"
-                @click="prevPage" :disabled="currentPage === 1" aria-label="上一页">
+                @click="prevPage" :disabled="currentPage === 1" :aria-label="t('prevPage')">
                 <span class="me-1">&lt;</span>
-                <span>上一页</span>
+                <span>{{ t('prevPage') }}</span>
               </button>
             </li>
 
@@ -90,8 +90,8 @@
             <!-- 下一页按钮 -->
             <li class="page-item" :class="{ disabled: currentPage === totalPages }">
               <button class="page-link d-flex align-items-center border-0 bg-transparent px-3 py-2" :style="{ color: 'var(--app-text-muted)' }"
-                @click="nextPage" :disabled="currentPage === totalPages" aria-label="下一页">
-                <span>下一页</span>
+                @click="nextPage" :disabled="currentPage === totalPages" :aria-label="t('nextPage')">
+                <span>{{ t('nextPage') }}</span>
                 <span class="ms-1">&gt;</span>
               </button>
             </li>
@@ -103,11 +103,16 @@
 </template>
 
 <script>
-import notesFlat from '@/content/notes.json'
-import categoriesData from '@/content/categories.json'
+import { useI18n } from 'vue-i18n'
+import { loadNotes, loadCategories } from '@/utils/contentLoader'
+
 
 export default {
   name: 'PostList',
+  setup() {
+    const { t, locale } = useI18n()
+    return { t, locale }
+  },
   props: {
     docs: {
       type: Array,
@@ -122,10 +127,24 @@ export default {
   data() {
     return {
       currentPage: 1,
-      maxVisiblePages: 5
+      maxVisiblePages: 5,
+      notesFlat: [],
+      categoriesData: []
     }
   },
   computed: {
+    paginationLabel() {
+      return this.t('paginationLabel')
+    },
+    prevPageText() {
+      return this.t('prevPage')
+    },
+    nextPageText() {
+      return this.t('nextPage')
+    },
+    tagsText() {
+      return this.t('tags')
+    },
     totalPages() {
       return Math.max(1, Math.ceil(this.docs.length / this.perPage))
     },
@@ -197,7 +216,7 @@ export default {
     categoryTitleMap() {
       const map = {}
       try {
-        (categoriesData || []).forEach(section => {
+        (this.categoriesData || []).forEach(section => {
           (section.items || []).forEach(item => {
             (item.categories || []).forEach(cat => {
               if (cat && cat.key && cat.title) {
@@ -212,17 +231,44 @@ export default {
       return map
     }
   },
+
+  watch: {
+    docs() {
+      this.currentPage = 1
+    },
+    '$route.query.page'(newVal) {
+      const p = parseInt(newVal);
+      const page = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
+      if (page !== this.currentPage) {
+        this.currentPage = page;
+        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
+    },
+    locale() {
+      this.loadData()
+    }
+  },
+  async created() {
+    await this.loadData()
+  },
+  mounted() {
+    const p = parseInt(this.$route.query.page);
+    this.currentPage = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  },
   methods: {
     formatDate(dateString) {
+      const locale = this.locale === 'zh-CN' ? 'zh-CN' : 'en-US'
       const options = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Date(dateString).toLocaleDateString('zh-CN', options)
+      return new Date(dateString).toLocaleDateString(locale, options)
     },
     getArticlePath(post) {
       // 根据文章标题从notes.json中查找对应的文件路径
       let articlePath = 'notes/Programming/python/25-09-19--python-fastq.md' // 默认路径
       
       // 在扁平 notes.json 中查找匹配的文章
-      const found = Array.isArray(notesFlat) ? notesFlat.find(item => item.title === post.title) : null
+      const found = Array.isArray(this.notesFlat) ? this.notesFlat.find(item => item.title === post.title) : null
       if (found && found.relativePath) {
         articlePath = `notes/${found.relativePath}.md`
       }
@@ -278,26 +324,21 @@ export default {
       if (!subKey) return top
       const subTitle = this.categoryTitleMap[subKey] || subKey
       return `${top} / ${subTitle}`
-    }
-  },
-  watch: {
-    docs() {
-      this.currentPage = 1
     },
-    '$route.query.page'(newVal) {
-      const p = parseInt(newVal);
-      const page = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
-      if (page !== this.currentPage) {
-        this.currentPage = page;
-        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    async loadData() {
+      try {
+        const [notesData, categoriesData] = await Promise.all([
+          loadNotes(),
+          loadCategories()
+        ]);
+        this.notesFlat = notesData || [];
+        this.categoriesData = categoriesData || [];
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        this.notesFlat = [];
+        this.categoriesData = [];
       }
     }
-  },
-  mounted() {
-    const p = parseInt(this.$route.query.page);
-    this.currentPage = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.handleResize)

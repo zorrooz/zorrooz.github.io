@@ -16,12 +16,6 @@ function ensureDirectoryExistence(filePath) {
   }
 }
 
-// Strictly parse current data structure only:
-// {
-//   introduction: string,
-//   section: Array<{ title: string, items: Array<{ item: string, desc?: string }> }>,
-//   contacts: Array<{ label, value, link, icon }>
-// }
 function normalize(raw = {}) {
   const intro = typeof raw.introduction === 'string' ? raw.introduction : '';
 
@@ -47,9 +41,9 @@ function normalize(raw = {}) {
   };
 }
 
-function generateAboutJson() {
-  const yamlPath = path.join(contentSrcDir, 'about.yaml');
-  const outputPath = path.join(contentOutputDir, 'about.json');
+function generateAboutJson(locale = 'zh-CN') {
+  const yamlPath = path.join(contentSrcDir, locale === 'zh-CN' ? 'about.yaml' : 'about-en.yaml');
+  const outputPath = path.join(contentOutputDir, locale === 'zh-CN' ? 'about.json' : 'about-en.json');
 
   let raw = {};
   if (fs.existsSync(yamlPath)) {
@@ -77,7 +71,8 @@ function generateAboutJson() {
 
 function main() {
   console.log('Starting about.json generation script...');
-  generateAboutJson();
+  generateAboutJson('zh-CN');
+  generateAboutJson('en-US');
   console.log('about.json generation complete.');
 }
 
