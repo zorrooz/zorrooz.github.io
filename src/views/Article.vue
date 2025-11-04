@@ -509,15 +509,15 @@ export default {
   /* 移动端标题字号优化 - 确保比二级标题大 */
   .article-title { font-size: 1.8rem; }
   
-  /* 移动端元信息间距优化 - 当两行分别显示时减小间距 */
+  /* 统一标签间距为固定值 */
   .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.5rem !important; }
-  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.375rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.5rem !important; }
 }
 
 @media (max-width: 768px) {
   .article-title { font-size: 1.6rem; }
-  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.375rem !important; }
-  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.25rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.5rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.5rem !important; }
   
   /* 移动端标题字号调整 - H6与正文字号一致 */
   :deep(.markdown-body h1) { font-size: 1.65rem; margin-top: 2rem; margin-bottom: 0.875rem; }
@@ -530,8 +530,8 @@ export default {
 
 @media (max-width: 576px) {
   .article-title { font-size: 1.5rem; }
-  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.25rem !important; }
-  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.125rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.375rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.375rem !important; }
   
   /* 手机端标题字号调整 - H6与正文字号一致 */
   :deep(.markdown-body h1) { font-size: 1.55rem; margin-top: 1.75rem; margin-bottom: 0.75rem; }

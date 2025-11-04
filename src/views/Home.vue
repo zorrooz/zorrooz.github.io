@@ -83,7 +83,6 @@ export default {
   watch: {
     locale(newLocale, oldLocale) {
       if (newLocale !== oldLocale) {
-        // 语言切换时清除当前标签，避免标签不匹配问题
         if (this.currentTag) {
           this.clearTag()
         } else {
