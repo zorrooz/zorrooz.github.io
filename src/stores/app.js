@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { setTheme } from '@/utils/theme'
+import { setTheme } from './theme'
 import i18n from './i18n'
 
 export const useAppStore = defineStore('app', () => {

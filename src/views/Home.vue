@@ -9,10 +9,10 @@
 
 
             <div v-if="currentTag" class="mb-3 d-flex align-items-center gap-2">
-              <span>{{ tagsText }}：</span>
+              <span>{{ filteredByText }}：</span>
               <span class="current-tag-chip d-inline-flex">
                 <span># {{ currentTag }}</span>
-                <button class="chip-close" @click="clearTag" :aria-label="clearFilterText" :title="clearFilterText">×</button>
+                <button class="chip-close" @click="clearTag">×</button>
               </span>
             </div>
             <PostList :docs="filteredDocs" :perPage="5" />
@@ -57,11 +57,9 @@ export default {
     tagsText() {
       return this.t('tags')
     },
-    clearFilterText() {
-      return this.t('clearFilter')
-    }
-  },
-  computed: {
+    filteredByText() {
+      return this.t('filteredBy')
+    },
     currentTag() { return this.$route.query.tag || '' },
     filteredDocs() {
       const tag = this.currentTag
@@ -83,11 +81,20 @@ export default {
     window.addEventListener('resize', this.updateSidebarDimensions)
   },
   watch: {
-    locale() {
-      this.loadPostData()
+    locale(newLocale, oldLocale) {
+      if (newLocale !== oldLocale) {
+        // 语言切换时清除当前标签，避免标签不匹配问题
+        if (this.currentTag) {
+          this.clearTag()
+        } else {
+          this.loadPostData()
+        }
+      }
     }
   },
   methods: {
+
+    
     async loadPostData() {
       try {
         this.postData = await loadPosts() || [];
@@ -127,7 +134,11 @@ export default {
       delete q.tag
       q.page = '1'
       this.$router.push({ path: this.$route.path, query: q }).catch(() => {})
-      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+      this.$nextTick(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        // 重新加载数据以确保状态一致
+        this.loadPostData()
+      })
     }
   },
   beforeUnmount() {

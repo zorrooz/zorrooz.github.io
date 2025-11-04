@@ -35,6 +35,6 @@ export default {
   contact: '联系我',
   thanks: '感谢您的关注！',
 
-  
-  
+  // 过滤功能
+  filteredBy: '筛选条件'
 }

@@ -84,8 +84,30 @@ export const loadMarkdownContent = async (filePath) => {
   const locale = getCurrentLocale();
   const isEnglish = locale === 'en-US';
   
-  // 尝试加载对应语言的MD文件
+  // 构建所有可能的文件路径组合（按优先级排序）
+  const possiblePaths = [];
+  
+  // 1. 当前语言对应的文件（最高优先级）
   const localizedPath = isEnglish ? filePath.replace('.md', '-en.md') : filePath;
+  possiblePaths.push(localizedPath);
+  
+  // 2. 原始文件（中等优先级）
+  possiblePaths.push(filePath);
+  
+  // 3. 跨语言回退（最低优先级）
+  if (isEnglish) {
+    // 英文环境回退到中文
+    const chinesePath = filePath.replace('-en.md', '.md');
+    if (chinesePath !== filePath && chinesePath !== localizedPath) {
+      possiblePaths.push(chinesePath);
+    }
+  } else {
+    // 中文环境回退到英文
+    const englishPath = filePath.replace('.md', '-en.md');
+    if (englishPath !== filePath && englishPath !== localizedPath) {
+      possiblePaths.push(englishPath);
+    }
+  }
   
   try {
     // 使用Vite的glob导入模式
@@ -95,25 +117,24 @@ export const loadMarkdownContent = async (filePath) => {
       eager: false 
     });
     
-    // 构建可能的文件路径
-    const possiblePaths = [
-      `../content-src/${localizedPath}`,
-      `../content-src/${filePath}`, // 回退到原始文件
-      `../content-src/${localizedPath}?raw`,
-      `../content-src/${filePath}?raw`
-    ];
-    
-    // 查找匹配的模块
-    const matchedKey = Object.keys(markdownModules).find(key => 
-      possiblePaths.some(path => key.endsWith(path))
-    );
-    
-    if (matchedKey) {
-      const content = await markdownModules[matchedKey]();
-      return content;
+    // 按优先级顺序尝试所有可能的路径
+    for (const path of possiblePaths) {
+      const searchPaths = [
+        `../content-src/${path}`,
+        `../content-src/${path}?raw`
+      ];
+      
+      const matchedKey = Object.keys(markdownModules).find(key => 
+        searchPaths.some(searchPath => key.endsWith(searchPath))
+      );
+      
+      if (matchedKey) {
+        const content = await markdownModules[matchedKey]();
+        return content;
+      }
     }
     
-    throw new Error(`Markdown file not found: ${localizedPath}`);
+    throw new Error(`Markdown file not found for any of: ${possiblePaths.join(', ')}`);
   } catch (error) {
     console.error(`Failed to load markdown content: ${localizedPath}`, error);
     

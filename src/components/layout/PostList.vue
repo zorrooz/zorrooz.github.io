@@ -265,13 +265,28 @@ export default {
     },
     getArticlePath(post) {
       // 根据文章标题从notes.json中查找对应的文件路径
-      let articlePath = 'notes/Programming/python/25-09-19--python-fastq.md' // 默认路径
+      let articlePath = '';
       
       // 在扁平 notes.json 中查找匹配的文章
       const found = Array.isArray(this.notesFlat) ? this.notesFlat.find(item => item.title === post.title) : null
       if (found && found.relativePath) {
         articlePath = `notes/${found.relativePath}.md`
+      } else {
+        // 如果没找到，尝试从分类数据中查找
+        const locale = this.locale;
+        const isEnglish = locale === 'en-US';
+        
+        // 构建可能的文章路径
+        const basePath = post.category?.[1] || 'notes';
+        const fileName = post.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        articlePath = `${basePath}/${fileName}.md`;
+        
+        // 根据语言调整路径
+        if (isEnglish) {
+          articlePath = articlePath.replace('.md', '-en.md');
+        }
       }
+      
       return `/article/${articlePath.replace(/\.md$/, '')}`
     },
     goToPage(page) {

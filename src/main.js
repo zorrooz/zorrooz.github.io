@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router'
 import App from './App.vue'
 import router from './router'
 import 'bootstrap'
-import './assets/styles/global.scss'
+import './stores/styles/global.scss'
 import i18n from './stores/i18n'
 import 'katex/dist/katex.min.css'
 

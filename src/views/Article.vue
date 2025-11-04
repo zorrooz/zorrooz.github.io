@@ -135,18 +135,24 @@ export default {
         const articlePath = article.path.replace(/\.md$/, '');
         const currentPath = this.currentPath.replace(/\.md$/, '');
         
-        // 处理语言后缀匹配
+        // 处理语言后缀匹配 - 统一匹配逻辑
         if (isEnglish) {
-          // 英文环境：优先匹配带-en后缀的文章，如果没有则匹配无后缀的文章
-          return articlePath === currentPath || 
-                 articlePath === currentPath.replace(/-en$/, '') ||
-                 articlePath.replace(/-en$/, '') === currentPath;
+          // 英文环境：优先匹配带-en后缀的文章
+          if (articlePath === currentPath) return true;
+          // 如果当前路径有-en后缀，但文章路径没有，尝试匹配
+          if (currentPath.endsWith('-en') && articlePath === currentPath.replace(/-en$/, '')) return true;
+          // 如果当前路径没有-en后缀，但文章路径有，尝试匹配
+          if (!currentPath.endsWith('-en') && articlePath === currentPath + '-en') return true;
         } else {
-          // 中文环境：优先匹配无后缀的文章，如果没有则匹配带-en后缀的文章
-          return articlePath === currentPath || 
-                 articlePath === currentPath + '-en' ||
-                 articlePath.replace(/-en$/, '') === currentPath;
+          // 中文环境：优先匹配无后缀的文章
+          if (articlePath === currentPath) return true;
+          // 如果当前路径有-en后缀，但文章路径没有，尝试匹配
+          if (currentPath.endsWith('-en') && articlePath === currentPath.replace(/-en$/, '')) return true;
+          // 如果当前路径没有-en后缀，但文章路径有，尝试匹配
+          if (!currentPath.endsWith('-en') && articlePath === currentPath + '-en') return true;
         }
+        
+        return false;
       });
     },
 
@@ -433,7 +439,7 @@ export default {
 .article-content { min-height: 400px; padding: 0; }
 .article-meta { padding-bottom: 0.75rem !important; border-bottom: none !important; }
 
-.article-title { font-size: 2.1rem; font-weight: 700; color: var(--app-text-emphasis); }
+.article-title { font-size: 1.8rem; font-weight: 700; color: var(--app-text-emphasis); }
 .article-meta .text-secondary { font-size: 1rem; color: var(--app-text-muted); }
 .article-meta .badge { font-size: 0.95rem; font-weight: 500; }
 .article-meta .tag-badge { 
@@ -445,6 +451,14 @@ export default {
   font-size: 1.125rem; line-height: 1.8; color: var(--app-text);
 }
 :deep(.markdown-body p) { margin-bottom: 0.75rem; }
+
+/* 标题字号层级分配 - H6与正文字号一致（1.125rem） */
+:deep(.markdown-body h1) { font-size: 1.9rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; }
+:deep(.markdown-body h2) { font-size: 1.65rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.875rem; }
+:deep(.markdown-body h3) { font-size: 1.45rem; font-weight: 700; margin-top: 1.75rem; margin-bottom: 0.75rem; }
+:deep(.markdown-body h4) { font-size: 1.3rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.625rem; }
+:deep(.markdown-body h5) { font-size: 1.2rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+:deep(.markdown-body h6) { font-size: 1.125rem; font-weight: 700; margin-top: 1rem; margin-bottom: 0.375rem; }
 
 
 
@@ -491,5 +505,40 @@ export default {
   .toc-container { margin-top: 1rem; margin-bottom: 1rem; }
   .card-body { padding: 0.75rem !important; }
   .article-content { padding: 0.25rem; }
+  
+  /* 移动端标题字号优化 - 确保比二级标题大 */
+  .article-title { font-size: 1.8rem; }
+  
+  /* 移动端元信息间距优化 - 当两行分别显示时减小间距 */
+  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.5rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.375rem !important; }
+}
+
+@media (max-width: 768px) {
+  .article-title { font-size: 1.6rem; }
+  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.375rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.25rem !important; }
+  
+  /* 移动端标题字号调整 - H6与正文字号一致 */
+  :deep(.markdown-body h1) { font-size: 1.65rem; margin-top: 2rem; margin-bottom: 0.875rem; }
+  :deep(.markdown-body h2) { font-size: 1.5rem; margin-top: 1.75rem; margin-bottom: 0.75rem; }
+  :deep(.markdown-body h3) { font-size: 1.35rem; margin-top: 1.5rem; margin-bottom: 0.625rem; }
+  :deep(.markdown-body h4) { font-size: 1.25rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+  :deep(.markdown-body h5) { font-size: 1.15rem; margin-top: 1rem; margin-bottom: 0.375rem; }
+  :deep(.markdown-body h6) { font-size: 1.125rem; margin-top: 0.875rem; margin-bottom: 0.25rem; }
+}
+
+@media (max-width: 576px) {
+  .article-title { font-size: 1.5rem; }
+  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.25rem !important; }
+  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.125rem !important; }
+  
+  /* 手机端标题字号调整 - H6与正文字号一致 */
+  :deep(.markdown-body h1) { font-size: 1.55rem; margin-top: 1.75rem; margin-bottom: 0.75rem; }
+  :deep(.markdown-body h2) { font-size: 1.45rem; margin-top: 1.5rem; margin-bottom: 0.625rem; }
+  :deep(.markdown-body h3) { font-size: 1.35rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+  :deep(.markdown-body h4) { font-size: 1.25rem; margin-top: 1rem; margin-bottom: 0.375rem; }
+  :deep(.markdown-body h5) { font-size: 1.15rem; margin-top: 0.875rem; margin-bottom: 0.25rem; }
+  :deep(.markdown-body h6) { font-size: 1.125rem; margin-top: 0.75rem; margin-bottom: 0.125rem; }
 }
 </style>

@@ -34,4 +34,7 @@ export default {
   introduction: 'Introduction',
   contact: 'Contact Me',
   thanks: 'Thank you for your attention!',
+
+  // 过滤功能
+  filteredBy: 'Filtered by'
 }
