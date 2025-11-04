@@ -19,7 +19,7 @@
                 <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
                 <div class="d-flex flex-wrap gap-3 align-items-center" :style="{ color: 'var(--app-text-muted)' }">
                   <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>{{ updatedAtText }} {{ currentPost.date }}</span>
-                  <span v-if="readingMinutes > 0"><i class="bi bi-clock me-1"></i>{{ $t('readingTime', { minutes: readingMinutes }) }}</span>
+                  <span v-if="readingMinutes > 0"><i class="bi bi-clock me-1"></i>{{ getReadingTimeText(readingMinutes) }}</span>
                 </div>
                 <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
                   <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="badge tag-badge fw-normal py-1 px-2 rounded-3">
@@ -252,6 +252,13 @@ export default {
     window.removeEventListener('scroll', this.updateSidebarDimensions);
   },
   methods: {
+    getReadingTimeText(minutes) {
+      // 直接处理翻译逻辑，避免静态构建时的i18n问题
+      const isEnglish = this.locale === 'en-US';
+      const template = isEnglish ? 'Reading about {minutes} minutes' : '阅读约 {minutes} 分钟';
+      return template.replace('{minutes}', minutes.toString());
+    },
+    
     toArticle(p) {
       return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } };
     },
