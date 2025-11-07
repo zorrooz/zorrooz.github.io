@@ -1,18 +1,18 @@
 ---
-title: "Vue.js Frontend Development Introduction"
+title: "Getting Started with Vue.js Frontend Development"
 date: "2025-09-19"
 author: "zorrooz"
-tags: ["JavaScript", "Vue.js", "Frontend Development", "Componentization", "Reactive"]
+tags: ["JavaScript", "Vue.js", "Frontend Development", "Componentization", "Reactivity"]
 draft: false
-description: "Application of Vue.js framework in scientific data visualization frontend development"
+description: "Application of Vue.js Framework in Scientific Data Visualization Frontend Development"
 ---
 
-# Vue.js Frontend Development Introduction
+# Getting Started with Vue.js Frontend Development
 
 ## Basic Syntax
 
 ```javascript
-// Vue component example
+// Vue Component Example
 export default {
   data() {
     return {
@@ -33,7 +33,7 @@ export default {
 - Events: Child component sends messages to parent component
 - Vuex: Global state management
 
-Below is a demonstration of common Markdown syntax features.
+The following demonstrates common Markdown syntax features.
 
 ## 1. Basic Text Styles
 
@@ -45,35 +45,35 @@ Below is a demonstration of common Markdown syntax features.
 
 ###### Level 6 Heading
 
-Regular paragraph text example.
+Example of regular paragraph text.
 
 1. Bold Text
-    - **Asterisk format**
-    - **Underscore format**
+    - **Asterisk form**
+    - **Underscore form**
 2. Italic Text
-    - *Asterisk format*
-    - *Underscore format*
+    - *Asterisk form*
+    - *Underscore form*
 
 ## 2. Links and Images
 
 This is an inline link example: [Vue Official Website](https://vuejs.org)
 
-Below are embedded image examples:
+Below are examples of embedded images:
 
  ![city](./city.png)
 ![Vue Logo](https://vuejs.org/images/logo.png)
 
-## 3. Block Quotes
+## 3. Blockquotes
 
-> This is a block quote.  
-> Block quotes are commonly used to emphasize certain content or display others' statements.
+> This is a blockquote.  
+> Blockquotes are often used to emphasize certain content or present someone else's statement.
 
 ## 4. Tables and Inline Code
 
 | Style Type          | Example |
-| ------------------- | ------- |
-| Inline Code         | `console.log("Hello World")` |
-| Inline Math Formula | $f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$ |
+| ----------------- | ---- |
+| Inline Code          | `console.log("Hello World")` |
+| Inline Math Formula      | $f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$ |
 
 ## 5. Code Blocks
 
@@ -103,4 +103,4 @@ $$
 $$
 
 ---
-Above are examples of commonly used Markdown syntax features.
+The above are examples of commonly used Markdown syntax features.

@@ -1,7 +1,7 @@
 notes:
   - name: "Omics"
     title: "Omics"
-    desc: "Learning records and resource collection related to omics"
+    desc: "Summary of learning records and materials related to omics"
     date: "2025-09-19"
     categories:
       genomics: "Genomics"
@@ -10,7 +10,7 @@ notes:
 
   - name: "Programming"
     title: "Programming"
-    desc: "Learning records and resource collection related to programming"
+    desc: "Summary of learning records and materials related to programming"
     date: "2025-09-19"
     categories:
       python: "Python"
@@ -33,7 +33,7 @@ projects:
 topics:
   - name: "demo"
     title: "Demo Topic"
-    desc: "Example collection of topic structures and workflows"
+    desc: "Collection of topic structure and workflow examples"
     date: "2025-07-01"
     doi: "www.tt.org"
     tags: ["Demo", "Workflow"]

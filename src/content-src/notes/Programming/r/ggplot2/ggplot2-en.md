@@ -4,7 +4,7 @@ date: "2025-09-19"
 author: "zorrooz"
 tags: ["R Language", "ggplot2", "Data Visualization", "Statistical Charts", "Bioinformatics"]
 draft: false
-description: "Application of ggplot2 in bioinformatics data visualization"
+description: "Applications of ggplot2 in Bioinformatics Data Visualization"
 ---
 
 # R Language ggplot2 Data Visualization

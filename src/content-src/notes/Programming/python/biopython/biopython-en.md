@@ -4,12 +4,12 @@ date: "2025-09-19"
 author: "zorrooz"
 tags: ["Python", "Biopython", "Bioinformatics", "Sequence Analysis", "Genomics"]
 draft: false
-description: "Application of Biopython library in sequence analysis and genomic data processing"
+description: "Applications of the Biopython library in sequence analysis and genomic data processing"
 ---
 
 # Biopython Bioinformatics Applications
 
-## Sequence Operations
+## Sequence Manipulation
 
 ```python
 from Bio import SeqIO

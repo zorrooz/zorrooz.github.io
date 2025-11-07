@@ -28,3 +28,6 @@ coverage
 *.sln
 *.sw?
 *.tsbuildinfo
+
+# API Keys and sensitive configuration
+src/config/apiKeys.js

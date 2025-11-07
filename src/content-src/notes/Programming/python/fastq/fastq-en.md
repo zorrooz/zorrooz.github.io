@@ -4,7 +4,7 @@ date: "2025-09-19"
 author: "zorrooz"
 tags: ["Python", "Pandas", "FASTQ", "Data Cleaning", "Bioinformatics", "Beginner"]
 draft: false
-description: "Demonstrating how to quickly analyze sequencing data quality reports using Python Pandas"
+description: "Demonstrates how to quickly analyze sequencing data quality reports using Python Pandas."
 ---
 
 # Processing FASTQ Quality Statistics with Pandas
@@ -15,3 +15,4 @@ Brief example: Reading `fastqc_data.txt` and extracting basic statistics:
 import pandas as pd
 df = pd.read_csv("fastqc_data.txt", sep="\t", comment="#")
 print(df.head())
+```

@@ -19,12 +19,12 @@ section:
   - title: Project Experience
     items:
       - item: Example
-        desc: Currently none
+        desc: None for now
 
   - title: Honors & Awards
     items:
       - item: None yet
-        desc: "Testing"
+        desc: "Test"
 
 contacts:
   - label: Email

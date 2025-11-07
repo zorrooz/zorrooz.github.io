@@ -43,3 +43,4 @@ ggplot(data, aes(x = Condition, y = Expression)) +
 # t-test
 t_test_result <- t.test(Expression ~ Condition, data = data)
 print(t_test_result)
+```

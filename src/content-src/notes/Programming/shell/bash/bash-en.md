@@ -1,13 +1,13 @@
 ---
-title: "Bash Shell Script Programming"
+title: "Bash Shell Scripting"
 date: "2025-09-19"
 author: "zorrooz"
-tags: ["Shell", "Bash", "Command Line", "Script Programming", "Automation"]
+tags: ["Shell", "Bash", "Command Line", "Scripting", "Automation"]
 draft: false
-description: "Automation applications of Bash Shell scripts in bioinformatics data processing"
+description: "Automation Applications of Bash Shell Scripting in Bioinformatics Data Processing"
 ---
 
-# Bash Shell Script Programming
+# Bash Shell Scripting
 
 ## Basic Syntax
 

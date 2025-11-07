@@ -2,9 +2,9 @@
 title: "MaxQuant Proteomics Analysis Workflow"
 date: "2025-09-19"
 author: "zorrooz"
-tags: ["MaxQuant", "Proteomics", "Mass Spectrometry Analysis", "Bioinformatics", "Quantitative Analysis"]
+tags: ["MaxQuant", "Proteomics", "Mass Spectrometry", "Bioinformatics", "Quantitative Analysis"]
 draft: false
-description: "Detailed recording of standard workflow and parameter settings for MaxQuant in proteomics data analysis"
+description: "Detailed documentation of the standard workflow and parameter settings for MaxQuant in proteomics data analysis"
 ---
 
 # MaxQuant Proteomics Analysis Workflow
@@ -16,10 +16,10 @@ description: "Detailed recording of standard workflow and parameter settings for
    - FASTA files: Protein database
 
 2. **Main Parameters**
-   - Digestion method: Trypsin/P
+   - Enzyme: Trypsin/P
    - Maximum missed cleavages: 2
    - Precursor mass tolerance: 20 ppm (MS1)
-   - Fragment ion tolerance: 0.5 Da (MS2)
+   - Fragment mass tolerance: 0.5 Da (MS2)
 
 ## Analysis Workflow
 

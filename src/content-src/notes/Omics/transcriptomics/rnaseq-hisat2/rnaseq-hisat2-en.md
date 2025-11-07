@@ -2,9 +2,9 @@
 title: "RNA-Seq Analysis: HISAT2 Alignment Workflow"
 date: "2025-09-19"
 author: "zorrooz"
-tags: ["RNA-Seq", "HISAT2", "Transcriptomics", "Alignment", "Bioinformatics"]
+tags: ["RNA-Seq", "HISAT2", "Transcriptome", "Alignment", "Bioinformatics"]
 draft: false
-description: "Standard workflow for RNA-Seq data alignment using HISAT2"
+description: "Standard workflow for aligning RNA-Seq data using HISAT2"
 ---
 
 # RNA-Seq Analysis: HISAT2 Alignment Workflow

@@ -1,17 +1,17 @@
 ---
-title: "BWA MEM Human Genome Alignment Practice"
+title: "BWA MEM Alignment to Human Genome in Practice"
 date: "2025-09-19"
 tags: ["BWA", "Genome Alignment", "NGS", "Command Line", "Human Genome", "SAM/BAM"]
 draft: false
-description: "Recording standard usage workflow and parameter optimization of BWA MEM in human WGS data"
+description: "Documenting the standard workflow and parameter tuning for BWA MEM with human WGS data"
 ---
 
-# BWA MEM Human Genome Alignment Practice
+# BWA MEM Alignment to Human Genome in Practice
 
 ## Basic Commands
 
 ```bash
-# Index reference genome
+# Index the reference genome
 bwa index ref.fa
 
 # Align paired-end sequencing data
@@ -23,6 +23,6 @@ samtools view -bS output.sam | samtools sort -o output.bam
 
 ## Parameter Optimization
 
-- `-t`: Number of threads, adjust according to server configuration
+- `-t`: Number of threads, adjust based on server configuration
 - `-M`: Mark shorter split hits as secondary
 - `-R`: Add read group information

@@ -7,12 +7,12 @@
           desc: "Authoritative Python 3 documentation, including tutorials, library references, and language references"
         - name: "Real Python"
           url: "https://realpython.com/"
-          desc: "High-quality Python tutorials and practical projects suitable for learners at all levels"
+          desc: "High-quality Python tutorials and practical projects suitable for learners of all levels"
     - title: "Frontend Development"
       items:
         - name: "MDN Web Docs"
           url: "https://developer.mozilla.org/zh-CN/docs/Web/JavaScript"
-          desc: "Most authoritative Web technology documentation covering HTML, CSS, JavaScript, etc."
+          desc: "The most authoritative Web technology documentation, covering HTML, CSS, JavaScript, and more"
 
 - title: "Omics"
   children:
@@ -20,10 +20,10 @@
       items:
         - name: "NCBI"
           url: "https://www.ncbi.nlm.nih.gov/"
-          desc: "National Center for Biotechnology Information, providing important databases like GenBank"
+          desc: "National Center for Biotechnology Information, providing important databases such as GenBank"
         - name: "Ensembl"
           url: "https://www.ensembl.org/"
-          desc: "Genome browser and biological database providing gene annotation and variant analysis tools"
+          desc: "Genome browser and biological database, offering gene annotation and variation analysis tools"
     - title: "Transcriptomics"
       items:
         - name: "ENCODE Project"
@@ -36,10 +36,10 @@
       items:
         - name: "RELION"
           url: "https://www3.mrc-lmb.cam.ac.uk/groups/scheres/index.php"
-          desc: "Bayesian-based cryo-EM 3D reconstruction software widely used for high-resolution structure determination"
+          desc: "Bayesian-based cryo-EM 3D reconstruction software, widely used for high-resolution structure analysis"
         - name: "cryoSPARC"
           url: "https://cryoem.slac.stanford.edu/"
-          desc: "High-performance cryo-EM data processing platform with intuitive user interface"
+          desc: "High-performance cryo-EM data processing platform with an intuitive user interface"
     - title: "Database Resources"
       items:
         - name: "EMDB"
@@ -47,4 +47,4 @@
           desc: "Electron Microscopy Data Bank, storing and distributing cryo-EM 3D density maps"
         - name: "RCSB PDB"
           url: "https://www.rcsb.org/"
-          desc: "Protein Data Bank containing biological macromolecule structures determined by X-ray, NMR, and cryo-EM"
+          desc: "Protein Data Bank, containing biomolecular structures determined by X-ray, NMR, and cryo-EM"
