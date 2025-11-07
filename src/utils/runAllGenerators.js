@@ -10,15 +10,15 @@
  * so importing them once is enough; do NOT call their exported functions again.
  */
 
-import './generateAbout.js';       // self-executes on import
-import './generateResources.js';   // self-executes on import
+import './generators/generateAbout.js';       // self-executes on import
+import './generators/generateResources.js';   // self-executes on import
 
-import { generateNotesJson } from './generateNotes.js';
-import { generateProjectsJson } from './generateProjects.js';
-import { generateTopicsJson } from './generateTopics.js';
-import { generateCategoriesJson } from './generateCategories.js';
-import { generatePostsJson } from './generatePosts.js';
-import { generateTagsJson } from './generateTags.js';
+import { generateNotesJson } from './generators/generateNotes.js';
+import { generateProjectsJson } from './generators/generateProjects.js';
+import { generateTopicsJson } from './generators/generateTopics.js';
+import { generateCategoriesJson } from './generators/generateCategories.js';
+import { generatePostsJson } from './generators/generatePosts.js';
+import { generateTagsJson } from './generators/generateTags.js';
 
 function runStep(name, fn) {
   try {

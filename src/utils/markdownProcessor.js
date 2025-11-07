@@ -14,7 +14,45 @@ import rehypeStringify from 'rehype-stringify'
 import { common } from 'lowlight'
 import julia from 'highlight.js/lib/languages/julia'
 import dockerfile from 'highlight.js/lib/languages/dockerfile'
-import 'highlight.js/styles/github.css'
+// 动态加载语法高亮样式
+const loadHighlightStyle = () => {
+  if (typeof window === 'undefined') return;
+  
+  const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  const existingStyle = document.getElementById('highlight-style');
+  
+  if (existingStyle) {
+    existingStyle.remove();
+  }
+  
+  const link = document.createElement('link');
+  link.id = 'highlight-style';
+  link.rel = 'stylesheet';
+  link.href = isDark 
+    ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark-dimmed.min.css'
+    : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css';
+  
+  document.head.appendChild(link);
+};
+
+// 初始加载样式
+if (typeof window !== 'undefined') {
+  loadHighlightStyle();
+  
+  // 监听主题变化
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'data-bs-theme') {
+        loadHighlightStyle();
+      }
+    });
+  });
+  
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-bs-theme']
+  });
+}
 const languages = { ...common, julia, dockerfile }
 
 const processor = unified()

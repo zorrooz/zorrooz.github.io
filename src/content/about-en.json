@@ -32,7 +32,7 @@
       "items": [
         {
           "item": "Example",
-          "desc": "Currently none"
+          "desc": "None for now"
         }
       ]
     },
@@ -41,7 +41,7 @@
       "items": [
         {
           "item": "None yet",
-          "desc": "Testing"
+          "desc": "Test"
         }
       ]
     }

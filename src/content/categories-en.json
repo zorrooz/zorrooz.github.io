@@ -5,7 +5,7 @@
       {
         "name": "Omics",
         "title": "Omics",
-        "desc": "Learning records and resource collection related to omics",
+        "desc": "Summary of learning records and materials related to omics",
         "tags": [
           "BWA",
           "Genome Alignment",
@@ -15,17 +15,17 @@
           "SAM/BAM",
           "MaxQuant",
           "Proteomics",
-          "Mass Spectrometry Analysis",
+          "Mass Spectrometry",
           "Bioinformatics",
           "Quantitative Analysis",
           "RNA-Seq",
           "HISAT2",
-          "Transcriptomics",
+          "Transcriptome",
           "Alignment"
         ],
         "stats": {
           "postsCount": 3,
-          "totalWords": 143,
+          "totalWords": 144,
           "latestDate": "2025-09-19"
         },
         "categories": [
@@ -34,7 +34,7 @@
             "title": "Genomics",
             "articles": [
               {
-                "title": "BWA MEM Human Genome Alignment Practice",
+                "title": "BWA MEM Alignment to Human Genome in Practice",
                 "articleUrl": "/article/notes/Omics/genomics/bwa/bwa-en",
                 "tags": [
                   "BWA",
@@ -48,7 +48,7 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 28,
+              "totalWords": 30,
               "latestDate": "2025-09-19"
             }
           },
@@ -62,7 +62,7 @@
                 "tags": [
                   "MaxQuant",
                   "Proteomics",
-                  "Mass Spectrometry Analysis",
+                  "Mass Spectrometry",
                   "Bioinformatics",
                   "Quantitative Analysis"
                 ]
@@ -70,7 +70,7 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 64,
+              "totalWords": 63,
               "latestDate": "2025-09-19"
             }
           },
@@ -84,7 +84,7 @@
                 "tags": [
                   "RNA-Seq",
                   "HISAT2",
-                  "Transcriptomics",
+                  "Transcriptome",
                   "Alignment",
                   "Bioinformatics"
                 ]
@@ -102,13 +102,13 @@
       {
         "name": "Programming",
         "title": "Programming",
-        "desc": "Learning records and resource collection related to programming",
+        "desc": "Summary of learning records and materials related to programming",
         "tags": [
           "JavaScript",
           "Vue.js",
           "Frontend Development",
           "Componentization",
-          "Reactive",
+          "Reactivity",
           "Python",
           "Biopython",
           "Bioinformatics",
@@ -128,12 +128,12 @@
           "Shell",
           "Bash",
           "Command Line",
-          "Script Programming",
+          "Scripting",
           "Automation"
         ],
         "stats": {
           "postsCount": 7,
-          "totalWords": 344,
+          "totalWords": 294,
           "latestDate": "2025-09-19"
         },
         "categories": [
@@ -165,7 +165,7 @@
                 ]
               },
               {
-                "title": "Python Pandas Data Processing Practice",
+                "title": "Python Pandas Data Processing in Practice",
                 "articleUrl": "/article/notes/Programming/python/pandas/pandas-en",
                 "tags": [
                   "Python",
@@ -178,7 +178,7 @@
             ],
             "stats": {
               "postsCount": 3,
-              "totalWords": 100,
+              "totalWords": 66,
               "latestDate": "2025-09-19"
             }
           },
@@ -187,20 +187,20 @@
             "title": "JavaScript",
             "articles": [
               {
-                "title": "Vue.js Frontend Development Introduction",
+                "title": "Getting Started with Vue.js Frontend Development",
                 "articleUrl": "/article/notes/Programming/javascript/vue/vue-en",
                 "tags": [
                   "JavaScript",
                   "Vue.js",
                   "Frontend Development",
                   "Componentization",
-                  "Reactive"
+                  "Reactivity"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 176,
+              "totalWords": 177,
               "latestDate": "2025-09-19"
             }
           },
@@ -233,7 +233,7 @@
             ],
             "stats": {
               "postsCount": 2,
-              "totalWords": 46,
+              "totalWords": 30,
               "latestDate": "2025-09-19"
             }
           },
@@ -242,20 +242,20 @@
             "title": "Shell",
             "articles": [
               {
-                "title": "Bash Shell Script Programming",
+                "title": "Bash Shell Scripting",
                 "articleUrl": "/article/notes/Programming/shell/bash/bash-en",
                 "tags": [
                   "Shell",
                   "Bash",
                   "Command Line",
-                  "Script Programming",
+                  "Scripting",
                   "Automation"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 22,
+              "totalWords": 21,
               "latestDate": "2025-09-19"
             }
           }
@@ -278,7 +278,7 @@
         ],
         "stats": {
           "postsCount": 5,
-          "totalWords": 23,
+          "totalWords": 21,
           "latestDate": "2025-08-01"
         },
         "categories": [
@@ -299,7 +299,7 @@
             ],
             "stats": {
               "postsCount": 2,
-              "totalWords": 13,
+              "totalWords": 12,
               "latestDate": ""
             }
           },
@@ -336,7 +336,7 @@
             ],
             "stats": {
               "postsCount": 2,
-              "totalWords": 8,
+              "totalWords": 7,
               "latestDate": ""
             }
           }
@@ -352,14 +352,14 @@
       {
         "name": "demo",
         "title": "Demo Topic",
-        "desc": "Example collection of topic structures and workflows",
+        "desc": "Collection of topic structure and workflow examples",
         "tags": [
           "Demo",
           "Workflow"
         ],
         "stats": {
           "postsCount": 3,
-          "totalWords": 15,
+          "totalWords": 13,
           "latestDate": "2025-07-01"
         },
         "categories": [
@@ -380,7 +380,7 @@
             ],
             "stats": {
               "postsCount": 2,
-              "totalWords": 8,
+              "totalWords": 7,
               "latestDate": ""
             }
           },
@@ -396,7 +396,7 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 7,
+              "totalWords": 6,
               "latestDate": ""
             }
           }

@@ -2,6 +2,59 @@
 @use "bootstrap/scss/bootstrap";
 
 // 自定义全局样式
+// 确保应用容器撑满全屏
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// 确保所有视图都能撑满剩余空间
+.view-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px - 80px); /* 减去header和footer的预估高度 */
+}
+
+.view-container > .container,
+.view-container > .container-fluid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// 确保所有视图的直接子元素都能撑满
+.view-container > .container > *,
+.view-container > .container-fluid > * {
+  flex: 1;
+}
+
+// 针对具体视图的额外样式
+.home-view .container,
+.about-view .container,
+.category-view .container,
+.resource-view .container,
+.article-view .container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-view .container > *,
+.about-view .container > *,
+.category-view .container > *,
+.resource-view .container > *,
+.article-view .container > * {
+  flex: 1;
+}
+
 .nav-link.active {
   color: var(--app-nav-link-active-color) !important;
   background-color: transparent !important;

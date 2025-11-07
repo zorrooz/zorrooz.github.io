@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container view-container article-view">
     <div class="row py-4 px-0">
       <!-- 左侧：根目录（2列） -->
       <div class="col-12 col-lg-2 order-2 order-lg-1" ref="leftSidebarContainer">

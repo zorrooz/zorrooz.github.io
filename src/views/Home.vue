@@ -1,13 +1,11 @@
 <!-- Home.vue -->
 <template>
-  <div class="container">
+  <div class="container view-container home-view">
     <div class="row py-4 px-0">
-      <!-- 中间主内容区域 -->
-      <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body" ref="mainContent">
+      <!-- 主内容区域 - 移动端在最上方，桌面端在右侧 -->
+      <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body mb-4 mb-lg-0" ref="mainContent">
         <div class="row">
           <div class="col">
-
-
             <div v-if="currentTag" class="mb-3 d-flex align-items-center gap-2">
               <span>{{ filteredByText }}：</span>
               <span class="current-tag-chip d-inline-flex">
@@ -20,7 +18,7 @@
         </div>
       </div>
 
-      <!-- 左侧边栏 -->
+      <!-- 侧边栏 - 移动端在下方，桌面端在左侧 -->
       <div class="col-12 col-lg-3 order-2 order-lg-1" ref="sidebarContainer">
         <div class="sticky-sidebar" ref="sidebarContent">
           <div class="d-flex flex-column w-100 gap-4">
@@ -103,6 +101,9 @@ export default {
       }
     },
     updateSidebarDimensions() {
+      // 只在桌面端更新侧边栏尺寸
+      if (window.innerWidth < 992) return
+      
       const header = document.querySelector('header')
       const footer = document.querySelector('footer')
       const content = this.$refs.sidebarContent
@@ -157,15 +158,7 @@ export default {
   transition: max-height 0.2s ease;
 }
 
-@media (max-width: 991px) {
-  .sticky-sidebar {
-    position: static;
-    top: auto;
-    bottom: auto !important;
-    max-height: none !important;
-    overflow-y: visible !important;
-  }
-}
+/* 移动端布局已经通过d-lg-none和d-none d-lg-block控制，不再需要额外的CSS */
 .current-tag-chip {
   font-size: 1rem; /* 与卡片标签更一致 */
   font-weight: 500;

@@ -1,6 +1,6 @@
 [
   {
-    "title": "BWA MEM Human Genome Alignment Practice",
+    "title": "BWA MEM Alignment to Human Genome in Practice",
     "date": "2025-09-19",
     "tags": [
       "BWA",
@@ -11,9 +11,9 @@
       "SAM/BAM"
     ],
     "draft": false,
-    "description": "Recording standard usage workflow and parameter optimization of BWA MEM in human WGS data",
+    "description": "Documenting the standard workflow and parameter tuning for BWA MEM with human WGS data",
     "relativePath": "Omics/genomics/bwa/bwa-en",
-    "wordCount": 28,
+    "wordCount": 30,
     "tagCount": 6
   },
   {
@@ -22,14 +22,14 @@
     "tags": [
       "MaxQuant",
       "Proteomics",
-      "Mass Spectrometry Analysis",
+      "Mass Spectrometry",
       "Bioinformatics",
       "Quantitative Analysis"
     ],
     "draft": false,
-    "description": "Detailed recording of standard workflow and parameter settings for MaxQuant in proteomics data analysis",
+    "description": "Detailed documentation of the standard workflow and parameter settings for MaxQuant in proteomics data analysis",
     "relativePath": "Omics/proteomics/maxquant/maxquant-en",
-    "wordCount": 64,
+    "wordCount": 63,
     "tagCount": 5
   },
   {
@@ -38,30 +38,30 @@
     "tags": [
       "RNA-Seq",
       "HISAT2",
-      "Transcriptomics",
+      "Transcriptome",
       "Alignment",
       "Bioinformatics"
     ],
     "draft": false,
-    "description": "Standard workflow for RNA-Seq data alignment using HISAT2",
+    "description": "Standard workflow for aligning RNA-Seq data using HISAT2",
     "relativePath": "Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en",
     "wordCount": 51,
     "tagCount": 5
   },
   {
-    "title": "Vue.js Frontend Development Introduction",
+    "title": "Getting Started with Vue.js Frontend Development",
     "date": "2025-09-19",
     "tags": [
       "JavaScript",
       "Vue.js",
       "Frontend Development",
       "Componentization",
-      "Reactive"
+      "Reactivity"
     ],
     "draft": false,
-    "description": "Application of Vue.js framework in scientific data visualization frontend development",
+    "description": "Application of Vue.js Framework in Scientific Data Visualization Frontend Development",
     "relativePath": "Programming/javascript/vue/vue-en",
-    "wordCount": 176,
+    "wordCount": 177,
     "tagCount": 5
   },
   {
@@ -75,7 +75,7 @@
       "Genomics"
     ],
     "draft": false,
-    "description": "Application of Biopython library in sequence analysis and genomic data processing",
+    "description": "Applications of the Biopython library in sequence analysis and genomic data processing",
     "relativePath": "Programming/python/biopython/biopython-en",
     "wordCount": 43,
     "tagCount": 5
@@ -92,13 +92,13 @@
       "Beginner"
     ],
     "draft": false,
-    "description": "Demonstrating how to quickly analyze sequencing data quality reports using Python Pandas",
+    "description": "Demonstrates how to quickly analyze sequencing data quality reports using Python Pandas.",
     "relativePath": "Programming/python/fastq/fastq-en",
-    "wordCount": 31,
+    "wordCount": 13,
     "tagCount": 6
   },
   {
-    "title": "Python Pandas Data Processing Practice",
+    "title": "Python Pandas Data Processing in Practice",
     "date": "2025-09-19",
     "tags": [
       "Python",
@@ -108,9 +108,9 @@
       "Data Cleaning"
     ],
     "draft": false,
-    "description": "Common operations and techniques of Pandas library in bioinformatics data processing",
+    "description": "Common operations and techniques of the Pandas library in bioinformatics data processing",
     "relativePath": "Programming/python/pandas/pandas-en",
-    "wordCount": 26,
+    "wordCount": 10,
     "tagCount": 5
   },
   {
@@ -126,7 +126,7 @@
     "draft": false,
     "description": "Demonstrating basic applications of R language in bioinformatics data processing",
     "relativePath": "Programming/r/demo/demo-en",
-    "wordCount": 30,
+    "wordCount": 14,
     "tagCount": 5
   },
   {
@@ -140,25 +140,25 @@
       "Bioinformatics"
     ],
     "draft": false,
-    "description": "Application of ggplot2 in bioinformatics data visualization",
+    "description": "Applications of ggplot2 in Bioinformatics Data Visualization",
     "relativePath": "Programming/r/ggplot2/ggplot2-en",
     "wordCount": 16,
     "tagCount": 5
   },
   {
-    "title": "Bash Shell Script Programming",
+    "title": "Bash Shell Scripting",
     "date": "2025-09-19",
     "tags": [
       "Shell",
       "Bash",
       "Command Line",
-      "Script Programming",
+      "Scripting",
       "Automation"
     ],
     "draft": false,
-    "description": "Automation applications of Bash Shell scripts in bioinformatics data processing",
+    "description": "Automation Applications of Bash Shell Scripting in Bioinformatics Data Processing",
     "relativePath": "Programming/shell/bash/bash-en",
-    "wordCount": 22,
+    "wordCount": 21,
     "tagCount": 5
   }
 ]

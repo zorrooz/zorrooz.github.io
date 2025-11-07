@@ -15,7 +15,7 @@
     "format": "prettier --write src/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --repo https://github.com/zorrooz/zorrooz.github.io",
-    "translate": "node ./src/utils/translatorCli.js"
+    "translate": "node ./src/utils/translator/translatorCli.js"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

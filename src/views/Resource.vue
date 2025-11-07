@@ -1,6 +1,6 @@
 <!-- Resource.vue -->
 <template>
-  <div class="container py-4 px-3">
+  <div class="container py-4 px-3 view-container resource-view">
     <div class="row justify-content-center">
       <div class="col-lg-10 col-xl-8 typography-body">
         <!-- 页面标题 -->
