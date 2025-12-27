@@ -124,7 +124,7 @@ program
   .action(() => {
     console.log(`
 命令:
-  translate [目录路径]    翻译文件或目录
+  translate <目录路径>    翻译文件或目录
   status <目录路径>       检查翻译状态
   help                    显示此帮助信息
 
