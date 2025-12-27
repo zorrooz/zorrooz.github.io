@@ -6,8 +6,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/zorrooz/gblog?style=social)](https://github.com/zorrooz/gblog)
 [![中文版本](https://img.shields.io/badge/中文版本-blue)](README.md)
 
-
-<center>[English](README_EN.md) | [中文](README.md)</center>
+[English](README_EN.md) | [中文](README.md)
 
 gblog is a modern personal blog system built with Vue 3 + Vite, featuring bilingual support (Chinese/English), theme switching, Markdown article management, and more.
 

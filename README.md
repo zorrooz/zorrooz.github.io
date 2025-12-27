@@ -7,7 +7,7 @@
 [![English Version](https://img.shields.io/badge/English-Version-blue)](README_EN.md)
 
 
-<center>[English](README_EN.md) | [中文](README.md)</center>
+[English](README_EN.md) | [中文](README.md)
 
 gblog是基于 Vue 3 + Vite 构建的现代化个人博客系统，支持中英文双语、主题切换、Markdown 文章管理等功能。
 
