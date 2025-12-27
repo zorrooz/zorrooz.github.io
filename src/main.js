@@ -20,7 +20,6 @@ app.use(createPinia())
 app.use(router)
 app.use(i18n)
 
-// 初始化应用状态
 const appStore = useAppStore()
 appStore.initTheme()
 appStore.initLocale()

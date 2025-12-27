@@ -1,9 +1,7 @@
-// 导入Bootstrap
 @use "bootstrap/scss/bootstrap";
 
-// 自定义全局样式
-// 确保应用容器撑满全屏
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -15,28 +13,25 @@ html, body {
   flex-direction: column;
 }
 
-// 确保所有视图都能撑满剩余空间
 .view-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 80px - 80px); /* 减去header和footer的预估高度 */
+  min-height: calc(100vh - 80px - 80px);
 }
 
-.view-container > .container,
-.view-container > .container-fluid {
+.view-container>.container,
+.view-container>.container-fluid {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-// 确保所有视图的直接子元素都能撑满
-.view-container > .container > *,
-.view-container > .container-fluid > * {
+.view-container>.container>*,
+.view-container>.container-fluid>* {
   flex: 1;
 }
 
-// 针对具体视图的额外样式
 .home-view .container,
 .about-view .container,
 .category-view .container,
@@ -47,11 +42,11 @@ html, body {
   flex-direction: column;
 }
 
-.home-view .container > *,
-.about-view .container > *,
-.category-view .container > *,
-.resource-view .container > *,
-.article-view .container > * {
+.home-view .container>*,
+.about-view .container>*,
+.category-view .container>*,
+.resource-view .container>*,
+.article-view .container>* {
   flex: 1;
 }
 
@@ -122,15 +117,15 @@ html, body {
   --app-custom-border-color: var(--app-border);
   --app-custom-icon-color: var(--app-icon-color);
   --app-success: #198754;
-  
+
   /* Markdown相关变量 */
   --app-markdown-list-marker: var(--app-primary-bg-subtle);
   --app-markdown-code-bg: #f1f3f5;
   --app-markdown-code-color: var(--app-primary);
   --app-markdown-external-link-color: var(--app-primary);
-  --app-code-header-text: var(--app-text-muted); /* 代码块头部文本色 */
-  --app-code-button-bg: rgba(255, 255, 255, 0.2); /* 代码块按钮背景 */
-  --app-markdown-code-header-bg: #e9ecef; /* 新增：代码块头部背景色 */
+  --app-code-header-text: var(--app-text-muted);
+  --app-code-button-bg: rgba(255, 255, 255, 0.2);
+  --app-markdown-code-header-bg: #e9ecef;
 }
 
 /* 深色主题变量定义 */
@@ -174,13 +169,13 @@ html, body {
   --app-nav-arrow-color: #757575;
   --app-bg-light: #121212;
   --app-success: #198754;
-  
+
   /* Markdown相关变量 */
   --app-markdown-list-marker: var(--app-primary-bg-subtle);
   --app-markdown-code-bg: #121212;
   --app-markdown-code-color: var(--app-primary);
   --app-markdown-external-link-color: var(--app-primary);
-  --app-code-header-text: #b0b0b0; /* 代码块头部文本色 */
-  --app-code-button-bg: rgba(255, 255, 255, 0.1); /* 代码块按钮背景 */
-  --app-markdown-code-header-bg: #1a1a1a; /* 新增：代码块头部背景色 */
+  --app-code-header-text: #b0b0b0;
+  --app-code-button-bg: rgba(255, 255, 255, 0.1);
+  --app-markdown-code-header-bg: #1a1a1a;
 }
