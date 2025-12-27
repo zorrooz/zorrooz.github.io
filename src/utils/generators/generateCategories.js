@@ -56,6 +56,7 @@ function getSubCategoryKeyFromUrl(url) {
   if (typeof url !== 'string') return ''
   const parts = url.replace(/^\/+/, '').split('/')
   const articleIndex = parts[0] === 'article' ? 1 : 0
+  return parts[articleIndex + 2] || ''
 }
 
 function formatArticle(article, type) {

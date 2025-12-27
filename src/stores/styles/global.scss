@@ -130,52 +130,52 @@ body {
 
 /* 深色主题变量定义 */
 [data-bs-theme="dark"] {
-  --app-bg: #000000;
-  --app-bg-tertiary: #121212;
+  --app-bg: #141414;
+  --app-bg-tertiary: #242526;
   --app-text: #e0e0e0;
   --app-text-muted: #9e9e9e;
   --app-text-secondary: #e0e0e0;
   --app-text-emphasis: #ffffff;
-  --app-primary: #0d6efd;
+  --app-primary: #3d8bfd;
   --app-primary-bg-subtle: rgba(13, 110, 253, 0.3);
-  --app-primary-mid: rgba(13, 110, 253, 0.6);
+  --app-primary-mid: #5a9afd;
   --app-primary-rgb-01: rgba(13, 110, 253, 0.1);
   --app-border: rgba(255, 255, 255, 0.15);
-  --app-card-bg: #000000;
+  --app-card-bg: #141414;
   --app-card-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
-  --app-header-bg: #000000;
-  --app-footer-bg: #1a1a1a;
+  --app-header-bg: #141414;
+  --app-footer-bg: #1b1b1d;
   --app-link-hover-bg: #2d3748;
-  --app-btn-bg: #000000;
-  --app-btn-hover-bg: #1a1a1a;
+  --app-btn-bg: #141414;
+  --app-btn-hover-bg: #1b1b1d;
   --app-btn-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
   --app-btn-hover-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
-  --app-tag-bg: #121212;
+  --app-tag-bg: #242526;
   --app-tag-text: #e0e0e0;
-  --app-chip-bg: #000000;
+  --app-chip-bg: #141414;
   --app-chip-text: #e0e0e0;
   --app-chip-border: rgba(255, 255, 255, 0.15);
   --app-chip-close-text: #9e9e9e;
   --app-icon-color: #9e9e9e;
-  --app-pagination-link-bg: #000000;
+  --app-pagination-link-bg: #141414;
   --app-pagination-link-text: #b0b0b0;
   --app-pagination-link-hover-bg: rgba(13, 110, 253, 0.3);
   --app-pagination-current-bg: var(--app-primary);
-  --app-pagination-current-text: #121212;
-  --app-offcanvas-bg: #121212;
+  --app-pagination-current-text: #242526;
+  --app-offcanvas-bg: #242526;
   --app-offcanvas-shadow: 0 0.25rem 0.75rem rgba(255, 255, 255, 0.05);
   --app-backdrop-bg: rgba(255, 255, 255, 0.25);
   --app-stat-num-color: #e0e0e0;
   --app-nav-arrow-color: #757575;
-  --app-bg-light: #121212;
+  --app-bg-light: #242526;
   --app-success: #198754;
 
   /* Markdown相关变量 */
   --app-markdown-list-marker: var(--app-primary-bg-subtle);
-  --app-markdown-code-bg: #121212;
+  --app-markdown-code-bg: #242526;
   --app-markdown-code-color: var(--app-primary);
   --app-markdown-external-link-color: var(--app-primary);
   --app-code-header-text: #b0b0b0;
   --app-code-button-bg: rgba(255, 255, 255, 0.1);
-  --app-markdown-code-header-bg: #1a1a1a;
+  --app-markdown-code-header-bg: #1b1b1d;
 }
