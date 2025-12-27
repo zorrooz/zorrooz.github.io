@@ -9,7 +9,7 @@ description: "Applications of the Biopython library in sequence analysis and gen
 
 # Biopython Bioinformatics Applications
 
-## Sequence Manipulation
+## Sequence Operations
 
 \`\`\`python
 from Bio import SeqIO

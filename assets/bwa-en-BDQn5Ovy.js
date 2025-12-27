@@ -3,7 +3,7 @@ title: "BWA MEM Alignment to Human Genome in Practice"
 date: "2025-09-19"
 tags: ["BWA", "Genome Alignment", "NGS", "Command Line", "Human Genome", "SAM/BAM"]
 draft: false
-description: "Documenting the standard workflow and parameter tuning for BWA MEM with human WGS data"
+description: "Documenting the standard workflow and parameter tuning for BWA MEM in human WGS data"
 ---
 
 # BWA MEM Alignment to Human Genome in Practice
