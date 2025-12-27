@@ -97,7 +97,7 @@ function normalizeProjectTopicConfig(rawDef) {
   }
 }
 
-function buildDetailedNoteCategories(noteConfigs, noteArticles) {
+function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN') {
   return noteConfigs
     .map((rawConfig) => {
       const config = normalizeNoteConfig(rawConfig)
@@ -138,7 +138,7 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles) {
       if (uncategorizedArticles.length > 0) {
         detailedSubCats.push({
           key: 'uncategorized',
-          title: '未分类',
+          title: getCategoryTitles(locale).uncategorized,
           articles: uncategorizedArticles.map(({ wordCount, date, ...rest }) => rest),
           stats: {
             postsCount: uncategorizedArticles.length,
@@ -183,7 +183,7 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles) {
     .filter(Boolean)
 }
 
-function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type) {
+function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale = 'zh-CN') {
   return ptConfigs
     .map((rawConfig) => {
       const config = normalizeProjectTopicConfig(rawConfig)
@@ -231,7 +231,7 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type) {
       if (uncategorizedArticles.length > 0) {
         detailedSubCats.push({
           key: 'uncategorized',
-          title: '未分类',
+          title: getCategoryTitles(locale).uncategorized,
           articles: uncategorizedArticles.map(({ wordCount, date, ...rest }) => rest),
           stats: {
             postsCount: uncategorizedArticles.length,
@@ -282,12 +282,14 @@ function getCategoryTitles(locale = 'zh-CN') {
       notes: 'Notes',
       projects: 'Projects',
       topics: 'Topics',
+      uncategorized: 'Uncategorized',
     }
   }
   return {
     notes: '笔记',
     projects: '项目',
     topics: '课题',
+    uncategorized: '未分类',
   }
 }
 
@@ -310,13 +312,14 @@ function generateCategoriesJson(locale = 'zh-CN') {
       topics: safeArray(yamlConfig?.topics),
     }
 
-    const detailedNotes = buildDetailedNoteCategories(noteConfigs, noteArticles)
+    const detailedNotes = buildDetailedNoteCategories(noteConfigs, noteArticles, locale)
     const detailedProjects = buildDetailedProjectTopicCategories(
       projectConfigs,
       projectArticles,
       'project',
+      locale,
     )
-    const detailedTopics = buildDetailedProjectTopicCategories(topicConfigs, topicArticles, 'topic')
+    const detailedTopics = buildDetailedProjectTopicCategories(topicConfigs, topicArticles, 'topic', locale)
 
     const finalStructure = [
       {

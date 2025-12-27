@@ -20,6 +20,8 @@ export default {
   projects: '项目',
   topics: '课题',
   seeMore: '查看更多',
+  // 未分类
+  uncategorized: '未分类',
 
   // 文章页面
   updatedAt: '更新于',

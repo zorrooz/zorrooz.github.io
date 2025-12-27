@@ -20,6 +20,8 @@ export default {
   projects: 'Projects',
   topics: 'Topics',
   seeMore: 'See More',
+  // 未分类
+  uncategorized: 'Uncategorized',
 
   // 文章页面
   updatedAt: 'Updated at',
