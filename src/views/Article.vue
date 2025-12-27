@@ -1,16 +1,15 @@
+<!-- Article.vue -->
 <template>
   <div class="container view-container article-view">
     <div class="row py-4 px-0">
-      <!-- 左侧：根目录（2列） -->
       <div class="col-12 col-lg-2 order-2 order-lg-1" ref="leftSidebarContainer">
         <div class="sticky-sidebar" ref="leftSidebarContent">
-          <div v-if="isDesktop" class="navigation-container">
+          <div v-if="isDesktop" class="navigation-container mb-0">
             <NavigationTree />
           </div>
         </div>
       </div>
 
-      <!-- 中间：正文（8列） -->
       <div class="col-12 col-lg-8 order-1 order-lg-2" ref="mainContent">
         <div class="card shadow-sm border-0 rounded-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
           <div class="card-body p-4">
@@ -18,28 +17,25 @@
               <div v-if="currentPost" class="article-meta pb-2 mb-0">
                 <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
                 <div class="d-flex flex-wrap gap-3 align-items-center" :style="{ color: 'var(--app-text-muted)' }">
-                  <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>{{ updatedAtText }} {{ currentPost.date }}</span>
-                  <span v-if="readingMinutes > 0"><i class="bi bi-clock me-1"></i>{{ getReadingTimeText(readingMinutes) }}</span>
+                  <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>{{ updatedAtText }} {{
+                    currentPost.date }}</span>
+                  <span v-if="readingMinutes > 0"><i class="bi bi-clock me-1"></i>{{ getReadingTimeText(readingMinutes)
+                    }}</span>
                 </div>
                 <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
-                  <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="badge tag-badge fw-normal py-1 px-2 rounded-3">
+                  <span v-for="(tag, idx) in currentPost.tags" :key="idx"
+                    class="badge tag-badge fw-normal py-1 px-2 rounded-3">
                     # {{ tag }}
                   </span>
                 </div>
               </div>
 
-              <RenderMarkdown 
-                v-if="rawMarkdown" 
-                :rawMarkdown="rawMarkdown" 
-                :articlePath="currentPost?.path || ''"
-                :articleTitle="currentPost?.title || ''"
-                @markdown-rendered="handleMarkdownRendered"
-              />
+              <RenderMarkdown v-if="rawMarkdown" :rawMarkdown="rawMarkdown" :articlePath="currentPost?.path || ''"
+                :articleTitle="currentPost?.title || ''" @markdown-rendered="handleMarkdownRendered" />
 
-              <!-- 上一篇 / 下一篇 -->
               <nav class="article-navigation" v-if="rawMarkdown">
                 <router-link v-if="prevPost" :to="toArticle(prevPost.path)" class="article-nav-item prev">
-                  <div class="nav-arrow"><</div>
+                  <div class="nav-arrow">&lt;</div>
                   <div class="nav-details">
                     <div class="nav-label">{{ prevPageText }}</div>
                     <div class="nav-title">{{ prevPost.title }}</div>
@@ -50,7 +46,7 @@
                     <div class="nav-label">{{ nextPageText }}</div>
                     <div class="nav-title">{{ nextPost.title }}</div>
                   </div>
-                  <div class="nav-arrow">></div>
+                  <div class="nav-arrow">&gt;</div>
                 </router-link>
               </nav>
             </div>
@@ -58,21 +54,15 @@
         </div>
       </div>
 
-      <!-- 右侧：本页目录（2列） -->
       <div class="col-12 col-lg-2 order-3" ref="rightSidebarContainer">
         <div class="sticky-sidebar" ref="rightSidebarContent">
-          <div v-if="isDesktop" class="toc-container">
-            <OnThisPage 
-              ref="onThisPageRef"
-              containerSelector=".markdown-body" 
-              :levels="[2, 3]" 
-            />
+          <div v-if="isDesktop" class="toc-container mt-0">
+            <OnThisPage ref="onThisPageRef" containerSelector=".markdown-body" :levels="[2, 3]" />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 移动端：TOC抽屉 -->
     <TocDrawer v-if="rawMarkdown" />
   </div>
 </template>
@@ -88,8 +78,11 @@ import { loadCategories, loadMarkdownContent } from '@/utils/contentLoader'
 
 
 const markdownModules = import.meta.glob('../content-src/**/*.md', { query: '?raw', import: 'default', eager: false });
-const keys = Object.keys(markdownModules);
 
+/*
+  ArticleView
+  - 文章页面
+*/
 export default {
   name: 'ArticleView',
   setup() {
@@ -99,13 +92,13 @@ export default {
   components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawer },
   props: { path: { type: [String, Array], default: '' } },
   data() {
-    return { 
-      rawMarkdown: '', 
-      currentPath: '', 
-      allArticles: [], 
+    return {
+      rawMarkdown: '',
+      currentPath: '',
+      allArticles: [],
       groupedArticles: {},
       categoryList: [],
-      viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024) 
+      viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024)
     }
   },
   computed: {
@@ -123,35 +116,27 @@ export default {
     nextPageText() {
       return this.t('nextPage')
     },
-    
+
     currentPost() {
       if (!this.currentPath) return null;
-      
-      // 根据当前语言构建正确的路径匹配逻辑
+
       const locale = this.locale;
       const isEnglish = locale === 'en-US';
-      
+
       return this.allArticles.find(article => {
         const articlePath = article.path.replace(/\.md$/, '');
         const currentPath = this.currentPath.replace(/\.md$/, '');
-        
-        // 处理语言后缀匹配 - 统一匹配逻辑
+
         if (isEnglish) {
-          // 英文环境：优先匹配带-en后缀的文章
           if (articlePath === currentPath) return true;
-          // 如果当前路径有-en后缀，但文章路径没有，尝试匹配
           if (currentPath.endsWith('-en') && articlePath === currentPath.replace(/-en$/, '')) return true;
-          // 如果当前路径没有-en后缀，但文章路径有，尝试匹配
           if (!currentPath.endsWith('-en') && articlePath === currentPath + '-en') return true;
         } else {
-          // 中文环境：优先匹配无后缀的文章
           if (articlePath === currentPath) return true;
-          // 如果当前路径有-en后缀，但文章路径没有，尝试匹配
           if (currentPath.endsWith('-en') && articlePath === currentPath.replace(/-en$/, '')) return true;
-          // 如果当前路径没有-en后缀，但文章路径有，尝试匹配
           if (!currentPath.endsWith('-en') && articlePath === currentPath + '-en') return true;
         }
-        
+
         return false;
       });
     },
@@ -160,7 +145,7 @@ export default {
       if (!this.currentPost) return [];
       const [type, group] = this.currentPost.path.replace(/\.md$/, '').split('/');
       const linear = [];
-      
+
       const pushFromUrl = (title, articleUrl) => {
         if (!articleUrl) return;
         const parts = String(articleUrl).replace(/^\/+/, '').split('/');
@@ -172,7 +157,6 @@ export default {
         linear.push({ title, path: `${pathNoExt}.md` });
       };
 
-      // 使用动态加载的分类数据
       if (Array.isArray(this.categoryList)) {
         for (const section of this.categoryList) {
           if (!Array.isArray(section.items)) continue;
@@ -212,7 +196,7 @@ export default {
 
     readingMinutes() {
       if (!this.rawMarkdown) return 0;
-      const text = this.rawMarkdown.replace(/(```[\s\S]*?```)|(!\[.*?\]\(.*?\))|(\[.*?\]\(.*?\))|([#>*\-]+)/g, '').trim();
+      const text = this.rawMarkdown.replace(/(```[\s\S]*?```)|(!\[.*?\]\(.*?\))|(\[.*?\]\(.*?\))|([#>*-]+)/g, '').trim();
       return Math.max(1, Math.round(text.length / 800));
     }
   },
@@ -224,9 +208,7 @@ export default {
     locale: {
       handler(newLocale, oldLocale) {
         if (newLocale !== oldLocale) {
-          // 语言切换时重新构建分类数据并加载对应语言的文章内容
           this.buildFromCategories().then(() => {
-            // 强制重新加载当前文章的内容
             this.loadArticleContent();
           });
         }
@@ -259,12 +241,12 @@ export default {
   },
   methods: {
     getReadingTimeText(minutes) {
-      // 直接处理翻译逻辑，避免静态构建时的i18n问题
+
       const isEnglish = this.locale === 'en-US';
       const template = isEnglish ? 'Reading about {minutes} minutes' : '阅读约 {minutes} 分钟';
       return template.replace('{minutes}', minutes.toString());
     },
-    
+
     toArticle(p) {
       return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } };
     },
@@ -289,9 +271,8 @@ export default {
       };
 
       try {
-        // 使用新的内容加载工具函数
         const categoryData = await loadCategories();
-        
+
         if (Array.isArray(categoryData)) {
           categoryData.forEach(section => {
             if (!Array.isArray(section.items)) return;
@@ -321,8 +302,7 @@ export default {
         this.groupedArticles = {};
         this.categoryList = [];
       }
-      
-      // 返回Promise以便链式调用
+
       return Promise.resolve();
     },
 
@@ -331,7 +311,6 @@ export default {
       this.updateSidebarDimensions();
     },
 
-    // 此方法已不再需要，因为MD文件加载已由loadMarkdownContent函数处理
     getMatchedKey(rel) {
       const normalized = rel.replace(/^notes\//, 'notes/');
       const candidates = [
@@ -339,14 +318,13 @@ export default {
         `/content-src/${normalized}?raw`, `${normalized}?raw`,
         `../content-src/${normalized}`, `../content-src/${normalized}?raw`
       ];
-      
-      // 优先查找英文版本的内容文件
+
       if (this.locale === 'en-US') {
         const enCandidates = candidates.map(candidate => candidate.replace('.md', '-en.md'));
         const enKey = Object.keys(markdownModules).find(k => enCandidates.some(suf => k.endsWith(suf)));
         if (enKey) return enKey;
       }
-      
+
       return Object.keys(markdownModules).find(k => candidates.some(suf => k.endsWith(suf)));
     },
 
@@ -358,40 +336,34 @@ export default {
       this.rawMarkdown = '';
       try {
         const currentPathClean = this.normalizeRoutePathParam(this.$route.params.path);
-        
-        // 根据当前语言动态匹配文章
+
         const locale = this.locale;
         const isEnglish = locale === 'en-US';
-        
-        // 优先在当前语言的文章列表中查找
+
         let matchedPost = this.allArticles.find(article => {
           const articlePath = article.path.replace(/\.md$/, '');
-          
+
           if (isEnglish) {
-            // 英文环境：优先匹配带-en后缀的文章
-            return articlePath === currentPathClean || 
-                   articlePath === currentPathClean.replace(/-en$/, '') + '-en';
+            return articlePath === currentPathClean ||
+              articlePath === currentPathClean.replace(/-en$/, '') + '-en';
           } else {
-            // 中文环境：优先匹配无后缀的文章
-            return articlePath === currentPathClean || 
-                   articlePath === currentPathClean.replace(/-en$/, '');
+            return articlePath === currentPathClean ||
+              articlePath === currentPathClean.replace(/-en$/, '');
           }
         });
-        
-        // 如果没找到，放宽匹配条件
+
         if (!matchedPost) {
           matchedPost = this.allArticles.find(article => {
             const articlePath = article.path.replace(/\.md$/, '');
             const cleanCurrentPath = currentPathClean.replace(/-en$/, '');
-            return articlePath === cleanCurrentPath || 
-                   articlePath === cleanCurrentPath + '-en';
+            return articlePath === cleanCurrentPath ||
+              articlePath === cleanCurrentPath + '-en';
           });
         }
-        
+
         if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`);
         this.currentPath = matchedPost.path;
 
-        // 强制重新加载Markdown内容
         this.rawMarkdown = await loadMarkdownContent(this.currentPath);
 
         this.$nextTick(() => {
@@ -431,34 +403,97 @@ export default {
 
 <style scoped>
 .sticky-sidebar {
-  position: sticky; top: 30px; box-sizing: border-box; width: 100%;
-  -webkit-overflow-scrolling: touch; transition: max-height 0.2s ease;
+  position: sticky;
+  top: 30px;
+  box-sizing: border-box;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  transition: max-height 0.2s ease;
 }
-.navigation-container { margin-bottom: 0; }
-.toc-container { margin-top: 0; }
-.article-content { min-height: 400px; padding: 0; }
-.article-meta { padding-bottom: 0.75rem !important; border-bottom: none !important; }
 
-.article-title { font-size: 1.8rem; font-weight: 700; color: var(--app-text-emphasis); }
-.article-meta .text-secondary { font-size: 1rem; color: var(--app-text-muted); }
-.article-meta .badge { font-size: 0.95rem; font-weight: 500; }
-.article-meta .tag-badge { 
-  color: var(--app-tag-text) !important; 
-  background-color: var(--app-tag-bg) !important; 
+.article-content {
+  min-height: 400px;
+  padding: 0;
+}
+
+.article-meta {
+  padding-bottom: 0.75rem !important;
+  border-bottom: none !important;
+}
+
+.article-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--app-text-emphasis);
+}
+
+.article-meta .text-secondary {
+  font-size: 1rem;
+  color: var(--app-text-muted);
+}
+
+.article-meta .badge {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.article-meta .tag-badge {
+  color: var(--app-tag-text) !important;
+  background-color: var(--app-tag-bg) !important;
 }
 
 :deep(.markdown-body) {
-  font-size: 1.125rem; line-height: 1.8; color: var(--app-text);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--app-text);
 }
-:deep(.markdown-body p) { margin-bottom: 0.75rem; }
 
-/* 标题字号层级分配 - H6与正文字号一致（1.125rem） */
-:deep(.markdown-body h1) { font-size: 1.9rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; }
-:deep(.markdown-body h2) { font-size: 1.65rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.875rem; }
-:deep(.markdown-body h3) { font-size: 1.45rem; font-weight: 700; margin-top: 1.75rem; margin-bottom: 0.75rem; }
-:deep(.markdown-body h4) { font-size: 1.3rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.625rem; }
-:deep(.markdown-body h5) { font-size: 1.2rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.5rem; }
-:deep(.markdown-body h6) { font-size: 1.125rem; font-weight: 700; margin-top: 1rem; margin-bottom: 0.375rem; }
+:deep(.markdown-body p) {
+  margin-bottom: 0.75rem;
+}
+
+
+:deep(.markdown-body h1) {
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+:deep(.markdown-body h2) {
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.875rem;
+}
+
+:deep(.markdown-body h3) {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+:deep(.markdown-body h4) {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.625rem;
+}
+
+:deep(.markdown-body h5) {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+:deep(.markdown-body h6) {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.375rem;
+}
 
 
 
@@ -470,6 +505,7 @@ export default {
   padding-top: 1rem;
   border-top: none !important;
 }
+
 .article-nav-item {
   display: flex;
   align-items: center;
@@ -482,63 +518,208 @@ export default {
   transition: all 0.2s ease-in-out;
   min-width: 0;
 }
+
 .article-nav-item:hover {
   border-color: var(--app-primary);
   color: var(--app-primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px var(--app-primary-rgb-01);
 }
-.article-nav-item.prev { grid-column: 1; }
-.article-nav-item.next { grid-column: 2; justify-content: flex-end; text-align: right; }
-.nav-arrow { font-size: 1.5rem; font-weight: 300; line-height: 1; color: var(--app-nav-arrow-color); transition: color 0.2s ease-in-out; }
-.article-nav-item:hover .nav-arrow { color: var(--app-primary); }
-.nav-details { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-.article-nav-item.next .nav-details { align-items: flex-end; flex: 1 1 auto; }
-.nav-label { font-size: 0.875rem; color: var(--app-text-muted); transition: color 0.2s ease-in-out; }
-.article-nav-item:hover .nav-label { color: var(--app-primary); }
-.nav-title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; }
-.article-nav-item.next .nav-title { text-align: left; max-width: 100%; }
+
+.article-nav-item.prev {
+  grid-column: 1;
+}
+
+.article-nav-item.next {
+  grid-column: 2;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.nav-arrow {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--app-nav-arrow-color);
+  transition: color 0.2s ease-in-out;
+}
+
+.article-nav-item:hover .nav-arrow {
+  color: var(--app-primary);
+}
+
+.nav-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.article-nav-item.next .nav-details {
+  align-items: flex-end;
+  flex: 1 1 auto;
+}
+
+.nav-label {
+  font-size: 0.875rem;
+  color: var(--app-text-muted);
+  transition: color 0.2s ease-in-out;
+}
+
+.article-nav-item:hover .nav-label {
+  color: var(--app-primary);
+}
+
+.nav-title {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: ltr;
+}
+
+.article-nav-item.next .nav-title {
+  text-align: left;
+  max-width: 100%;
+}
 
 @media (max-width: 991px) {
-  .sticky-sidebar { position: static; top: auto; bottom: auto !important; max-height: none !important; overflow-y: visible !important; }
-  .navigation-container { margin-bottom: 1rem; margin-top: 1rem; }
-  .toc-container { margin-top: 1rem; margin-bottom: 1rem; }
-  .card-body { padding: 0.75rem !important; }
-  .article-content { padding: 0.25rem; }
-  
-  /* 移动端标题字号优化 - 确保比二级标题大 */
-  .article-title { font-size: 1.8rem; }
-  
-  /* 统一标签间距为固定值 */
-  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.5rem !important; }
-  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.5rem !important; }
+  .sticky-sidebar {
+    position: static;
+    top: auto;
+    bottom: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+
+  .navigation-container {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+
+  .toc-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  .article-content {
+    padding: 0.25rem;
+  }
+
+  .article-title {
+    font-size: 1.8rem;
+  }
+
+  .article-meta .d-flex.flex-wrap.gap-3 {
+    gap: 0.5rem !important;
+  }
+
+  .article-meta .d-flex.flex-wrap.gap-2 {
+    gap: 0.5rem !important;
+  }
 }
 
 @media (max-width: 768px) {
-  .article-title { font-size: 1.6rem; }
-  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.5rem !important; }
-  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.5rem !important; }
-  
-  /* 移动端标题字号调整 - H6与正文字号一致 */
-  :deep(.markdown-body h1) { font-size: 1.65rem; margin-top: 2rem; margin-bottom: 0.875rem; }
-  :deep(.markdown-body h2) { font-size: 1.5rem; margin-top: 1.75rem; margin-bottom: 0.75rem; }
-  :deep(.markdown-body h3) { font-size: 1.35rem; margin-top: 1.5rem; margin-bottom: 0.625rem; }
-  :deep(.markdown-body h4) { font-size: 1.25rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
-  :deep(.markdown-body h5) { font-size: 1.15rem; margin-top: 1rem; margin-bottom: 0.375rem; }
-  :deep(.markdown-body h6) { font-size: 1.125rem; margin-top: 0.875rem; margin-bottom: 0.25rem; }
+  .article-title {
+    font-size: 1.6rem;
+  }
+
+  .article-meta .d-flex.flex-wrap.gap-3 {
+    gap: 0.5rem !important;
+  }
+
+  .article-meta .d-flex.flex-wrap.gap-2 {
+    gap: 0.5rem !important;
+  }
+
+  :deep(.markdown-body h1) {
+    font-size: 1.65rem;
+    margin-top: 2rem;
+    margin-bottom: 0.875rem;
+  }
+
+  :deep(.markdown-body h2) {
+    font-size: 1.5rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  :deep(.markdown-body h3) {
+    font-size: 1.35rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  :deep(.markdown-body h4) {
+    font-size: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :deep(.markdown-body h5) {
+    font-size: 1.15rem;
+    margin-top: 1rem;
+    margin-bottom: 0.375rem;
+  }
+
+  :deep(.markdown-body h6) {
+    font-size: 1.125rem;
+    margin-top: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
 }
 
 @media (max-width: 576px) {
-  .article-title { font-size: 1.5rem; }
-  .article-meta .d-flex.flex-wrap.gap-3 { gap: 0.375rem !important; }
-  .article-meta .d-flex.flex-wrap.gap-2 { gap: 0.375rem !important; }
-  
-  /* 手机端标题字号调整 - H6与正文字号一致 */
-  :deep(.markdown-body h1) { font-size: 1.55rem; margin-top: 1.75rem; margin-bottom: 0.75rem; }
-  :deep(.markdown-body h2) { font-size: 1.45rem; margin-top: 1.5rem; margin-bottom: 0.625rem; }
-  :deep(.markdown-body h3) { font-size: 1.35rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
-  :deep(.markdown-body h4) { font-size: 1.25rem; margin-top: 1rem; margin-bottom: 0.375rem; }
-  :deep(.markdown-body h5) { font-size: 1.15rem; margin-top: 0.875rem; margin-bottom: 0.25rem; }
-  :deep(.markdown-body h6) { font-size: 1.125rem; margin-top: 0.75rem; margin-bottom: 0.125rem; }
+  .article-title {
+    font-size: 1.5rem;
+  }
+
+  .article-meta .d-flex.flex-wrap.gap-3 {
+    gap: 0.375rem !important;
+  }
+
+  .article-meta .d-flex.flex-wrap.gap-2 {
+    gap: 0.375rem !important;
+  }
+
+  :deep(.markdown-body h1) {
+    font-size: 1.55rem;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  :deep(.markdown-body h2) {
+    font-size: 1.45rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  :deep(.markdown-body h3) {
+    font-size: 1.35rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :deep(.markdown-body h4) {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.375rem;
+  }
+
+  :deep(.markdown-body h5) {
+    font-size: 1.15rem;
+    margin-top: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+
+  :deep(.markdown-body h6) {
+    font-size: 1.125rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.125rem;
+  }
 }
 </style>

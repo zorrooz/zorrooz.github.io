@@ -1,6 +1,6 @@
 <!-- LanguageSwitcher.vue -->
 <template>
-  <div class="language-switcher">
+  <div class="language-switcher d-inline-flex align-items-center">
     <button class="btn btn-sm btn-icon" @click="toggleLanguage" @focus="$event.target.blur()">
       <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
       <span class="ms-1">{{ currentLanguage }}</span>
@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+/* LanguageSwitcher
+  - 显示当前语言并触发全局语言切换
+*/
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
@@ -16,24 +19,12 @@ import { useAppStore } from '@/stores/app'
 const { t, locale } = useI18n()
 const appStore = useAppStore()
 
-const currentLanguage = computed(() => {
-  return locale.value === 'zh-CN' ? '中文' : 'English'
-})
-
-const toggleLanguage = () => {
-  appStore.toggleLanguage()
-}
+const currentLanguage = computed(() => locale.value === 'zh-CN' ? '中文' : 'English')
+const toggleLanguage = () => appStore.toggleLanguage()
 </script>
 
 <style scoped>
-.language-switcher {
-  display: inline-flex;
-  align-items: center;
-}
-
 .btn-icon {
-  display: inline-flex;
-  align-items: center;
   padding: 0.375rem 0.75rem;
   border: 1px solid var(--app-border);
   background: var(--app-card-bg);

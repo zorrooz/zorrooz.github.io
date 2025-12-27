@@ -1,28 +1,29 @@
+<!-- NavigationTree.vue -->
 <template>
   <div class="navigation-tree">
     <div v-for="category in navigationTree" :key="category.name" class="category-group">
       <h3 class="category-name">{{ category.name }}</h3>
       <ul class="article-list article-list-root">
-        <!-- 二级分类（与一级对齐，不缩进） -->
-        <li v-if="category.children && category.children.length" v-for="dir in category.children" :key="dir.name" class="article-item">
+        <li v-if="category.children && category.children.length" v-for="dir in category.children" :key="dir.name"
+          class="article-item">
           <div class="directory-node">
             <span class="directory-name level-2">{{ dir.name }}</span>
-            <!-- 三级文章（有缩进） -->
             <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
               <li v-for="file in dir.files" :key="file.path" class="article-item">
-                <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
+                <router-link :to="toArticle(file.path)" class="article-link level-3"
+                  :class="{ active: isActive(file.path) }">
                   {{ file.title }}
                 </router-link>
               </li>
             </ul>
-            <!-- 更深层子目录 -->
             <ul v-if="dir.children && dir.children.length" class="article-list sub-list">
               <li v-for="sub in dir.children" :key="sub.name" class="article-item">
                 <div class="directory-node">
                   <span class="directory-name level-2">{{ sub.name }}</span>
                   <ul v-if="sub.files && sub.files.length" class="article-list sub-list files-level">
                     <li v-for="file in sub.files" :key="file.path" class="article-item">
-                      <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
+                      <router-link :to="toArticle(file.path)" class="article-link level-3"
+                        :class="{ active: isActive(file.path) }">
                         {{ file.title }}
                       </router-link>
                     </li>
@@ -32,8 +33,8 @@
             </ul>
           </div>
         </li>
-        <!-- 若一级分类下直接存在文件，也作为三级文章处理 -->
-        <li v-if="category.files && category.files.length" v-for="file in category.files" :key="file.path" class="article-item">
+        <li v-if="category.files && category.files.length" v-for="file in category.files" :key="file.path"
+          class="article-item">
           <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
             {{ file.title }}
           </router-link>
@@ -47,6 +48,10 @@
 import { useI18n } from 'vue-i18n'
 import { loadCategories } from '@/utils/contentLoader';
 
+/* 
+  NavigationTree
+  - 根据 categories 数据构建分级导航树
+*/
 export default {
   name: 'NavigationTree',
   setup() {
@@ -69,13 +74,7 @@ export default {
       immediate: true,
       deep: true
     },
-    locale() {
-      this.loadCategoryData().then(() => {
-        // 语言切换时，需要重新获取当前路由路径并构建导航树
-        this.currentPath = this.$route.params.path ? this.$route.params.path.join('/') : '';
-        this.buildTree();
-      });
-    }
+    locale() { this.loadCategoryData().then(() => { this.currentPath = this.$route.params.path ? this.$route.params.path.join('/') : ''; this.buildTree(); }); }
   },
   async mounted() {
     await this.loadCategoryData();
@@ -97,27 +96,17 @@ export default {
     isActive(path) {
       const currentPath = this.currentPath.replace(/\.md$/, '');
       const articlePath = path.replace(/\.md$/, '');
-      
-      // 处理语言后缀匹配
+
       const cleanCurrentPath = currentPath.replace(/-en$/, '');
       const cleanArticlePath = articlePath.replace(/-en$/, '');
-      
-      // 如果清理后的路径相同，则认为是同一篇文章
+
       return cleanCurrentPath === cleanArticlePath;
     },
     buildTree() {
-      // 根据当前路由，按 categories.json 原顺序构建导航树
-      // currentPath 形如 notes/Programming/python/biopython/biopython
-      const path = this.currentPath;
-      if (!path) { this.navigationTree = []; return; }
+      const path = this.currentPath; if (!path) { this.navigationTree = []; return; }
+      const segs = path.split('/').filter(Boolean); if (segs.length < 2) { this.navigationTree = []; return; }
+      const type = segs[0]; const group = segs[1];
 
-      const segs = path.split('/').filter(Boolean);
-      if (segs.length < 2) { this.navigationTree = []; return; }
-
-      const type = segs[0];  // notes | projects | topics
-      const group = segs[1]; // Omics | Programming | biocrawler | demo ...
-
-      // 1) 在 categories.json 中定位到对应 item（保持 JSON 顺序）
       let targetItem = null;
       if (Array.isArray(this.categoryData)) {
         outer:
@@ -126,7 +115,6 @@ export default {
           for (const item of section.items) {
             if (item?.name !== group) continue;
 
-            // 确认该 item 下存在属于当前 type 的文章（兼容老结构与新结构）
             let hasTypeMatch = false;
 
             if (Array.isArray(item.articles)) {
@@ -148,7 +136,6 @@ export default {
       }
       if (!targetItem) { this.navigationTree = []; return; }
 
-      // 2) 生成根层文件（老结构）与子分类（新结构），严格按 JSON 顺序
       const rootFiles = [];
       const children = [];
 
@@ -157,24 +144,21 @@ export default {
         const i0 = parts[0] === 'article' ? 1 : 0;
         const t = parts[i0];
         const g = parts[i0 + 1];
-        const rest = parts.slice(i0 + 2); // [subKey, ..., fileName]
+        const rest = parts.slice(i0 + 2);
         const pathNoExt = `${t}/${g}/${rest.join('/')}`;
         return { title, path: `${pathNoExt}.md` };
       };
 
-      // 老结构：item.articles 直接挂根层
       if (Array.isArray(targetItem.articles)) {
         targetItem.articles.forEach(a => { if (a?.articleUrl) rootFiles.push(toFile(a.title, a.articleUrl)); });
       }
 
-      // 新结构：item.categories[].articles -> children
       if (Array.isArray(targetItem.categories)) {
         targetItem.categories.forEach(cat => {
           const files = [];
           if (Array.isArray(cat.articles)) {
             cat.articles.forEach(a => { if (a?.articleUrl) files.push(toFile(a.title, a.articleUrl)); });
           }
-          // 只在该子分类下有文件时渲染
           if (files.length) {
             children.push({
               name: cat.title || cat.key,
@@ -185,7 +169,6 @@ export default {
         });
       }
 
-      // 3) 设定导航树根节点。根名使用 item.title（如“组学”、“编程”等）
       this.navigationTree = [{
         name: targetItem.title || targetItem.name || group,
         files: rootFiles,
@@ -202,39 +185,53 @@ export default {
   font-size: 0.95rem;
 }
 
-/* 包裹每个一级分类组 */
-.category-group { margin-bottom: 1rem; }
+.category-group {
+  margin-bottom: 1rem;
+}
 
-/* 一级分类：灰色粗体 */
 .category-name {
   font-size: 1.1rem;
-  font-weight: 700;               /* 粗体 */
-  color: var(--app-text-muted);      /* 更浅灰色 */
+  font-weight: 700;
+  color: var(--app-text-muted);
   margin-bottom: 0.5rem;
   padding-bottom: 0.25rem;
   padding-left: 0.75rem;
-
 }
 
-/* 根列表不缩进，让二级分类对齐一级分类 */
-.article-list { list-style: none; padding-left: 0; }
-.article-list-root { padding-left: 0; }
+.article-list {
+  list-style: none;
+  padding-left: 0;
+}
 
-/* 二级分类：黑色正常体，并与一级对齐 */
-.directory-node { padding: 0.25rem 0; }
+.article-list-root {
+  padding-left: 0;
+}
+
+.directory-node {
+  padding: 0.25rem 0;
+}
+
 .directory-name.level-2 {
   display: block;
-  font-weight: 700;               /* 加粗 */
+  font-weight: 700;
   color: var(--app-text-emphasis);
-  margin-left: 0;                 /* 与一级对齐 */
+  margin-left: 0;
   padding-left: 0.75rem;
 }
 
-/* 三级文章：有缩进，黑色或灰色；当前文章蓝色粗体 */
-.sub-list { padding-left: 0.75rem; margin-top: 0.5rem; }
-.files-level { padding-left: 0.75rem; } /* 三级文章缩进 */
+.sub-list {
+  padding-left: 0.75rem;
+  margin-top: 0.5rem;
+}
 
-.article-item { margin-bottom: 0.3rem; }
+.files-level {
+  padding-left: 0.75rem;
+}
+
+.article-item {
+  margin-bottom: 0.3rem;
+}
+
 .article-link {
   display: block;
   padding: 0.5rem 0.75rem;
@@ -243,14 +240,16 @@ export default {
   border-radius: 0.25rem;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 .article-link:hover,
 .article-link:focus {
   background-color: var(--app-primary-bg-subtle);
   color: var(--app-primary);
 }
+
 .article-link.active {
-  background-color: transparent;  /* 去背景，强调纯文字样式 */
-  color: var(--app-primary);       /* 蓝色 */
-  font-weight: 700;               /* 粗体 */
+  background-color: transparent;
+  color: var(--app-primary);
+  font-weight: 700;
 }
 </style>

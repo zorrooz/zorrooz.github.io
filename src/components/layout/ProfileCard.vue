@@ -1,7 +1,6 @@
 <!-- ProfileCard.vue -->
 <template>
   <div class="card shadow-sm border-0 mb-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-    <!-- 头像区域 -->
     <div class="text-center px-4 pt-4 pb-0">
       <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
         :style="{ width: '80px', height: '80px', backgroundColor: 'var(--app-bg-light)' }">
@@ -9,14 +8,12 @@
       </div>
     </div>
 
-    <!-- 个人信息区域 -->
     <div class="card-body p-4 text-center typography-body">
       <h3 class="card-title mb-1 fw-bold" :style="{ color: 'var(--app-text)' }">zorrooz</h3>
       <p class="card-text mb-4" :style="{ color: 'var(--app-text-muted)' }">
         {{ t('developer') }}
       </p>
 
-      <!-- 统计数据 -->
       <div class="row g-0 text-center" :style="{ 'border-color': 'var(--app-border)' }">
         <div class="col border-end">
           <div class="fw-bold" :style="{ color: 'var(--app-stat-num-color)' }">{{ postCount }}</div>
@@ -39,6 +36,10 @@
 import { useI18n } from 'vue-i18n'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
 
+/* 
+  ProfileCard 
+  - 显示作者和统计信息，基于 posts/tags 数据
+*/
 export default {
   name: 'ProfileCard',
   setup() {

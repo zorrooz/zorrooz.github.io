@@ -1,3 +1,3 @@
-const t=`# API\r
-\r
+const t=`# Get Started
+
 ![city](./city.png)`;export{t as default};

@@ -66,7 +66,7 @@ Below are examples of embedded images:
 ## 3. Blockquotes
 
 > This is a blockquote.  
-> Blockquotes are often used to emphasize certain content or present someone else's statement.
+> Blockquotes are often used to emphasize certain content or display someone else's statement.
 
 ## 4. Tables and Inline Code
 

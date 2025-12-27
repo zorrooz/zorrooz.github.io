@@ -2,7 +2,6 @@
 <template>
   <div class="container view-container home-view">
     <div class="row py-4 px-0">
-      <!-- 主内容区域 - 移动端在最上方，桌面端在右侧 -->
       <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body mb-4 mb-lg-0" ref="mainContent">
         <div class="row">
           <div class="col">
@@ -18,7 +17,6 @@
         </div>
       </div>
 
-      <!-- 侧边栏 - 移动端在下方，桌面端在左侧 -->
       <div class="col-12 col-lg-3 order-2 order-lg-1" ref="sidebarContainer">
         <div class="sticky-sidebar" ref="sidebarContent">
           <div class="d-flex flex-column w-100 gap-4">
@@ -38,7 +36,10 @@ import PostList from '@/components/layout/PostList.vue'
 import { useI18n } from 'vue-i18n'
 import { loadPosts } from '@/utils/contentLoader'
 
-
+/*
+  HomeView
+  - 家页面
+*/
 export default {
   name: 'HomeView',
   setup() {
@@ -91,7 +92,7 @@ export default {
   },
   methods: {
 
-    
+
     async loadPostData() {
       try {
         this.postData = await loadPosts() || [];
@@ -101,9 +102,8 @@ export default {
       }
     },
     updateSidebarDimensions() {
-      // 只在桌面端更新侧边栏尺寸
       if (window.innerWidth < 992) return
-      
+
       const header = document.querySelector('header')
       const footer = document.querySelector('footer')
       const content = this.$refs.sidebarContent
@@ -133,10 +133,9 @@ export default {
       const q = { ...this.$route.query }
       delete q.tag
       q.page = '1'
-      this.$router.push({ path: this.$route.path, query: q }).catch(() => {})
+      this.$router.push({ path: this.$route.path, query: q }).catch(() => { })
       this.$nextTick(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
-        // 重新加载数据以确保状态一致
         this.loadPostData()
       })
     }
@@ -158,34 +157,33 @@ export default {
   transition: max-height 0.2s ease;
 }
 
-/* 移动端布局已经通过d-lg-none和d-none d-lg-block控制，不再需要额外的CSS */
 .current-tag-chip {
-  font-size: 1rem; /* 与卡片标签更一致 */
+  font-size: 1rem;
   font-weight: 500;
   color: var(--app-chip-text);
-  background: var(--app-chip-bg); /* 白色背底 */
-  padding: 0.25rem 0.5rem; /* 适度内边距 */
-  border: 1px solid var(--app-chip-border); /* 细边框 */
-  box-shadow: var(--app-card-shadow); /* 轻微卡片感 */
-  border-radius: 12px; /* 圆角矩形 */
-  align-items: center; /* 垂直居中 */
+  background: var(--app-chip-bg);
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--app-chip-border);
+  box-shadow: var(--app-card-shadow);
+  border-radius: 12px;
+  align-items: center;
   gap: 0.4rem;
 }
 
 .chip-close {
-  font-size: 1.2rem; /* 与芯片字体更协调 */
+  font-size: 1.2rem;
   line-height: 1;
   background: transparent;
   border: none;
-  color: var(--app-chip-close-text); /* 与全局 text-secondary 接近 */
+  color: var(--app-chip-close-text);
   padding: 0;
-  margin-left: 2px; /* 与文字间距更自然 */
+  margin-left: 2px;
   cursor: pointer;
-  opacity: 1; /* 常驻显示 */
+  opacity: 1;
   transition: color 0.2s ease;
 }
 
 .chip-close:hover {
-  color: var(--app-primary); /* 与全局主色一致的悬停色 */
+  color: var(--app-primary);
 }
 </style>

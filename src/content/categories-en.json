@@ -321,7 +321,7 @@
           },
           {
             "key": "test",
-            "title": "Testing",
+            "title": "Test",
             "articles": [
               {
                 "title": "API",
@@ -365,7 +365,7 @@
         "categories": [
           {
             "key": "test",
-            "title": "Testing",
+            "title": "Test",
             "articles": [
               {
                 "title": "API",

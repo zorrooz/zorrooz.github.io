@@ -28,7 +28,7 @@ projects:
     categories:
       API: "Interface"
       get_start: "Getting Started"
-      test: "Testing"
+      test: "Test"
 
 topics:
   - name: "demo"
@@ -38,5 +38,5 @@ topics:
     doi: "www.tt.org"
     tags: ["Demo", "Workflow"]
     categories:
-      test: "Testing"
+      test: "Test"
       tt: "Example"

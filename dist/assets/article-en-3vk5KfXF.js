@@ -1,4 +1,4 @@
-# Test Article
+const e=`# Test Article
 
 ## 1. Is ionization achieved through direct electron transfer or proton transfer?
 
@@ -8,15 +8,15 @@ The essence of mass spectrometry ionization is to impart charge to neutral molec
 
 * **Electron Transfer (Direct gain or loss of electrons):**
   * **Typical Example: Electron Ionization (EI) Source.** Under vacuum conditions, high-energy electrons (typically 70 eV) emitted from a tungsten filament bombard vaporized sample molecules. Upon bombardment, a molecule may directly lose an electron, forming a positively charged molecular ion (M⁺•).
-  * `M + e⁻ → M⁺• + 2e⁻`
+  * \`M + e⁻ → M⁺• + 2e⁻\`
   * This process is high-energy and often leads to bond cleavage, producing numerous fragment ions.
 
 * **Proton Transfer (Gain or loss of protons):**
   * **Typical Examples: Electrospray Ionization (ESI) and Atmospheric Pressure Chemical Ionization (APCI) Sources.** These are "soft ionization" techniques, more commonly used in life sciences (e.g., metabolomics, proteomics).
-  * In ESI, during the continuous evaporation and Coulombic fission of charged droplets, **protons (H⁺) are ultimately transferred to the analyte molecule**, forming adduct ions such as `[M+H]⁺` (positive ion mode) or are lost from the molecule, forming `[M-H]⁻` (negative ion mode).
-  * `M + H⁺ → [M+H]⁺` (Positive ion mode)
-  * `M - H⁺ → [M-H]⁻` (Negative ion mode)
-  * Additionally, adduction with other cations like `[M+Na]⁺`, `[M+NH₄]⁺` is possible.
+  * In ESI, during the continuous evaporation and Coulombic fission of charged droplets, **protons (H⁺) are ultimately transferred to the analyte molecule**, forming adduct ions such as \`[M+H]⁺\` (positive ion mode) or are lost from the molecule, forming \`[M-H]⁻\` (negative ion mode).
+  * \`M + H⁺ → [M+H]⁺\` (Positive ion mode)
+  * \`M - H⁺ → [M-H]⁻\` (Negative ion mode)
+  * Additionally, adduction with other cations like \`[M+Na]⁺\`, \`[M+NH₄]⁺\` is possible.
 
 **Summary:** Traditional EI sources primarily achieve ionization through **electron transfer**; whereas modern soft ionization techniques (like ESI, APCI, MALDI) primarily form ions through **proton transfer** or adduct formation (e.g., with Na⁺).
 
@@ -47,7 +47,7 @@ The instability of ionization efficiency (i.e., the degree of ionization) is one
 These two major omics fields currently heavily rely on **soft ionization techniques** to obtain intact molecular ion information.
 
 * **Metabolomics:**
-  * **Primary Ion Source: Electrospray Ionization (ESI).** Due to its excellent "soft" characteristics, it efficiently generates `[M+H]⁺` or `[M-H]⁻` ions, making it very suitable for analyzing metabolites of varying polarity and low molecular weight (e.g., amino acids, organic acids, sugars, lipids). It is often coupled with Liquid Chromatography (LC), i.e., LC-ESI-MS.
+  * **Primary Ion Source: Electrospray Ionization (ESI).** Due to its excellent "soft" characteristics, it efficiently generates \`[M+H]⁺\` or \`[M-H]⁻\` ions, making it very suitable for analyzing metabolites of varying polarity and low molecular weight (e.g., amino acids, organic acids, sugars, lipids). It is often coupled with Liquid Chromatography (LC), i.e., LC-ESI-MS.
   * **Secondary Ion Sources: Atmospheric Pressure Chemical Ionization (APCI)** and **Atmospheric Pressure Photoionization (APPI).** APCI offers good ionization efficiency for medium to non-polar small molecules (e.g., some lipids, steroid hormones) and is more tolerant of salts and matrix effects than ESI.
 
 * **Proteomics:**
@@ -85,8 +85,8 @@ For sources like ESI that can produce multiply charged ions, directly determinin
     * **Example:** If the measured mass difference between two peaks is 0.5 Da, then the charge state of that ion is z = 1 / 0.5 = **2+**.
 
 2.  **Charge Deconvolution Method**
-    * **Principle:** The same molecule can form a series of ions with different charge states but the same mass (e.g., `[M+2H]²⁺`, `[M+3H]³⁺`, `[M+4H]⁴⁺`...). These ions are distributed on the m/z axis, but mathematical algorithms can reverse-calculate the **neutral molecular weight (M)** they all correspond to. Once M is calculated, combined with the m/z value of any one of these ions, its charge state z can be determined.
-    * **Formula:** For an `[M+nH]ⁿ⁺` ion, `m/z = (M + n*1.007825) / n`
+    * **Principle:** The same molecule can form a series of ions with different charge states but the same mass (e.g., \`[M+2H]²⁺\`, \`[M+3H]³⁺\`, \`[M+4H]⁴⁺\`...). These ions are distributed on the m/z axis, but mathematical algorithms can reverse-calculate the **neutral molecular weight (M)** they all correspond to. Once M is calculated, combined with the m/z value of any one of these ions, its charge state z can be determined.
+    * **Formula:** For an \`[M+nH]ⁿ⁺\` ion, \`m/z = (M + n*1.007825) / n\`
         * m/z is the measured value
         * M is the neutral molecular weight to be found
         * n is the charge number (also the number of protons added)
@@ -94,4 +94,4 @@ For sources like ESI that can produce multiply charged ions, directly determinin
 
 **Summary:** In modern high-resolution mass spectrometry, **determining the charge state directly by analyzing the spacing between isotopic peaks** is the most common and intuitive method.
 
-We hope these detailed explanations help you fully understand these questions
+We hope these detailed explanations help you fully understand these questions`;export{e as default};

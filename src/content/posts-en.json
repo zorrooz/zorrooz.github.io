@@ -16,7 +16,7 @@
       "Human Genome",
       "SAM/BAM"
     ],
-    "preview": "Documenting the standard workflow and parameter tuning for BWA MEM with human WGS data",
+    "preview": "Documenting the standard workflow and parameter tuning for BWA MEM in human WGS data",
     "wordCount": 30
   },
   {
@@ -35,7 +35,7 @@
       "Bioinformatics",
       "Quantitative Analysis"
     ],
-    "preview": "Detailed documentation of the standard workflow and parameter settings for MaxQuant in proteomics data analysis",
+    "preview": "Detailed documentation of standard procedures and parameter settings for MaxQuant in proteomics data analysis",
     "wordCount": 63
   },
   {
@@ -169,7 +169,7 @@
       "Statistical Charts",
       "Bioinformatics"
     ],
-    "preview": "Applications of ggplot2 in Bioinformatics Data Visualization",
+    "preview": "Application of ggplot2 in Bioinformatics Data Visualization",
     "wordCount": 16
   },
   {

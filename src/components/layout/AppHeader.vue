@@ -1,17 +1,14 @@
 <!-- AppHeader.vue -->
 <template>
-  <!-- 外层负责定位和全宽 -->
   <header class="shadow-sm" style="background-color: var(--app-header-bg);">
     <div class="container px-0">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex">
-          <!-- Logo -->
           <RouterLink class="navbar-brand" to="/" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle"
             @click="mobileMenuOpen = false">
             <img src="@/assets/icons/gblog.svg" alt="gblog" class="logo-icon" height="40">
           </RouterLink>
 
-          <!-- ========== 移动端按钮 ========== -->
           <div class="d-flex d-lg-none ms-auto">
             <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="$event.target.blur()">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
@@ -25,7 +22,6 @@
             </button>
           </div>
 
-          <!-- ========== 导航菜单（移动端折叠内容）========== -->
           <div :class="['navbar-collapse collapse', { 'show': mobileMenuOpen }]">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item" v-for="item in navItems" :key="item.text">
@@ -38,7 +34,6 @@
             </ul>
           </div>
 
-          <!-- ========== 桌面端按钮 ========== -->
           <div class="d-none d-lg-flex ms-auto">
             <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="$event.target.blur()">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
@@ -52,26 +47,16 @@
     </div>
   </header>
 
-  <!-- 移动端统一左侧抽屉：全站风格一致；文章页额外显示目录 -->
   <div v-if="showMobileSidebar" class="mobile-offcanvas d-lg-none" @click.self="closeMobileSidebar">
-    <div class="offcanvas-panel border-end rounded-0" :style="{ 'border-color': 'var(--app-border)', 'box-shadow': 'var(--app-offcanvas-shadow)' }">
-      <!-- <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <div></div>
-        <button class="btn btn-sm p-2 btn-icon" @click="closeMobileSidebar" @focus="$event.target.blur()" aria-label="关闭">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div> -->
+    <div class="offcanvas-panel border-end rounded-0"
+      :style="{ 'border-color': 'var(--app-border)', 'box-shadow': 'var(--app-offcanvas-shadow)' }">
 
       <div class="offcanvas-section">
         <div class="offcanvas-card">
           <ul class="list-unstyled m-0">
             <li v-for="item in navItems" :key="item.text" class="my-1">
-              <RouterLink
-                :to="item.href"
-                class="offcanvas-link d-flex align-items-center"
-                :class="{ active: $route.path === item.href }"
-                @click="closeMobileSidebar"
-              >
+              <RouterLink :to="item.href" class="offcanvas-link d-flex align-items-center"
+                :class="{ active: $route.path === item.href }" @click="closeMobileSidebar">
                 <i :class="['fas', item.icon]" style="flex-shrink: 0; width: 20px; margin-right: 8px;"></i>
                 <span>{{ item.text }}</span>
               </RouterLink>
@@ -92,6 +77,10 @@
 </template>
 
 <script setup>
+/*
+  AppHeader
+  - 顶部导航，包含移动抽屉与语言/主题按钮
+*/
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -111,14 +100,7 @@ const navItems = ref([
   { icon: 'fa-info-circle', text: t('about'), href: '/about' },
 ]);
 
-// 监听语言变化，更新导航项文本
-watch(locale, () => {
-  navItems.value = [
-    { icon: 'fa-layer-group', text: t('categories'), href: '/category' },
-    { icon: 'fa-folder-open', text: t('resources'), href: '/resource' },
-    { icon: 'fa-info-circle', text: t('about'), href: '/about' },
-  ];
-});
+watch(locale, () => { navItems.value = [{ icon: 'fa-layer-group', text: t('categories'), href: '/category' }, { icon: 'fa-folder-open', text: t('resources'), href: '/resource' }, { icon: 'fa-info-circle', text: t('about'), href: '/about' },]; });
 
 const isArticle = computed(() => route.name === 'Article');
 
@@ -141,14 +123,7 @@ const toggleLanguage = () => {
   appStore.toggleLanguage();
 };
 
-const onMobileMenuClick = () => {
-  const isMobile = window.innerWidth < 992;
-  if (isMobile) {
-    openMobileSidebar();
-  } else {
-    mobileMenuOpen.value = !mobileMenuOpen.value;
-  }
-};
+const onMobileMenuClick = () => { const isMobile = window.innerWidth < 992; if (isMobile) openMobileSidebar(); else mobileMenuOpen.value = !mobileMenuOpen.value; };
 
 const lockScroll = () => {
   const docEl = document.documentElement;
@@ -215,28 +190,28 @@ onBeforeUnmount(() => {
   filter: invert(1);
 }
 
-/* Scoped styles for AppHeader */
 .header {
   background-color: var(--app-header-bg);
 }
 
-/* Styles for nav-link are now global in main.scss */
-
-/* 统一移动端抽屉样式（贴近 Bootstrap） */
 .mobile-offcanvas {
   position: fixed;
   inset: 0;
   z-index: 1050;
 }
+
 .offcanvas-backdrop {
   position: absolute;
   inset: 0;
   background: var(--app-backdrop-bg);
   z-index: 1;
 }
+
 .offcanvas-panel {
   position: absolute;
-  top: 0; left: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: min(85vw, 320px);
   background: var(--app-offcanvas-bg);
   box-shadow: var(--app-offcanvas-shadow);
@@ -245,19 +220,23 @@ onBeforeUnmount(() => {
   padding: 0.75rem 0.75rem 1rem;
   z-index: 2;
 }
+
 .offcanvas-header {
   margin-bottom: 0.5rem;
   padding-bottom: 0.5rem;
 }
-.offcanvas-section + .offcanvas-section {
+
+.offcanvas-section+.offcanvas-section {
   margin-top: 0.75rem;
 }
+
 .section-title {
   font-size: 0.95rem;
   color: var(--app-text-muted);
   margin-bottom: 0.25rem;
   font-weight: 600;
 }
+
 .offcanvas-link {
   display: block;
   padding: 0.5rem 0.75rem;
@@ -269,33 +248,40 @@ onBeforeUnmount(() => {
   background-color: transparent;
   border: none;
 }
+
 .offcanvas-link:hover,
 .offcanvas-link:focus {
   color: var(--app-primary) !important;
   background-color: var(--app-primary-bg-subtle) !important;
 }
+
 .offcanvas-link.active {
   color: var(--app-primary) !important;
   background-color: transparent !important;
   font-weight: 500;
 }
+
 .offcanvas-link:focus {
   outline: none;
   box-shadow: none;
 }
+
 .offcanvas-link i {
   flex-shrink: 0;
   width: 20px;
   margin-right: 8px;
 }
+
 .offcanvas-link:hover i,
 .offcanvas-link:focus i,
 .offcanvas-link.active i {
   color: var(--app-primary) !important;
 }
+
 .offcanvas-tree {
   border-top: 0;
 }
+
 .offcanvas-card {
   background-color: var(--app-card-bg);
   border: none;

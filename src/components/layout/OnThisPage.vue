@@ -1,3 +1,4 @@
+<!-- OnThisPage.vue -->
 <template>
   <nav class="on-this-page">
     <div class="otp-header">
@@ -6,12 +7,15 @@
 
     <ul class="otp-list">
       <li v-for="(item, idx) in toc" :key="idx" :class="['otp-item', { active: activeId === item.id }]">
-        <a class="otp-link" role="button" tabindex="0" @click.prevent="scrollToId(item.id)" @keydown.enter.prevent="scrollToId(item.id)">
+        <a class="otp-link" role="button" tabindex="0" @click.prevent="scrollToId(item.id)"
+          @keydown.enter.prevent="scrollToId(item.id)">
           <span class="otp-text">{{ item.text }}</span>
         </a>
         <ul v-if="item.children && item.children.length" class="otp-sublist">
-          <li v-for="(sub, sIdx) in item.children" :key="sIdx" :class="['otp-subitem', { active: activeId === sub.id }]">
-            <a class="otp-sublink" role="button" tabindex="0" @click.prevent="scrollToId(sub.id)" @keydown.enter.prevent="scrollToId(sub.id)">
+          <li v-for="(sub, sIdx) in item.children" :key="sIdx"
+            :class="['otp-subitem', { active: activeId === sub.id }]">
+            <a class="otp-sublink" role="button" tabindex="0" @click.prevent="scrollToId(sub.id)"
+              @keydown.enter.prevent="scrollToId(sub.id)">
               <span class="otp-subtext">{{ sub.text }}</span>
             </a>
           </li>
@@ -24,6 +28,10 @@
 <script>
 import { useI18n } from 'vue-i18n'
 
+/*
+  OnThisPage
+  - 生成页面内目录并提供滚动监听 
+*/
 export default {
   name: 'OnThisPage',
   setup() {
@@ -56,7 +64,7 @@ export default {
   mounted() {
     this.buildToc();
     this.bindScrollSpy();
-    
+
     this.$nextTick(() => {
       this.setupContainerObserver();
     });
@@ -67,106 +75,54 @@ export default {
     this.cleanupObservers();
   },
   methods: {
-    // 新增：重置目录状态
     resetToc() {
       this.toc = [];
       this.activeId = '';
       this.cleanupObservers();
       this.$nextTick(() => this.setupContainerObserver());
     },
-    
-    // 刷新目录内容
-    refreshToc() {
-      this.buildToc();
-      this.onScrollSpy();
-    },
-    
-    // 清理所有观察者
-    cleanupObservers() {
-      if (this._otpObserver) {
-        this._otpObserver.disconnect();
-        this._otpObserver = null;
-      }
-      if (this._otpObserverTimer) {
-        clearTimeout(this._otpObserverTimer);
-        this._otpObserverTimer = null;
-      }
-      if (this._otpPoller) {
-        clearInterval(this._otpPoller);
-        this._otpPoller = null;
-      }
-    },
-    
-    // 设置容器观察者
-    setupContainerObserver() {
-      // 多次重试确保目录能正确生成
-      [0, 200, 500, 1000].forEach(delay => {
-        setTimeout(() => this.refreshToc(), delay);
-      });
 
-      // 轮询检查容器是否存在
+    refreshToc() { this.buildToc(); this.onScrollSpy(); },
+
+    cleanupObservers() {
+      if (this._otpObserver) { this._otpObserver.disconnect(); this._otpObserver = null; }
+      if (this._otpObserverTimer) { clearTimeout(this._otpObserverTimer); this._otpObserverTimer = null; }
+      if (this._otpPoller) { clearInterval(this._otpPoller); this._otpPoller = null; }
+    },
+
+    setupContainerObserver() {
+      [0, 200, 500, 1000].forEach(delay => setTimeout(() => this.refreshToc(), delay));
       const checkContainer = () => {
         const root = document.querySelector(this.containerSelector);
-        if (root) {
-          // 清除轮询
-          if (this._otpPoller) {
-            clearInterval(this._otpPoller);
-            this._otpPoller = null;
-          }
-
-          // 监听容器变化
-          if (!this._otpObserver) {
-            this._otpObserver = new MutationObserver(() => {
-              clearTimeout(this._otpObserverTimer);
-              this._otpObserverTimer = setTimeout(() => this.refreshToc(), 100);
-            });
-            this._otpObserver.observe(root, {
-              childList: true,
-              subtree: true,
-              attributes: true,
-              attributeFilter: ['id']
-            });
-          }
-
-          this.refreshToc();
+        if (!root) return;
+        if (this._otpPoller) { clearInterval(this._otpPoller); this._otpPoller = null; }
+        if (!this._otpObserver) {
+          this._otpObserver = new MutationObserver(() => { clearTimeout(this._otpObserverTimer); this._otpObserverTimer = setTimeout(() => this.refreshToc(), 100); });
+          this._otpObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] });
         }
+        this.refreshToc();
       };
-
       checkContainer();
-      // 启动轮询（每200ms一次，直到找到容器）
-      if (!this._otpPoller && !document.querySelector(this.containerSelector)) {
-        this._otpPoller = setInterval(checkContainer, 200);
-      }
+      if (!this._otpPoller && !document.querySelector(this.containerSelector)) this._otpPoller = setInterval(checkContainer, 200);
     },
-    
-    getHeadingText(h) {
-      try {
-        const clone = h.cloneNode(true);
-        clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove());
-        let text = clone.textContent || '';
-        text = text.replace(/\s*#\s*$/, '').trim();
-        return text;
-      } catch (e) {
-        return (h.textContent || '').replace(/\s*#\s*$/, '').trim();
-      }
-    },
-    
+
+    getHeadingText(h) { try { const clone = h.cloneNode(true); clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove()); return (clone.textContent || '').replace(/\s*#\s*$/, '').trim(); } catch (e) { return (h.textContent || '').replace(/\s*#\s*$/, '').trim(); } },
+
     buildToc() {
       const root = document.querySelector(this.containerSelector);
       if (!root) {
         this.toc = [];
         return;
       }
-      
+
       const selector = this.levels.map(l => `h${l}`).join(',');
       const headings = Array.from(root.querySelectorAll(selector));
-      
+
       if (headings.length === 0) {
         this.toc = [];
         return;
       }
 
-      // 确保每个标题都有唯一id
       headings.forEach(h => {
         if (!h.id) {
           let safeId = h.textContent.trim().toLowerCase()
@@ -176,7 +132,7 @@ export default {
           if (!safeId) {
             safeId = `section-${Math.random().toString(36).substring(2, 9)}`;
           }
-          
+
           // 处理ID重复
           let finalId = safeId;
           let count = 1;
@@ -187,55 +143,37 @@ export default {
         }
       });
 
-      // 构建二级/三级嵌套目录
       const levelSet = new Set(this.levels);
       const topLevel = Math.min(...this.levels);
       const secondLevel = topLevel + 1;
-
-      const toc = [];
-      let currentTop = null;
-
+      const toc = []; let currentTop = null;
       for (const h of headings) {
-        const level = parseInt(h.tagName.substring(1), 10);
-        if (!levelSet.has(level)) continue;
-
-        const node = {
-          id: h.id,
-          text: this.getHeadingText(h),
-          level,
-          children: []
-        };
-
-        if (level === topLevel) {
-          toc.push(node);
-          currentTop = node;
-        } else if (currentTop && level >= secondLevel) {
-          currentTop.children.push(node);
-        } else {
-          toc.push(node);
-        }
+        const level = parseInt(h.tagName.substring(1), 10); if (!levelSet.has(level)) continue;
+        const node = { id: h.id, text: this.getHeadingText(h), level, children: [] };
+        if (level === topLevel) { toc.push(node); currentTop = node; }
+        else if (currentTop && level >= secondLevel) currentTop.children.push(node);
+        else toc.push(node);
       }
-
       this.toc = toc;
     },
-    
+
     bindScrollSpy() {
       window.addEventListener('scroll', this.onScrollSpy, { passive: true });
       window.addEventListener('resize', this.onScrollSpy);
       this.onScrollSpy();
     },
-    
+
     onScrollSpy() {
       const root = document.querySelector(this.containerSelector);
       if (!root) return;
-      
+
       const selector = this.levels.map(l => `h${l}`).join(',');
       const headings = Array.from(root.querySelectorAll(selector));
       if (headings.length === 0) {
         this.activeId = '';
         return;
       }
-      
+
       const scrollY = window.scrollY || window.pageYOffset;
 
       let current = '';
@@ -249,7 +187,7 @@ export default {
       }
       this.activeId = current || (headings[0]?.id || '');
     },
-    
+
     scrollToId(id) {
       const el = document.getElementById(id);
       if (!el) {
@@ -266,7 +204,6 @@ export default {
 </script>
 
 <style scoped>
-/* 样式保持不变 */
 .on-this-page {
   --otp-border: var(--app-border);
   --otp-muted: var(--app-text-muted);
@@ -313,7 +250,7 @@ export default {
   color: var(--app-primary);
 }
 
-.otp-item.active > .otp-link {
+.otp-item.active>.otp-link {
   color: var(--otp-active);
   font-weight: 600;
 }
@@ -338,7 +275,7 @@ export default {
   color: var(--app-primary);
 }
 
-.otp-subitem.active > .otp-sublink {
+.otp-subitem.active>.otp-sublink {
   color: var(--otp-active);
   font-weight: 600;
 }

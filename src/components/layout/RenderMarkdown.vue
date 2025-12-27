@@ -1,8 +1,13 @@
+<!-- RenderMarkdown.vue -->
 <template>
   <div class="markdown-body" v-html="renderedMarkdown" ref="markdownContainer"></div>
 </template>
 
 <script>
+/*
+  RenderMarkdown
+  - 将 Markdown 渲染为 HTML，并处理图片路径、代码复制和标题锚点
+*/
 import { renderMarkdown } from '@/utils/markdownProcessor'
 
 const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true });
@@ -31,14 +36,13 @@ export default {
     rewriteImageLinks(md, articlePath) {
       try {
         const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/');
-        
+
         const toAssetUrl = (relPath) => {
           if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath;
           const parts = (articleDir + '/' + relPath).split('/').filter(p => p && p !== '.');
           const stack = [];
           parts.forEach(p => p === '..' ? stack.pop() : stack.push(p));
           const normalized = stack.join('/');
-          // 尝试多种可能的路径格式
           const candidateKeys = [
             `../../content-src/${normalized}`,
             `../content-src/${normalized}`,
@@ -55,7 +59,7 @@ export default {
             const clean = src.trim().replace(/^<|>|&/g, '');
             return `![${alt}](${toAssetUrl(clean)})`;
           })
-          .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) => 
+          .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) =>
             `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`);
       } catch (e) {
         console.warn('rewriteImageLinks failed', e);
@@ -101,14 +105,14 @@ export default {
           ariaHidden: 'false'
         });
 
-        anchorBtn.addEventListener('click', (e) => { 
-          e.stopPropagation(); 
-          scrollToHeading(heading, anchorBtn); 
+        anchorBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          scrollToHeading(heading, anchorBtn);
         });
         anchorBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { 
-            e.preventDefault(); 
-            scrollToHeading(heading, anchorBtn); 
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            scrollToHeading(heading, anchorBtn);
           }
         });
 
@@ -127,17 +131,15 @@ export default {
 
         const language = (code.className.match(/language-(\w+)/) || [, 'text'])[1]
         const header = document.createElement('div')
-        header.className = 'code-block-header'
+        header.className = 'code-block-header d-flex align-items-center justify-content-between'
 
-        // 语言标签
         const langLabel = document.createElement('span')
         langLabel.className = 'code-language'
         langLabel.textContent = language
 
-        // 复制按钮
         const copyButton = document.createElement('button')
         copyButton.type = 'button'
-        copyButton.className = 'copy-button btn-icon'
+        copyButton.className = 'copy-button btn-icon d-flex align-items-center justify-content-center'
         copyButton.setAttribute('aria-label', '复制代码')
         copyButton.innerHTML = `
           <svg width="18" height="18" viewBox="0 0 14 14" fill="currentColor">
@@ -147,7 +149,6 @@ export default {
         `
         copyButton.addEventListener('click', () => this.copyToClipboard(code.textContent, copyButton))
 
-        // 组装DOM
         header.append(langLabel, copyButton)
         const wrapper = document.createElement('div')
         wrapper.className = 'code-block-wrapper'
@@ -161,7 +162,6 @@ export default {
         await navigator.clipboard.writeText(text)
       } catch (err) {
         console.error('复制失败:', err)
-        // 降级方案
         const textArea = document.createElement('textarea')
         textArea.value = text
         document.body.appendChild(textArea)
@@ -183,7 +183,10 @@ export default {
 </script>
 
 <style>
-/* 代码字体定义 */
+/* 
+  RenderMarkdown 
+  - markdown相关样式
+*/
 @font-face {
   font-family: 'CodeFont';
   src: local('Agave Regular'), local('Agave-Regular'), url('@/assets/fonts/Agave-Regular.ttf') format('truetype');
@@ -191,6 +194,7 @@ export default {
   font-style: normal;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
+
 @font-face {
   font-family: 'CodeFont';
   src: local('Source Han Sans SC Regular'), local('SourceHanSansSC-Regular'), url('@/assets/fonts/SourceHanSansSC-Regular.otf') format('opentype');
@@ -199,7 +203,6 @@ export default {
   unicode-range: U+4E00-9FFF, U+3400-4DBF, U+F900-FAFF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+2CEB0-2EBEF, U+30000-3134F;
 }
 
-/* Markdown基础样式 */
 .markdown-body {
   box-sizing: border-box;
   width: 100%;
@@ -208,24 +211,51 @@ export default {
   line-height: 1.8;
 }
 
-/* 列表样式 */
-.markdown-body ul, .markdown-body ol { padding-left: 1.5em; margin-bottom: 1em; }
-.markdown-body ul { list-style-type: disc; }
-.markdown-body ol { list-style-type: decimal; }
-.markdown-body li { margin-bottom: 0.25em; padding-left: 0; }
-.markdown-body ul li::marker, .markdown-body ol li::marker { color: var(--app-primary-mid); }
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
 
-/* 链接样式 */
-.markdown-body a { color: var(--app-primary); text-decoration: none; transition: color 0.2s ease; }
-.markdown-body a:hover { color: var(--app-primary); text-decoration: underline; }
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+}
+
+.markdown-body li {
+  margin-bottom: 0.25em;
+  padding-left: 0;
+}
+
+.markdown-body ul li::marker,
+.markdown-body ol li::marker {
+  color: var(--app-primary-mid);
+}
+
+.markdown-body a {
+  color: var(--app-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.markdown-body a:hover {
+  color: var(--app-primary);
+  text-decoration: underline;
+}
+
 .markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]) {
   color: var(--app-markdown-external-link-color);
   font-weight: 700;
   text-decoration: none;
 }
-.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]):hover { text-decoration: underline; }
 
-/* 行内代码样式 */
+.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]):hover {
+  text-decoration: underline;
+}
+
 .markdown-body code:not(pre code) {
   background-color: var(--app-markdown-code-bg);
   color: var(--app-markdown-code-color);
@@ -235,7 +265,6 @@ export default {
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
-/* 代码块样式 */
 .markdown-body pre {
   background-color: var(--app-markdown-code-bg);
   border-radius: 0 0 0.5em 0.5em;
@@ -244,9 +273,14 @@ export default {
   overflow-x: auto;
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
-.markdown-body pre code { background: none; padding: 0; color: inherit; font-family: inherit; }
 
-/* 代码块包装器 */
+.markdown-body pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+}
+
 .markdown-body .code-block-wrapper {
   position: relative;
   margin: 1em 0;
@@ -255,17 +289,12 @@ export default {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 代码块头部 */
 .markdown-body .code-block-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 0.4em 1em;
   background-color: var(--app-markdown-code-header-bg, rgba(0, 0, 0, 0.05));
   border-bottom: 1px solid var(--app-border);
 }
 
-/* 语言标签 */
 .markdown-body .code-language {
   font-size: 0.85em;
   font-weight: 500;
@@ -276,23 +305,23 @@ export default {
   padding: 0;
 }
 
-/* 复制按钮 */
 .markdown-body .copy-button {
   background: transparent;
   border: none;
   padding: 0.25em;
   cursor: pointer;
   color: var(--app-text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-.markdown-body .copy-button:hover { color: var(--app-primary); }
 
-/* 语法高亮 */
-.markdown-body .hljs { background: var(--app-markdown-code-bg); font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; }
+.markdown-body .copy-button:hover {
+  color: var(--app-primary);
+}
 
-/* 图片样式 */
+.markdown-body .hljs {
+  background: var(--app-markdown-code-bg);
+  font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
 .markdown-body img {
   max-width: 100%;
   height: auto;
@@ -301,9 +330,17 @@ export default {
   border-radius: 0.25em;
 }
 
-/* 段落和标题 */
-.markdown-body p { margin-top: 0; margin-bottom: 1em; }
-.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+.markdown-body p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
   font-weight: 600;
   line-height: 1.25;
   color: var(--app-text-emphasis);
@@ -338,18 +375,40 @@ export default {
   margin-top: 0.4em;
   margin-bottom: 0.1em;
 }
-.markdown-body h1 { font-size: 2em; }
-.markdown-body h2 { font-size: 1.5em; }
-.markdown-body h3 { font-size: 1.25em; }
-.markdown-body h4 { font-size: 1.1em; }
-.markdown-body h5 { font-size: 1em; }
-.markdown-body h6 { font-size: 0.9em; color: var(--app-text-emphasis); }
 
-/* 标题锚点链接 */
-.markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
-  position: relative; 
-  padding-right: 0; 
-  display: inline-block; 
+.markdown-body h1 {
+  font-size: 2em;
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1.1em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 0.9em;
+  color: var(--app-text-emphasis);
+}
+
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  padding-right: 0;
+  display: inline-block;
   width: 100%;
 }
 
@@ -371,11 +430,11 @@ export default {
   line-height: 1;
 }
 
-.markdown-body h2:hover .heading-anchor, 
-.markdown-body h3:hover .heading-anchor, 
-.markdown-body h4:hover .heading-anchor, 
-.markdown-body h5:hover .heading-anchor, 
-.markdown-body h6:hover .heading-anchor, 
+.markdown-body h2:hover .heading-anchor,
+.markdown-body h3:hover .heading-anchor,
+.markdown-body h4:hover .heading-anchor,
+.markdown-body h5:hover .heading-anchor,
+.markdown-body h6:hover .heading-anchor,
 .heading-anchor:focus {
   opacity: 1;
   color: var(--app-primary-mid);
@@ -386,7 +445,6 @@ export default {
   outline-offset: 0;
 }
 
-/* 引用块 */
 .markdown-body blockquote {
   border-left: 4px solid var(--app-border);
   padding-left: 1em;
@@ -395,8 +453,21 @@ export default {
   font-style: normal;
 }
 
-/* 表格 */
-.markdown-body table { border-collapse: collapse; width: 100%; margin: 1em 0; }
-.markdown-body th, .markdown-body td { border: 1px solid var(--app-border); padding: 0.5em; text-align: left; }
-.markdown-body th { background-color: var(--app-bg-light); font-weight: 600; }
+.markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--app-border);
+  padding: 0.5em;
+  text-align: left;
+}
+
+.markdown-body th {
+  background-color: var(--app-bg-light);
+  font-weight: 600;
+}
 </style>

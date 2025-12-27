@@ -4,7 +4,7 @@ date: "2025-09-19"
 author: "zorrooz"
 tags: ["MaxQuant", "Proteomics", "Mass Spectrometry", "Bioinformatics", "Quantitative Analysis"]
 draft: false
-description: "Detailed documentation of the standard workflow and parameter settings for MaxQuant in proteomics data analysis"
+description: "Detailed documentation of standard procedures and parameter settings for MaxQuant in proteomics data analysis"
 ---
 
 # MaxQuant Proteomics Analysis Workflow
