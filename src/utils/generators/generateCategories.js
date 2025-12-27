@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
+import zhCN from '../../stores/locales/zh-CN.js'
+import enUS from '../../stores/locales/en-US.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -277,19 +279,12 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
 }
 
 function getCategoryTitles(locale = 'zh-CN') {
-  if (locale === 'en-US') {
-    return {
-      notes: 'Notes',
-      projects: 'Projects',
-      topics: 'Topics',
-      uncategorized: 'Uncategorized',
-    }
-  }
+  const l = locale === 'en-US' ? enUS : zhCN
   return {
-    notes: '笔记',
-    projects: '项目',
-    topics: '课题',
-    uncategorized: '未分类',
+    notes: (l && l.notes) || (locale === 'en-US' ? 'Notes' : '笔记'),
+    projects: (l && l.projects) || (locale === 'en-US' ? 'Projects' : '项目'),
+    topics: (l && l.topics) || (locale === 'en-US' ? 'Topics' : '课题'),
+    uncategorized: (l && l.uncategorized) || (locale === 'en-US' ? 'Uncategorized' : '未分类'),
   }
 }
 
