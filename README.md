@@ -1,20 +1,15 @@
 # gblog
 
-<center>
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4fc08d)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646cff)](https://vitejs.dev/)
 [![GitHub stars](https://img.shields.io/github/stars/zorrooz/gblog?style=social)](https://github.com/zorrooz/gblog)
 [![English Version](https://img.shields.io/badge/English-Version-blue)](README_EN.md)
-</center>
 
-<center>[English](README_EN.md) | [中文](README.md)
+
+<center>[English](README_EN.md) | [中文](README.md)</center>
 
 gblog是基于 Vue 3 + Vite 构建的现代化个人博客系统，支持中英文双语、主题切换、Markdown 文章管理等功能。
-
-## 📋 目录
-
-[TOC]
 
 ## ✨ 项目介绍
 

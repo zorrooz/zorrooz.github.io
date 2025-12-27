@@ -1,20 +1,15 @@
 # gblog
 
-<center>
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4fc08d)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646cff)](https://vitejs.dev/)
 [![GitHub stars](https://img.shields.io/github/stars/zorrooz/gblog?style=social)](https://github.com/zorrooz/gblog)
 [![中文版本](https://img.shields.io/badge/中文版本-blue)](README.md)
-</center>
+
 
 <center>[English](README_EN.md) | [中文](README.md)</center>
 
 gblog is a modern personal blog system built with Vue 3 + Vite, featuring bilingual support (Chinese/English), theme switching, Markdown article management, and more.
-
-## 📋 Table of Contents
-
-[TOC]
 
 ## ✨ Introduction
 
