@@ -60,25 +60,6 @@
   {
     "id": 4,
     "no": 4,
-    "title": "Vue.js 前端开发入门",
-    "date": "2025-09-19",
-    "category": [
-      "编程",
-      "javascript"
-    ],
-    "tags": [
-      "JavaScript",
-      "Vue.js",
-      "前端开发",
-      "组件化",
-      "响应式"
-    ],
-    "preview": "Vue.js 框架在科学数据可视化前端开发中的应用",
-    "wordCount": 272
-  },
-  {
-    "id": 5,
-    "no": 5,
     "title": "Biopython 生物信息学应用",
     "date": "2025-09-19",
     "category": [
@@ -96,8 +77,8 @@
     "wordCount": 54
   },
   {
-    "id": 6,
-    "no": 6,
+    "id": 5,
+    "no": 5,
     "title": "用 Pandas 处理 FASTQ 质量统计",
     "date": "2025-09-19",
     "category": [
@@ -116,8 +97,8 @@
     "wordCount": 22
   },
   {
-    "id": 7,
-    "no": 7,
+    "id": 6,
+    "no": 6,
     "title": "Python Pandas 数据处理实战",
     "date": "2025-09-19",
     "category": [
@@ -135,8 +116,8 @@
     "wordCount": 37
   },
   {
-    "id": 8,
-    "no": 8,
+    "id": 7,
+    "no": 7,
     "title": "R语言数据处理示例",
     "date": "2025-09-19",
     "category": [
@@ -154,8 +135,8 @@
     "wordCount": 44
   },
   {
-    "id": 9,
-    "no": 9,
+    "id": 8,
+    "no": 8,
     "title": "R语言 ggplot2 数据可视化",
     "date": "2025-09-19",
     "category": [
@@ -173,8 +154,8 @@
     "wordCount": 27
   },
   {
-    "id": 10,
-    "no": 10,
+    "id": 9,
+    "no": 9,
     "title": "Bash Shell 脚本编程",
     "date": "2025-09-19",
     "category": [

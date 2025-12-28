@@ -60,25 +60,6 @@
   {
     "id": 4,
     "no": 4,
-    "title": "Getting Started with Vue.js Frontend Development",
-    "date": "2025-09-19",
-    "category": [
-      "Programming",
-      "javascript"
-    ],
-    "tags": [
-      "JavaScript",
-      "Vue.js",
-      "Frontend Development",
-      "Componentization",
-      "Reactivity"
-    ],
-    "preview": "Application of Vue.js Framework in Scientific Data Visualization Frontend Development",
-    "wordCount": 177
-  },
-  {
-    "id": 5,
-    "no": 5,
     "title": "Biopython Bioinformatics Applications",
     "date": "2025-09-19",
     "category": [
@@ -96,8 +77,8 @@
     "wordCount": 43
   },
   {
-    "id": 6,
-    "no": 6,
+    "id": 5,
+    "no": 5,
     "title": "Processing FASTQ Quality Statistics with Pandas",
     "date": "2025-09-19",
     "category": [
@@ -116,8 +97,8 @@
     "wordCount": 13
   },
   {
-    "id": 7,
-    "no": 7,
+    "id": 6,
+    "no": 6,
     "title": "Python Pandas Data Processing in Practice",
     "date": "2025-09-19",
     "category": [
@@ -135,8 +116,8 @@
     "wordCount": 10
   },
   {
-    "id": 8,
-    "no": 8,
+    "id": 7,
+    "no": 7,
     "title": "R Language Data Processing Example",
     "date": "2025-09-19",
     "category": [
@@ -154,8 +135,8 @@
     "wordCount": 14
   },
   {
-    "id": 9,
-    "no": 9,
+    "id": 8,
+    "no": 8,
     "title": "R Language ggplot2 Data Visualization",
     "date": "2025-09-19",
     "category": [
@@ -173,8 +154,8 @@
     "wordCount": 16
   },
   {
-    "id": 10,
-    "no": 10,
+    "id": 9,
+    "no": 9,
     "title": "Bash Shell Scripting",
     "date": "2025-09-19",
     "category": [

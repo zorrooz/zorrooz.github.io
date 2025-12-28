@@ -32,10 +32,6 @@
     "count": 2
   },
   {
-    "name": "Componentization",
-    "count": 1
-  },
-  {
     "name": "Data Analysis",
     "count": 1
   },
@@ -56,10 +52,6 @@
     "count": 1
   },
   {
-    "name": "Frontend Development",
-    "count": 1
-  },
-  {
     "name": "Genome Alignment",
     "count": 1
   },
@@ -77,10 +69,6 @@
   },
   {
     "name": "Human Genome",
-    "count": 1
-  },
-  {
-    "name": "JavaScript",
     "count": 1
   },
   {
@@ -116,10 +104,6 @@
     "count": 2
   },
   {
-    "name": "Reactivity",
-    "count": 1
-  },
-  {
     "name": "RNA-Seq",
     "count": 1
   },
@@ -149,10 +133,6 @@
   },
   {
     "name": "Transcriptome",
-    "count": 1
-  },
-  {
-    "name": "Vue.js",
     "count": 1
   }
 ]

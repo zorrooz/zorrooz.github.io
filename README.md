@@ -295,6 +295,12 @@ export default {
   
   使用`npm run translate -- help`查看详细用法。
 
+翻译完成后，请手动构建完成内容更新：
+
+```
+npm run prebuild
+```
+
 #### 内容生成器
 
 一般情况下，内容生成器会在构建时自动运行，无需手动干预`runAllGenerators`。

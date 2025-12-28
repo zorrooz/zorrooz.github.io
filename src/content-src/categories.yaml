@@ -18,24 +18,23 @@ notes:
       shell: "Shell"
 
 projects:
-  - name: "biocrawler"
+  - name: "Biocrawler"
     title: "BioCrawler"
     desc: "面向生物数据抓取与处理的工具集"
-    date: "2025-08-01"
+    date: "2025-11-01"
     github: "https://github.com/example/biocrawler"
     tags: ["Crawler", "API", "Bioinformatics"]
     categories:
-      API: "接口"
-      get_start: "入门"
-      test: "测试"
+      api: "接口"
+      installation: "安装"
 
 topics:
-  - name: "demo"
-    title: "Demo课题"
-    desc: "课题结构与流程示例集合"
-    date: "2025-07-01"
-    doi: "www.tt.org"
-    tags: ["Demo", "Workflow"]
+  - name: "StructureOfProteinDemo"
+    title: "蛋白质结构解析演示课题"
+    desc: "蛋白质结构解析方法与结果演示"
+    date: "2025-12-01"
+    doi: "www.demo-structure.org"
+    tags: ["Protein", "Structure", "Cryo-EM"]
     categories:
-      test: "测试"
-      tt: "示例"
+      methods: "方法"
+      results: "结果"

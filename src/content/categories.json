@@ -104,11 +104,6 @@
         "title": "编程",
         "desc": "编程相关的学习记录与资料汇总",
         "tags": [
-          "JavaScript",
-          "Vue.js",
-          "前端开发",
-          "组件化",
-          "响应式",
           "Python",
           "Biopython",
           "生物信息学",
@@ -133,8 +128,8 @@
           "自动化"
         ],
         "stats": {
-          "postsCount": 7,
-          "totalWords": 487,
+          "postsCount": 6,
+          "totalWords": 215,
           "latestDate": "2025-09-19"
         },
         "categories": [
@@ -184,30 +179,8 @@
             }
           },
           {
-            "key": "javascript",
-            "title": "JavaScript",
-            "articles": [
-              {
-                "title": "Vue.js 前端开发入门",
-                "articleUrl": "/article/notes/Programming/javascript/vue/vue",
-                "tags": [
-                  "JavaScript",
-                  "Vue.js",
-                  "前端开发",
-                  "组件化",
-                  "响应式"
-                ]
-              }
-            ],
-            "stats": {
-              "postsCount": 1,
-              "totalWords": 272,
-              "latestDate": "2025-09-19"
-            }
-          },
-          {
             "key": "r",
-            "title": "R语言",
+            "title": "R",
             "articles": [
               {
                 "title": "R语言数据处理示例",
@@ -269,7 +242,7 @@
     "title": "项目",
     "items": [
       {
-        "name": "biocrawler",
+        "name": "Biocrawler",
         "title": "BioCrawler",
         "desc": "面向生物数据抓取与处理的工具集",
         "tags": [
@@ -278,71 +251,45 @@
           "Bioinformatics"
         ],
         "stats": {
-          "postsCount": 5,
-          "totalWords": 30,
-          "latestDate": "2025-08-01"
+          "postsCount": 2,
+          "totalWords": 306,
+          "latestDate": "2025-11-01"
         },
         "categories": [
           {
-            "key": "API",
+            "key": "api",
             "title": "接口",
             "articles": [
               {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/API/API1/API1",
-                "tags": []
-              },
-              {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/API/API2/API2",
-                "tags": []
-              }
-            ],
-            "stats": {
-              "postsCount": 2,
-              "totalWords": 19,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "get_start",
-            "title": "入门",
-            "articles": [
-              {
-                "title": "get start",
-                "articleUrl": "/article/projects/biocrawler/get_start/get_start",
+                "title": "BioCrawler API 接口文档",
+                "articleUrl": "/article/projects/Biocrawler/api/api-demo/api-demo",
                 "tags": []
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 2,
+              "totalWords": 165,
               "latestDate": ""
             }
           },
           {
-            "key": "test",
-            "title": "测试",
+            "key": "installation",
+            "title": "安装",
             "articles": [
               {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/test/test1/test1",
-                "tags": []
-              },
-              {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/test/test2/test2",
+                "title": "BioCrawler 安装指南",
+                "articleUrl": "/article/projects/Biocrawler/installation/installation-demo/installation-demo",
                 "tags": []
               }
             ],
             "stats": {
-              "postsCount": 2,
-              "totalWords": 9,
+              "postsCount": 1,
+              "totalWords": 141,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/projects/biocrawler/API/API1/API1",
+        "root": "/article/projects/Biocrawler/api/api-demo/api-demo",
         "github": "https://github.com/example/biocrawler"
       }
     ]
@@ -351,59 +298,55 @@
     "title": "课题",
     "items": [
       {
-        "name": "demo",
-        "title": "Demo课题",
-        "desc": "课题结构与流程示例集合",
+        "name": "StructureOfProteinDemo",
+        "title": "蛋白质结构解析演示课题",
+        "desc": "蛋白质结构解析方法与结果演示",
         "tags": [
-          "Demo",
-          "Workflow"
+          "Protein",
+          "Structure",
+          "Cryo-EM"
         ],
         "stats": {
-          "postsCount": 3,
-          "totalWords": 17,
-          "latestDate": "2025-07-01"
+          "postsCount": 2,
+          "totalWords": 814,
+          "latestDate": "2025-12-01"
         },
         "categories": [
           {
-            "key": "test",
-            "title": "测试",
+            "key": "methods",
+            "title": "方法",
             "articles": [
               {
-                "title": "API",
-                "articleUrl": "/article/topics/demo/test/test1/test1",
-                "tags": []
-              },
-              {
-                "title": "API",
-                "articleUrl": "/article/topics/demo/test/test2/test2",
-                "tags": []
-              }
-            ],
-            "stats": {
-              "postsCount": 2,
-              "totalWords": 9,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "tt",
-            "title": "示例",
-            "articles": [
-              {
-                "title": "API",
-                "articleUrl": "/article/topics/demo/tt/tt",
+                "title": "实验方法",
+                "articleUrl": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo",
                 "tags": []
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 8,
+              "totalWords": 354,
+              "latestDate": ""
+            }
+          },
+          {
+            "key": "results",
+            "title": "结果",
+            "articles": [
+              {
+                "title": "实验结果",
+                "articleUrl": "/article/topics/StructureOfProteinDemo/results/results-demo/results-demo",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 460,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/topics/demo/test/test1/test1",
-        "doi": "www.tt.org"
+        "root": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo",
+        "doi": "www.demo-structure.org"
       }
     ]
   }

@@ -14,29 +14,27 @@ notes:
     date: "2025-09-19"
     categories:
       python: "Python"
-      javascript: "JavaScript"
-      r: "R Language"
+      r: "R"
       shell: "Shell"
 
 projects:
-  - name: "biocrawler"
+  - name: "Biocrawler"
     title: "BioCrawler"
-    desc: "Toolset for biological data crawling and processing"
-    date: "2025-08-01"
+    desc: "A toolkit for biological data crawling and processing"
+    date: "2025-11-01"
     github: "https://github.com/example/biocrawler"
     tags: ["Crawler", "API", "Bioinformatics"]
     categories:
-      API: "Interface"
-      get_start: "Getting Started"
-      test: "Test"
+      api: "API"
+      installation: "Installation"
 
 topics:
-  - name: "demo"
-    title: "Demo Topic"
-    desc: "Collection of topic structure and workflow examples"
-    date: "2025-07-01"
-    doi: "www.tt.org"
-    tags: ["Demo", "Workflow"]
+  - name: "StructureOfProteinDemo"
+    title: "Protein Structure Analysis Demo Project"
+    desc: "Demonstration of protein structure analysis methods and results"
+    date: "2025-12-01"
+    doi: "www.demo-structure.org"
+    tags: ["Protein", "Structure", "Cryo-EM"]
     categories:
-      test: "Test"
-      tt: "Example"
+      methods: "Methods"
+      results: "Results"

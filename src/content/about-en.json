@@ -1,47 +1,25 @@
 {
-  "introduction": "This is a placeholder for self-introduction. hello",
+  "introduction": "Hello, this is a placeholder for self-introduction.",
   "section": [
     {
-      "title": "Education",
+      "title": "Experience",
       "items": [
         {
-          "item": "Lanzhou University · Bachelor's · Bioinformatics (2021 – 2025)",
-          "desc": "GPA: 3.8/5.0"
+          "item": "Star University Bachelor's · Bioinformatics (2021 – 2025)",
+          "desc": "Bachelor's degree obtained"
+        },
+        {
+          "item": "Star University Bachelor's · Biology (2025 – present)",
+          "desc": "Master's degree in progress"
         }
       ]
     },
     {
-      "title": "Professional Skills",
-      "items": [
-        {
-          "item": "Programming Languages · Proficient",
-          "desc": "Python, R, Bash, JavaScript"
-        },
-        {
-          "item": "Data Analysis & Visualization · Proficient",
-          "desc": "Pandas, NumPy, Matplotlib, ggplot2, ECharts"
-        },
-        {
-          "item": "Structural Biology Tools · Proficient",
-          "desc": "PyMOL, AlphaFold2, ChimeraX"
-        }
-      ]
-    },
-    {
-      "title": "Project Experience",
+      "title": "Projects",
       "items": [
         {
           "item": "Example",
-          "desc": "None for now"
-        }
-      ]
-    },
-    {
-      "title": "Honors & Awards",
-      "items": [
-        {
-          "item": "None yet",
-          "desc": "Test"
+          "desc": "Pretend this is a project."
         }
       ]
     }

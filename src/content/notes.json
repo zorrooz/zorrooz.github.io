@@ -49,22 +49,6 @@
     "tagCount": 5
   },
   {
-    "title": "Vue.js 前端开发入门",
-    "date": "2025-09-19",
-    "tags": [
-      "JavaScript",
-      "Vue.js",
-      "前端开发",
-      "组件化",
-      "响应式"
-    ],
-    "draft": false,
-    "description": "Vue.js 框架在科学数据可视化前端开发中的应用",
-    "relativePath": "Programming/javascript/vue/vue",
-    "wordCount": 272,
-    "tagCount": 5
-  },
-  {
     "title": "Biopython 生物信息学应用",
     "date": "2025-09-19",
     "tags": [

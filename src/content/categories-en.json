@@ -104,11 +104,6 @@
         "title": "Programming",
         "desc": "Summary of learning records and materials related to programming",
         "tags": [
-          "JavaScript",
-          "Vue.js",
-          "Frontend Development",
-          "Componentization",
-          "Reactivity",
           "Python",
           "Biopython",
           "Bioinformatics",
@@ -132,8 +127,8 @@
           "Automation"
         ],
         "stats": {
-          "postsCount": 7,
-          "totalWords": 294,
+          "postsCount": 6,
+          "totalWords": 117,
           "latestDate": "2025-09-19"
         },
         "categories": [
@@ -183,30 +178,8 @@
             }
           },
           {
-            "key": "javascript",
-            "title": "JavaScript",
-            "articles": [
-              {
-                "title": "Getting Started with Vue.js Frontend Development",
-                "articleUrl": "/article/notes/Programming/javascript/vue/vue-en",
-                "tags": [
-                  "JavaScript",
-                  "Vue.js",
-                  "Frontend Development",
-                  "Componentization",
-                  "Reactivity"
-                ]
-              }
-            ],
-            "stats": {
-              "postsCount": 1,
-              "totalWords": 177,
-              "latestDate": "2025-09-19"
-            }
-          },
-          {
             "key": "r",
-            "title": "R Language",
+            "title": "R",
             "articles": [
               {
                 "title": "R Language Data Processing Example",
@@ -268,80 +241,54 @@
     "title": "Projects",
     "items": [
       {
-        "name": "biocrawler",
+        "name": "Biocrawler",
         "title": "BioCrawler",
-        "desc": "Toolset for biological data crawling and processing",
+        "desc": "A toolkit for biological data crawling and processing",
         "tags": [
           "Crawler",
           "API",
           "Bioinformatics"
         ],
         "stats": {
-          "postsCount": 5,
-          "totalWords": 21,
-          "latestDate": "2025-08-01"
+          "postsCount": 2,
+          "totalWords": 194,
+          "latestDate": "2025-11-01"
         },
         "categories": [
           {
-            "key": "API",
-            "title": "Interface",
+            "key": "api",
+            "title": "API",
             "articles": [
               {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/API/API1/API1-en",
-                "tags": []
-              },
-              {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/API/API2/API2-en",
-                "tags": []
-              }
-            ],
-            "stats": {
-              "postsCount": 2,
-              "totalWords": 12,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "get_start",
-            "title": "Getting Started",
-            "articles": [
-              {
-                "title": "Get Started",
-                "articleUrl": "/article/projects/biocrawler/get_start/get_start-en",
+                "title": "BioCrawler API Documentation",
+                "articleUrl": "/article/projects/Biocrawler/api/api-demo/api-demo-en",
                 "tags": []
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 2,
+              "totalWords": 99,
               "latestDate": ""
             }
           },
           {
-            "key": "test",
-            "title": "Test",
+            "key": "installation",
+            "title": "Installation",
             "articles": [
               {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/test/test1/test1-en",
-                "tags": []
-              },
-              {
-                "title": "API",
-                "articleUrl": "/article/projects/biocrawler/test/test2/test2-en",
+                "title": "BioCrawler Installation Guide",
+                "articleUrl": "/article/projects/Biocrawler/installation/installation-demo/installation-demo-en",
                 "tags": []
               }
             ],
             "stats": {
-              "postsCount": 2,
-              "totalWords": 7,
+              "postsCount": 1,
+              "totalWords": 95,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/projects/biocrawler/API/API1/API1-en",
+        "root": "/article/projects/Biocrawler/api/api-demo/api-demo-en",
         "github": "https://github.com/example/biocrawler"
       }
     ]
@@ -350,59 +297,55 @@
     "title": "Topics",
     "items": [
       {
-        "name": "demo",
-        "title": "Demo Topic",
-        "desc": "Collection of topic structure and workflow examples",
+        "name": "StructureOfProteinDemo",
+        "title": "Protein Structure Analysis Demo Project",
+        "desc": "Demonstration of protein structure analysis methods and results",
         "tags": [
-          "Demo",
-          "Workflow"
+          "Protein",
+          "Structure",
+          "Cryo-EM"
         ],
         "stats": {
-          "postsCount": 3,
-          "totalWords": 13,
-          "latestDate": "2025-07-01"
+          "postsCount": 2,
+          "totalWords": 520,
+          "latestDate": "2025-12-01"
         },
         "categories": [
           {
-            "key": "test",
-            "title": "Test",
+            "key": "methods",
+            "title": "Methods",
             "articles": [
               {
-                "title": "API",
-                "articleUrl": "/article/topics/demo/test/test1/test1-en",
-                "tags": []
-              },
-              {
-                "title": "API",
-                "articleUrl": "/article/topics/demo/test/test2/test2-en",
-                "tags": []
-              }
-            ],
-            "stats": {
-              "postsCount": 2,
-              "totalWords": 7,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "tt",
-            "title": "Example",
-            "articles": [
-              {
-                "title": "API",
-                "articleUrl": "/article/topics/demo/tt/tt-en",
+                "title": "Experimental Methods",
+                "articleUrl": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo-en",
                 "tags": []
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 6,
+              "totalWords": 229,
+              "latestDate": ""
+            }
+          },
+          {
+            "key": "results",
+            "title": "Results",
+            "articles": [
+              {
+                "title": "Experimental Results",
+                "articleUrl": "/article/topics/StructureOfProteinDemo/results/results-demo/results-demo-en",
+                "tags": []
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 291,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/topics/demo/test/test1/test1-en",
-        "doi": "www.tt.org"
+        "root": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo-en",
+        "doi": "www.demo-structure.org"
       }
     ]
   }

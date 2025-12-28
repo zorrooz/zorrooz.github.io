@@ -1,17 +1,12 @@
 [
   {
-    "title": "API",
-    "relativePath": "demo/test/test1/test1",
-    "wordCount": 1
+    "title": "实验方法",
+    "relativePath": "StructureOfProteinDemo/methods/methods-demo/methods-demo",
+    "wordCount": 354
   },
   {
-    "title": "API",
-    "relativePath": "demo/test/test2/test2",
-    "wordCount": 8
-  },
-  {
-    "title": "API",
-    "relativePath": "demo/tt/tt",
-    "wordCount": 8
+    "title": "实验结果",
+    "relativePath": "StructureOfProteinDemo/results/results-demo/results-demo",
+    "wordCount": 460
   }
 ]

@@ -297,6 +297,12 @@ After configuration is complete, you can use the following commands for translat
   
   Use `npm run translate -- help` to view detailed usage.
 
+After translation is complete, please manually trigger a build to update the content:
+
+```
+npm run prebuild
+```
+
 #### Content Generators
 
 Normally, content generators run automatically during build time without manual intervention (`runAllGenerators`).

@@ -28,10 +28,6 @@
     "count": 2
   },
   {
-    "name": "前端开发",
-    "count": 1
-  },
-  {
     "name": "人类基因组",
     "count": 1
   },
@@ -72,10 +68,6 @@
     "count": 1
   },
   {
-    "name": "响应式",
-    "count": 1
-  },
-  {
     "name": "序列分析",
     "count": 1
   },
@@ -89,10 +81,6 @@
   },
   {
     "name": "自动化",
-    "count": 1
-  },
-  {
-    "name": "组件化",
     "count": 1
   },
   {
@@ -117,10 +105,6 @@
   },
   {
     "name": "HISAT2",
-    "count": 1
-  },
-  {
-    "name": "JavaScript",
     "count": 1
   },
   {
@@ -153,10 +137,6 @@
   },
   {
     "name": "Shell",
-    "count": 1
-  },
-  {
-    "name": "Vue.js",
     "count": 1
   }
 ]

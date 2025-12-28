@@ -1,27 +1,12 @@
 [
   {
-    "title": "API",
-    "relativePath": "biocrawler/API/API1/API1-en",
-    "wordCount": 11
+    "title": "BioCrawler API Documentation",
+    "relativePath": "Biocrawler/api/api-demo/api-demo-en",
+    "wordCount": 99
   },
   {
-    "title": "API",
-    "relativePath": "biocrawler/API/API2/API2-en",
-    "wordCount": 1
-  },
-  {
-    "title": "Get Started",
-    "relativePath": "biocrawler/get_start/get_start-en",
-    "wordCount": 2
-  },
-  {
-    "title": "API",
-    "relativePath": "biocrawler/test/test1/test1-en",
-    "wordCount": 1
-  },
-  {
-    "title": "API",
-    "relativePath": "biocrawler/test/test2/test2-en",
-    "wordCount": 6
+    "title": "BioCrawler Installation Guide",
+    "relativePath": "Biocrawler/installation/installation-demo/installation-demo-en",
+    "wordCount": 95
   }
 ]

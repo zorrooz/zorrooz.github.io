@@ -49,22 +49,6 @@
     "tagCount": 5
   },
   {
-    "title": "Getting Started with Vue.js Frontend Development",
-    "date": "2025-09-19",
-    "tags": [
-      "JavaScript",
-      "Vue.js",
-      "Frontend Development",
-      "Componentization",
-      "Reactivity"
-    ],
-    "draft": false,
-    "description": "Application of Vue.js Framework in Scientific Data Visualization Frontend Development",
-    "relativePath": "Programming/javascript/vue/vue-en",
-    "wordCount": 177,
-    "tagCount": 5
-  },
-  {
     "title": "Biopython Bioinformatics Applications",
     "date": "2025-09-19",
     "tags": [
