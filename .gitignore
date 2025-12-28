@@ -30,4 +30,4 @@ coverage
 *.tsbuildinfo
 
 # API Keys and sensitive configuration
-src/config/apiKeys.js
+src/config/llmConfig.js

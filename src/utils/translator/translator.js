@@ -1,11 +1,11 @@
 import OpenAI from 'openai'
 import fs from 'fs/promises'
 import path from 'path'
-import apiKeys from '../../config/apiKeys.js'
+import llmConfig from '../../config/llmConfig.js'
 
 const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com',
-  apiKey: apiKeys.deepseek,
+  baseURL: llmConfig.url,
+  apiKey: llmConfig.apikey,
 })
 
 /**
@@ -26,7 +26,7 @@ async function translateText(text, fileType = 'md') {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: text },
       ],
-      model: 'deepseek-chat',
+      model: llmConfig.model,
       temperature: 0.3,
     })
 

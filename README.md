@@ -58,11 +58,11 @@ src/
 
 ## 🚀 快速开始
 
-### 环境
+### 🌍 环境
 
 - **Node.js**: `^20.19.0` 或 `>=22.12.0`
 
-### 安装
+### 💻 安装
 
 1. 克隆仓库
 
@@ -252,6 +252,20 @@ contacts:
 ```
 
 #### 使用翻译工具
+
+在开始翻译前，请先完成API Key配置：
+
+请在`src/config`目录下新建`llmConfig.js`文件，并填入以下内容：
+
+```
+export default {
+  url: 'your_api_endpoint_url',  // 替换为实际的 API 端点 URL
+  apikey: 'your_api_key_here',   // 替换为实际的 API 密钥
+  model: 'your_model_name',      // 替换为使用的模型名称
+};
+```
+
+配置完成后，可使用以下命令进行翻译操作：
 
 - 增量翻译（推荐）
 

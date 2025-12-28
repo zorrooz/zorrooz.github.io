@@ -58,11 +58,11 @@ src/
 
 ## 🚀 Getting Started
 
-### Environment
+### 🌍 Environment
 
 - **Node.js**: `^20.19.0` or `>=22.12.0`
 
-### Installation
+### 💻 Installation
 
 1. Clone the repository
 
@@ -253,6 +253,21 @@ contacts:
 ```
 
 #### Using the Translation Tool
+
+Before starting the translation, please complete the API Key configuration:
+
+Create a new file `llmConfig.js` in the `src/config` directory and add the following content:
+
+```
+export default {
+  url: 'your_api_endpoint_url',  // Replace with the actual API endpoint URL
+  apikey: 'your_api_key_here',   // Replace with the actual API key
+  model: 'your_model_name',      // Replace with the model name to be used
+};
+
+```
+
+After configuration is complete, you can use the following commands for translation operations:
 
 - Incremental translation (recommended)
 

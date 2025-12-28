@@ -14,8 +14,7 @@ notes:
     date: "2025-09-19"
     categories:
       python: "Python"
-      javascript: "JavaScript"
-      r: "R语言"
+      r: "R"
       shell: "Shell"
 
 projects:
