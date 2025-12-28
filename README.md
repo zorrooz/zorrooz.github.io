@@ -83,7 +83,7 @@ src/
    npm run dev
    ```
 
-   开发服务器将默认运行在 http://localhost:5173。
+   开发服务器将默认运行在 http://localhost:5173 。
 4. 构建生产版本
 
    ```
