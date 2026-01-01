@@ -1,6 +1,7 @@
 # gblog
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/zorrooz/zorrooz.github.io)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4fc08d)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646cff)](https://vitejs.dev/)
 [![GitHub stars](https://img.shields.io/github/stars/zorrooz/gblog?style=social)](https://github.com/zorrooz/zorrooz.github.io)
@@ -83,7 +84,7 @@ src/
    npm run dev
    ```
 
-   开发服务器将默认运行在 http://localhost:5173。
+   开发服务器将默认运行在 http://localhost:5173 。
 4. 构建生产版本
 
    ```
