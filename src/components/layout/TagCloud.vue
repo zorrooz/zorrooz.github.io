@@ -1,7 +1,7 @@
 <!-- TagCloud.vue -->
 <template>
   <div class="card shadow-sm border-0 mb-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-    <div class="card-header border-0 px-4 py-2" :style="{ backgroundColor: 'var(--app-card-bg)' }">
+    <div class="card-header border-0 px-4 pt-3 pb-2" :style="{ backgroundColor: 'var(--app-card-bg)' }">
       <h6 class="m-0" :style="{ color: 'var(--app-text-muted)' }">{{ tagsText }}</h6>
     </div>
     <div class="card-body px-4 pt-2 pb-3">

@@ -92,14 +92,13 @@
 </template>
 
 <script>
-import { useI18n } from 'vue-i18n'
-import { loadNotes, loadCategories } from '@/utils/contentLoader'
-
-
 /*
   PostList
   - 列表与分页组件，采用 props docs 与 perPage 控制
 */
+import { useI18n } from 'vue-i18n'
+import { loadNotes, loadCategories } from '@/utils/contentLoader'
+
 export default {
   name: 'PostList',
   setup() {

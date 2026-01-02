@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import { useI18n } from 'vue-i18n'
-
 /*
   OnThisPage
   - 生成页面内目录并提供滚动监听 
 */
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'OnThisPage',
   setup() {
@@ -52,6 +52,7 @@ export default {
       default: 8
     }
   },
+  emits: ['navigate'],
   data() {
     return {
       toc: [],
@@ -133,7 +134,6 @@ export default {
             safeId = `section-${Math.random().toString(36).substring(2, 9)}`;
           }
 
-          // 处理ID重复
           let finalId = safeId;
           let count = 1;
           while (document.getElementById(finalId)) {
@@ -189,15 +189,30 @@ export default {
     },
 
     scrollToId(id) {
+      this.$emit('navigate', id);
+
       const el = document.getElementById(id);
       if (!el) {
         return;
       }
       const top = el.getBoundingClientRect().top + window.scrollY - this.offset;
-      window.scrollTo({
-        top,
-        behavior: 'smooth'
-      });
+      const doScroll = () => {
+        window.scrollTo({
+          top,
+          behavior: 'smooth'
+        });
+      };
+
+      try {
+        const bodyOverflow = document.body && document.body.style && document.body.style.overflow;
+        if (bodyOverflow === 'hidden') {
+          setTimeout(doScroll, 80);
+        } else {
+          doScroll();
+        }
+      } catch (e) {
+        doScroll();
+      }
     }
   }
 }

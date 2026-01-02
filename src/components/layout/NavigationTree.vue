@@ -45,13 +45,13 @@
 </template>
 
 <script>
-import { useI18n } from 'vue-i18n'
-import { loadCategories } from '@/utils/contentLoader';
-
 /* 
   NavigationTree
   - 根据 categories 数据构建分级导航树
 */
+import { useI18n } from 'vue-i18n'
+import { loadCategories } from '@/utils/contentLoader';
+
 export default {
   name: 'NavigationTree',
   setup() {
@@ -181,12 +181,16 @@ export default {
 
 <style scoped>
 .navigation-tree {
-  padding: 0;
+  padding: 0.5rem 0;
   font-size: 0.95rem;
 }
 
 .category-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.category-group:last-child {
+  margin-bottom: 0;
 }
 
 .category-name {

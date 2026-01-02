@@ -96,7 +96,6 @@ export default {
       rawMarkdown: '',
       currentPath: '',
       allArticles: [],
-      groupedArticles: {},
       categoryList: [],
       viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024)
     }
@@ -252,7 +251,7 @@ export default {
     },
 
     async buildFromCategories() {
-      const all = [], grouped = {};
+      const all = [];
 
       const pushArticle = (artTitle, articleUrl, tags = [], dateStr = '') => {
         if (typeof articleUrl !== 'string' || !articleUrl.trim()) return;
@@ -265,8 +264,6 @@ export default {
         const pathNoExt = `${t}/${g}/${rest}`;
 
         const art = { title: artTitle, path: `${pathNoExt}.md`, date: dateStr || '', tags: Array.isArray(tags) ? tags : [], preview: '', category: `${t}/${g}/${subKey}` };
-        if (!grouped[art.category]) grouped[art.category] = [];
-        grouped[art.category].push(art);
         all.push(art);
       };
 
@@ -294,16 +291,11 @@ export default {
         }
 
         this.allArticles = all;
-        this.groupedArticles = grouped;
         this.categoryList = categoryData;
       } catch (error) {
-        console.error('Failed to load category data:', error);
         this.allArticles = [];
-        this.groupedArticles = {};
         this.categoryList = [];
       }
-
-      return Promise.resolve();
     },
 
     onResize() {
@@ -367,13 +359,16 @@ export default {
         this.rawMarkdown = await loadMarkdownContent(this.currentPath);
 
         this.$nextTick(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           this.updateSidebarDimensions();
           this.$refs.onThisPageRef?.refreshToc();
         });
       } catch (error) {
-        console.error('Load article failed:', error);
         this.rawMarkdown = '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.';
-        this.$nextTick(() => this.$refs.onThisPageRef?.refreshToc());
+        this.$nextTick(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.$refs.onThisPageRef?.refreshToc();
+        });
       }
     },
 

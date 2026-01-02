@@ -33,13 +33,13 @@
 </template>
 
 <script>
-import { useI18n } from 'vue-i18n'
-import { loadPosts, loadTags } from '@/utils/contentLoader'
-
 /* 
   ProfileCard 
   - 显示作者和统计信息，基于 posts/tags 数据
 */
+import { useI18n } from 'vue-i18n'
+import { loadPosts, loadTags } from '@/utils/contentLoader'
+
 export default {
   name: 'ProfileCard',
   setup() {

@@ -10,7 +10,7 @@
     <div class="offcanvas-panel offcanvas-right border-start rounded-0 shadow-sm">
       <div class="offcanvas-section">
         <div class="offcanvas-card">
-          <OnThisPage ref="otp" containerSelector=".markdown-body" :levels="[2, 3]" :offset="8" />
+          <OnThisPage containerSelector=".markdown-body" :levels="[2, 3]" :offset="8" @navigate="onNavigate" />
         </div>
       </div>
     </div>
@@ -34,7 +34,8 @@ export default {
     return {
       sourceId: 'toc', rafPending: false, rafLastBaseTop: null,
       visible: false, isDragging: false, startY: 0, initialTop: 0, buttonTop: window.innerHeight - 160, touchMoved: false,
-      show: false
+      show: false,
+      _lockedScrollY: null
     };
   },
   mounted() {
@@ -62,8 +63,53 @@ export default {
     onTouchStart(e) { e.preventDefault(); this.isDragging = true; this.touchMoved = false; this.startY = e.touches[0].clientY; this.initialTop = this.buttonTop; },
     onTouchMove(e) { this.touchMoved = true; const currentY = e.touches[0].clientY; const diffY = currentY - this.startY; let newTop = this.clampTop(this.initialTop + diffY); this.buttonTop = newTop; const { gap } = this.getBounds(); this.rafDispatchBaseTop(newTop + gap); e.preventDefault(); },
     onTouchEnd(e) { e.preventDefault(); this.isDragging = false; if (!this.touchMoved) this.openDrawer(); },
-    lockScroll() { const docEl = document.documentElement; const body = document.body; if (docEl) { docEl.style.overflow = 'hidden'; docEl.style.overscrollBehavior = 'contain'; } if (body) { body.style.overflow = 'hidden'; body.style.overscrollBehavior = 'contain'; } },
-    unlockScroll() { const docEl = document.documentElement; const body = document.body; if (docEl) { docEl.style.overflow = ''; docEl.style.overscrollBehavior = ''; } if (body) { body.style.overflow = ''; body.style.overscrollBehavior = ''; } }
+    onNavigate(id) { this.close(); },
+    lockScroll() {
+      try {
+        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+        this._lockedScrollY = scrollY;
+        const body = document.body;
+        if (body) {
+          body.style.position = 'fixed';
+          body.style.top = `-${scrollY}px`;
+          body.style.left = '0';
+          body.style.right = '0';
+          body.style.overflow = 'hidden';
+        }
+        if (document.documentElement) {
+          document.documentElement.style.overscrollBehavior = 'contain';
+        }
+      } catch (e) {
+        const docEl = document.documentElement;
+        const body = document.body;
+        if (docEl) { docEl.style.overflow = 'hidden'; docEl.style.overscrollBehavior = 'contain'; }
+        if (body) { body.style.overflow = 'hidden'; body.style.overscrollBehavior = 'contain'; }
+      }
+    },
+    unlockScroll() {
+      try {
+        const body = document.body;
+        if (body) {
+          body.style.position = '';
+          body.style.top = '';
+          body.style.left = '';
+          body.style.right = '';
+          body.style.overflow = '';
+        }
+        if (document.documentElement) {
+          document.documentElement.style.overscrollBehavior = '';
+        }
+        if (typeof this._lockedScrollY === 'number') {
+          window.scrollTo(0, this._lockedScrollY);
+          this._lockedScrollY = null;
+        }
+      } catch (e) {
+        const docEl = document.documentElement;
+        const body = document.body;
+        if (docEl) { docEl.style.overflow = ''; docEl.style.overscrollBehavior = ''; }
+        if (body) { body.style.overflow = ''; body.style.overscrollBehavior = ''; }
+      }
+    }
   }
 };
 </script>
