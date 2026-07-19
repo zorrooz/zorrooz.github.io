@@ -40,7 +40,7 @@
 
         <div class="text-center mt-5 pt-4" style="border-top: 1px solid var(--app-custom-border-color);">
           <p style="color: var(--app-text-secondary); margin-bottom: 0;">
-            <i class="bi bi-info-circle me-1"></i>
+            <i class="fas fa-info-circle me-1"></i>
             {{ footerText }}
           </p>
         </div>

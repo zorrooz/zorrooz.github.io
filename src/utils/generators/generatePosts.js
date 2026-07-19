@@ -21,10 +21,6 @@ function ensureDirectoryExistence(filePath) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
 }
 
-function toArray(x) {
-  return Array.isArray(x) ? x : x == null ? [] : [x]
-}
-
 function deriveCategory(relativePath) {
   if (typeof relativePath !== 'string' || !relativePath) return []
   const parts = relativePath.split('/')

@@ -54,8 +54,7 @@ async function needsTranslation(sourcePath, targetPath) {
 
     // 如果源文件比目标文件新，则需要重新翻译
     return sourceStats.mtime > targetStats.mtime
-  } catch (error) {
-    // 目标文件不存在，需要翻译
+  } catch {
     return true
   }
 }
@@ -233,29 +232,3 @@ export { translateText, translateFile, translateDirectory, TranslationManager, n
 
 // 默认导出管理器实例
 export default new TranslationManager()
-
-// CLI 使用示例
-async function main() {
-  const manager = new TranslationManager()
-
-  // 示例用法
-  try {
-    // 翻译整个 content-src 目录（增量模式）
-    console.log('[INFO] 开始增量翻译 content-src 目录...')
-    const results = await manager.translate('../content-src')
-    console.log(`[INFO] 翻译完成，处理了 ${results.length} 个文件`)
-
-    // 强制重新翻译所有文件
-    // await manager.forceTranslate('../content-src');
-
-    // 仅翻译新文件
-    // await manager.translateNewOnly('../content-src');
-  } catch (error) {
-    console.error('[ERROR] 翻译过程出错:', error.message)
-  }
-}
-
-// 如果直接运行此文件，执行main函数
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main()
-}

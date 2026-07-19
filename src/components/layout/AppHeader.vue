@@ -167,20 +167,12 @@ const handleDirectoryClick = (event) => {
   }
 };
 
-let _openSidebarHandler = null;
 onMounted(() => {
   appStore.initTheme();
   appStore.initLocale();
-
-  _openSidebarHandler = () => openMobileSidebar();
-  window.addEventListener('open-mobile-sidebar', _openSidebarHandler);
 });
 
 onBeforeUnmount(() => {
-  if (_openSidebarHandler) {
-    window.removeEventListener('open-mobile-sidebar', _openSidebarHandler);
-    _openSidebarHandler = null;
-  }
   unlockScroll();
 });
 </script>

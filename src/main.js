@@ -1,7 +1,6 @@
 //main.js
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { RouterLink } from 'vue-router'
 
 import App from './App.vue'
 import router from './router'
@@ -13,8 +12,6 @@ import 'katex/dist/katex.min.css'
 import { useAppStore } from './stores/app'
 
 const app = createApp(App)
-
-app.component('RouterLink', RouterLink)
 
 app.use(createPinia())
 app.use(router)

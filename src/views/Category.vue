@@ -72,7 +72,7 @@
                       <span class="fw-medium d-inline-flex align-items-center gap-1 cursor-pointer see-more-text"
                         :style="{ color: 'var(--app-primary)' }" @click="() => handleSeeMore(item)">
                         {{ seeMoreText }}
-                        <i class="bi bi-arrow-right"></i>
+                        <i class="fas fa-arrow-right"></i>
                       </span>
                     </div>
                   </div>

@@ -125,18 +125,6 @@ export default {
     }
   },
   computed: {
-    paginationLabel() {
-      return this.t('paginationLabel')
-    },
-    prevPageText() {
-      return this.t('prevPage')
-    },
-    nextPageText() {
-      return this.t('nextPage')
-    },
-    tagsText() {
-      return this.t('tags')
-    },
     totalPages() {
       return Math.max(1, Math.ceil(this.docs.length / this.perPage))
     },

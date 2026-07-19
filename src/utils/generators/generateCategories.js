@@ -289,8 +289,8 @@ function getCategoryTitles(locale = 'zh-CN') {
 }
 
 function generateCategoriesJson(locale = 'zh-CN') {
+  const paths = getFilePaths(locale)
   try {
-    const paths = getFilePaths(locale)
     const titles = getCategoryTitles(locale)
 
     const noteArticles = readJsonArray(paths.notesJsonPath)
@@ -342,7 +342,7 @@ function generateCategoriesJson(locale = 'zh-CN') {
     fs.writeFileSync(targetPath, JSON.stringify(finalStructure, null, 2), 'utf-8')
     console.log(`Successfully generated: ${targetPath}`)
   } catch (error) {
-    console.error(`Failed to generate ${categoriesJsonPath}:`, error)
+    console.error(`Failed to generate ${paths.categoriesJsonPath}:`, error)
     process.exitCode = 1
   }
 }

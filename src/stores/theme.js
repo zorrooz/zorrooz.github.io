@@ -11,7 +11,3 @@ export const setTheme = (mode) => {
   }
 };
 
-export const initTheme = () => {
-  const savedMode = localStorage.getItem('theme');
-  setTheme(savedMode || 'auto');
-};

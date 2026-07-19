@@ -92,7 +92,7 @@ export default {
     },
 
     setupContainerObserver() {
-      [0, 200, 500, 1000].forEach(delay => setTimeout(() => this.refreshToc(), delay));
+      setTimeout(() => this.refreshToc(), 100);
       const checkContainer = () => {
         const root = document.querySelector(this.containerSelector);
         if (!root) return;
@@ -220,9 +220,6 @@ export default {
 
 <style scoped>
 .on-this-page {
-  --otp-border: var(--app-border);
-  --otp-muted: var(--app-text-muted);
-  --otp-bg-hover: var(--app-bg-tertiary);
   --otp-active-bg: var(--app-primary-bg-subtle);
   --otp-active: var(--app-primary);
   padding: 0.25rem 0;

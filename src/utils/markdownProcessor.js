@@ -11,8 +11,6 @@ import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 
 import { common } from 'lowlight'
-import julia from 'highlight.js/lib/languages/julia'
-import dockerfile from 'highlight.js/lib/languages/dockerfile'
 
 const loadHighlightStyle = () => {
   if (typeof window === 'undefined') return
@@ -50,19 +48,17 @@ if (typeof window !== 'undefined') {
     attributeFilter: ['data-bs-theme'],
   })
 }
-const languages = { ...common, julia, dockerfile }
-
 const processor = unified()
   .use(remarkParse)
+  .use(remarkFrontmatter, ['yaml', 'toml'])
+  .use(remarkParseFrontmatter)
   .use(remarkGfm)
   .use(remarkBreaks)
   .use(remarkMath)
   .use(remarkRehype)
-  .use(rehypeHighlight, { languages })
+  .use(rehypeHighlight, { languages: common })
   .use(rehypeKatex, { throwOnError: false, errorColor: '#cc0000' })
   .use(rehypeStringify)
-  .use(remarkFrontmatter, ['yaml', 'toml'])
-  .use(remarkParseFrontmatter)
 export async function renderMarkdown(markdown) {
   const result = await processor.process(markdown)
   return String(result)

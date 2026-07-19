@@ -17,9 +17,9 @@
               <div v-if="currentPost" class="article-meta pb-2 mb-0">
                 <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
                 <div class="d-flex flex-wrap gap-3 align-items-center" :style="{ color: 'var(--app-text-muted)' }">
-                  <span v-if="isNote && currentPost.date"><i class="bi bi-calendar3 me-1"></i>{{ updatedAtText }} {{
+                  <span v-if="isNote && currentPost.date"><i class="fas fa-calendar-alt me-1"></i>{{ updatedAtText }} {{
                     currentPost.date }}</span>
-                  <span v-if="readingMinutes > 0"><i class="bi bi-clock me-1"></i>{{ getReadingTimeText(readingMinutes)
+                  <span v-if="readingMinutes > 0"><i class="fas fa-clock me-1"></i>{{ getReadingTimeText(readingMinutes)
                     }}</span>
                 </div>
                 <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
@@ -105,9 +105,6 @@ export default {
     isNote() { return !!(this.currentPost?.path && this.currentPost.path.startsWith('notes/')); },
     updatedAtText() {
       return this.t('updatedAt')
-    },
-    readingTimeText() {
-      return this.t('readingTime');
     },
     prevPageText() {
       return this.t('prevPage')
@@ -301,23 +298,6 @@ export default {
     onResize() {
       this.viewportWidth = window.innerWidth;
       this.updateSidebarDimensions();
-    },
-
-    getMatchedKey(rel) {
-      const normalized = rel.replace(/^notes\//, 'notes/');
-      const candidates = [
-        `/content-src/${normalized}`, `${normalized}`,
-        `/content-src/${normalized}?raw`, `${normalized}?raw`,
-        `../content-src/${normalized}`, `../content-src/${normalized}?raw`
-      ];
-
-      if (this.locale === 'en-US') {
-        const enCandidates = candidates.map(candidate => candidate.replace('.md', '-en.md'));
-        const enKey = Object.keys(markdownModules).find(k => enCandidates.some(suf => k.endsWith(suf)));
-        if (enKey) return enKey;
-      }
-
-      return Object.keys(markdownModules).find(k => candidates.some(suf => k.endsWith(suf)));
     },
 
     normalizeRoutePathParam(p) {

@@ -4,37 +4,37 @@
     <div v-for="category in navigationTree" :key="category.name" class="category-group">
       <h3 class="category-name">{{ category.name }}</h3>
       <ul class="article-list article-list-root">
-        <li v-if="category.children && category.children.length" v-for="dir in category.children" :key="dir.name"
-          class="article-item">
-          <div class="directory-node">
-            <span class="directory-name level-2">{{ dir.name }}</span>
-            <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
-              <li v-for="file in dir.files" :key="file.path" class="article-item">
-                <router-link :to="toArticle(file.path)" class="article-link level-3"
-                  :class="{ active: isActive(file.path) }">
-                  {{ file.title }}
-                </router-link>
-              </li>
-            </ul>
-            <ul v-if="dir.children && dir.children.length" class="article-list sub-list">
-              <li v-for="sub in dir.children" :key="sub.name" class="article-item">
-                <div class="directory-node">
-                  <span class="directory-name level-2">{{ sub.name }}</span>
-                  <ul v-if="sub.files && sub.files.length" class="article-list sub-list files-level">
-                    <li v-for="file in sub.files" :key="file.path" class="article-item">
-                      <router-link :to="toArticle(file.path)" class="article-link level-3"
-                        :class="{ active: isActive(file.path) }">
-                        {{ file.title }}
-                      </router-link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li v-if="category.files && category.files.length" v-for="file in category.files" :key="file.path"
-          class="article-item">
+        <template v-for="dir in category.children" :key="dir.name">
+          <li v-if="dir.children && dir.children.length" class="article-item">
+            <div class="directory-node">
+              <span class="directory-name level-2">{{ dir.name }}</span>
+              <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
+                <li v-for="file in dir.files" :key="file.path" class="article-item">
+                  <router-link :to="toArticle(file.path)" class="article-link level-3"
+                    :class="{ active: isActive(file.path) }">
+                    {{ file.title }}
+                  </router-link>
+                </li>
+              </ul>
+              <ul v-if="dir.children && dir.children.length" class="article-list sub-list">
+                <li v-for="sub in dir.children" :key="sub.name" class="article-item">
+                  <div class="directory-node">
+                    <span class="directory-name level-2">{{ sub.name }}</span>
+                    <ul v-if="sub.files && sub.files.length" class="article-list sub-list files-level">
+                      <li v-for="file in sub.files" :key="file.path" class="article-item">
+                        <router-link :to="toArticle(file.path)" class="article-link level-3"
+                          :class="{ active: isActive(file.path) }">
+                          {{ file.title }}
+                        </router-link>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </template>
+        <li v-for="file in category.files" :key="file.path" class="article-item">
           <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
             {{ file.title }}
           </router-link>
