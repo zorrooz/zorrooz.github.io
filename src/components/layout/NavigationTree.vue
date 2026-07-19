@@ -5,7 +5,7 @@
       <h3 class="category-name">{{ category.name }}</h3>
       <ul class="article-list article-list-root">
         <template v-for="dir in category.children" :key="dir.name">
-          <li v-if="dir.children && dir.children.length" class="article-item">
+          <li v-if="dir.files && dir.files.length" class="article-item">
             <div class="directory-node">
               <span class="directory-name level-2">{{ dir.name }}</span>
               <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
