@@ -1,6 +1,6 @@
 # gblog 架构现代化执行计划
 
-> 状态：**执行中（Phase 0-2 已完成）**
+> 状态：**执行中（Phase 0-3 已完成）**
 > 制定日期：2026-07-31
 > 路由来源：AGENTS.md → 本文件（约定文档）
 > 执行方式：由用户切换到 build 模式，按 Phase 顺序逐个执行；每个 Phase 完成后更新本文件顶部的状态表
@@ -12,7 +12,7 @@
 | Phase 0 | 基建：dev 热更新 + SSR 安全 + 高亮本地化 | ✅ 已完成 |
 | Phase 1 | Markdown 渲染移入构建期（bundle 瘦身） | ✅ 已完成 |
 | Phase 2 | SSG 预渲染 + history 路由（核心升级） | ✅ 已完成 |
-| Phase 3 | 内容层整理（生成器共享 core + sitemap） | ⬜ 待执行 |
+| Phase 3 | 内容层整理（生成器共享 core + sitemap） | ✅ 已完成 |
 | Phase 4 | 组件现代化（`<script setup>` 迁移） | ⬜ 待执行 |
 | Phase 5 | TypeScript 渐进迁移 | ⬜ 待执行 |
 | Phase 6 | 体验增强（PWA / 搜索 / 资产本地化，可选） | ⬜ 待执行 |
@@ -207,7 +207,14 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
 - 新增 `src/utils/generators/generateSitemap.js`：读 `posts.json`（zh）→ 写 `public/sitemap.xml` + `public/robots.txt`（纯静态资源，vite 自动拷贝）
 - `runAllGenerators.js` 追加 sitemap 步骤
 
-**验证**：生成 JSON 与改造前 diff 完全一致（除时间戳类字段）；build + preview 正常。
+**执行记录（2026-07-31）**：
+- 新建 `src/utils/generators/core/index.js`，收敛全部重复实现：`walk` / `ensureDirectoryExistence` / `normalizeTags` / `parseFrontMatterAndBody` / `markdownToPlain` / `countWordsSmart` / `toPosixRelativeNoExt` / `extractTitleFromH1`
+- 收敛范围：notes/topics/projects（全文）、html（walk + ensureDirectoryExistence）、其余 5 个生成器（ensureDirectoryExistence）；`generateCategories.js` 的 `readJsonArray`/`readYaml` 等单点函数保留原地（无重复）
+- **行为验证**：改造前后 `npm run prebuild` 产物逐文件 SHA256 对比 42/42 完全一致（0 diff）
+- `generateSitemap.js`：读 zh `categories.json` 提取 13 篇 `articleUrl` + `date`，加 4 个静态路由（`/` `/about` `/resource` `/category`）→ 共 17 条 URL；站点常量 `https://zorrooz.github.io`（user site）；写 `public/sitemap.xml` + `public/robots.txt`（Vite 自动拷贝入 dist）
+- `runAllGenerators.js` 追加 sitemap 步骤（最后执行，依赖 zh categories.json）
+
+**验证**：生成 JSON 与改造前 diff 完全一致（除时间戳类字段）✅（SHA256 42/42）；build + preview 正常 ✅（dist 含 sitemap.xml/robots.txt）
 
 ---
 

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
 import zhCN from '../../stores/locales/zh-CN.js'
 import enUS from '../../stores/locales/en-US.js'
+import { ensureDirectoryExistence } from './core/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -22,10 +23,7 @@ function getFilePaths(locale = 'zh-CN') {
   }
 }
 
-function ensureDirectoryExistence(filePath) {
-  const dir = path.dirname(filePath)
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
-}
+
 
 function safeArray(x) {
   return Array.isArray(x) ? x : []

@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
+import { ensureDirectoryExistence } from './core/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -12,12 +13,7 @@ const isDirectRun =
 const contentSrcDir = path.join(__dirname, '../../content-src')
 const contentOutputDir = path.join(__dirname, '../../content')
 
-function ensureDirectoryExistence(filePath) {
-  const dirname = path.dirname(filePath)
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true })
-  }
-}
+
 
 function normalize(raw) {
   const list = Array.isArray(raw) ? raw : []

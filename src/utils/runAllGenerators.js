@@ -23,6 +23,7 @@ import { generateTopicsJson } from './generators/generateTopics.js'
 import { generateCategoriesJson } from './generators/generateCategories.js'
 import { generatePostsJson } from './generators/generatePosts.js'
 import { generateTagsJson } from './generators/generateTags.js'
+import { generateSitemap } from './generators/generateSitemap.js'
 import { generateHtml } from './generators/generateHtml.js'
 
 const isDirectRun =
@@ -82,6 +83,9 @@ export async function runAllGenerators() {
   // 9. article HTML (build-time markdown rendering) - Chinese + English
   await runStep('html', () => generateHtml('zh-CN'))
   await runStep('html-en', () => generateHtml('en-US'))
+
+  // 10. sitemap + robots.txt (depends on zh categories.json)
+  await runStep('sitemap', () => generateSitemap())
 
   console.log('== Generators: done ==')
 }

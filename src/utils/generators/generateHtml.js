@@ -12,6 +12,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { renderMarkdown } from '../markdownProcessor.js'
+import { ensureDirectoryExistence, walk } from './core/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,24 +21,6 @@ const contentSrcDir = path.join(__dirname, '../../content-src')
 const htmlOutputDir = path.join(__dirname, '../../content/html')
 
 const sections = ['notes', 'projects', 'topics']
-
-function ensureDirectoryExistence(filePath) {
-  const dirname = path.dirname(filePath)
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true })
-  }
-}
-
-function walk(dir, predicate = () => true, acc = []) {
-  if (!fs.existsSync(dir)) return acc
-  const items = fs.readdirSync(dir, { withFileTypes: true })
-  for (const it of items) {
-    const full = path.join(dir, it.name)
-    if (it.isDirectory()) walk(full, predicate, acc)
-    else if (predicate(full)) acc.push(full)
-  }
-  return acc
-}
 
 function isTargetFile(p, locale) {
   if (locale === 'zh-CN') return /\.md$/i.test(p) && !p.endsWith('-en.md')
