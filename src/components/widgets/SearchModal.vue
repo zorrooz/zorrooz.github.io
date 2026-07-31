@@ -188,6 +188,11 @@ nextTick(() => {
 }
 
 .search-close {
+  border: none;
+  background: transparent;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  line-height: 1;
   color: var(--app-text-muted);
   transition: color 0.15s ease-in-out;
 }
