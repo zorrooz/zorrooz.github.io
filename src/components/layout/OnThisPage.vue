@@ -25,34 +25,39 @@
   </nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const props = defineProps({
-  containerSelector: {
-    type: String,
-    default: '.markdown-body'
-  },
-  levels: {
-    type: Array,
-    default: () => [2, 3, 4, 5, 6]
-  },
-  offset: {
-    type: Number,
-    default: 8
+interface TocNode {
+  id: string
+  text: string
+  level: number
+  children: TocNode[]
+}
+
+const props = withDefaults(
+  defineProps<{
+    containerSelector?: string
+    levels?: number[]
+    offset?: number
+  }>(),
+  {
+    containerSelector: '.markdown-body',
+    levels: () => [2, 3, 4, 5, 6],
+    offset: 8
   }
-})
+)
 
 const emit = defineEmits(['navigate'])
 
 const { t } = useI18n()
 
-const toc = ref([])
+const toc = ref<TocNode[]>([])
 const activeId = ref('')
-const otpObserver = ref(null)
-const otpObserverTimer = ref(null)
-const otpPoller = ref(null)
+const otpObserver = ref<MutationObserver | null>(null)
+const otpObserverTimer = ref<number | null>(null)
+const otpPoller = ref<number | null>(null)
 
 function cleanupObservers() {
   if (otpObserver.value) { otpObserver.value.disconnect(); otpObserver.value = null }
@@ -80,7 +85,7 @@ function setupContainerObserver() {
     if (otpPoller.value) { clearInterval(otpPoller.value); otpPoller.value = null }
     if (!otpObserver.value) {
       otpObserver.value = new MutationObserver(() => {
-        clearTimeout(otpObserverTimer.value)
+        clearTimeout(otpObserverTimer.value ?? undefined)
         otpObserverTimer.value = setTimeout(() => refreshToc(), 100)
       })
       otpObserver.value.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] })
@@ -91,9 +96,9 @@ function setupContainerObserver() {
   if (!otpPoller.value && !document.querySelector(props.containerSelector)) otpPoller.value = setInterval(checkContainer, 200)
 }
 
-function getHeadingText(h) {
+function getHeadingText(h: Element) {
   try {
-    const clone = h.cloneNode(true)
+    const clone = h.cloneNode(true) as Element
     clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove())
     return (clone.textContent || '').replace(/\s*#\s*$/, '').trim()
   } catch {
@@ -138,12 +143,12 @@ function buildToc() {
   const levelSet = new Set(props.levels)
   const topLevel = Math.min(...props.levels)
   const secondLevel = topLevel + 1
-  const tocList = []
-  let currentTop = null
+  const tocList: TocNode[] = []
+  let currentTop: TocNode | null = null
   for (const h of headings) {
     const level = parseInt(h.tagName.substring(1), 10)
     if (!levelSet.has(level)) continue
-    const node = { id: h.id, text: getHeadingText(h), level, children: [] }
+    const node: TocNode = { id: h.id, text: getHeadingText(h), level, children: [] }
     if (level === topLevel) { tocList.push(node); currentTop = node }
     else if (currentTop && level >= secondLevel) currentTop.children.push(node)
     else tocList.push(node)
@@ -182,7 +187,7 @@ function onScrollSpy() {
   activeId.value = current || (headings[0]?.id || '')
 }
 
-function scrollToId(id) {
+function scrollToId(id: string) {
   emit('navigate', id)
 
   const el = document.getElementById(id)

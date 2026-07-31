@@ -32,15 +32,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
 
 const { t, locale } = useI18n()
 
-const posts = ref([])
-const tags = ref([])
+const posts = ref<any[]>([])
+const tags = ref<any[]>([])
 
 function loadData() {
   try {

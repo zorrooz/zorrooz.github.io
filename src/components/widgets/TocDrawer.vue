@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
@@ -27,7 +27,7 @@ const { t } = useI18n()
 
 const sourceId = 'toc'
 const rafPending = ref(false)
-const rafLastBaseTop = ref(null)
+const rafLastBaseTop = ref<number | null>(null)
 const visible = ref(false)
 const isDragging = ref(false)
 const startY = ref(0)
@@ -35,7 +35,7 @@ const initialTop = ref(0)
 const buttonTop = ref((typeof window !== 'undefined' ? window.innerHeight : 1024) - 160)
 const touchMoved = ref(false)
 const show = ref(false)
-const lockedScrollY = ref(null)
+const lockedScrollY = ref<number | null>(null)
 
 function getBounds() {
   const BUTTON_HEIGHT = 40
@@ -44,12 +44,12 @@ function getBounds() {
   return { gap: GAP, minTop: MARGIN, maxTop: Math.max(0, window.innerHeight - BUTTON_HEIGHT - MARGIN - GAP) }
 }
 
-function clampTop(top) {
+function clampTop(top: number) {
   const { minTop, maxTop } = getBounds()
   return Math.max(minTop, Math.min(maxTop, top))
 }
 
-function rafDispatchBaseTop(baseTop) {
+function rafDispatchBaseTop(baseTop: number) {
   rafLastBaseTop.value = baseTop
   if (rafPending.value) return
   rafPending.value = true
@@ -59,9 +59,10 @@ function rafDispatchBaseTop(baseTop) {
   })
 }
 
-function syncBaseTop(e) {
-  const base = e?.detail?.baseTop
-  const source = e?.detail?.source
+function syncBaseTop(e: Event) {
+  const detail = (e as CustomEvent).detail
+  const base = detail?.baseTop
+  const source = detail?.source
   if (source === sourceId) return
   const { gap } = getBounds()
   if (typeof base === 'number') {
@@ -94,11 +95,11 @@ function close() {
   unlockScroll()
 }
 
-function onTouchStart(e) {
+function onTouchStart(e: TouchEvent) {
   e.preventDefault(); isDragging.value = true; touchMoved.value = false; startY.value = e.touches[0].clientY; initialTop.value = buttonTop.value
 }
 
-function onTouchMove(e) {
+function onTouchMove(e: TouchEvent) {
   touchMoved.value = true
   const currentY = e.touches[0].clientY
   const diffY = currentY - startY.value
@@ -109,7 +110,7 @@ function onTouchMove(e) {
   e.preventDefault()
 }
 
-function onTouchEnd(e) {
+function onTouchEnd(e: TouchEvent) {
   e.preventDefault(); isDragging.value = false; if (!touchMoved.value) openDrawer()
 }
 

@@ -2,12 +2,13 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
+import tsParser from '@typescript-eslint/parser'
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
 export default defineConfig([
   {
     name: 'app/files-to-lint',
-    files: ['**/*.{js,mjs,jsx,vue}'],
+    files: ['**/*.{js,mjs,jsx,ts,vue}'],
   },
 
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
@@ -17,6 +18,21 @@ export default defineConfig([
       globals: {
         ...globals.browser,
       },
+    },
+  },
+
+  {
+    name: 'app/vue-ts',
+    files: ['**/*.vue', '**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        parser: {
+          ts: tsParser,
+        },
+      },
+    },
+    rules: {
+      'no-undef': 'off',
     },
   },
 

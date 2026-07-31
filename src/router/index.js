@@ -1,9 +1,11 @@
+// @ts-check
 import HomeView from '@/views/Home.vue'
 import CategoryView from '@/views/Category.vue'
 import ResourceView from '@/views/Resource.vue'
 import AboutView from '@/views/About.vue'
 import ArticleView from '@/views/Article.vue'
 
+/** @type {import('vue-router').RouteRecordRaw[]} */
 export const routes = [{
   path: '/',
   name: 'Home',

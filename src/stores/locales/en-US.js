@@ -5,6 +5,7 @@ export default {
   words: 'Words',
   prevPage: 'Previous',
   nextPage: 'Next',
+  pagination: 'Pagination',
 
   // 导航
   categories: 'Categories',

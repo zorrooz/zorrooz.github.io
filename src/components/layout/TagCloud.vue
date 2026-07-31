@@ -15,27 +15,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-const props = defineProps({
-  tagData: { type: Array, default: () => [] }
-})
+const props = withDefaults(defineProps<{ tagData?: unknown[] }>(), { tagData: () => [] })
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const tags = ref([])
+const tags = ref<unknown[]>([])
 
 const tagsText = computed(() => t('tags'))
 const cloudTags = computed(() => {
   const src = Array.isArray(props.tagData) && props.tagData.length ? props.tagData : tags.value
-  const map = new Map()
+  const map = new Map<string, number>()
   src.forEach(t => {
-    const name = typeof t === 'string' ? t : t.name
+    const name = typeof t === 'string' ? t : (t as { name?: string })?.name
     if (!name) return
     map.set(name, (map.get(name) || 0) + 1)
   })
@@ -44,7 +42,7 @@ const cloudTags = computed(() => {
 
 if (props.tagData.length) tags.value = props.tagData
 
-function goTag(name) {
+function goTag(name: string) {
   if (!name) return
   const q = { ...route.query, tag: name, page: '1' }
   router.push({ path: '/', query: q }).catch(() => { })

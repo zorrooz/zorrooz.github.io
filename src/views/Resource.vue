@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineOptions({ name: 'ResourceView' })
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -57,7 +57,7 @@ import { loadResources } from '@/utils/contentLoader'
 
 const { t, locale } = useI18n()
 
-const resources = ref([])
+const resources = ref<any[]>([])
 
 const pageTitle = computed(() => t('resources'))
 const pageSubtitle = computed(() => t('resourceSubtitle'))

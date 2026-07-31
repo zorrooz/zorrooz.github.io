@@ -1,6 +1,6 @@
 # gblog 架构现代化执行计划
 
-> 状态：**执行中（Phase 0-4 已完成）**
+> 状态：**执行中（Phase 0-5 已完成）**
 > 制定日期：2026-07-31
 > 路由来源：AGENTS.md → 本文件（约定文档）
 > 执行方式：由用户切换到 build 模式，按 Phase 顺序逐个执行；每个 Phase 完成后更新本文件顶部的状态表
@@ -14,7 +14,7 @@
 | Phase 2 | SSG 预渲染 + history 路由（核心升级） | ✅ 已完成 |
 | Phase 3 | 内容层整理（生成器共享 core + sitemap） | ✅ 已完成 |
 | Phase 4 | 组件现代化（`<script setup>` 迁移） | ✅ 已完成 |
-| Phase 5 | TypeScript 渐进迁移 | ⬜ 待执行 |
+| Phase 5 | TypeScript 渐进迁移 | ✅ 已完成 |
 | Phase 6 | 体验增强（PWA / 搜索 / 资产本地化，可选） | ⬜ 待执行 |
 
 ---
@@ -251,6 +251,23 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
 - JS/TS 混存不阻塞；每步保持 lint + build 通过
 
 **验证**：`vue-tsc --noEmit` 无新增错误；功能回归。
+
+**执行记录（2026-07-31）**：
+- 基建（commit `6030200`）：
+  - 依赖：`typescript@5.9.3`（**不能升 7.x**：原生 Go 版无 `./lib/tsc` JS API，vue-tsc 报 `ERR_PACKAGE_PATH_NOT_EXPORTED`）+ `vue-tsc@3.3.9` + `@typescript-eslint/{parser,eslint-plugin}` + `@types/node` + `@types/js-yaml`
+  - `tsconfig.json` 三件套（references 分拆）：`tsconfig.app.json`（浏览器侧 `src/**/*.{js,ts,vue}`，exclude generators/translator/runAllGenerators/contentDevPlugin/markdownProcessor）+ `tsconfig.node.json`（vite.config.js、eslint.config.js、generators/translator/runAllGenerators/contentDevPlugin/markdownProcessor）
+  - 均 `strict` + `noEmit` + `allowJs:true` + **`checkJs:false`（JS 走每文件 `// @ts-check` 自愿开启，替代计划的 `checkJs:true` 全局开启）**
+  - `npm run typecheck` = `vue-tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json`
+  - `eslint.config.js` 接入 `@typescript-eslint/parser`（vue 文件 `lang="ts"` 块）+ `no-undef` 对 `.vue`/`.ts` 关闭（`any` 等类型名会误报）
+- 生成器（commit `6030200`）：11 个 generator 文件 `// @ts-check` + JSDoc；`generateCategories.js` 加 `@typedef {FormattedArticle}`/`@typedef {DetailedSubCategory}`；`new Date(a)-new Date(b)` → `.getTime()`（TS2362/2363）；`.filter(Boolean)` → `.filter((item) => item !== null)`；yaml.load 强转 `Record<string, unknown>`；catch 统一 `e instanceof Error ? e.message : e`
+  - **行为验证**：改造前后 `npm run prebuild` 产物逐文件 diff 完全一致（`git diff src/content` 为空）
+- 加载层 + 状态层（commit `9347c50`）：`contentLoader.js`（glob 模块值强转）、`markdownProcessor.js`（`// @ts-check`，移入 tsconfig.node）、`stores/{app,theme,i18n}.js`（`Ref<string>`、locale 强转 `'zh-CN'|'en-US'`）、`router/index.js`（`RouteRecordRaw[]`，该文件改动随本 Phase 一并合入）
+- 视图/组件（本 Phase 合入）：14 个 `.vue` 全部 `lang="ts"`（2 小组件 → 6 布局 → 6 视图）；零运行时依赖改动，仅以下等价改写：
+  - `RenderMarkdown` watch 去掉 `async: true`（`{immediate,async}` 组合触发 vue 类型重载歧义 `WatchCallback<() => string>`；行为等价——`initRender` 内部 `await nextTick()` 后 emit，Article 侧本就有 nextTick 兜底）
+  - `PostList` 补真实翻译键 `pagination`（原模板引用了未定义的 `paginationLabel`，aria-label 恒为空）
+  - `Article` 侧栏数组 `[leftContent, rightContent].forEach(...)` 提为 `const sidebarEls = [...]`（vue-tsc 对模板 ref 窄化后的数组字面量链式调用误报）
+  - 其余为参数/ref 类型标注（`any[]`、`Element`、`MutationObserver | null`、`InstanceType<typeof OnThisPage>` 等）
+- 全量回归：lint ✅ / typecheck ✅（0 错误）/ build 17 页 ✅ / preview 深链 + 正文内联 + 高亮 + 导航树 200 冒烟 ✅ / dist 还原
 
 ---
 

@@ -10,14 +10,14 @@
           </RouterLink>
 
           <div class="d-flex d-lg-none ms-auto">
-            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="$event.target.blur()">
+            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
             </button>
-            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleLanguage" @focus="$event.target.blur()">
+            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleLanguage" @focus="blurFocus">
               <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
             </button>
             <button class="btn btn-sm mx-1 p-2 btn-icon" @click="onMobileMenuClick"
-              style="font-size: 1.2em; background: none; border: none;" @focus="$event.target.blur()">
+              style="font-size: 1.2em; background: none; border: none;" @focus="blurFocus">
               <img src="@/assets/icons/menu.png" alt="菜单" width="20" height="20">
             </button>
           </div>
@@ -35,10 +35,10 @@
           </div>
 
           <div class="d-none d-lg-flex ms-auto">
-            <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="$event.target.blur()">
+            <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
             </button>
-            <button class="btn btn-sm btn-icon" @click="toggleLanguage" @focus="$event.target.blur()">
+            <button class="btn btn-sm btn-icon" @click="toggleLanguage" @focus="blurFocus">
               <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
             </button>
           </div>
@@ -76,7 +76,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /*
   AppHeader
   - 顶部导航，包含移动抽屉与语言/主题按钮
@@ -92,7 +92,11 @@ const { t } = useI18n();
 const appStore = useAppStore();
 const mobileMenuOpen = ref(false);
 const showMobileSidebar = ref(false);
-const logoStyle = ref({});
+const logoStyle = ref<Record<string, string>>({});
+
+const blurFocus = (event: FocusEvent) => {
+  (event.currentTarget as HTMLButtonElement | null)?.blur()
+};
 
 const navItems = computed(() => [
   { icon: 'fa-layer-group', text: t('categories'), href: '/category' },
@@ -159,8 +163,9 @@ const closeMobileSidebar = () => {
   unlockScroll();
 };
 
-const handleDirectoryClick = (event) => {
-  if (event.target.closest('a')) {
+const handleDirectoryClick = (event: MouseEvent) => {
+  const target = event.target as Element | null
+  if (target && target.closest('a')) {
     closeMobileSidebar();
   }
 };

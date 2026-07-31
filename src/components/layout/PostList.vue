@@ -91,23 +91,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { loadNotes, loadCategories } from '@/utils/contentLoader'
 
-const props = defineProps({
-  docs: {
-    type: Array,
-    required: true,
-    default: () => []
-  },
-  perPage: {
-    type: Number,
-    default: 6
-  }
-})
+const props = withDefaults(defineProps<{ docs: any[]; perPage?: number }>(), { perPage: 6 })
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -115,8 +105,10 @@ const router = useRouter()
 
 const currentPage = ref(1)
 const maxVisiblePages = ref(5)
-const notesFlat = ref([])
-const categoriesData = ref([])
+const notesFlat = ref<any[]>([])
+const categoriesData = ref<any[]>([])
+
+const paginationLabel = computed(() => t('pagination'))
 
 const totalPages = computed(() => Math.max(1, Math.ceil(props.docs.length / props.perPage)))
 
@@ -127,7 +119,7 @@ const displayedPosts = computed(() => {
 })
 
 const allVisiblePages = computed(() => {
-  const pages = []
+  const pages: number[] = []
   const total = totalPages.value
   const current = currentPage.value
   const maxShow = maxVisiblePages.value
@@ -183,11 +175,11 @@ const showLastEllipsis = computed(() =>
 )
 
 const categoryTitleMap = computed(() => {
-  const map = {}
+  const map: Record<string, string> = {}
   try {
-    (categoriesData.value || []).forEach(section => {
-      (section.items || []).forEach(item => {
-        (item.categories || []).forEach(cat => {
+    (categoriesData.value || []).forEach((section: any) => {
+      (section.items || []).forEach((item: any) => {
+        (item.categories || []).forEach((cat: any) => {
           if (cat && cat.key && cat.title) map[cat.key] = cat.title
         })
       })
@@ -209,13 +201,13 @@ function loadData() {
   }
 }
 
-function formatDate(dateString) {
+function formatDate(dateString: string) {
   const l = locale.value === 'zh-CN' ? 'zh-CN' : 'en-US'
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
   return new Date(dateString).toLocaleDateString(l, options)
 }
 
-function getArticlePath(post) {
+function getArticlePath(post: any) {
   let articlePath = ''
 
   const found = Array.isArray(notesFlat.value) ? notesFlat.value.find(item => item.title === post.title) : null
@@ -236,7 +228,7 @@ function getArticlePath(post) {
   return `/article/${articlePath.replace(/\.md$/, '')}`
 }
 
-function goToPage(page) {
+function goToPage(page: number) {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
     const q = { ...route.query, page: String(page) }
@@ -265,7 +257,7 @@ function nextPage() {
   }
 }
 
-function goTag(tag) {
+function goTag(tag: string) {
   if (!tag) return
   const q = { ...route.query, tag: tag, page: '1' }
   router.push({ path: '/', query: q }).catch(() => { })
@@ -276,7 +268,7 @@ function handleResize() {
   maxVisiblePages.value = window.innerWidth < 480 ? 3 : 5
 }
 
-function formatCategory(catArr) {
+function formatCategory(catArr: any) {
   if (!Array.isArray(catArr) || catArr.length === 0) return ''
   const top = catArr[0] || ''
   const subKey = catArr[1]
@@ -290,7 +282,7 @@ loadData()
 watch(() => props.docs, () => { currentPage.value = 1 })
 
 watch(() => route.query.page, (newVal) => {
-  const p = parseInt(newVal)
+  const p = parseInt(String(newVal))
   const page = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
   if (page !== currentPage.value) {
     currentPage.value = page
@@ -301,7 +293,7 @@ watch(() => route.query.page, (newVal) => {
 watch(locale, () => loadData())
 
 onMounted(() => {
-  const p = parseInt(route.query.page)
+  const p = parseInt(String(route.query.page))
   currentPage.value = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
   handleResize()
   window.addEventListener('resize', handleResize)

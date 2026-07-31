@@ -67,7 +67,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -96,15 +96,15 @@ defineProps({ path: { type: [String, Array], default: '' } })
 
 const rawMarkdown = ref('')
 const currentPath = ref('')
-const allArticles = ref([])
-const categoryList = ref([])
+const allArticles = ref<any[]>([])
+const categoryList = ref<any[]>([])
 const viewportWidth = ref((typeof window !== 'undefined' ? window.innerWidth : 1024))
 
-const onThisPageRef = useTemplateRef('onThisPageRef')
-const leftSidebarContent = useTemplateRef('leftSidebarContent')
-const rightSidebarContent = useTemplateRef('rightSidebarContent')
-const leftSidebarContainer = useTemplateRef('leftSidebarContainer')
-const rightSidebarContainer = useTemplateRef('rightSidebarContainer')
+const onThisPageRef = useTemplateRef<InstanceType<typeof OnThisPage>>('onThisPageRef')
+const leftSidebarContent = useTemplateRef<HTMLElement>('leftSidebarContent')
+const rightSidebarContent = useTemplateRef<HTMLElement>('rightSidebarContent')
+const leftSidebarContainer = useTemplateRef<HTMLElement>('leftSidebarContainer')
+const rightSidebarContainer = useTemplateRef<HTMLElement>('rightSidebarContainer')
 
 const isDesktop = computed(() => viewportWidth.value >= 992)
 const isNote = computed(() => !!(currentPost.value?.path && currentPost.value.path.startsWith('notes/')))
@@ -130,9 +130,9 @@ const currentPost = computed(() => {
 const groupLinearArticles = computed(() => {
   if (!currentPost.value) return []
   const [type, group] = currentPost.value.path.replace(/\.md$/, '').split('/')
-  const linear = []
+  const linear: { title: string; path: string }[] = []
 
-  const pushFromUrl = (title, articleUrl) => {
+  const pushFromUrl = (title: string, articleUrl: string) => {
     if (!articleUrl) return
     const parts = String(articleUrl).replace(/^\/+/, '').split('/')
     const i0 = parts[0] === 'article' ? 1 : 0
@@ -149,12 +149,12 @@ const groupLinearArticles = computed(() => {
       for (const item of section.items) {
         if (item?.name !== group) continue
         if (Array.isArray(item.articles)) {
-          item.articles.forEach(a => pushFromUrl(a.title, a.articleUrl))
+          item.articles.forEach((a: any) => pushFromUrl(a.title, a.articleUrl))
         }
         if (Array.isArray(item.categories)) {
-          item.categories.forEach(cat => {
+          item.categories.forEach((cat: any) => {
             if (Array.isArray(cat.articles)) {
-              cat.articles.forEach(a => pushFromUrl(a.title, a.articleUrl))
+              cat.articles.forEach((a: any) => pushFromUrl(a.title, a.articleUrl))
             }
           })
         }
@@ -189,20 +189,20 @@ const readingMinutes = computed(() => {
   return Math.max(1, Math.round(text.length / 800))
 })
 
-function getReadingTimeText(minutes) {
+function getReadingTimeText(minutes: number) {
   const isEnglish = locale.value === 'en-US'
   const template = isEnglish ? 'Reading about {minutes} minutes' : '阅读约 {minutes} 分钟'
   return template.replace('{minutes}', minutes.toString())
 }
 
-function toArticle(p) {
+function toArticle(p: string) {
   return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } }
 }
 
 function buildFromCategories() {
-  const all = []
+  const all: any[] = []
 
-  const pushArticle = (artTitle, articleUrl, tags = [], dateStr = '') => {
+  const pushArticle = (artTitle: string, articleUrl: string, tags: any[] = [], dateStr: string = '') => {
     if (typeof articleUrl !== 'string' || !articleUrl.trim()) return
     const parts = articleUrl.replace(/^\/+/, '').split('/')
     const idxArticle = parts[0] === 'article' ? 1 : 0
@@ -220,18 +220,18 @@ function buildFromCategories() {
     const categoryData = loadCategories()
 
     if (Array.isArray(categoryData)) {
-      categoryData.forEach(section => {
+      categoryData.forEach((section: any) => {
         if (!Array.isArray(section.items)) return
-        section.items.forEach(item => {
+        section.items.forEach((item: any) => {
           const itemLatest = item?.stats?.latestDate || ''
           if (Array.isArray(item.articles)) {
-            item.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest))
+            item.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest))
           }
           if (Array.isArray(item.categories)) {
-            item.categories.forEach(cat => {
+            item.categories.forEach((cat: any) => {
               const catLatest = cat?.stats?.latestDate || itemLatest || ''
               if (Array.isArray(cat.articles)) {
-                cat.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest))
+                cat.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest))
               }
             })
           }
@@ -252,7 +252,7 @@ function onResize() {
   updateSidebarDimensions()
 }
 
-function normalizeRoutePathParam(p) {
+function normalizeRoutePathParam(p: string | string[]) {
   return Array.isArray(p) ? p.join('/') : (typeof p === 'string' && p.length ? p : '')
 }
 
@@ -316,7 +316,8 @@ function updateSidebarDimensions() {
   const remainingH = Math.max(0, docH - scrollTop - headerH - footerH - 40)
   const availableH = Math.min(viewportH - headerH - 40, remainingH)
 
-  [leftContent, rightContent].forEach(el => {
+  const sidebarEls = [leftContent, rightContent]
+  sidebarEls.forEach(el => {
     el.style.maxHeight = `${availableH}px`
     el.style.overflowY = el.scrollHeight > availableH ? 'auto' : 'visible'
   })

@@ -86,7 +86,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineOptions({ name: 'CategoryView' })
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -99,7 +99,7 @@ useHead({ title: 'gblog - Categories' })
 const { t, locale } = useI18n()
 const router = useRouter()
 
-const categoryList = ref([])
+const categoryList = ref<any[]>([])
 
 const pageTitle = computed(() => t('categories'))
 const notesTitle = computed(() => t('notes'))
@@ -119,17 +119,17 @@ function loadCategoryData() {
   }
 }
 
-function getLatestDate(item) {
+function getLatestDate(item: any) {
   return (item && item.stats && item.stats.latestDate) || ''
 }
 
-function normalizeUrl(u) {
+function normalizeUrl(u: any) {
   if (typeof u !== 'string' || !u.trim()) return ''
   if (/^https?:\/\//i.test(u)) return u
   return 'https://' + u.replace(/^\/+/, '')
 }
 
-function formatMonth(dateStr) {
+function formatMonth(dateStr: string) {
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return dateStr
   const y = d.getFullYear()
@@ -137,14 +137,14 @@ function formatMonth(dateStr) {
   return `${y}-${m}`
 }
 
-function formatWords(n) {
+function formatWords(n: any) {
   const num = Number(n)
-  if (!Number.isFinite(num)) return n
+  if (!Number.isFinite(num)) return num
   if (num >= 10000) return Math.round(num / 1000) + 'k'
   return String(num)
 }
 
-function handleSeeMore(item) {
+function handleSeeMore(item: any) {
   const root = item?.root
   if (root) {
     router.push(root).catch(err => {

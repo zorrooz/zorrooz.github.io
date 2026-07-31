@@ -5,6 +5,7 @@ export default {
   words: '字数',
   prevPage: '上一页',
   nextPage: '下一页',
+  pagination: '分页导航',
 
   // 导航
   categories: '分类',

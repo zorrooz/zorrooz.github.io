@@ -8,12 +8,12 @@
   </button>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const sourceId = 'btt'
 const rafPending = ref(false)
-const rafLastBaseTop = ref(null)
+const rafLastBaseTop = ref<number | null>(null)
 
 const showBackToTop = ref(false)
 const isDragging = ref(false)
@@ -29,12 +29,12 @@ function getBounds() {
   return { gap: GAP, minTop: MARGIN + GAP, maxTop: window.innerHeight - BUTTON_HEIGHT - MARGIN }
 }
 
-function clampTop(top) {
+function clampTop(top: number) {
   const { minTop, maxTop } = getBounds()
   return Math.max(minTop, Math.min(maxTop, top))
 }
 
-function rafDispatchBaseTop(baseTop) {
+function rafDispatchBaseTop(baseTop: number) {
   rafLastBaseTop.value = baseTop
   if (rafPending.value) return
   rafPending.value = true
@@ -44,9 +44,10 @@ function rafDispatchBaseTop(baseTop) {
   })
 }
 
-function syncBaseTop(e) {
-  const base = e?.detail?.baseTop
-  const source = e?.detail?.source
+function syncBaseTop(e: Event) {
+  const detail = (e as CustomEvent).detail
+  const base = detail?.baseTop
+  const source = detail?.source
   if (source === sourceId) return
   if (typeof base === 'number') buttonTop.value = clampTop(base)
 }
@@ -60,10 +61,10 @@ function handleScroll() {
 
 function backToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) }
 function handleClick() { if (!isDragging.value) backToTop() }
-function handleTouchStart(e) {
+function handleTouchStart(e: TouchEvent) {
   e.preventDefault(); isDragging.value = true; touchMoved.value = false; startY.value = e.touches[0].clientY; initialTop.value = buttonTop.value
 }
-function handleTouchMove(e) {
+function handleTouchMove(e: TouchEvent) {
   touchMoved.value = true
   const currentY = e.touches[0].clientY
   const diffY = currentY - startY.value
@@ -71,7 +72,7 @@ function handleTouchMove(e) {
   rafDispatchBaseTop(buttonTop.value)
   e.preventDefault()
 }
-function handleTouchEnd(e) { e.preventDefault(); isDragging.value = false; if (!touchMoved.value) backToTop() }
+function handleTouchEnd(e: TouchEvent) { e.preventDefault(); isDragging.value = false; if (!touchMoved.value) backToTop() }
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)

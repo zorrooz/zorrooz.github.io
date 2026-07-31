@@ -3,7 +3,7 @@
   <div class="markdown-body" v-html="renderedMarkdown" ref="markdownContainer"></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 /*
   RenderMarkdown
   - 接收构建期预渲染的 HTML，处理图片路径、代码复制和标题锚点
@@ -12,18 +12,25 @@ import { nextTick, ref, useTemplateRef, watch } from 'vue'
 
 const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
 
-const props = defineProps({
-  rawMarkdown: { type: String, default: '' },
-  articlePath: { type: String, default: '' },
-  articleTitle: { type: String, default: '' }
-})
+const props = withDefaults(
+  defineProps<{
+    rawMarkdown?: string
+    articlePath?: string
+    articleTitle?: string
+  }>(),
+  {
+    rawMarkdown: '',
+    articlePath: '',
+    articleTitle: ''
+  }
+)
 
 const emit = defineEmits(['markdown-rendered'])
 
 const renderedMarkdown = ref('')
-const markdownContainer = useTemplateRef('markdownContainer')
+const markdownContainer = useTemplateRef<HTMLElement>('markdownContainer')
 
-async function initRender(htmlContent) {
+async function initRender(htmlContent: string) {
   const processedHtml = rewriteImageLinks(htmlContent, props.articlePath)
   renderedMarkdown.value = processedHtml
   await nextTick()
@@ -32,14 +39,14 @@ async function initRender(htmlContent) {
   enhanceHeadings()
 }
 
-function rewriteImageLinks(html, articlePath) {
+function rewriteImageLinks(html: string, articlePath: string) {
   try {
     const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/')
 
-    const toAssetUrl = (relPath) => {
+    const toAssetUrl = (relPath: string) => {
       if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath
       const parts = (articleDir + '/' + relPath).split('/').filter(p => p && p !== '.')
-      const stack = []
+      const stack: string[] = []
       parts.forEach(p => p === '..' ? stack.pop() : stack.push(p))
       const normalized = stack.join('/')
       const candidateKeys = [
@@ -54,7 +61,7 @@ function rewriteImageLinks(html, articlePath) {
     }
 
     return html
-      .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) =>
+      .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (_m, pre, src, post) =>
         `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`)
   } catch (e) {
     console.warn('rewriteImageLinks failed', e)
@@ -69,7 +76,7 @@ function enhanceHeadings() {
   addAnchorLinks(container)
 }
 
-function cleanDuplicateH1(container) {
+function cleanDuplicateH1(container: HTMLElement) {
   if (!props.articleTitle) return
   const pageTitle = props.articleTitle.trim().toLowerCase()
   container.querySelectorAll('h1').forEach(h1 => {
@@ -82,8 +89,8 @@ function cleanDuplicateH1(container) {
   })
 }
 
-function addAnchorLinks(container) {
-  const scrollToHeading = (heading, anchorBtn) => {
+function addAnchorLinks(container: HTMLElement) {
+  const scrollToHeading = (heading: Element, anchorBtn: HTMLButtonElement) => {
     const targetTop = window.scrollY + heading.getBoundingClientRect().top - 8
     window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
     setTimeout(() => anchorBtn.blur(), 300)
@@ -142,17 +149,17 @@ function enhanceCodeBlocks() {
         <path d="M5 4C4.44772 4 4 4.44772 4 5V11C4 11.5523 4.44772 12 5 12H11C11.5523 12 12 11.5523 12 11V5C12 4.44772 11.5523 4 11 4H5Z"/>
       </svg>
     `
-    copyButton.addEventListener('click', () => copyToClipboard(code.textContent, copyButton))
+    copyButton.addEventListener('click', () => copyToClipboard(code.textContent ?? '', copyButton))
 
     header.append(langLabel, copyButton)
     const wrapper = document.createElement('div')
     wrapper.className = 'code-block-wrapper'
-    pre.parentNode.insertBefore(wrapper, pre)
+    pre.parentNode?.insertBefore(wrapper, pre)
     wrapper.append(header, pre)
   })
 }
 
-async function copyToClipboard(text, button) {
+async function copyToClipboard(text: string, button: HTMLButtonElement) {
   try {
     await navigator.clipboard.writeText(text)
   } catch (err) {
@@ -168,13 +175,13 @@ async function copyToClipboard(text, button) {
   }
 }
 
-function showCopyFeedback(button) {
+function showCopyFeedback(button: HTMLButtonElement) {
   const originalColor = button.style.color
   button.style.color = 'var(--app-success)'
   setTimeout(() => button.style.color = originalColor, 1000)
 }
 
-watch(() => props.rawMarkdown, initRender, { immediate: true, async: true })
+watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate: true })
 </script>
 
 <style>

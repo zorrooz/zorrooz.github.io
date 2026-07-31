@@ -44,18 +44,36 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { loadCategories } from '@/utils/contentLoader'
 
+interface TreeFile {
+  title: string
+  path: string
+}
+
+interface TreeDir {
+  name: string
+  type: string
+  files: TreeFile[]
+  children?: TreeDir[]
+}
+
+interface TreeCategory {
+  name: string
+  files: TreeFile[]
+  children: TreeDir[]
+}
+
 const { locale } = useI18n()
 const route = useRoute()
 
-const navigationTree = ref([])
+const navigationTree = ref<TreeCategory[]>([])
 const currentPath = ref('')
-const categoryData = ref([])
+const categoryData = ref<any[]>([])
 
 function loadCategoryData() {
   try {
@@ -66,11 +84,11 @@ function loadCategoryData() {
   }
 }
 
-function toArticle(path) {
+function toArticle(path: string) {
   return { name: 'Article', params: { path: path.replace(/\.md$/, '').split('/') } }
 }
 
-function isActive(path) {
+function isActive(path: string) {
   const current = currentPath.value.replace(/\.md$/, '')
   const articlePath = path.replace(/\.md$/, '')
 
@@ -88,7 +106,7 @@ function buildTree() {
   const type = segs[0]
   const group = segs[1]
 
-  let targetItem = null
+  let targetItem: any = null
   if (Array.isArray(categoryData.value)) {
     outer:
     for (const section of categoryData.value) {
@@ -99,12 +117,12 @@ function buildTree() {
         let hasTypeMatch = false
 
         if (Array.isArray(item.articles)) {
-          hasTypeMatch = item.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/`))
+          hasTypeMatch = item.articles.some((a: any) => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/`))
         }
         if (!hasTypeMatch && Array.isArray(item.categories)) {
-          hasTypeMatch = item.categories.some(cat =>
+          hasTypeMatch = item.categories.some((cat: any) =>
             Array.isArray(cat.articles) &&
-            cat.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/${group}/`))
+            cat.articles.some((a: any) => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/${group}/`))
           )
         }
 
@@ -117,10 +135,10 @@ function buildTree() {
   }
   if (!targetItem) { navigationTree.value = []; return }
 
-  const rootFiles = []
-  const children = []
+  const rootFiles: TreeFile[] = []
+  const children: TreeDir[] = []
 
-  const toFile = (title, articleUrl) => {
+  const toFile = (title: string, articleUrl: string): TreeFile => {
     const parts = String(articleUrl).replace(/^\/+/, '').split('/')
     const i0 = parts[0] === 'article' ? 1 : 0
     const t = parts[i0]
@@ -131,14 +149,14 @@ function buildTree() {
   }
 
   if (Array.isArray(targetItem.articles)) {
-    targetItem.articles.forEach(a => { if (a?.articleUrl) rootFiles.push(toFile(a.title, a.articleUrl)) })
+    targetItem.articles.forEach((a: any) => { if (a?.articleUrl) rootFiles.push(toFile(a.title, a.articleUrl)) })
   }
 
   if (Array.isArray(targetItem.categories)) {
-    targetItem.categories.forEach(cat => {
-      const files = []
+    targetItem.categories.forEach((cat: any) => {
+      const files: TreeFile[] = []
       if (Array.isArray(cat.articles)) {
-        cat.articles.forEach(a => { if (a?.articleUrl) files.push(toFile(a.title, a.articleUrl)) })
+        cat.articles.forEach((a: any) => { if (a?.articleUrl) files.push(toFile(a.title, a.articleUrl)) })
       }
       if (files.length) {
         children.push({
@@ -158,7 +176,8 @@ function buildTree() {
 }
 
 function syncPathAndBuild() {
-  currentPath.value = route.params.path ? route.params.path.join('/') : ''
+  const p = route.params.path
+  currentPath.value = Array.isArray(p) ? p.join('/') : (p || '')
   buildTree()
 }
 

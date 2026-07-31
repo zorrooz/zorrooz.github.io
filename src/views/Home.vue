@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 defineOptions({ name: 'HomeView' })
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -46,7 +46,7 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const postData = ref([])
+const postData = ref<any[]>([])
 const sidebarContent = useTemplateRef('sidebarContent')
 const sidebarContainer = useTemplateRef('sidebarContainer')
 
@@ -58,8 +58,8 @@ const filteredDocs = computed(() => {
   return postData.value.filter(p => Array.isArray(p.tags) && p.tags.includes(tag))
 })
 const tagList = computed(() => {
-  const set = new Set()
-  postData.value.forEach(p => (p.tags || []).forEach(t => set.add(t)))
+  const set = new Set<string>()
+  postData.value.forEach(p => (p.tags || []).forEach((t: any) => set.add(t)))
   return Array.from(set).sort()
 })
 
