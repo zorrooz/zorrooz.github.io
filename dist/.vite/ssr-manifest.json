@@ -1,5 +1,6 @@
 {
   "\u0000plugin-vue:export-helper": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -65,6 +66,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "\u0000vite/modulepreload-polyfill.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -130,6 +132,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "\u0000vite/preload-helper.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -195,6 +198,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "index.html": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -260,6 +264,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@intlify/core-base/dist/core-base.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -325,6 +330,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@intlify/message-compiler/dist/message-compiler.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -390,6 +396,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@intlify/shared/dist/shared.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -455,6 +462,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@intlify/vue-i18n-core/dist/vue-i18n-core.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -685,6 +693,7 @@
     "/assets/bootstrap.esm-inoyDHN5.js"
   ],
   "node_modules/@unhead/vue/dist/client.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -750,6 +759,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@unhead/vue/dist/shared/vue.BM998iwd.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -815,6 +825,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@unhead/vue/dist/shared/vue.Cr7xSEtD.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -880,6 +891,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@unhead/vue/dist/shared/vue.N9zWjxoK.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -945,6 +957,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1010,6 +1023,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1075,6 +1089,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1140,6 +1155,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/@vue/shared/dist/shared.esm-bundler.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1208,6 +1224,7 @@
     "/assets/bootstrap.esm-inoyDHN5.js"
   ],
   "node_modules/katex/dist/katex.min.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1273,10 +1290,11 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/minisearch/dist/es/index.js": [
-    "/assets/SearchModal-DZa-Wzjw.js",
+    "/assets/SearchModal-CrO84Hpo.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "node_modules/pinia/dist/pinia.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1342,6 +1360,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/unhead/dist/client.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1407,6 +1426,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/unhead/dist/shared/unhead.B3VbJo7Y.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1472,6 +1492,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/unhead/dist/shared/unhead.CaI5ZD4O.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1537,6 +1558,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/unhead/dist/shared/unhead.CbpEuj3y.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1602,6 +1624,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/unhead/dist/shared/unhead.yem5I2v_.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1667,6 +1690,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/unhead/node_modules/hookable/dist/index.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1732,6 +1756,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/vite-ssg/dist/index.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1797,6 +1822,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/vite-ssg/dist/shared/vite-ssg.C6pK7rvr.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1862,6 +1888,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/vite-ssg/dist/shared/vite-ssg.ETIvV-80.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1927,6 +1954,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/vue-router/dist/vue-router.mjs": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -1992,6 +2020,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/App.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2057,6 +2086,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/App.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2122,6 +2152,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/App.vue?vue&type=style&index=0&scoped=0ef6ab13&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2187,6 +2218,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/icons/change-language.png": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2252,6 +2284,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/icons/change-theme.png": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2317,6 +2350,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/icons/gblog.svg": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2382,6 +2416,73 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/icons/menu.png": [
+    "/assets/search-DNHU7N8H.png",
+    "/assets/change-theme-C-kNbcY2.png",
+    "/assets/change-language-DPCJmbbl.png",
+    "/assets/Agave-Regular-BYVuOv7L.ttf",
+    "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
+    "/assets/KaTeX_AMS-Regular-BQhdFMY1.woff2",
+    "/assets/KaTeX_AMS-Regular-DMm9YOAa.woff",
+    "/assets/KaTeX_AMS-Regular-DRggAlZN.ttf",
+    "/assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2",
+    "/assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff",
+    "/assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf",
+    "/assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2",
+    "/assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff",
+    "/assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf",
+    "/assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2",
+    "/assets/KaTeX_Fraktur-Bold-BsDP51OF.woff",
+    "/assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf",
+    "/assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2",
+    "/assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff",
+    "/assets/KaTeX_Fraktur-Regular-CB_wures.ttf",
+    "/assets/KaTeX_Main-Bold-Cx986IdX.woff2",
+    "/assets/KaTeX_Main-Bold-Jm3AIy58.woff",
+    "/assets/KaTeX_Main-Bold-waoOVXN0.ttf",
+    "/assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2",
+    "/assets/KaTeX_Main-BoldItalic-SpSLRI95.woff",
+    "/assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf",
+    "/assets/KaTeX_Main-Italic-NWA7e6Wa.woff2",
+    "/assets/KaTeX_Main-Italic-BMLOBm91.woff",
+    "/assets/KaTeX_Main-Italic-3WenGoN9.ttf",
+    "/assets/KaTeX_Main-Regular-B22Nviop.woff2",
+    "/assets/KaTeX_Main-Regular-Dr94JaBh.woff",
+    "/assets/KaTeX_Main-Regular-ypZvNtVU.ttf",
+    "/assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2",
+    "/assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff",
+    "/assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf",
+    "/assets/KaTeX_Math-Italic-t53AETM-.woff2",
+    "/assets/KaTeX_Math-Italic-DA0__PXp.woff",
+    "/assets/KaTeX_Math-Italic-flOr_0UB.ttf",
+    "/assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2",
+    "/assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff",
+    "/assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf",
+    "/assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2",
+    "/assets/KaTeX_SansSerif-Italic-DN2j7dab.woff",
+    "/assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf",
+    "/assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2",
+    "/assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff",
+    "/assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf",
+    "/assets/KaTeX_Script-Regular-D3wIWfF6.woff2",
+    "/assets/KaTeX_Script-Regular-D5yQViql.woff",
+    "/assets/KaTeX_Script-Regular-C5JkGWo-.ttf",
+    "/assets/KaTeX_Size1-Regular-mCD8mA8B.woff2",
+    "/assets/KaTeX_Size1-Regular-C195tn64.woff",
+    "/assets/KaTeX_Size1-Regular-Dbsnue_I.ttf",
+    "/assets/KaTeX_Size2-Regular-Dy4dx90m.woff2",
+    "/assets/KaTeX_Size2-Regular-oD1tc_U0.woff",
+    "/assets/KaTeX_Size2-Regular-B7gKUWhC.ttf",
+    "/assets/KaTeX_Size3-Regular-CTq5MqoE.woff",
+    "/assets/KaTeX_Size3-Regular-DgpXs0kz.ttf",
+    "/assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2",
+    "/assets/KaTeX_Size4-Regular-BF-4gkZK.woff",
+    "/assets/KaTeX_Size4-Regular-DWFBv043.ttf",
+    "/assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2",
+    "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
+    "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
+  ],
+  "src/assets/icons/search.png": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2447,6 +2548,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/styles/fa-subset.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2512,6 +2614,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/styles/highlight/github-dark-dimmed.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2577,6 +2680,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/assets/styles/highlight/github.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2642,6 +2746,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/AppFooter.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2707,6 +2812,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/AppHeader.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2772,6 +2878,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/AppHeader.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2836,7 +2943,8 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/layout/AppHeader.vue?vue&type=style&index=0&scoped=972e5298&lang.css": [
+  "src/components/layout/AppHeader.vue?vue&type=style&index=0&scoped=c45482b7&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2902,6 +3010,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/NavigationTree.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -2967,6 +3076,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/NavigationTree.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3032,6 +3142,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/NavigationTree.vue?vue&type=style&index=0&scoped=01c6ce83&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3097,6 +3208,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/OnThisPage.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3162,6 +3274,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/OnThisPage.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3227,6 +3340,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/OnThisPage.vue?vue&type=style&index=0&scoped=c6c9ba0c&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3292,6 +3406,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/PostList.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3357,6 +3472,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/PostList.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3422,6 +3538,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/PostList.vue?vue&type=style&index=0&scoped=f040d39b&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3487,6 +3604,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/ProfileCard.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3552,6 +3670,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/RenderMarkdown.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3617,6 +3736,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/RenderMarkdown.vue?vue&type=style&index=0&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3682,6 +3802,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/TagCloud.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3747,6 +3868,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/TagCloud.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3812,6 +3934,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/layout/TagCloud.vue?vue&type=style&index=0&scoped=f4999d3b&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3877,6 +4000,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/BackToTop.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -3942,6 +4066,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/BackToTop.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4007,6 +4132,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/BackToTop.vue?vue&type=style&index=0&scoped=ee6f08da&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4072,18 +4198,19 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/SearchModal.vue": [
-    "/assets/SearchModal-DZa-Wzjw.js",
+    "/assets/SearchModal-CrO84Hpo.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-DZa-Wzjw.js",
+    "/assets/SearchModal-CrO84Hpo.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=3c591a86&lang.css": [
-    "/assets/SearchModal-DZa-Wzjw.js",
+    "/assets/SearchModal-CrO84Hpo.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "src/components/widgets/TocDrawer.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4149,6 +4276,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/TocDrawer.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4214,6 +4342,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/TocDrawer.vue?vue&type=style&index=0&scoped=35be7386&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4279,6 +4408,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/about-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4344,6 +4474,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/about.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4409,6 +4540,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/categories-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4474,6 +4606,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/categories.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4539,6 +4672,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Omics/genomics/bwa/bwa-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4604,6 +4738,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Omics/genomics/bwa/bwa.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4669,6 +4804,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Omics/proteomics/maxquant/maxquant-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4734,6 +4870,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Omics/proteomics/maxquant/maxquant.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4799,6 +4936,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4864,6 +5002,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4929,6 +5068,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/python/biopython/biopython-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -4994,6 +5134,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/python/biopython/biopython.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5059,6 +5200,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/python/fastq/fastq-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5124,6 +5266,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/python/fastq/fastq.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5189,6 +5332,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/python/pandas/pandas-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5254,6 +5398,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/python/pandas/pandas.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5319,6 +5464,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/r/demo/demo-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5384,6 +5530,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/r/demo/demo.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5449,6 +5596,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/r/ggplot2/ggplot2-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5514,6 +5662,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/r/ggplot2/ggplot2.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5579,6 +5728,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/shell/bash/bash-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5644,6 +5794,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/notes/Programming/shell/bash/bash.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5709,6 +5860,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/projects/Biocrawler/api/api-demo/api-demo-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5774,6 +5926,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/projects/Biocrawler/api/api-demo/api-demo.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5839,6 +5992,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/projects/Biocrawler/installation/installation-demo/installation-demo-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5904,6 +6058,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/projects/Biocrawler/installation/installation-demo/installation-demo.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -5969,6 +6124,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6034,6 +6190,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6099,6 +6256,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/topics/StructureOfProteinDemo/results/results-demo/results-demo-en.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6164,6 +6322,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/html/topics/StructureOfProteinDemo/results/results-demo/results-demo.html?raw": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6229,6 +6388,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/notes-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6294,6 +6454,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/notes.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6359,6 +6520,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/posts-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6424,6 +6586,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/posts.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6489,6 +6652,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/projects-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6554,6 +6718,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/projects.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6619,6 +6784,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/resources-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6684,6 +6850,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/resources.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6755,6 +6922,7 @@
     "/assets/search-index-CoIlhH-g.js"
   ],
   "src/content/tags-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6820,6 +6988,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/tags.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6885,6 +7054,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/topics-en.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -6950,6 +7120,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/content/topics.json": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7015,6 +7186,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/main.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7080,6 +7252,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/router/index.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7145,6 +7318,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/stores/app.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7210,6 +7384,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/stores/i18n.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7275,6 +7450,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/stores/locales/en-US.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7340,6 +7516,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/stores/locales/zh-CN.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7405,6 +7582,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/stores/styles/global.scss": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7470,6 +7648,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/stores/theme.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7535,6 +7714,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/utils/contentLoader.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7600,6 +7780,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/utils/localePath.js": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7665,6 +7846,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/About.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7730,6 +7912,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/About.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7795,6 +7978,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/About.vue?vue&type=style&index=0&scoped=c1666542&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7860,6 +8044,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Article.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7925,6 +8110,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Article.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -7990,6 +8176,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Article.vue?vue&type=style&index=0&scoped=644dac6c&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8055,6 +8242,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Category.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8120,6 +8308,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Category.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8185,6 +8374,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Category.vue?vue&type=style&index=0&scoped=1b3972e9&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8250,6 +8440,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Home.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8315,6 +8506,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Home.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8380,6 +8572,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Home.vue?vue&type=style&index=0&scoped=5de0e84a&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8445,6 +8638,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Resource.vue": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8510,6 +8704,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Resource.vue?vue&type=script&setup=true&lang.ts": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
@@ -8575,6 +8770,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/views/Resource.vue?vue&type=style&index=0&scoped=633c06d9&lang.css": [
+    "/assets/search-DNHU7N8H.png",
     "/assets/change-theme-C-kNbcY2.png",
     "/assets/change-language-DPCJmbbl.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",

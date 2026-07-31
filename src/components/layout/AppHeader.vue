@@ -10,9 +10,9 @@
           </RouterLink>
 
           <div class="d-flex d-lg-none ms-auto">
-            <button class="btn btn-sm mx-1 p-2 btn-icon" style="font-size: 1.2em;" @click="emit('open-search')"
-              @focus="blurFocus" :aria-label="t('search')">
-              <i class="fas fa-search"></i>
+            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="emit('open-search')" @focus="blurFocus"
+              :aria-label="t('search')">
+              <img src="@/assets/icons/search.png" alt="" width="20" height="20">
             </button>
             <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
@@ -39,9 +39,9 @@
           </div>
 
           <div class="d-none d-lg-flex ms-auto">
-            <button class="btn btn-sm me-2 btn-icon" style="font-size: 1.2em;" @click="emit('open-search')"
-              @focus="blurFocus" :aria-label="t('search')">
-              <i class="fas fa-search"></i>
+            <button class="btn btn-sm me-2 btn-icon" @click="emit('open-search')" @focus="blurFocus"
+              :aria-label="t('search')">
+              <img src="@/assets/icons/search.png" alt="" width="20" height="20">
             </button>
             <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
