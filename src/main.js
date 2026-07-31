@@ -8,6 +8,7 @@ import { routes } from './router'
 import './stores/styles/global.scss'
 import './assets/styles/highlight/github.css'
 import './assets/styles/highlight/github-dark-dimmed.css'
+import './assets/styles/fa-subset.css'
 import i18n from './stores/i18n'
 import 'katex/dist/katex.min.css'
 

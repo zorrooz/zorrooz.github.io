@@ -16,9 +16,11 @@
     "format": "prettier --write src/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --repo https://github.com/zorrooz/zorrooz.github.io",
-    "translate": "node ./src/utils/translator/translatorCli.js"
+    "translate": "node ./src/utils/translator/translatorCli.js",
+    "subset:icons": "node ./scripts/subset-fa-icons.mjs"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "6.4.0",
     "@popperjs/core": "^2.11.8",
     "@unhead/vue": "^2.1.16",
     "bootstrap": "^5.3.7",
