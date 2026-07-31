@@ -38,11 +38,15 @@ const ICONS = {
 
 const css = fs.readFileSync(faCssPath, 'utf-8')
 
+// Returns the full codepoint INCLUDING the leading 'f' (e.g. 'f005' for fa-star).
+// FA icon codepoints are 5 hex digits with a leading 'f'; dropping it (as 'U+005')
+// silently produces a garbage font, so both the CSS rule and the pyftsubset
+// --unicodes argument derive from this value.
 const codepointFor = (name) => {
-  const re = new RegExp(`\\.fa-${name}:before[^{]*\\{content:"\\\\f([0-9a-f]+)"`)
+  const re = new RegExp(`\\.fa-${name}:before[^{]*\\{content:"\\\\f([0-9a-f]{3})"`)
   const m = css.match(re)
   if (!m) throw new Error(`icon "fa-${name}" not found in all.min.css`)
-  return m[1]
+  return `f${m[1]}`
 }
 
 const subset = (family, codepoints, outFile) => {
@@ -53,11 +57,29 @@ const subset = (family, codepoints, outFile) => {
     [source, `--unicodes=${unicodeArg}`, '--flavor=woff2', `--output-file=${outFile}`],
     { stdio: 'inherit' },
   )
+  verifyCmap(outFile, codepoints, family)
+}
+
+// Guards against silent font corruption: the produced woff2 must map every
+// requested codepoint (asserted via fontTools' getBestCmap in Python).
+const verifyCmap = (outFile, codepoints, family) => {
+  const py = [
+    'from fontTools.ttLib import TTFont',
+    'import sys',
+    't = TTFont(sys.argv[1]).getBestCmap()',
+    'want = set(int(x, 16) for x in sys.argv[2:])',
+    'have = set(t) if t else set()',
+    'missing = sorted(hex(c) for c in want - have)',
+    'if missing:',
+    '  raise SystemExit("cmap missing: " + ", ".join(missing))',
+    'print("cmap ok:", ", ".join(hex(c) for c in sorted(have)))',
+  ].join('\n')
+  execFileSync('python', ['-c', py, outFile, ...codepoints], { stdio: 'inherit' })
 }
 
 const makeRules = (family) => {
   return ICONS[family]
-    .map((name) => `.fa-${name}:before{content:"\\f${codepointFor(name)}"}`)
+    .map((name) => `.fa-${name}:before{content:"\\${codepointFor(name)}"}`)
     .join('')
 }
 

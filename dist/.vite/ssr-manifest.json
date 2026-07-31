@@ -1273,7 +1273,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/minisearch/dist/es/index.js": [
-    "/assets/SearchModal-MTK6FENr.js",
+    "/assets/SearchModal-DZa-Wzjw.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "node_modules/pinia/dist/pinia.mjs": [
@@ -4072,15 +4072,15 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/SearchModal.vue": [
-    "/assets/SearchModal-MTK6FENr.js",
+    "/assets/SearchModal-DZa-Wzjw.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-MTK6FENr.js",
+    "/assets/SearchModal-DZa-Wzjw.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=3c591a86&lang.css": [
-    "/assets/SearchModal-MTK6FENr.js",
+    "/assets/SearchModal-DZa-Wzjw.js",
     "/assets/SearchModal-AvSrmt4E.css"
   ],
   "src/components/widgets/TocDrawer.vue": [
