@@ -44,139 +44,135 @@
   </div>
 </template>
 
-<script>
-/* 
-  NavigationTree
-  - 根据 categories 数据构建分级导航树
-*/
+<script setup>
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { loadCategories } from '@/utils/contentLoader';
+import { useRoute } from 'vue-router'
+import { loadCategories } from '@/utils/contentLoader'
 
-export default {
-  name: 'NavigationTree',
-  setup() {
-    const { locale } = useI18n()
-    return { locale }
-  },
-  data() {
-    return {
-      navigationTree: [],
-      currentPath: '',
-      categoryData: []
-    };
-  },
-  watch: {
-    '$route': {
-      handler(to) {
-        this.currentPath = to.params.path ? to.params.path.join('/') : '';
-        this.buildTree();
-      },
-      immediate: true,
-      deep: true
-    },
-    locale() { this.loadCategoryData().then(() => { this.currentPath = this.$route.params.path ? this.$route.params.path.join('/') : ''; this.buildTree(); }); }
-  },
-  async mounted() {
-    await this.loadCategoryData();
-    this.buildTree();
-  },
-  methods: {
-    async loadCategoryData() {
-      try {
-        this.categoryData = await loadCategories() || [];
-      } catch (error) {
-        console.error('Failed to load category data:', error);
-        this.categoryData = [];
-      }
-      return Promise.resolve();
-    },
-    toArticle(path) {
-      return { name: 'Article', params: { path: path.replace(/\.md$/, '').split('/') } };
-    },
-    isActive(path) {
-      const currentPath = this.currentPath.replace(/\.md$/, '');
-      const articlePath = path.replace(/\.md$/, '');
+const { locale } = useI18n()
+const route = useRoute()
 
-      const cleanCurrentPath = currentPath.replace(/-en$/, '');
-      const cleanArticlePath = articlePath.replace(/-en$/, '');
+const navigationTree = ref([])
+const currentPath = ref('')
+const categoryData = ref([])
 
-      return cleanCurrentPath === cleanArticlePath;
-    },
-    buildTree() {
-      const path = this.currentPath; if (!path) { this.navigationTree = []; return; }
-      const segs = path.split('/').filter(Boolean); if (segs.length < 2) { this.navigationTree = []; return; }
-      const type = segs[0]; const group = segs[1];
+function loadCategoryData() {
+  try {
+    categoryData.value = loadCategories() || []
+  } catch (error) {
+    console.error('Failed to load category data:', error)
+    categoryData.value = []
+  }
+}
 
-      let targetItem = null;
-      if (Array.isArray(this.categoryData)) {
-        outer:
-        for (const section of this.categoryData) {
-          if (!Array.isArray(section.items)) continue;
-          for (const item of section.items) {
-            if (item?.name !== group) continue;
+function toArticle(path) {
+  return { name: 'Article', params: { path: path.replace(/\.md$/, '').split('/') } }
+}
 
-            let hasTypeMatch = false;
+function isActive(path) {
+  const current = currentPath.value.replace(/\.md$/, '')
+  const articlePath = path.replace(/\.md$/, '')
 
-            if (Array.isArray(item.articles)) {
-              hasTypeMatch = item.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/`));
-            }
-            if (!hasTypeMatch && Array.isArray(item.categories)) {
-              hasTypeMatch = item.categories.some(cat =>
-                Array.isArray(cat.articles) &&
-                cat.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/${group}/`))
-              );
-            }
+  const cleanCurrentPath = current.replace(/-en$/, '')
+  const cleanArticlePath = articlePath.replace(/-en$/, '')
 
-            if (hasTypeMatch) {
-              targetItem = item;
-              break outer;
-            }
-          }
+  return cleanCurrentPath === cleanArticlePath
+}
+
+function buildTree() {
+  const path = currentPath.value
+  if (!path) { navigationTree.value = []; return }
+  const segs = path.split('/').filter(Boolean)
+  if (segs.length < 2) { navigationTree.value = []; return }
+  const type = segs[0]
+  const group = segs[1]
+
+  let targetItem = null
+  if (Array.isArray(categoryData.value)) {
+    outer:
+    for (const section of categoryData.value) {
+      if (!Array.isArray(section.items)) continue
+      for (const item of section.items) {
+        if (item?.name !== group) continue
+
+        let hasTypeMatch = false
+
+        if (Array.isArray(item.articles)) {
+          hasTypeMatch = item.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/`))
+        }
+        if (!hasTypeMatch && Array.isArray(item.categories)) {
+          hasTypeMatch = item.categories.some(cat =>
+            Array.isArray(cat.articles) &&
+            cat.articles.some(a => typeof a?.articleUrl === 'string' && a.articleUrl.includes(`/article/${type}/${group}/`))
+          )
+        }
+
+        if (hasTypeMatch) {
+          targetItem = item
+          break outer
         }
       }
-      if (!targetItem) { this.navigationTree = []; return; }
-
-      const rootFiles = [];
-      const children = [];
-
-      const toFile = (title, articleUrl) => {
-        const parts = String(articleUrl).replace(/^\/+/, '').split('/');
-        const i0 = parts[0] === 'article' ? 1 : 0;
-        const t = parts[i0];
-        const g = parts[i0 + 1];
-        const rest = parts.slice(i0 + 2);
-        const pathNoExt = `${t}/${g}/${rest.join('/')}`;
-        return { title, path: `${pathNoExt}.md` };
-      };
-
-      if (Array.isArray(targetItem.articles)) {
-        targetItem.articles.forEach(a => { if (a?.articleUrl) rootFiles.push(toFile(a.title, a.articleUrl)); });
-      }
-
-      if (Array.isArray(targetItem.categories)) {
-        targetItem.categories.forEach(cat => {
-          const files = [];
-          if (Array.isArray(cat.articles)) {
-            cat.articles.forEach(a => { if (a?.articleUrl) files.push(toFile(a.title, a.articleUrl)); });
-          }
-          if (files.length) {
-            children.push({
-              name: cat.title || cat.key,
-              type: 'directory',
-              files
-            });
-          }
-        });
-      }
-
-      this.navigationTree = [{
-        name: targetItem.title || targetItem.name || group,
-        files: rootFiles,
-        children
-      }];
     }
   }
-};
+  if (!targetItem) { navigationTree.value = []; return }
+
+  const rootFiles = []
+  const children = []
+
+  const toFile = (title, articleUrl) => {
+    const parts = String(articleUrl).replace(/^\/+/, '').split('/')
+    const i0 = parts[0] === 'article' ? 1 : 0
+    const t = parts[i0]
+    const g = parts[i0 + 1]
+    const rest = parts.slice(i0 + 2)
+    const pathNoExt = `${t}/${g}/${rest.join('/')}`
+    return { title, path: `${pathNoExt}.md` }
+  }
+
+  if (Array.isArray(targetItem.articles)) {
+    targetItem.articles.forEach(a => { if (a?.articleUrl) rootFiles.push(toFile(a.title, a.articleUrl)) })
+  }
+
+  if (Array.isArray(targetItem.categories)) {
+    targetItem.categories.forEach(cat => {
+      const files = []
+      if (Array.isArray(cat.articles)) {
+        cat.articles.forEach(a => { if (a?.articleUrl) files.push(toFile(a.title, a.articleUrl)) })
+      }
+      if (files.length) {
+        children.push({
+          name: cat.title || cat.key,
+          type: 'directory',
+          files
+        })
+      }
+    })
+  }
+
+  navigationTree.value = [{
+    name: targetItem.title || targetItem.name || group,
+    files: rootFiles,
+    children
+  }]
+}
+
+function syncPathAndBuild() {
+  currentPath.value = route.params.path ? route.params.path.join('/') : ''
+  buildTree()
+}
+
+watch(route, syncPathAndBuild, { deep: true, immediate: true })
+
+watch(locale, () => {
+  loadCategoryData()
+  syncPathAndBuild()
+})
+
+onMounted(() => {
+  loadCategoryData()
+  buildTree()
+})
 </script>
 
 <style scoped>

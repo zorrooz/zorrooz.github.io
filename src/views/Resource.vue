@@ -49,53 +49,34 @@
   </div>
 </template>
 
-<script>
+<script setup>
+defineOptions({ name: 'ResourceView' })
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { loadResources } from '@/utils/contentLoader'
 
-/*
-  ResourceView
-  - 资源页面
-*/
-export default {
-  name: 'ResourceView',
-  setup() {
-    const { t, locale } = useI18n()
-    return { t, locale }
-  },
-  data() {
-    return { resources: [] }
-  },
-  computed: {
-    pageTitle() {
-      return this.t('resources')
-    },
-    pageSubtitle() {
-      return this.t('resourceSubtitle')
-    },
-    footerText() {
-      return this.t('updating')
-    }
-  },
-  created() {
-    this.loadResourcesData()
-  },
-  watch: {
-    locale() {
-      this.loadResourcesData()
-    }
-  },
-  methods: {
-    async loadResourcesData() {
-      try {
-        this.resources = await loadResources() || [];
-      } catch (error) {
-        console.error('Failed to load resources data:', error);
-        this.resources = [];
-      }
-    }
+const { t, locale } = useI18n()
+
+const resources = ref([])
+
+const pageTitle = computed(() => t('resources'))
+const pageSubtitle = computed(() => t('resourceSubtitle'))
+const footerText = computed(() => t('updating'))
+
+function loadResourcesData() {
+  try {
+    resources.value = loadResources() || []
+  } catch (error) {
+    console.error('Failed to load resources data:', error)
+    resources.value = []
   }
 }
+
+loadResourcesData()
+
+watch(locale, () => {
+  loadResourcesData()
+})
 </script>
 
 <style scoped>

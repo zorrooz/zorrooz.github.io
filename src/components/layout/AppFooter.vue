@@ -24,14 +24,4 @@
   </footer>
 </template>
 
-<script>
-/*
-  AppFooter
-  - 页面底部信息
-*/
-export default {
-  name: 'AppFooter'
-}
-</script>
-
 <style scoped></style>

@@ -32,72 +32,46 @@
   </div>
 </template>
 
-<script>
-/* 
-  ProfileCard 
-  - 显示作者和统计信息，基于 posts/tags 数据
-*/
+<script setup>
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
 
-export default {
-  name: 'ProfileCard',
-  setup() {
-    const { t, locale } = useI18n()
-    return { t, locale }
-  },
-  data() {
-    return {
-      posts: [],
-      tags: []
-    }
-  },
-  async created() {
-    await this.loadData()
-  },
-  watch: {
-    locale() {
-      this.loadData()
-    }
-  },
-  methods: {
-    async loadData() {
-      try {
-        const [postsData, tagsData] = await Promise.all([
-          loadPosts(),
-          loadTags()
-        ]);
-        this.posts = postsData || [];
-        this.tags = tagsData || [];
-      } catch (error) {
-        console.error('Failed to load data:', error);
-        this.posts = [];
-        this.tags = [];
-      }
-    }
-  },
-  computed: {
-    postCount() {
-      return Array.isArray(this.posts) ? this.posts.length : 0
-    },
-    tagCount() {
-      return Array.isArray(this.tags) ? this.tags.length : 0
-    },
-    totalWords() {
-      if (!Array.isArray(this.posts)) return 0
-      return this.posts.reduce((sum, p) => {
-        const n = typeof p?.wordCount === 'number' ? p.wordCount : 0
-        return sum + (Number.isFinite(n) ? n : 0)
-      }, 0)
-    },
-    totalWordsDisplay() {
-      const n = this.totalWords
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 ? 1 : 0) + 'M'
-      if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 ? 1 : 0) + 'K'
-      return String(n)
-    }
+const { t, locale } = useI18n()
+
+const posts = ref([])
+const tags = ref([])
+
+function loadData() {
+  try {
+    posts.value = loadPosts() || []
+    tags.value = loadTags() || []
+  } catch (error) {
+    console.error('Failed to load data:', error)
+    posts.value = []
+    tags.value = []
   }
 }
+
+loadData()
+
+watch(locale, () => loadData())
+
+const postCount = computed(() => (Array.isArray(posts.value) ? posts.value.length : 0))
+const tagCount = computed(() => (Array.isArray(tags.value) ? tags.value.length : 0))
+const totalWords = computed(() => {
+  if (!Array.isArray(posts.value)) return 0
+  return posts.value.reduce((sum, p) => {
+    const n = typeof p?.wordCount === 'number' ? p.wordCount : 0
+    return sum + (Number.isFinite(n) ? n : 0)
+  }, 0)
+})
+const totalWordsDisplay = computed(() => {
+  const n = totalWords.value
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 ? 1 : 0) + 'M'
+  if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 ? 1 : 0) + 'K'
+  return String(n)
+})
 </script>
 
 <style scoped></style>

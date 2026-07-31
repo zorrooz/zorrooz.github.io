@@ -67,26 +67,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadHtmlContent } from '@/utils/contentLoader'
 
-/*
-  ArticleView
-  - 文章页面
-*/
-export default {
+defineOptions({
   name: 'ArticleView',
-  setup() {
-    const { t, locale } = useI18n()
-    return { t, locale }
-  },
-  components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawer },
-  props: { path: { type: [String, Array], default: '' } },
   head() {
     return {
       title: this.currentPost ? `${this.currentPost.title} - gblog` : 'gblog',
@@ -94,296 +86,280 @@ export default {
         ? [{ name: 'description', content: this.currentPost.description }]
         : [],
     }
-  },
-  data() {
-    return {
-      rawMarkdown: '',
-      currentPath: '',
-      allArticles: [],
-      categoryList: [],
-      viewportWidth: (typeof window !== 'undefined' ? window.innerWidth : 1024)
-    }
-  },
-  computed: {
-    isDesktop() { return this.viewportWidth >= 992 },
-    isNote() { return !!(this.currentPost?.path && this.currentPost.path.startsWith('notes/')); },
-    updatedAtText() {
-      return this.t('updatedAt')
-    },
-    prevPageText() {
-      return this.t('prevPage')
-    },
-    nextPageText() {
-      return this.t('nextPage')
-    },
+  }
+})
 
-    currentPost() {
-      if (!this.currentPath) return null;
+const { t, locale } = useI18n()
+const route = useRoute()
 
-      const locale = this.locale;
-      const isEnglish = locale === 'en-US';
+defineProps({ path: { type: [String, Array], default: '' } })
 
-      return this.allArticles.find(article => {
-        const articlePath = article.path.replace(/\.md$/, '');
-        const currentPath = this.currentPath.replace(/\.md$/, '');
+const rawMarkdown = ref('')
+const currentPath = ref('')
+const allArticles = ref([])
+const categoryList = ref([])
+const viewportWidth = ref((typeof window !== 'undefined' ? window.innerWidth : 1024))
 
-        if (isEnglish) {
-          if (articlePath === currentPath) return true;
-          if (currentPath.endsWith('-en') && articlePath === currentPath.replace(/-en$/, '')) return true;
-          if (!currentPath.endsWith('-en') && articlePath === currentPath + '-en') return true;
-        } else {
-          if (articlePath === currentPath) return true;
-          if (currentPath.endsWith('-en') && articlePath === currentPath.replace(/-en$/, '')) return true;
-          if (!currentPath.endsWith('-en') && articlePath === currentPath + '-en') return true;
+const onThisPageRef = useTemplateRef('onThisPageRef')
+const leftSidebarContent = useTemplateRef('leftSidebarContent')
+const rightSidebarContent = useTemplateRef('rightSidebarContent')
+const leftSidebarContainer = useTemplateRef('leftSidebarContainer')
+const rightSidebarContainer = useTemplateRef('rightSidebarContainer')
+
+const isDesktop = computed(() => viewportWidth.value >= 992)
+const isNote = computed(() => !!(currentPost.value?.path && currentPost.value.path.startsWith('notes/')))
+const updatedAtText = computed(() => t('updatedAt'))
+const prevPageText = computed(() => t('prevPage'))
+const nextPageText = computed(() => t('nextPage'))
+
+const currentPost = computed(() => {
+  if (!currentPath.value) return null
+
+  return allArticles.value.find(article => {
+    const articlePath = article.path.replace(/\.md$/, '')
+    const cp = currentPath.value.replace(/\.md$/, '')
+
+    if (articlePath === cp) return true
+    if (cp.endsWith('-en') && articlePath === cp.replace(/-en$/, '')) return true
+    if (!cp.endsWith('-en') && articlePath === cp + '-en') return true
+
+    return false
+  })
+})
+
+const groupLinearArticles = computed(() => {
+  if (!currentPost.value) return []
+  const [type, group] = currentPost.value.path.replace(/\.md$/, '').split('/')
+  const linear = []
+
+  const pushFromUrl = (title, articleUrl) => {
+    if (!articleUrl) return
+    const parts = String(articleUrl).replace(/^\/+/, '').split('/')
+    const i0 = parts[0] === 'article' ? 1 : 0
+    const t = parts[i0], g = parts[i0 + 1]
+    if (t !== type || g !== group) return
+    const rest = parts.slice(i0 + 2)
+    const pathNoExt = `${t}/${g}/${rest.join('/')}`
+    linear.push({ title, path: `${pathNoExt}.md` })
+  }
+
+  if (Array.isArray(categoryList.value)) {
+    for (const section of categoryList.value) {
+      if (!Array.isArray(section.items)) continue
+      for (const item of section.items) {
+        if (item?.name !== group) continue
+        if (Array.isArray(item.articles)) {
+          item.articles.forEach(a => pushFromUrl(a.title, a.articleUrl))
         }
-
-        return false;
-      });
-    },
-
-    groupLinearArticles() {
-      if (!this.currentPost) return [];
-      const [type, group] = this.currentPost.path.replace(/\.md$/, '').split('/');
-      const linear = [];
-
-      const pushFromUrl = (title, articleUrl) => {
-        if (!articleUrl) return;
-        const parts = String(articleUrl).replace(/^\/+/, '').split('/');
-        const i0 = parts[0] === 'article' ? 1 : 0;
-        const t = parts[i0], g = parts[i0 + 1];
-        if (t !== type || g !== group) return;
-        const rest = parts.slice(i0 + 2);
-        const pathNoExt = `${t}/${g}/${rest.join('/')}`;
-        linear.push({ title, path: `${pathNoExt}.md` });
-      };
-
-      if (Array.isArray(this.categoryList)) {
-        for (const section of this.categoryList) {
-          if (!Array.isArray(section.items)) continue;
-          for (const item of section.items) {
-            if (item?.name !== group) continue;
-            if (Array.isArray(item.articles)) {
-              item.articles.forEach(a => pushFromUrl(a.title, a.articleUrl));
+        if (Array.isArray(item.categories)) {
+          item.categories.forEach(cat => {
+            if (Array.isArray(cat.articles)) {
+              cat.articles.forEach(a => pushFromUrl(a.title, a.articleUrl))
             }
-            if (Array.isArray(item.categories)) {
-              item.categories.forEach(cat => {
-                if (Array.isArray(cat.articles)) {
-                  cat.articles.forEach(a => pushFromUrl(a.title, a.articleUrl));
-                }
-              });
-            }
-          }
+          })
         }
       }
-      return linear;
-    },
-
-    currentLinearIndex() {
-      if (!this.currentPost) return -1;
-      return this.groupLinearArticles.findIndex(a => a.path.replace(/\.md$/, '') === this.currentPost.path.replace(/\.md$/, ''));
-    },
-
-    prevPost() {
-      const idx = this.currentLinearIndex;
-      return idx > 0 ? this.groupLinearArticles[idx - 1] : null;
-    },
-
-    nextPost() {
-      const idx = this.currentLinearIndex;
-      const last = this.groupLinearArticles.length - 1;
-      return idx >= 0 && idx < last ? this.groupLinearArticles[idx + 1] : null;
-    },
-
-    readingMinutes() {
-      if (!this.rawMarkdown) return 0;
-      const text = this.rawMarkdown
-        .replace(/<[^>]+>/g, ' ')
-        .replace(/&[a-zA-Z#0-9]+;/g, ' ')
-        .trim();
-      return Math.max(1, Math.round(text.length / 800));
     }
-  },
-  created() {
-    this.buildFromCategories()
-    this.loadArticleContent()
-  },
-  watch: {
-    locale: {
-      handler(newLocale, oldLocale) {
-        if (newLocale !== oldLocale) {
-          this.buildFromCategories().then(() => {
-            this.loadArticleContent();
-          });
-        }
-      },
-      immediate: false
-    },
-    '$route': {
-      handler(to, from) {
-        const oldPath = this.normalizeRoutePathParam(from?.params?.path);
-        const newPath = this.normalizeRoutePathParam(to?.params?.path);
-        if (oldPath !== newPath) {
-          this.$refs.onThisPageRef?.resetToc();
-          this.loadArticleContent();
-        }
-      },
-      immediate: false
-    },
-    rawMarkdown() {
-      this.$nextTick(() => this.updateSidebarDimensions());
-    }
-  },
-  mounted() {
-    this.viewportWidth = window.innerWidth;
-    window.addEventListener('resize', this.onResize);
-    window.addEventListener('scroll', this.updateSidebarDimensions);
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('scroll', this.updateSidebarDimensions);
-  },
-  methods: {
-    getReadingTimeText(minutes) {
+  }
+  return linear
+})
 
-      const isEnglish = this.locale === 'en-US';
-      const template = isEnglish ? 'Reading about {minutes} minutes' : '阅读约 {minutes} 分钟';
-      return template.replace('{minutes}', minutes.toString());
-    },
+const currentLinearIndex = computed(() => {
+  if (!currentPost.value) return -1
+  return groupLinearArticles.value.findIndex(a => a.path.replace(/\.md$/, '') === currentPost.value.path.replace(/\.md$/, ''))
+})
 
-    toArticle(p) {
-      return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } };
-    },
+const prevPost = computed(() => {
+  const idx = currentLinearIndex.value
+  return idx > 0 ? groupLinearArticles.value[idx - 1] : null
+})
 
-    async buildFromCategories() {
-      const all = [];
+const nextPost = computed(() => {
+  const idx = currentLinearIndex.value
+  const last = groupLinearArticles.value.length - 1
+  return idx >= 0 && idx < last ? groupLinearArticles.value[idx + 1] : null
+})
 
-      const pushArticle = (artTitle, articleUrl, tags = [], dateStr = '') => {
-        if (typeof articleUrl !== 'string' || !articleUrl.trim()) return;
-        const parts = articleUrl.replace(/^\/+/, '').split('/');
-        const idxArticle = parts[0] === 'article' ? 1 : 0;
-        const t = parts[idxArticle], g = parts[idxArticle + 1];
-        const restParts = parts.slice(idxArticle + 2);
-        const subKey = restParts[0] || '__root__';
-        const rest = restParts.join('/');
-        const pathNoExt = `${t}/${g}/${rest}`;
+const readingMinutes = computed(() => {
+  if (!rawMarkdown.value) return 0
+  const text = rawMarkdown.value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-zA-Z#0-9]+;/g, ' ')
+    .trim()
+  return Math.max(1, Math.round(text.length / 800))
+})
 
-        const art = { title: artTitle, path: `${pathNoExt}.md`, date: dateStr || '', tags: Array.isArray(tags) ? tags : [], preview: '', category: `${t}/${g}/${subKey}` };
-        all.push(art);
-      };
+function getReadingTimeText(minutes) {
+  const isEnglish = locale.value === 'en-US'
+  const template = isEnglish ? 'Reading about {minutes} minutes' : '阅读约 {minutes} 分钟'
+  return template.replace('{minutes}', minutes.toString())
+}
 
-      try {
-        const categoryData = loadCategories();
+function toArticle(p) {
+  return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } }
+}
 
-        if (Array.isArray(categoryData)) {
-          categoryData.forEach(section => {
-            if (!Array.isArray(section.items)) return;
-            section.items.forEach(item => {
-              const itemLatest = item?.stats?.latestDate || '';
-              if (Array.isArray(item.articles)) {
-                item.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest));
-              }
-              if (Array.isArray(item.categories)) {
-                item.categories.forEach(cat => {
-                  const catLatest = cat?.stats?.latestDate || itemLatest || '';
-                  if (Array.isArray(cat.articles)) {
-                    cat.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest));
-                  }
-                });
-              }
-            });
-          });
-        }
+function buildFromCategories() {
+  const all = []
 
-        this.allArticles = all;
-        this.categoryList = categoryData;
-      } catch {
-        this.allArticles = [];
-        this.categoryList = [];
-      }
-    },
+  const pushArticle = (artTitle, articleUrl, tags = [], dateStr = '') => {
+    if (typeof articleUrl !== 'string' || !articleUrl.trim()) return
+    const parts = articleUrl.replace(/^\/+/, '').split('/')
+    const idxArticle = parts[0] === 'article' ? 1 : 0
+    const t = parts[idxArticle], g = parts[idxArticle + 1]
+    const restParts = parts.slice(idxArticle + 2)
+    const subKey = restParts[0] || '__root__'
+    const rest = restParts.join('/')
+    const pathNoExt = `${t}/${g}/${rest}`
 
-    onResize() {
-      this.viewportWidth = window.innerWidth;
-      this.updateSidebarDimensions();
-    },
+    const art = { title: artTitle, path: `${pathNoExt}.md`, date: dateStr || '', tags: Array.isArray(tags) ? tags : [], preview: '', category: `${t}/${g}/${subKey}` }
+    all.push(art)
+  }
 
-    normalizeRoutePathParam(p) {
-      return Array.isArray(p) ? p.join('/') : (typeof p === 'string' && p.length ? p : '');
-    },
+  try {
+    const categoryData = loadCategories()
 
-    async loadArticleContent() {
-      this.rawMarkdown = '';
-      try {
-        const currentPathClean = this.normalizeRoutePathParam(this.$route.params.path);
-
-        const locale = this.locale;
-        const isEnglish = locale === 'en-US';
-
-        let matchedPost = this.allArticles.find(article => {
-          const articlePath = article.path.replace(/\.md$/, '');
-
-          if (isEnglish) {
-            return articlePath === currentPathClean ||
-              articlePath === currentPathClean.replace(/-en$/, '') + '-en';
-          } else {
-            return articlePath === currentPathClean ||
-              articlePath === currentPathClean.replace(/-en$/, '');
+    if (Array.isArray(categoryData)) {
+      categoryData.forEach(section => {
+        if (!Array.isArray(section.items)) return
+        section.items.forEach(item => {
+          const itemLatest = item?.stats?.latestDate || ''
+          if (Array.isArray(item.articles)) {
+            item.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest))
           }
-        });
+          if (Array.isArray(item.categories)) {
+            item.categories.forEach(cat => {
+              const catLatest = cat?.stats?.latestDate || itemLatest || ''
+              if (Array.isArray(cat.articles)) {
+                cat.articles.forEach(a => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest))
+              }
+            })
+          }
+        })
+      })
+    }
 
-        if (!matchedPost) {
-          matchedPost = this.allArticles.find(article => {
-            const articlePath = article.path.replace(/\.md$/, '');
-            const cleanCurrentPath = currentPathClean.replace(/-en$/, '');
-            return articlePath === cleanCurrentPath ||
-              articlePath === cleanCurrentPath + '-en';
-          });
-        }
-
-        if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`);
-        this.currentPath = matchedPost.path;
-
-        this.rawMarkdown = loadHtmlContent(this.currentPath);
-
-        this.$nextTick(() => {
-          if (typeof window === 'undefined') return
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          this.updateSidebarDimensions();
-          this.$refs.onThisPageRef?.refreshToc();
-        });
-      } catch {
-        this.rawMarkdown = '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.';
-        this.$nextTick(() => {
-          if (typeof window === 'undefined') return
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          this.$refs.onThisPageRef?.refreshToc();
-        });
-      }
-    },
-
-    updateSidebarDimensions() {
-      if (typeof window === 'undefined' || typeof document === 'undefined') return;
-      const header = document.querySelector('header'), footer = document.querySelector('footer');
-      const leftContent = this.$refs.leftSidebarContent, rightContent = this.$refs.rightSidebarContent;
-      if (!leftContent || !rightContent || !this.$refs.leftSidebarContainer || !this.$refs.rightSidebarContainer) return;
-
-      const headerH = header?.offsetHeight || 0, footerH = footer?.offsetHeight || 0;
-      const viewportH = window.innerHeight, scrollTop = window.scrollY, docH = document.documentElement.scrollHeight;
-      const remainingH = Math.max(0, docH - scrollTop - headerH - footerH - 40);
-      const availableH = Math.min(viewportH - headerH - 40, remainingH);
-
-      [leftContent, rightContent].forEach(el => {
-        el.style.maxHeight = `${availableH}px`;
-        el.style.overflowY = el.scrollHeight > availableH ? 'auto' : 'visible';
-      });
-    },
-
-    handleMarkdownRendered() {
-      this.updateSidebarDimensions();
-      this.$nextTick(() => this.$refs.onThisPageRef?.refreshToc());
-    },
+    allArticles.value = all
+    categoryList.value = categoryData
+  } catch {
+    allArticles.value = []
+    categoryList.value = []
   }
 }
+
+function onResize() {
+  viewportWidth.value = window.innerWidth
+  updateSidebarDimensions()
+}
+
+function normalizeRoutePathParam(p) {
+  return Array.isArray(p) ? p.join('/') : (typeof p === 'string' && p.length ? p : '')
+}
+
+function loadArticleContent() {
+  rawMarkdown.value = ''
+  try {
+    const currentPathClean = normalizeRoutePathParam(route.params.path)
+
+    const isEnglish = locale.value === 'en-US'
+
+    let matchedPost = allArticles.value.find(article => {
+      const articlePath = article.path.replace(/\.md$/, '')
+
+      if (isEnglish) {
+        return articlePath === currentPathClean ||
+          articlePath === currentPathClean.replace(/-en$/, '') + '-en'
+      } else {
+        return articlePath === currentPathClean ||
+          articlePath === currentPathClean.replace(/-en$/, '')
+      }
+    })
+
+    if (!matchedPost) {
+      matchedPost = allArticles.value.find(article => {
+        const articlePath = article.path.replace(/\.md$/, '')
+        const cleanCurrentPath = currentPathClean.replace(/-en$/, '')
+        return articlePath === cleanCurrentPath ||
+          articlePath === cleanCurrentPath + '-en'
+      })
+    }
+
+    if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`)
+    currentPath.value = matchedPost.path
+
+    rawMarkdown.value = loadHtmlContent(currentPath.value)
+
+    nextTick(() => {
+      if (typeof window === 'undefined') return
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      updateSidebarDimensions()
+      onThisPageRef.value?.refreshToc()
+    })
+  } catch {
+    rawMarkdown.value = '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.'
+    nextTick(() => {
+      if (typeof window === 'undefined') return
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      onThisPageRef.value?.refreshToc()
+    })
+  }
+}
+
+function updateSidebarDimensions() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return
+  const header = document.querySelector('header'), footer = document.querySelector('footer')
+  const leftContent = leftSidebarContent.value, rightContent = rightSidebarContent.value
+  if (!leftContent || !rightContent || !leftSidebarContainer.value || !rightSidebarContainer.value) return
+
+  const headerH = header?.offsetHeight || 0, footerH = footer?.offsetHeight || 0
+  const viewportH = window.innerHeight, scrollTop = window.scrollY, docH = document.documentElement.scrollHeight
+  const remainingH = Math.max(0, docH - scrollTop - headerH - footerH - 40)
+  const availableH = Math.min(viewportH - headerH - 40, remainingH)
+
+  [leftContent, rightContent].forEach(el => {
+    el.style.maxHeight = `${availableH}px`
+    el.style.overflowY = el.scrollHeight > availableH ? 'auto' : 'visible'
+  })
+}
+
+function handleMarkdownRendered() {
+  updateSidebarDimensions()
+  nextTick(() => onThisPageRef.value?.refreshToc())
+}
+
+buildFromCategories()
+loadArticleContent()
+
+watch(locale, (newLocale, oldLocale) => {
+  if (newLocale !== oldLocale) {
+    buildFromCategories()
+    loadArticleContent()
+  }
+})
+
+watch(route, (to, from) => {
+  const oldPath = normalizeRoutePathParam(from?.params?.path)
+  const newPath = normalizeRoutePathParam(to?.params?.path)
+  if (oldPath !== newPath) {
+    onThisPageRef.value?.resetToc()
+    loadArticleContent()
+  }
+}, { deep: true })
+
+watch(rawMarkdown, () => {
+  nextTick(() => updateSidebarDimensions())
+})
+
+onMounted(() => {
+  viewportWidth.value = window.innerWidth
+  window.addEventListener('resize', onResize)
+  window.addEventListener('scroll', updateSidebarDimensions)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+  window.removeEventListener('scroll', updateSidebarDimensions)
+})
 </script>
 
 <style scoped>

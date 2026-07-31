@@ -65,62 +65,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
+defineOptions({ name: 'AboutView' })
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { loadAbout } from '@/utils/contentLoader'
 
-/*
-  AboutView
-  - 关于页面
-*/
-export default {
-  name: 'AboutView',
-  setup() {
-    const { t, locale } = useI18n()
-    return { t, locale }
-  },
-  data() {
-    return {
-      data: {}
-    }
-  },
-  computed: {
-    pageTitle() {
-      return this.t('about')
-    },
-    footerText() {
-      return this.t('thanks')
-    },
-    introductionTitle() {
-      return this.t('introduction')
-    },
-    contactTitle() {
-      return this.t('contact')
-    }
-  },
-  created() {
-    this.loadAboutData()
-  },
-  watch: {
-    locale() {
-      this.loadAboutData()
-    }
-  },
-  methods: {
-    async loadAboutData() {
-      try {
-        this.data = await loadAbout() || {};
-      } catch (error) {
-        console.error('Failed to load about data:', error);
-        this.data = {
-          introduction: this.introductionTitle,
-          section: [],
-          contacts: []
-        };
-      }
+const { t, locale } = useI18n()
+
+const data = ref({})
+
+const pageTitle = computed(() => t('about'))
+const footerText = computed(() => t('thanks'))
+const introductionTitle = computed(() => t('introduction'))
+const contactTitle = computed(() => t('contact'))
+
+function loadAboutData() {
+  try {
+    data.value = loadAbout() || {}
+  } catch (error) {
+    console.error('Failed to load about data:', error)
+    data.value = {
+      introduction: introductionTitle.value,
+      section: [],
+      contacts: []
     }
   }
 }
+
+loadAboutData()
+
+watch(locale, () => {
+  loadAboutData()
+})
 </script>
 
 <style scoped>

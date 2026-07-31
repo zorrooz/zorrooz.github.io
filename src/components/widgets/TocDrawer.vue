@@ -18,100 +18,166 @@
   </div>
 </template>
 
-<script>
-/*
-  TocDrawer
-  - 移动端目录抽屉，右侧面板，支持拖动调整按钮位置并与 BackToTop 同步
-*/
+<script setup>
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import OnThisPage from '@/components/layout/OnThisPage.vue';
+import OnThisPage from '@/components/layout/OnThisPage.vue'
 
-export default {
-  name: 'TocDrawer',
-  setup() { const { t } = useI18n(); return { t } },
-  components: { OnThisPage },
-  data() {
-    return {
-      sourceId: 'toc', rafPending: false, rafLastBaseTop: null,
-      visible: false, isDragging: false, startY: 0, initialTop: 0, buttonTop: (typeof window !== 'undefined' ? window.innerHeight : 1024) - 160, touchMoved: false,
-      show: false,
-      lockedScrollY: null
-    };
-  },
-  mounted() {
-    window.addEventListener('scroll', this.onScroll, { passive: true });
-    window.addEventListener('resize', this.onResize, { passive: true });
-    window.addEventListener('floating-buttons-base-top', this.syncBaseTop);
-    this.onResize(); this.onScroll();
-    const GAP = 48; this.rafDispatchBaseTop(this.buttonTop + GAP);
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.onScroll);
-    window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('floating-buttons-base-top', this.syncBaseTop);
-    this.unlockScroll();
-  },
-  methods: {
-    getBounds() { const BUTTON_HEIGHT = 40; const GAP = 48; const MARGIN = 20; return { gap: GAP, minTop: MARGIN, maxTop: Math.max(this.$el ? 0 : 0, window.innerHeight - BUTTON_HEIGHT - MARGIN - GAP) } },
-    clampTop(top) { const { minTop, maxTop } = this.getBounds(); return Math.max(minTop, Math.min(maxTop, top)); },
-    rafDispatchBaseTop(baseTop) { this.rafLastBaseTop = baseTop; if (this.rafPending) return; this.rafPending = true; requestAnimationFrame(() => { window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: this.rafLastBaseTop, source: this.sourceId } })); this.rafPending = false; }); },
-    syncBaseTop(e) { const base = e?.detail?.baseTop; const source = e?.detail?.source; if (source === this.sourceId) return; const { gap } = this.getBounds(); if (typeof base === 'number') { const desiredTop = base - gap; this.buttonTop = this.clampTop(desiredTop); } },
-    onResize() { const isMobile = window.innerWidth < 992; this.visible = isMobile; this.buttonTop = this.clampTop(this.buttonTop); },
-    onScroll() { if (!this.isDragging) { const isMobile = window.innerWidth < 992; this.visible = isMobile; } },
-    openDrawer() { if (this.isDragging) return; this.lockScroll(); this.show = true; },
-    close() { this.show = false; this.unlockScroll(); },
-    onTouchStart(e) { e.preventDefault(); this.isDragging = true; this.touchMoved = false; this.startY = e.touches[0].clientY; this.initialTop = this.buttonTop; },
-    onTouchMove(e) { this.touchMoved = true; const currentY = e.touches[0].clientY; const diffY = currentY - this.startY; let newTop = this.clampTop(this.initialTop + diffY); this.buttonTop = newTop; const { gap } = this.getBounds(); this.rafDispatchBaseTop(newTop + gap); e.preventDefault(); },
-    onTouchEnd(e) { e.preventDefault(); this.isDragging = false; if (!this.touchMoved) this.openDrawer(); },
-    onNavigate() { this.close(); },
-    lockScroll() {
-      try {
-        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-        this.lockedScrollY = scrollY;
-        const body = document.body;
-        if (body) {
-          body.style.position = 'fixed';
-          body.style.top = `-${scrollY}px`;
-          body.style.left = '0';
-          body.style.right = '0';
-          body.style.overflow = 'hidden';
-        }
-        if (document.documentElement) {
-          document.documentElement.style.overscrollBehavior = 'contain';
-        }
-      } catch {
-        const docEl = document.documentElement;
-        const body = document.body;
-        if (docEl) { docEl.style.overflow = 'hidden'; docEl.style.overscrollBehavior = 'contain'; }
-        if (body) { body.style.overflow = 'hidden'; body.style.overscrollBehavior = 'contain'; }
-      }
-    },
-    unlockScroll() {
-      try {
-        const body = document.body;
-        if (body) {
-          body.style.position = '';
-          body.style.top = '';
-          body.style.left = '';
-          body.style.right = '';
-          body.style.overflow = '';
-        }
-        if (document.documentElement) {
-          document.documentElement.style.overscrollBehavior = '';
-        }
-        if (typeof this.lockedScrollY === 'number') {
-          window.scrollTo(0, this.lockedScrollY);
-          this.lockedScrollY = null;
-        }
-      } catch {
-        const docEl = document.documentElement;
-        const body = document.body;
-        if (docEl) { docEl.style.overflow = ''; docEl.style.overscrollBehavior = ''; }
-        if (body) { body.style.overflow = ''; body.style.overscrollBehavior = ''; }
-      }
-    }
+const { t } = useI18n()
+
+const sourceId = 'toc'
+const rafPending = ref(false)
+const rafLastBaseTop = ref(null)
+const visible = ref(false)
+const isDragging = ref(false)
+const startY = ref(0)
+const initialTop = ref(0)
+const buttonTop = ref((typeof window !== 'undefined' ? window.innerHeight : 1024) - 160)
+const touchMoved = ref(false)
+const show = ref(false)
+const lockedScrollY = ref(null)
+
+function getBounds() {
+  const BUTTON_HEIGHT = 40
+  const GAP = 48
+  const MARGIN = 20
+  return { gap: GAP, minTop: MARGIN, maxTop: Math.max(0, window.innerHeight - BUTTON_HEIGHT - MARGIN - GAP) }
+}
+
+function clampTop(top) {
+  const { minTop, maxTop } = getBounds()
+  return Math.max(minTop, Math.min(maxTop, top))
+}
+
+function rafDispatchBaseTop(baseTop) {
+  rafLastBaseTop.value = baseTop
+  if (rafPending.value) return
+  rafPending.value = true
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: rafLastBaseTop.value, source: sourceId } }))
+    rafPending.value = false
+  })
+}
+
+function syncBaseTop(e) {
+  const base = e?.detail?.baseTop
+  const source = e?.detail?.source
+  if (source === sourceId) return
+  const { gap } = getBounds()
+  if (typeof base === 'number') {
+    const desiredTop = base - gap
+    buttonTop.value = clampTop(desiredTop)
   }
-};
+}
+
+function onResize() {
+  const isMobile = window.innerWidth < 992
+  visible.value = isMobile
+  buttonTop.value = clampTop(buttonTop.value)
+}
+
+function onScroll() {
+  if (!isDragging.value) {
+    const isMobile = window.innerWidth < 992
+    visible.value = isMobile
+  }
+}
+
+function openDrawer() {
+  if (isDragging.value) return
+  lockScroll()
+  show.value = true
+}
+
+function close() {
+  show.value = false
+  unlockScroll()
+}
+
+function onTouchStart(e) {
+  e.preventDefault(); isDragging.value = true; touchMoved.value = false; startY.value = e.touches[0].clientY; initialTop.value = buttonTop.value
+}
+
+function onTouchMove(e) {
+  touchMoved.value = true
+  const currentY = e.touches[0].clientY
+  const diffY = currentY - startY.value
+  const newTop = clampTop(initialTop.value + diffY)
+  buttonTop.value = newTop
+  const { gap } = getBounds()
+  rafDispatchBaseTop(newTop + gap)
+  e.preventDefault()
+}
+
+function onTouchEnd(e) {
+  e.preventDefault(); isDragging.value = false; if (!touchMoved.value) openDrawer()
+}
+
+function onNavigate() { close() }
+
+function lockScroll() {
+  try {
+    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0
+    lockedScrollY.value = scrollY
+    const body = document.body
+    if (body) {
+      body.style.position = 'fixed'
+      body.style.top = `-${scrollY}px`
+      body.style.left = '0'
+      body.style.right = '0'
+      body.style.overflow = 'hidden'
+    }
+    if (document.documentElement) {
+      document.documentElement.style.overscrollBehavior = 'contain'
+    }
+  } catch {
+    const docEl = document.documentElement
+    const body = document.body
+    if (docEl) { docEl.style.overflow = 'hidden'; docEl.style.overscrollBehavior = 'contain' }
+    if (body) { body.style.overflow = 'hidden'; body.style.overscrollBehavior = 'contain' }
+  }
+}
+
+function unlockScroll() {
+  try {
+    const body = document.body
+    if (body) {
+      body.style.position = ''
+      body.style.top = ''
+      body.style.left = ''
+      body.style.right = ''
+      body.style.overflow = ''
+    }
+    if (document.documentElement) {
+      document.documentElement.style.overscrollBehavior = ''
+    }
+    if (typeof lockedScrollY.value === 'number') {
+      window.scrollTo(0, lockedScrollY.value)
+      lockedScrollY.value = null
+    }
+  } catch {
+    const docEl = document.documentElement
+    const body = document.body
+    if (docEl) { docEl.style.overflow = ''; docEl.style.overscrollBehavior = '' }
+    if (body) { body.style.overflow = ''; body.style.overscrollBehavior = '' }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onResize, { passive: true })
+  window.addEventListener('floating-buttons-base-top', syncBaseTop)
+  onResize(); onScroll()
+  const GAP = 48
+  rafDispatchBaseTop(buttonTop.value + GAP)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', onResize)
+  window.removeEventListener('floating-buttons-base-top', syncBaseTop)
+  unlockScroll()
+})
 </script>
 
 <style scoped>

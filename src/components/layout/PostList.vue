@@ -91,245 +91,225 @@
   </div>
 </template>
 
-<script>
-/*
-  PostList
-  - 列表与分页组件，采用 props docs 与 perPage 控制
-*/
+<script setup>
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import { loadNotes, loadCategories } from '@/utils/contentLoader'
 
-export default {
-  name: 'PostList',
-  setup() {
-    const { t, locale } = useI18n()
-    return { t, locale }
+const props = defineProps({
+  docs: {
+    type: Array,
+    required: true,
+    default: () => []
   },
-  props: {
-    docs: {
-      type: Array,
-      required: true,
-      default: () => []
-    },
-    perPage: {
-      type: Number,
-      default: 6
+  perPage: {
+    type: Number,
+    default: 6
+  }
+})
+
+const { t, locale } = useI18n()
+const route = useRoute()
+const router = useRouter()
+
+const currentPage = ref(1)
+const maxVisiblePages = ref(5)
+const notesFlat = ref([])
+const categoriesData = ref([])
+
+const totalPages = computed(() => Math.max(1, Math.ceil(props.docs.length / props.perPage)))
+
+const displayedPosts = computed(() => {
+  const start = (currentPage.value - 1) * props.perPage
+  const end = start + props.perPage
+  return props.docs.slice(start, end)
+})
+
+const allVisiblePages = computed(() => {
+  const pages = []
+  const total = totalPages.value
+  const current = currentPage.value
+  const maxShow = maxVisiblePages.value
+
+  if (total <= maxShow) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i)
     }
-  },
-  data() {
-    return {
-      currentPage: 1,
-      maxVisiblePages: 5,
-      notesFlat: [],
-      categoriesData: []
+    return pages
+  }
+
+  pages.push(current)
+
+  let i = 1
+  while (pages.length < maxShow) {
+    if (current - i >= 1 && !pages.includes(current - i)) {
+      pages.push(current - i)
     }
-  },
-  computed: {
-    totalPages() {
-      return Math.max(1, Math.ceil(this.docs.length / this.perPage))
-    },
-    displayedPosts() {
-      const start = (this.currentPage - 1) * this.perPage
-      const end = start + this.perPage
-      return this.docs.slice(start, end)
-    },
-    allVisiblePages() {
-      const pages = []
-      const total = this.totalPages
-      const current = this.currentPage
-      const maxShow = this.maxVisiblePages
+    if (pages.length >= maxShow) break
 
-      if (total <= maxShow) {
-        for (let i = 1; i <= total; i++) {
-          pages.push(i)
-        }
-        return pages
-      }
+    if (current + i <= total && !pages.includes(current + i)) {
+      pages.push(current + i)
+    }
+    i++
+  }
 
-      pages.push(current)
+  if (!pages.includes(1)) {
+    pages.pop()
+    pages.push(1)
+  }
+  if (pages.length < maxShow && !pages.includes(total)) {
+    pages.push(total)
+  } else if (pages.length >= maxShow && !pages.includes(total)) {
+    pages.pop()
+    pages.push(total)
+  }
 
-      let i = 1
-      while (pages.length < maxShow) {
-        if (current - i >= 1 && !pages.includes(current - i)) {
-          pages.push(current - i)
-        }
-        if (pages.length >= maxShow) break
+  return pages.sort((a, b) => a - b)
+})
 
-        if (current + i <= total && !pages.includes(current + i)) {
-          pages.push(current + i)
-        }
-        i++
-      }
+const middlePages = computed(() =>
+  allVisiblePages.value.filter(page => page !== 1 && page !== totalPages.value)
+)
 
-      if (!pages.includes(1)) {
-        pages.pop()
-        pages.push(1)
-      }
-      if (pages.length < maxShow && !pages.includes(total)) {
-        pages.push(total)
-      } else if (pages.length >= maxShow && !pages.includes(total)) {
-        pages.pop()
-        pages.push(total)
-      }
+const showFirstPage = computed(() => allVisiblePages.value.includes(1))
+const showLastPage = computed(() => allVisiblePages.value.includes(totalPages.value))
+const showFirstEllipsis = computed(() =>
+  totalPages.value > maxVisiblePages.value && allVisiblePages.value[1] > 2
+)
+const showLastEllipsis = computed(() =>
+  totalPages.value > maxVisiblePages.value &&
+  allVisiblePages.value[allVisiblePages.value.length - 2] < totalPages.value - 1
+)
 
-      return pages.sort((a, b) => a - b)
-    },
-    middlePages() {
-      return this.allVisiblePages.filter(page =>
-        page !== 1 && page !== this.totalPages
-      )
-    },
-    showFirstPage() {
-      return this.allVisiblePages.includes(1)
-    },
-    showLastPage() {
-      return this.allVisiblePages.includes(this.totalPages)
-    },
-    showFirstEllipsis() {
-      return this.totalPages > this.maxVisiblePages && this.allVisiblePages[1] > 2
-    },
-    showLastEllipsis() {
-      return this.totalPages > this.maxVisiblePages &&
-        this.allVisiblePages[this.allVisiblePages.length - 2] < this.totalPages - 1
-    },
-    categoryTitleMap() {
-      const map = {}
-      try {
-        (this.categoriesData || []).forEach(section => {
-          (section.items || []).forEach(item => {
-            (item.categories || []).forEach(cat => {
-              if (cat && cat.key && cat.title) map[cat.key] = cat.title
-            })
-          })
+const categoryTitleMap = computed(() => {
+  const map = {}
+  try {
+    (categoriesData.value || []).forEach(section => {
+      (section.items || []).forEach(item => {
+        (item.categories || []).forEach(cat => {
+          if (cat && cat.key && cat.title) map[cat.key] = cat.title
         })
-      } catch (e) {
-        console.error(e);
-      }
-      return map
-    }
-  },
+      })
+    })
+  } catch (e) {
+    console.error(e)
+  }
+  return map
+})
 
-  watch: {
-    docs() {
-      this.currentPage = 1
-    },
-    '$route.query.page'(newVal) {
-      const p = parseInt(newVal);
-      const page = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
-      if (page !== this.currentPage) {
-        this.currentPage = page;
-        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-      }
-    },
-    locale() {
-      this.loadData()
-    }
-  },
-  async created() {
-    await this.loadData()
-  },
-  mounted() {
-    const p = parseInt(this.$route.query.page);
-    this.currentPage = Number.isFinite(p) && p >= 1 ? Math.min(p, this.totalPages) : 1;
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
-  },
-  methods: {
-    formatDate(dateString) {
-      const locale = this.locale === 'zh-CN' ? 'zh-CN' : 'en-US'
-      const options = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Date(dateString).toLocaleDateString(locale, options)
-    },
-    getArticlePath(post) {
-      let articlePath = '';
-
-      const found = Array.isArray(this.notesFlat) ? this.notesFlat.find(item => item.title === post.title) : null
-      if (found && found.relativePath) {
-        articlePath = `notes/${found.relativePath}.md`
-      } else {
-        const locale = this.locale;
-        const isEnglish = locale === 'en-US';
-
-        const basePath = post.category?.[1] || 'notes';
-        const fileName = post.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
-        articlePath = `${basePath}/${fileName}.md`;
-
-        if (isEnglish) {
-          articlePath = articlePath.replace('.md', '-en.md');
-        }
-      }
-
-      return `/article/${articlePath.replace(/\.md$/, '')}`
-    },
-    goToPage(page) {
-      if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
-        const q = { ...this.$route.query, page: String(page) };
-        this.$router.push({ path: this.$route.path, query: q }).catch(() => { });
-        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-      }
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        const page = this.currentPage - 1;
-        this.currentPage = page;
-        const q = { ...this.$route.query, page: String(page) };
-        this.$router.push({ path: this.$route.path, query: q }).catch(() => { });
-        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        const page = this.currentPage + 1;
-        this.currentPage = page;
-        const q = { ...this.$route.query, page: String(page) };
-        this.$router.push({ path: this.$route.path, query: q }).catch(() => { });
-        this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-      }
-    },
-    goTag(tag) {
-      if (!tag) return;
-      const q = { ...this.$route.query, tag: tag, page: '1' };
-      this.$router.push({ path: '/', query: q }).catch(() => { });
-      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    },
-    clearTag() {
-      const q = { ...this.$route.query };
-      delete q.tag;
-      q.page = '1';
-      this.$router.push({ path: '/', query: q }).catch(() => { });
-      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    },
-    handleResize() {
-      this.maxVisiblePages = window.innerWidth < 480 ? 3 : 5
-    },
-    formatCategory(catArr) {
-      if (!Array.isArray(catArr) || catArr.length === 0) return ''
-      const top = catArr[0] || ''
-      const subKey = catArr[1]
-      if (!subKey) return top
-      const subTitle = this.categoryTitleMap[subKey] || subKey
-      return `${top} / ${subTitle}`
-    },
-    async loadData() {
-      try {
-        const [notesData, categoriesData] = await Promise.all([
-          loadNotes(),
-          loadCategories()
-        ]);
-        this.notesFlat = notesData || [];
-        this.categoriesData = categoriesData || [];
-      } catch (error) {
-        console.error('Failed to load data:', error);
-        this.notesFlat = [];
-        this.categoriesData = [];
-      }
-    }
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.handleResize)
+function loadData() {
+  try {
+    notesFlat.value = loadNotes() || []
+    categoriesData.value = loadCategories() || []
+  } catch (error) {
+    console.error('Failed to load data:', error)
+    notesFlat.value = []
+    categoriesData.value = []
   }
 }
+
+function formatDate(dateString) {
+  const l = locale.value === 'zh-CN' ? 'zh-CN' : 'en-US'
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Date(dateString).toLocaleDateString(l, options)
+}
+
+function getArticlePath(post) {
+  let articlePath = ''
+
+  const found = Array.isArray(notesFlat.value) ? notesFlat.value.find(item => item.title === post.title) : null
+  if (found && found.relativePath) {
+    articlePath = `notes/${found.relativePath}.md`
+  } else {
+    const isEnglish = locale.value === 'en-US'
+
+    const basePath = post.category?.[1] || 'notes'
+    const fileName = post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')
+    articlePath = `${basePath}/${fileName}.md`
+
+    if (isEnglish) {
+      articlePath = articlePath.replace('.md', '-en.md')
+    }
+  }
+
+  return `/article/${articlePath.replace(/\.md$/, '')}`
+}
+
+function goToPage(page) {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    const q = { ...route.query, page: String(page) }
+    router.push({ path: route.path, query: q }).catch(() => { })
+    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+  }
+}
+
+function prevPage() {
+  if (currentPage.value > 1) {
+    const page = currentPage.value - 1
+    currentPage.value = page
+    const q = { ...route.query, page: String(page) }
+    router.push({ path: route.path, query: q }).catch(() => { })
+    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+  }
+}
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    const page = currentPage.value + 1
+    currentPage.value = page
+    const q = { ...route.query, page: String(page) }
+    router.push({ path: route.path, query: q }).catch(() => { })
+    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+  }
+}
+
+function goTag(tag) {
+  if (!tag) return
+  const q = { ...route.query, tag: tag, page: '1' }
+  router.push({ path: '/', query: q }).catch(() => { })
+  nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+}
+
+function handleResize() {
+  maxVisiblePages.value = window.innerWidth < 480 ? 3 : 5
+}
+
+function formatCategory(catArr) {
+  if (!Array.isArray(catArr) || catArr.length === 0) return ''
+  const top = catArr[0] || ''
+  const subKey = catArr[1]
+  if (!subKey) return top
+  const subTitle = categoryTitleMap.value[subKey] || subKey
+  return `${top} / ${subTitle}`
+}
+
+loadData()
+
+watch(() => props.docs, () => { currentPage.value = 1 })
+
+watch(() => route.query.page, (newVal) => {
+  const p = parseInt(newVal)
+  const page = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
+  if (page !== currentPage.value) {
+    currentPage.value = page
+    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+  }
+})
+
+watch(locale, () => loadData())
+
+onMounted(() => {
+  const p = parseInt(route.query.page)
+  currentPage.value = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
 </script>
 
 <style scoped>

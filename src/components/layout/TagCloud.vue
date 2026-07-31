@@ -15,39 +15,40 @@
   </div>
 </template>
 
-<script>
-/* TagCloud
-  - 展示标签云，支持传入外部 tagData
-*/
+<script setup>
+import { computed, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 
-export default {
-  name: 'TagCloud',
-  setup() { const { t } = useI18n(); return { t } },
-  props: { tagData: { type: Array, default: () => [] } },
-  data() { return { tags: [] } },
-  computed: {
-    tagsText() { return this.t('tags') },
-    cloudTags() {
-      const src = Array.isArray(this.tagData) && this.tagData.length ? this.tagData : this.tags;
-      const map = new Map();
-      src.forEach(t => {
-        const name = typeof t === 'string' ? t : t.name;
-        if (!name) return;
-        map.set(name, (map.get(name) || 0) + 1);
-      });
-      return Array.from(map.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => a.name.localeCompare(b.name));
-    }
-  },
-  mounted() { if (this.tagData.length) this.tags = this.tagData },
-  methods: {
-    goTag(name) {
-      if (!name) return;
-      const q = { ...this.$route.query, tag: name, page: '1' };
-      this.$router.push({ path: '/', query: q }).catch(() => { });
-      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    }
-  }
+const props = defineProps({
+  tagData: { type: Array, default: () => [] }
+})
+
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
+
+const tags = ref([])
+
+const tagsText = computed(() => t('tags'))
+const cloudTags = computed(() => {
+  const src = Array.isArray(props.tagData) && props.tagData.length ? props.tagData : tags.value
+  const map = new Map()
+  src.forEach(t => {
+    const name = typeof t === 'string' ? t : t.name
+    if (!name) return
+    map.set(name, (map.get(name) || 0) + 1)
+  })
+  return Array.from(map.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => a.name.localeCompare(b.name))
+})
+
+if (props.tagData.length) tags.value = props.tagData
+
+function goTag(name) {
+  if (!name) return
+  const q = { ...route.query, tag: name, page: '1' }
+  router.push({ path: '/', query: q }).catch(() => { })
+  nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
 }
 </script>
 

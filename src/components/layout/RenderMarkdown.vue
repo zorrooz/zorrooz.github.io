@@ -3,177 +3,178 @@
   <div class="markdown-body" v-html="renderedMarkdown" ref="markdownContainer"></div>
 </template>
 
-<script>
+<script setup>
 /*
   RenderMarkdown
   - 接收构建期预渲染的 HTML，处理图片路径、代码复制和标题锚点
 */
-const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true });
+import { nextTick, ref, useTemplateRef, watch } from 'vue'
 
-export default {
-  props: {
-    rawMarkdown: { type: String, default: '' },
-    articlePath: { type: String, default: '' },
-    articleTitle: { type: String, default: '' }
-  },
-  data() { return { renderedMarkdown: '' } },
-  watch: {
-    rawMarkdown: { handler: 'initRender', immediate: true, async: true }
-  },
-  methods: {
-    async initRender(htmlContent) {
-      const processedHtml = this.rewriteImageLinks(htmlContent, this.articlePath)
-      this.renderedMarkdown = processedHtml
-      this.$nextTick(() => {
-        this.$emit('markdown-rendered')
-        this.enhanceCodeBlocks()
-        this.enhanceHeadings()
-      })
-    },
+const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
 
-    rewriteImageLinks(html, articlePath) {
-      try {
-        const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/');
+const props = defineProps({
+  rawMarkdown: { type: String, default: '' },
+  articlePath: { type: String, default: '' },
+  articleTitle: { type: String, default: '' }
+})
 
-        const toAssetUrl = (relPath) => {
-          if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath;
-          const parts = (articleDir + '/' + relPath).split('/').filter(p => p && p !== '.');
-          const stack = [];
-          parts.forEach(p => p === '..' ? stack.pop() : stack.push(p));
-          const normalized = stack.join('/');
-          const candidateKeys = [
-            `../../content-src/${normalized}`,
-            `../content-src/${normalized}`,
-            `content-src/${normalized}`
-          ];
-          for (const key of candidateKeys) {
-            if (assetModules[key]) return assetModules[key];
-          }
-          return relPath;
-        };
+const emit = defineEmits(['markdown-rendered'])
 
-        return html
-          .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) =>
-            `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`);
-      } catch (e) {
-        console.warn('rewriteImageLinks failed', e);
-        return html;
+const renderedMarkdown = ref('')
+const markdownContainer = useTemplateRef('markdownContainer')
+
+async function initRender(htmlContent) {
+  const processedHtml = rewriteImageLinks(htmlContent, props.articlePath)
+  renderedMarkdown.value = processedHtml
+  await nextTick()
+  emit('markdown-rendered')
+  enhanceCodeBlocks()
+  enhanceHeadings()
+}
+
+function rewriteImageLinks(html, articlePath) {
+  try {
+    const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/')
+
+    const toAssetUrl = (relPath) => {
+      if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath
+      const parts = (articleDir + '/' + relPath).split('/').filter(p => p && p !== '.')
+      const stack = []
+      parts.forEach(p => p === '..' ? stack.pop() : stack.push(p))
+      const normalized = stack.join('/')
+      const candidateKeys = [
+        `../../content-src/${normalized}`,
+        `../content-src/${normalized}`,
+        `content-src/${normalized}`
+      ]
+      for (const key of candidateKeys) {
+        if (assetModules[key]) return assetModules[key]
       }
-    },
-
-    enhanceHeadings() {
-      const container = this.$refs.markdownContainer;
-      if (!container) return;
-      this.cleanDuplicateH1(container);
-      this.addAnchorLinks(container);
-    },
-
-    cleanDuplicateH1(container) {
-      if (!this.articleTitle) return;
-      const pageTitle = this.articleTitle.trim().toLowerCase();
-      container.querySelectorAll('h1').forEach(h1 => {
-        const h1Text = h1.textContent.trim().toLowerCase();
-        if (h1Text === pageTitle) h1.remove();
-        else h1.replaceWith(Object.assign(document.createElement('h2'), {
-          ...Object.fromEntries(Array.from(h1.attributes).map(attr => [attr.name, attr.value])),
-          innerHTML: h1.innerHTML
-        }));
-      });
-    },
-
-    addAnchorLinks(container) {
-      const scrollToHeading = (heading, anchorBtn) => {
-        const targetTop = window.scrollY + heading.getBoundingClientRect().top - 8;
-        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-        setTimeout(() => anchorBtn.blur(), 300);
-      };
-
-      container.querySelectorAll('h2, h3, h4, h5, h6').forEach(heading => {
-        heading.querySelector('.heading-anchor')?.remove();
-        const anchorBtn = Object.assign(document.createElement('button'), {
-          type: 'button',
-          className: 'heading-anchor',
-          textContent: '#',
-          ariaLabel: '置顶当前标题',
-          tabIndex: 0,
-          ariaHidden: 'false'
-        });
-
-        anchorBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          scrollToHeading(heading, anchorBtn);
-        });
-        anchorBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            scrollToHeading(heading, anchorBtn);
-          }
-        });
-
-        heading.appendChild(anchorBtn);
-      });
-    },
-
-    enhanceCodeBlocks() {
-      const container = this.$refs.markdownContainer
-      if (!container) return
-
-      container.querySelectorAll('pre').forEach(pre => {
-        if (pre.querySelector('.code-block-header')) return
-        const code = pre.querySelector('code')
-        if (!code) return
-
-        const language = (code.className.match(/language-(\w+)/) || ['', 'text'])[1]
-        const header = document.createElement('div')
-        header.className = 'code-block-header d-flex align-items-center justify-content-between'
-
-        const langLabel = document.createElement('span')
-        langLabel.className = 'code-language'
-        langLabel.textContent = language
-
-        const copyButton = document.createElement('button')
-        copyButton.type = 'button'
-        copyButton.className = 'copy-button btn-icon d-flex align-items-center justify-content-center'
-        copyButton.setAttribute('aria-label', '复制代码')
-        copyButton.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 14 14" fill="currentColor">
-            <path d="M3 2C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2H3ZM1 3C1 1.89543 1.89543 1 3 1H9C10.1046 1 11 1.89543 11 3V9C11 10.1046 10.1046 11 9 11H3C1.89543 11 1 10.1046 1 9V3Z"/>
-            <path d="M5 4C4.44772 4 4 4.44772 4 5V11C4 11.5523 4.44772 12 5 12H11C11.5523 12 12 11.5523 12 11V5C12 4.44772 11.5523 4 11 4H5Z"/>
-          </svg>
-        `
-        copyButton.addEventListener('click', () => this.copyToClipboard(code.textContent, copyButton))
-
-        header.append(langLabel, copyButton)
-        const wrapper = document.createElement('div')
-        wrapper.className = 'code-block-wrapper'
-        pre.parentNode.insertBefore(wrapper, pre)
-        wrapper.append(header, pre)
-      })
-    },
-
-    async copyToClipboard(text, button) {
-      try {
-        await navigator.clipboard.writeText(text)
-      } catch (err) {
-        console.error('复制失败:', err)
-        const textArea = document.createElement('textarea')
-        textArea.value = text
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textArea)
-      } finally {
-        this.showCopyFeedback(button)
-      }
-    },
-
-    showCopyFeedback(button) {
-      const originalColor = button.style.color
-      button.style.color = 'var(--app-success)'
-      setTimeout(() => button.style.color = originalColor, 1000)
+      return relPath
     }
+
+    return html
+      .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) =>
+        `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`)
+  } catch (e) {
+    console.warn('rewriteImageLinks failed', e)
+    return html
   }
 }
+
+function enhanceHeadings() {
+  const container = markdownContainer.value
+  if (!container) return
+  cleanDuplicateH1(container)
+  addAnchorLinks(container)
+}
+
+function cleanDuplicateH1(container) {
+  if (!props.articleTitle) return
+  const pageTitle = props.articleTitle.trim().toLowerCase()
+  container.querySelectorAll('h1').forEach(h1 => {
+    const h1Text = h1.textContent.trim().toLowerCase()
+    if (h1Text === pageTitle) h1.remove()
+    else h1.replaceWith(Object.assign(document.createElement('h2'), {
+      ...Object.fromEntries(Array.from(h1.attributes).map(attr => [attr.name, attr.value])),
+      innerHTML: h1.innerHTML
+    }))
+  })
+}
+
+function addAnchorLinks(container) {
+  const scrollToHeading = (heading, anchorBtn) => {
+    const targetTop = window.scrollY + heading.getBoundingClientRect().top - 8
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+    setTimeout(() => anchorBtn.blur(), 300)
+  }
+
+  container.querySelectorAll('h2, h3, h4, h5, h6').forEach(heading => {
+    heading.querySelector('.heading-anchor')?.remove()
+    const anchorBtn = Object.assign(document.createElement('button'), {
+      type: 'button',
+      className: 'heading-anchor',
+      textContent: '#',
+      ariaLabel: '置顶当前标题',
+      tabIndex: 0,
+      ariaHidden: 'false'
+    })
+
+    anchorBtn.addEventListener('click', (e) => {
+      e.stopPropagation()
+      scrollToHeading(heading, anchorBtn)
+    })
+    anchorBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        scrollToHeading(heading, anchorBtn)
+      }
+    })
+
+    heading.appendChild(anchorBtn)
+  })
+}
+
+function enhanceCodeBlocks() {
+  const container = markdownContainer.value
+  if (!container) return
+
+  container.querySelectorAll('pre').forEach(pre => {
+    if (pre.querySelector('.code-block-header')) return
+    const code = pre.querySelector('code')
+    if (!code) return
+
+    const language = (code.className.match(/language-(\w+)/) || ['', 'text'])[1]
+    const header = document.createElement('div')
+    header.className = 'code-block-header d-flex align-items-center justify-content-between'
+
+    const langLabel = document.createElement('span')
+    langLabel.className = 'code-language'
+    langLabel.textContent = language
+
+    const copyButton = document.createElement('button')
+    copyButton.type = 'button'
+    copyButton.className = 'copy-button btn-icon d-flex align-items-center justify-content-center'
+    copyButton.setAttribute('aria-label', '复制代码')
+    copyButton.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 14 14" fill="currentColor">
+        <path d="M3 2C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2H3ZM1 3C1 1.89543 1.89543 1 3 1H9C10.1046 1 11 1.89543 11 3V9C11 10.1046 10.1046 11 9 11H3C1.89543 11 1 10.1046 1 9V3Z"/>
+        <path d="M5 4C4.44772 4 4 4.44772 4 5V11C4 11.5523 4.44772 12 5 12H11C11.5523 12 12 11.5523 12 11V5C12 4.44772 11.5523 4 11 4H5Z"/>
+      </svg>
+    `
+    copyButton.addEventListener('click', () => copyToClipboard(code.textContent, copyButton))
+
+    header.append(langLabel, copyButton)
+    const wrapper = document.createElement('div')
+    wrapper.className = 'code-block-wrapper'
+    pre.parentNode.insertBefore(wrapper, pre)
+    wrapper.append(header, pre)
+  })
+}
+
+async function copyToClipboard(text, button) {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (err) {
+    console.error('复制失败:', err)
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+  } finally {
+    showCopyFeedback(button)
+  }
+}
+
+function showCopyFeedback(button) {
+  const originalColor = button.style.color
+  button.style.color = 'var(--app-success)'
+  setTimeout(() => button.style.color = originalColor, 1000)
+}
+
+watch(() => props.rawMarkdown, initRender, { immediate: true, async: true })
 </script>
 
 <style>

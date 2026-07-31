@@ -81,26 +81,24 @@
   AppHeader
   - 顶部导航，包含移动抽屉与语言/主题按钮
 */
-import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAppStore } from '@/stores/app';
 import NavigationTree from '@/components/layout/NavigationTree.vue';
 
 const route = useRoute();
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const appStore = useAppStore();
 const mobileMenuOpen = ref(false);
 const showMobileSidebar = ref(false);
 const logoStyle = ref({});
 
-const navItems = ref([
+const navItems = computed(() => [
   { icon: 'fa-layer-group', text: t('categories'), href: '/category' },
   { icon: 'fa-folder-open', text: t('resources'), href: '/resource' },
   { icon: 'fa-info-circle', text: t('about'), href: '/about' },
-]);
-
-watch(locale, () => { navItems.value = [{ icon: 'fa-layer-group', text: t('categories'), href: '/category' }, { icon: 'fa-folder-open', text: t('resources'), href: '/resource' }, { icon: 'fa-info-circle', text: t('about'), href: '/about' },]; });
+])
 
 const isArticle = computed(() => route.name === 'Article');
 

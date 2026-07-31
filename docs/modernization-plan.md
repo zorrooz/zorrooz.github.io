@@ -1,6 +1,6 @@
 # gblog 架构现代化执行计划
 
-> 状态：**执行中（Phase 0-3 已完成）**
+> 状态：**执行中（Phase 0-4 已完成）**
 > 制定日期：2026-07-31
 > 路由来源：AGENTS.md → 本文件（约定文档）
 > 执行方式：由用户切换到 build 模式，按 Phase 顺序逐个执行；每个 Phase 完成后更新本文件顶部的状态表
@@ -13,7 +13,7 @@
 | Phase 1 | Markdown 渲染移入构建期（bundle 瘦身） | ✅ 已完成 |
 | Phase 2 | SSG 预渲染 + history 路由（核心升级） | ✅ 已完成 |
 | Phase 3 | 内容层整理（生成器共享 core + sitemap） | ✅ 已完成 |
-| Phase 4 | 组件现代化（`<script setup>` 迁移） | ⬜ 待执行 |
+| Phase 4 | 组件现代化（`<script setup>` 迁移） | ✅ 已完成 |
 | Phase 5 | TypeScript 渐进迁移 | ⬜ 待执行 |
 | Phase 6 | 体验增强（PWA / 搜索 / 资产本地化，可选） | ⬜ 待执行 |
 
@@ -226,6 +226,17 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
 - **不做** unplugin-vue-router（手动路由表已足够清晰，避免过度工具化）
 
 **验证**：每迁移一个组件即 `npm run lint` + 浏览器回归该组件涉及的页面；全部完成后完整回归清单。
+
+**执行记录（2026-07-31）**：
+- 16 个 `.vue` 文件全部迁移 `<script setup>`（3 小组件 → 6 布局组件 → RenderMarkdown → 5 视图 → Article.vue 收尾）
+- 语义对照落地：props → `defineProps`、emits → `defineEmits`、`$refs` → `useTemplateRef`（Home/Article/RenderMarkdown）、`$route/$router` → `useRoute/useRouter`、`setup()` 返回 `t/locale` 混搭全部移除（`useI18n` 直接解构）
+- Vue 3.5 特性：`useTemplateRef`（Home 侧栏、Article 双栏 + OnThisPage ref、RenderMarkdown 容器）
+- 外部方法调用：`OnThisPage` 经 `defineExpose({ refreshToc, resetToc })` 供 Article.vue 使用（原 `$refs.xxx.xxx()` 语义保留）
+- SSR head 适配：`@unhead/vue` 2.x 的 `VueHeadMixin` 读取组件选项 `head`，`<script setup>` 下用 `defineOptions({ name, head() {} })` 承载（`this.currentPost` 绑定组件实例，SSR 标题验证正常）
+- `AppHeader` 已是 script setup，仅将 `navItems` 由 ref+watch 改为 computed（locale 依赖自动重算）
+- `PostList` 删除从未被引用的 `clearTag`（原 Options API 下 lint 不报，script setup 下报未使用；Home.vue 自有实现）
+- 单字组件名触犯 `vue/multi-word-component-names`：4 个视图用 `defineOptions({ name: 'HomeView'/'CategoryView'/'ResourceView'/'AboutView' })` 保留原名
+- **行为验证**：lint ✅；`vite-ssg build` 17 页 SSR 全部内联正文（`markdown-body`/`<title>` 均在）；preview 深链 200；dev server 无编译错误；主 bundle 273.97 → 259.6 kB（-14.4 kB，Options API 运行时开销去除）
 
 ---
 

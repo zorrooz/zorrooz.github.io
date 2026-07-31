@@ -25,197 +25,206 @@
   </nav>
 </template>
 
-<script>
-/*
-  OnThisPage
-  - 生成页面内目录并提供滚动监听 
-*/
+<script setup>
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export default {
-  name: 'OnThisPage',
-  setup() {
-    const { t } = useI18n()
-    return { t }
+const props = defineProps({
+  containerSelector: {
+    type: String,
+    default: '.markdown-body'
   },
-  props: {
-    containerSelector: {
-      type: String,
-      default: '.markdown-body'
-    },
-    levels: {
-      type: Array,
-      default: () => [2, 3, 4, 5, 6]
-    },
-    offset: {
-      type: Number,
-      default: 8
+  levels: {
+    type: Array,
+    default: () => [2, 3, 4, 5, 6]
+  },
+  offset: {
+    type: Number,
+    default: 8
+  }
+})
+
+const emit = defineEmits(['navigate'])
+
+const { t } = useI18n()
+
+const toc = ref([])
+const activeId = ref('')
+const otpObserver = ref(null)
+const otpObserverTimer = ref(null)
+const otpPoller = ref(null)
+
+function cleanupObservers() {
+  if (otpObserver.value) { otpObserver.value.disconnect(); otpObserver.value = null }
+  if (otpObserverTimer.value) { clearTimeout(otpObserverTimer.value); otpObserverTimer.value = null }
+  if (otpPoller.value) { clearInterval(otpPoller.value); otpPoller.value = null }
+}
+
+function resetToc() {
+  toc.value = []
+  activeId.value = ''
+  cleanupObservers()
+  nextTick(() => setupContainerObserver())
+}
+
+function refreshToc() {
+  buildToc()
+  onScrollSpy()
+}
+
+function setupContainerObserver() {
+  setTimeout(() => refreshToc(), 100)
+  const checkContainer = () => {
+    const root = document.querySelector(props.containerSelector)
+    if (!root) return
+    if (otpPoller.value) { clearInterval(otpPoller.value); otpPoller.value = null }
+    if (!otpObserver.value) {
+      otpObserver.value = new MutationObserver(() => {
+        clearTimeout(otpObserverTimer.value)
+        otpObserverTimer.value = setTimeout(() => refreshToc(), 100)
+      })
+      otpObserver.value.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] })
     }
-  },
-  emits: ['navigate'],
-  data() {
-    return {
-      toc: [],
-      activeId: '',
-      otpObserver: null,
-      otpObserverTimer: null,
-      otpPoller: null
-    }
-  },
-  mounted() {
-    this.buildToc();
-    this.bindScrollSpy();
+    refreshToc()
+  }
+  checkContainer()
+  if (!otpPoller.value && !document.querySelector(props.containerSelector)) otpPoller.value = setInterval(checkContainer, 200)
+}
 
-    this.$nextTick(() => {
-      this.setupContainerObserver();
-    });
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.onScrollSpy);
-    window.removeEventListener('resize', this.onScrollSpy);
-    this.cleanupObservers();
-  },
-  methods: {
-    resetToc() {
-      this.toc = [];
-      this.activeId = '';
-      this.cleanupObservers();
-      this.$nextTick(() => this.setupContainerObserver());
-    },
-
-    refreshToc() { this.buildToc(); this.onScrollSpy(); },
-
-    cleanupObservers() {
-      if (this.otpObserver) { this.otpObserver.disconnect(); this.otpObserver = null; }
-      if (this.otpObserverTimer) { clearTimeout(this.otpObserverTimer); this.otpObserverTimer = null; }
-      if (this.otpPoller) { clearInterval(this.otpPoller); this.otpPoller = null; }
-    },
-
-    setupContainerObserver() {
-      setTimeout(() => this.refreshToc(), 100);
-      const checkContainer = () => {
-        const root = document.querySelector(this.containerSelector);
-        if (!root) return;
-        if (this.otpPoller) { clearInterval(this.otpPoller); this.otpPoller = null; }
-        if (!this.otpObserver) {
-          this.otpObserver = new MutationObserver(() => { clearTimeout(this.otpObserverTimer); this.otpObserverTimer = setTimeout(() => this.refreshToc(), 100); });
-          this.otpObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] });
-        }
-        this.refreshToc();
-      };
-      checkContainer();
-      if (!this.otpPoller && !document.querySelector(this.containerSelector)) this.otpPoller = setInterval(checkContainer, 200);
-    },
-
-    getHeadingText(h) { try { const clone = h.cloneNode(true); clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove()); return (clone.textContent || '').replace(/\s*#\s*$/, '').trim(); } catch { return (h.textContent || '').replace(/\s*#\s*$/, '').trim(); } },
-
-    buildToc() {
-      const root = document.querySelector(this.containerSelector);
-      if (!root) {
-        this.toc = [];
-        return;
-      }
-
-      const selector = this.levels.map(l => `h${l}`).join(',');
-      const headings = Array.from(root.querySelectorAll(selector));
-
-      if (headings.length === 0) {
-        this.toc = [];
-        return;
-      }
-
-      headings.forEach(h => {
-        if (!h.id) {
-          let safeId = h.textContent.trim().toLowerCase()
-            .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s-]/g, '')
-            .replace(/\s+/g, '-');
-
-          if (!safeId) {
-            safeId = `section-${Math.random().toString(36).substring(2, 9)}`;
-          }
-
-          let finalId = safeId;
-          let count = 1;
-          while (document.getElementById(finalId)) {
-            finalId = `${safeId}-${count++}`;
-          }
-          h.id = finalId;
-        }
-      });
-
-      const levelSet = new Set(this.levels);
-      const topLevel = Math.min(...this.levels);
-      const secondLevel = topLevel + 1;
-      const toc = []; let currentTop = null;
-      for (const h of headings) {
-        const level = parseInt(h.tagName.substring(1), 10); if (!levelSet.has(level)) continue;
-        const node = { id: h.id, text: this.getHeadingText(h), level, children: [] };
-        if (level === topLevel) { toc.push(node); currentTop = node; }
-        else if (currentTop && level >= secondLevel) currentTop.children.push(node);
-        else toc.push(node);
-      }
-      this.toc = toc;
-    },
-
-    bindScrollSpy() {
-      window.addEventListener('scroll', this.onScrollSpy, { passive: true });
-      window.addEventListener('resize', this.onScrollSpy);
-      this.onScrollSpy();
-    },
-
-    onScrollSpy() {
-      const root = document.querySelector(this.containerSelector);
-      if (!root) return;
-
-      const selector = this.levels.map(l => `h${l}`).join(',');
-      const headings = Array.from(root.querySelectorAll(selector));
-      if (headings.length === 0) {
-        this.activeId = '';
-        return;
-      }
-
-      const scrollY = window.scrollY || window.pageYOffset;
-
-      let current = '';
-      for (const h of headings) {
-        const top = h.getBoundingClientRect().top + scrollY;
-        if (top - this.offset <= scrollY + 1) {
-          current = h.id;
-        } else {
-          break;
-        }
-      }
-      this.activeId = current || (headings[0]?.id || '');
-    },
-
-    scrollToId(id) {
-      this.$emit('navigate', id);
-
-      const el = document.getElementById(id);
-      if (!el) {
-        return;
-      }
-      const top = el.getBoundingClientRect().top + window.scrollY - this.offset;
-      const doScroll = () => {
-        window.scrollTo({
-          top,
-          behavior: 'smooth'
-        });
-      };
-
-      try {
-        const bodyOverflow = document.body && document.body.style && document.body.style.overflow;
-        if (bodyOverflow === 'hidden') {
-          setTimeout(doScroll, 80);
-        } else {
-          doScroll();
-        }
-      } catch {
-        doScroll();
-      }
-    }
+function getHeadingText(h) {
+  try {
+    const clone = h.cloneNode(true)
+    clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove())
+    return (clone.textContent || '').replace(/\s*#\s*$/, '').trim()
+  } catch {
+    return (h.textContent || '').replace(/\s*#\s*$/, '').trim()
   }
 }
+
+function buildToc() {
+  const root = document.querySelector(props.containerSelector)
+  if (!root) {
+    toc.value = []
+    return
+  }
+
+  const selector = props.levels.map(l => `h${l}`).join(',')
+  const headings = Array.from(root.querySelectorAll(selector))
+
+  if (headings.length === 0) {
+    toc.value = []
+    return
+  }
+
+  headings.forEach(h => {
+    if (!h.id) {
+      let safeId = h.textContent.trim().toLowerCase()
+        .replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+
+      if (!safeId) {
+        safeId = `section-${Math.random().toString(36).substring(2, 9)}`
+      }
+
+      let finalId = safeId
+      let count = 1
+      while (document.getElementById(finalId)) {
+        finalId = `${safeId}-${count++}`
+      }
+      h.id = finalId
+    }
+  })
+
+  const levelSet = new Set(props.levels)
+  const topLevel = Math.min(...props.levels)
+  const secondLevel = topLevel + 1
+  const tocList = []
+  let currentTop = null
+  for (const h of headings) {
+    const level = parseInt(h.tagName.substring(1), 10)
+    if (!levelSet.has(level)) continue
+    const node = { id: h.id, text: getHeadingText(h), level, children: [] }
+    if (level === topLevel) { tocList.push(node); currentTop = node }
+    else if (currentTop && level >= secondLevel) currentTop.children.push(node)
+    else tocList.push(node)
+  }
+  toc.value = tocList
+}
+
+function bindScrollSpy() {
+  window.addEventListener('scroll', onScrollSpy, { passive: true })
+  window.addEventListener('resize', onScrollSpy)
+  onScrollSpy()
+}
+
+function onScrollSpy() {
+  const root = document.querySelector(props.containerSelector)
+  if (!root) return
+
+  const selector = props.levels.map(l => `h${l}`).join(',')
+  const headings = Array.from(root.querySelectorAll(selector))
+  if (headings.length === 0) {
+    activeId.value = ''
+    return
+  }
+
+  const scrollY = window.scrollY || window.pageYOffset
+
+  let current = ''
+  for (const h of headings) {
+    const top = h.getBoundingClientRect().top + scrollY
+    if (top - props.offset <= scrollY + 1) {
+      current = h.id
+    } else {
+      break
+    }
+  }
+  activeId.value = current || (headings[0]?.id || '')
+}
+
+function scrollToId(id) {
+  emit('navigate', id)
+
+  const el = document.getElementById(id)
+  if (!el) {
+    return
+  }
+  const top = el.getBoundingClientRect().top + window.scrollY - props.offset
+  const doScroll = () => {
+    window.scrollTo({
+      top,
+      behavior: 'smooth'
+    })
+  }
+
+  try {
+    const bodyOverflow = document.body && document.body.style && document.body.style.overflow
+    if (bodyOverflow === 'hidden') {
+      setTimeout(doScroll, 80)
+    } else {
+      doScroll()
+    }
+  } catch {
+    doScroll()
+  }
+}
+
+onMounted(() => {
+  buildToc()
+  bindScrollSpy()
+
+  nextTick(() => {
+    setupContainerObserver()
+  })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScrollSpy)
+  window.removeEventListener('resize', onScrollSpy)
+  cleanupObservers()
+})
+
+defineExpose({ refreshToc, resetToc })
 </script>
 
 <style scoped>

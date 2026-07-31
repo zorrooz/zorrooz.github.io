@@ -29,124 +29,111 @@
   </div>
 </template>
 
-<script>
+<script setup>
+defineOptions({ name: 'HomeView' })
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
+import { useRoute, useRouter } from 'vue-router'
 import ProfileCard from '@/components/layout/ProfileCard.vue'
 import TagCloud from '@/components/layout/TagCloud.vue'
 import PostList from '@/components/layout/PostList.vue'
-import { useI18n } from 'vue-i18n'
-import { useHead } from '@unhead/vue'
 import { loadPosts } from '@/utils/contentLoader'
 
-/*
-  HomeView
-  - 家页面
-*/
-export default {
-  name: 'HomeView',
-  setup() {
-    const { t, locale } = useI18n()
-    useHead({ title: 'gblog - Home' })
-    return { t, locale }
-  },
-  components: { ProfileCard, TagCloud, PostList },
-  data() {
-    return {
-      postData: []
-    }
-  },
-  computed: {
-    tagsText() {
-      return this.t('tags')
-    },
-    filteredByText() {
-      return this.t('filteredBy')
-    },
-    currentTag() { return this.$route.query.tag || '' },
-    filteredDocs() {
-      const tag = this.currentTag
-      if (!tag) return this.postData
-      return this.postData.filter(p => Array.isArray(p.tags) && p.tags.includes(tag))
-    },
-    tagList() {
-      const set = new Set()
-      this.postData.forEach(p => (p.tags || []).forEach(t => set.add(t)))
-      return Array.from(set).sort()
-    }
-  },
-  created() {
-    this.loadPostData()
-  },
-  mounted() {
-    this.updateSidebarDimensions()
-    window.addEventListener('scroll', this.updateSidebarDimensions)
-    window.addEventListener('resize', this.updateSidebarDimensions)
-  },
-  watch: {
-    locale(newLocale, oldLocale) {
-      if (newLocale !== oldLocale) {
-        if (this.currentTag) {
-          this.clearTag()
-        } else {
-          this.loadPostData()
-        }
-      }
-    }
-  },
-  methods: {
+useHead({ title: 'gblog - Home' })
 
+const { t, locale } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-    loadPostData() {
-      try {
-        this.postData = loadPosts() || [];
-      } catch (error) {
-        console.error('Failed to load post data:', error);
-        this.postData = [];
-      }
-    },
-    updateSidebarDimensions() {
-      if (window.innerWidth < 992) return
+const postData = ref([])
+const sidebarContent = useTemplateRef('sidebarContent')
+const sidebarContainer = useTemplateRef('sidebarContainer')
 
-      const header = document.querySelector('header')
-      const footer = document.querySelector('footer')
-      const content = this.$refs.sidebarContent
-      const sidebarContainer = this.$refs.sidebarContainer
+const filteredByText = computed(() => t('filteredBy'))
+const currentTag = computed(() => route.query.tag || '')
+const filteredDocs = computed(() => {
+  const tag = currentTag.value
+  if (!tag) return postData.value
+  return postData.value.filter(p => Array.isArray(p.tags) && p.tags.includes(tag))
+})
+const tagList = computed(() => {
+  const set = new Set()
+  postData.value.forEach(p => (p.tags || []).forEach(t => set.add(t)))
+  return Array.from(set).sort()
+})
 
-      if (!content || !sidebarContainer) return
-
-      const headerHeight = header?.offsetHeight || 0
-      const footerHeight = footer?.offsetHeight || 0
-      const viewportHeight = window.innerHeight
-      const scrollTop = window.scrollY
-      const documentHeight = document.documentElement.scrollHeight
-
-      const remainingPageHeight = Math.max(
-        0,
-        documentHeight - scrollTop - headerHeight - footerHeight - 40
-      )
-      const availableHeight = Math.min(
-        viewportHeight - headerHeight - 40,
-        remainingPageHeight
-      )
-
-      content.style.maxHeight = `${availableHeight}px`
-      content.style.overflowY = content.scrollHeight > availableHeight ? 'auto' : 'visible'
-    },
-    clearTag() {
-      const q = { ...this.$route.query }
-      delete q.tag
-      q.page = '1'
-      this.$router.push({ path: this.$route.path, query: q }).catch(() => { })
-      this.$nextTick(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        this.loadPostData()
-      })
-    }
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.updateSidebarDimensions)
-    window.removeEventListener('resize', this.updateSidebarDimensions)
+function loadPostData() {
+  try {
+    postData.value = loadPosts() || []
+  } catch (error) {
+    console.error('Failed to load post data:', error)
+    postData.value = []
   }
 }
+
+function updateSidebarDimensions() {
+  if (window.innerWidth < 992) return
+
+  const header = document.querySelector('header')
+  const footer = document.querySelector('footer')
+  const content = sidebarContent.value
+  const sidebarContainerEl = sidebarContainer.value
+
+  if (!content || !sidebarContainerEl) return
+
+  const headerHeight = header?.offsetHeight || 0
+  const footerHeight = footer?.offsetHeight || 0
+  const viewportHeight = window.innerHeight
+  const scrollTop = window.scrollY
+  const documentHeight = document.documentElement.scrollHeight
+
+  const remainingPageHeight = Math.max(
+    0,
+    documentHeight - scrollTop - headerHeight - footerHeight - 40
+  )
+  const availableHeight = Math.min(
+    viewportHeight - headerHeight - 40,
+    remainingPageHeight
+  )
+
+  content.style.maxHeight = `${availableHeight}px`
+  content.style.overflowY = content.scrollHeight > availableHeight ? 'auto' : 'visible'
+}
+
+function clearTag() {
+  const q = { ...route.query }
+  delete q.tag
+  q.page = '1'
+  router.push({ path: route.path, query: q }).catch(() => { })
+  nextTick(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    loadPostData()
+  })
+}
+
+loadPostData()
+
+watch(locale, (newLocale, oldLocale) => {
+  if (newLocale !== oldLocale) {
+    if (currentTag.value) {
+      clearTag()
+    } else {
+      loadPostData()
+    }
+  }
+})
+
+onMounted(() => {
+  updateSidebarDimensions()
+  window.addEventListener('scroll', updateSidebarDimensions)
+  window.addEventListener('resize', updateSidebarDimensions)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateSidebarDimensions)
+  window.removeEventListener('resize', updateSidebarDimensions)
+})
 </script>
 
 <style scoped>

@@ -86,112 +86,86 @@
   </div>
 </template>
 
-<script>
-import { useI18n } from 'vue-i18n';
-import { useHead } from '@unhead/vue';
-import { loadCategories } from '@/utils/contentLoader';
+<script setup>
+defineOptions({ name: 'CategoryView' })
+import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
+import { useRouter } from 'vue-router'
+import { loadCategories } from '@/utils/contentLoader'
 
-/*
-  CategoryView
-  - 分类页面
-*/
-export default {
-  name: 'CategoryView',
-  setup() {
-    const { t, locale } = useI18n();
-    useHead({ title: 'gblog - Categories' });
-    return { t, locale };
-  },
-  data() {
-    return {
-      categoryList: []
-    };
-  },
-  computed: {
-    pageTitle() {
-      return this.t('categories');
-    },
-    notesTitle() {
-      return this.t('notes');
-    },
-    projectsTitle() {
-      return this.t('projects');
-    },
-    topicsTitle() {
-      return this.t('topics');
-    },
-    tagsText() {
-      return this.t('tags');
-    },
-    articlesText() {
-      return this.t('articles');
-    },
-    wordsText() {
-      return this.t('words');
-    },
-    seeMoreText() {
-      return this.t('seeMore');
-    }
-  },
-  created() {
-    this.loadCategoryData();
-  },
+useHead({ title: 'gblog - Categories' })
 
-  watch: {
-    locale() {
-      this.loadCategoryData();
-    }
-  },
+const { t, locale } = useI18n()
+const router = useRouter()
 
-  methods: {
-    loadCategoryData() {
-      try {
-        const categoryData = loadCategories();
-        this.categoryList = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || []);
-      } catch (error) {
-        console.error('Failed to load category data:', error);
-        this.categoryList = [];
-      }
-    },
-    getLatestDate(item) {
-      return (item && item.stats && item.stats.latestDate) || '';
-    },
-    normalizeUrl(u) {
-      if (typeof u !== 'string' || !u.trim()) return '';
-      if (/^https?:\/\//i.test(u)) return u;
-      return 'https://' + u.replace(/^\/+/, '');
-    },
-    formatMonth(dateStr) {
-      const d = new Date(dateStr);
-      if (isNaN(d.getTime())) return dateStr;
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      return `${y}-${m}`;
-    },
-    formatWords(n) {
-      const num = Number(n);
-      if (!Number.isFinite(num)) return n;
-      if (num >= 10000) return Math.round(num / 1000) + 'k';
-      return String(num);
-    },
-    handleSeeMore(item) {
-      const root = item?.root;
-      if (root) {
-        this.$router.push(root).catch(err => {
-          if (err.name !== 'NavigationDuplicated' && !err.toString().includes('Navigation cancelled')) {
-            console.error('Navigation error:', err);
-          }
-        });
-        return;
-      }
+const categoryList = ref([])
 
-      const doi = this.normalizeUrl(item?.doi);
-      if (doi) {
-        window.open(doi, '_blank', 'noopener,noreferrer');
-      }
-    }
+const pageTitle = computed(() => t('categories'))
+const notesTitle = computed(() => t('notes'))
+const projectsTitle = computed(() => t('projects'))
+const topicsTitle = computed(() => t('topics'))
+const articlesText = computed(() => t('articles'))
+const wordsText = computed(() => t('words'))
+const seeMoreText = computed(() => t('seeMore'))
+
+function loadCategoryData() {
+  try {
+    const categoryData = loadCategories()
+    categoryList.value = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || [])
+  } catch (error) {
+    console.error('Failed to load category data:', error)
+    categoryList.value = []
   }
-};
+}
+
+function getLatestDate(item) {
+  return (item && item.stats && item.stats.latestDate) || ''
+}
+
+function normalizeUrl(u) {
+  if (typeof u !== 'string' || !u.trim()) return ''
+  if (/^https?:\/\//i.test(u)) return u
+  return 'https://' + u.replace(/^\/+/, '')
+}
+
+function formatMonth(dateStr) {
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return dateStr
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  return `${y}-${m}`
+}
+
+function formatWords(n) {
+  const num = Number(n)
+  if (!Number.isFinite(num)) return n
+  if (num >= 10000) return Math.round(num / 1000) + 'k'
+  return String(num)
+}
+
+function handleSeeMore(item) {
+  const root = item?.root
+  if (root) {
+    router.push(root).catch(err => {
+      if (err.name !== 'NavigationDuplicated' && !err.toString().includes('Navigation cancelled')) {
+        console.error('Navigation error:', err)
+      }
+    })
+    return
+  }
+
+  const doi = normalizeUrl(item?.doi)
+  if (doi) {
+    window.open(doi, '_blank', 'noopener,noreferrer')
+  }
+}
+
+loadCategoryData()
+
+watch(locale, () => {
+  loadCategoryData()
+})
 </script>
 
 <style scoped>
