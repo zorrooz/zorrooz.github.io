@@ -15,7 +15,7 @@
 | Phase 3 | 内容层整理（生成器共享 core + sitemap） | ✅ 已完成 |
 | Phase 4 | 组件现代化（`<script setup>` 迁移） | ✅ 已完成 |
 | Phase 5 | TypeScript 渐进迁移 | ✅ 已完成 |
-| Phase 6 | 体验增强（PWA / 搜索 / 资产本地化，可选） | ⬜ 待执行 |
+| Phase 6 | 体验增强（PWA / 搜索 / 资产本地化 / 双语言路径化） | ✅ 已完成 |
 
 ---
 
@@ -277,6 +277,27 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
 2. **站内全文搜索**：构建期生成 minisearch 索引（跟随 generatePosts），运行时零后端模糊搜索
 3. **资产本地化**：Font Awesome 由 CDN 换本地子集（先统计实际用到的 icon 再裁剪）
 4. **双语言路径化** `/zh/` `/en/`（SEO 完整化；改动面最大，最后做）
+
+**验证**：lint + typecheck + build + preview 冒烟（双语言全部页面 200）。
+
+**执行记录（2026-07-31）**：
+- 6.1 PWA（commit `f0b93be`）：`vite-plugin-pwa@1.0.0` + `@vite-pwa/assets-generator`；`vite.config.js` `VitePWA` 插件（`registerType: 'autoUpdate'`、`workbox: { globPatterns: ['**/*.{js,css,html,json,woff2,png,svg,ico,webmanifest}'] }`、`injectManifest` 不启用）；`main.js` `registerSW()`；`public/favicon.svg`（PWA 专用 + 原有 favicon 复用）、`public/apple-touch-icon.png`、`manifest.webmanifest`；`registerType` 冲突（manifest 经 PWA 插件生成时移除 `registerType` 避免与 `vite-plugin-pwa` 的 manifest 文件互斥）；页面 `onLoad` 注册 service worker 后 PWA 自动更新。验证：`npm run build` 生成 `sw.js` + `manifest.webmanifest`，preview 下 `/sw.js` 200
+- 6.2 搜索（commit `591a3cd`）：`minisearch@7.1.1`（CJK 大分词，`split: (term) => term.split('').slice(0, 8)`）＋ `contentDevPlugin` 保留（search-index 由 `generateSearchIndex` 生成）：
+  - `src/utils/generators/generateSearchIndex.js`：读 posts.json + 正文（`renderMarkdown`）→ 权重 `title×4 + tags×3 + description×2 + body×1`，ID 为文章相对路径（`notes/Omics/genomics/bwa/bwa`、`-en` 后缀版本），输出 `src/content/search-index.json` / `search-index-en.json`
+  - `SearchModal.vue`：懒加载 `import.meta.glob('/src/content/search-index*.json')`（**必须根相对式**——`../content/...` 在 SFC 中解析为空），minisearch 构建索引，`SearchResult[]`→`as unknown as SearchDoc[]` 强转（类型不匹配）
+  - `contentLoader.js`：`jsonModules` glob 排除 `search-index*`（**首字符类陷阱**：写成 `[bcnprt]` 漏掉 `about/about-en`，导致 about 数据恒为空 → 修复为 `[abcnprt]`）
+  - 验证：dev server + 浏览器搜索、构建产物每个 locale 独立懒加载 chunk（search-index-CoIlhH-g.js 10,473B）、预览 + 搜索 200
+- 6.3 FA 本地化（commit `0fc55b2`）：`@fortawesome/fontawesome-free@6.4.0`（--save-exact）＋ 本地 Python 工具链 `pyftsubset`（fontTools）+ `brotli`；`scripts/subset-fa-icons.mjs` 从 all.min.css 正则提取码点 → 对 solid/brands 分别子集，输出 `src/assets/fonts/fa-{solid,brands}-subset.woff2`（860B/360B，源 150KB/108KB）+ `src/assets/styles/fa-subset.css`；`main.js` 导入，`index.html` 移除 CDN link；图标清单 13 solid + 1 brands（star/info-circle/calendar-alt/link/arrow-right/bookmark/clock/search/times/arrow-up/envelope/layer-group/folder-open/github）；`npm run subset:icons` 重跑；构建时 woff2 因 `assetsInlineLimit` base64 内联进 app css（子集 <4KB）
+- 6.4 双语言路径化（本 Phase 合入）：
+  - `src/utils/localePath.js`（新）：`toLocalePath(path)` 按 `i18n.global.locale` 加 `/zh`/`/en` 前缀（无前导斜杠时补 `/`）
+  - `src/router/index.js`：`prefixedRoutes(prefix)` 生成 5 命名路由（`zh-Home`/`en-Home` 等）；遗留路径 `/`、`/category`、`/resource`、`/about`、`/article/:path*` 重定向到 `localePrefix()`（localStorage → navigator.language → `/zh`）
+  - `src/stores/app.js`：`toggleLanguage` → `setLocale(nextLocale)`（JSDoc `@param {'zh-CN'|'en-US'}`）；`initLocale` 优先读 `pathname.match(/^\/(zh|en)(\/|$)/)`；SSR 下跳过 localStorage/document 写入
+  - `src/main.js`：SSR 后台回调第 4 参 `routePath` → `setLocale(routePath.startsWith('/en') ? 'en-US' : 'zh-CN')`
+  - `App.vue` watch 路由前缀 ↔ locale 同步；`AppHeader` 品牌/nav/toggleLanguage 全部走 `toLocalePath` + 对面前缀 router.push（保留 query）；`PostList`/`NavigationTree`/`Article`/`SearchModal`/`Category` 链接统一 `toLocalePath('/article/...')`
+  - `vite.config.js`：`ssgOptions.includedRoutes` 保留 prefixed 路径 + `getArticleRoutes()`（改读 `categories.json`→`/zh…`、`categories-en.json`→`/en…`，`-en` 文章仅存在于后者）；**`concurrency: 1`**（i18n.global.locale 是模块单例，vite-ssg 默认并发渲染 `/zh` `/en` 页面互相覆盖 locale，导致 en 页渲染成中文）
+  - `generateSitemap.js`：`LOCALE_PREFIXES = ['/zh','/en']` ×（4 静态 + 13 文章）= 34 条
+  - 验证：typecheck ✅ / lint ✅ / build 34 页（zh 4 + en 4 + zh 13 文章 + en 13 文章）✅ / preview 全部 200（含 `/en/article/.../bwa-en` 预渲染 10,976B）✅ / zh 页含「分类」、en 页含 `Categories` 且无中文导航 ✅ / `/article/...` 旧路由 825B SPA 壳（预期——重定向）✅ / sitemap 34 条 ✅
+  - 已知遗留（非本 Phase 引入）：SSR `<html lang="en">` 属性恒为 en（`git show 0fc55b2:dist/about.html` 早前即如此，来自 vite-ssg 的 useHead 默认值）
 
 ---
 

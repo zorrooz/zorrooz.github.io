@@ -4,7 +4,7 @@
     <div class="container px-0">
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid d-flex">
-          <RouterLink class="navbar-brand" to="/" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle"
+          <RouterLink class="navbar-brand" :to="toLocalePath('/')" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle"
             @click="mobileMenuOpen = false">
             <img src="@/assets/icons/gblog.svg" alt="gblog" class="logo-icon" height="40">
           </RouterLink>
@@ -90,12 +90,14 @@
   - 顶部导航，包含移动抽屉与语言/主题按钮
 */
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAppStore } from '@/stores/app';
+import { toLocalePath } from '@/utils/localePath';
 import NavigationTree from '@/components/layout/NavigationTree.vue';
 
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 const appStore = useAppStore();
 const mobileMenuOpen = ref(false);
@@ -108,12 +110,12 @@ const blurFocus = (event: FocusEvent) => {
 };
 
 const navItems = computed(() => [
-  { icon: 'fa-layer-group', text: t('categories'), href: '/category' },
-  { icon: 'fa-folder-open', text: t('resources'), href: '/resource' },
-  { icon: 'fa-info-circle', text: t('about'), href: '/about' },
+  { icon: 'fa-layer-group', text: t('categories'), href: toLocalePath('/category') },
+  { icon: 'fa-folder-open', text: t('resources'), href: toLocalePath('/resource') },
+  { icon: 'fa-info-circle', text: t('about'), href: toLocalePath('/about') },
 ])
 
-const isArticle = computed(() => route.name === 'Article');
+const isArticle = computed(() => route.path.includes('/article/'));
 
 const enlargeLogo = () => {
   logoStyle.value = {
@@ -131,7 +133,10 @@ const toggleTheme = () => {
 };
 
 const toggleLanguage = () => {
-  appStore.toggleLanguage();
+  const m = route.path.match(/^\/(zh|en)/)
+  const nextPrefix = m && m[1] === 'en' ? '/zh' : '/en'
+  const rest = m ? route.path.slice(m[0].length) : route.path
+  router.push({ path: `${nextPrefix}${rest}`, query: route.query })
 };
 
 const onMobileMenuClick = () => { const isMobile = window.innerWidth < 992; if (isMobile) openMobileSidebar(); else mobileMenuOpen.value = !mobileMenuOpen.value; };

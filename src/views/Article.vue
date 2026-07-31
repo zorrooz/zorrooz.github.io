@@ -76,6 +76,7 @@ import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadHtmlContent } from '@/utils/contentLoader'
+import { toLocalePath } from '@/utils/localePath'
 
 defineOptions({
   name: 'ArticleView',
@@ -196,7 +197,7 @@ function getReadingTimeText(minutes: number) {
 }
 
 function toArticle(p: string) {
-  return { name: 'Article', params: { path: p.replace(/\.md$/, '').split('/') } }
+  return toLocalePath(`/article/${p.replace(/\.md$/, '')}`)
 }
 
 function buildFromCategories() {

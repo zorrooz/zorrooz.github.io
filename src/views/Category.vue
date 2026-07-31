@@ -92,6 +92,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
+import { toLocalePath } from '@/utils/localePath'
 import { loadCategories } from '@/utils/contentLoader'
 
 useHead({ title: 'gblog - Categories' })
@@ -147,7 +148,7 @@ function formatWords(n: any) {
 function handleSeeMore(item: any) {
   const root = item?.root
   if (root) {
-    router.push(root).catch(err => {
+    router.push(toLocalePath(root)).catch(err => {
       if (err.name !== 'NavigationDuplicated' && !err.toString().includes('Navigation cancelled')) {
         console.error('Navigation error:', err)
       }

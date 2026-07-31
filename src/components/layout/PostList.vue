@@ -96,6 +96,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { loadNotes, loadCategories } from '@/utils/contentLoader'
+import { toLocalePath } from '@/utils/localePath'
 
 const props = withDefaults(defineProps<{ docs: any[]; perPage?: number }>(), { perPage: 6 })
 
@@ -225,7 +226,7 @@ function getArticlePath(post: any) {
     }
   }
 
-  return `/article/${articlePath.replace(/\.md$/, '')}`
+  return toLocalePath(`/article/${articlePath.replace(/\.md$/, '')}`)
 }
 
 function goToPage(page: number) {

@@ -49,6 +49,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { loadCategories } from '@/utils/contentLoader'
+import { toLocalePath } from '@/utils/localePath'
 
 interface TreeFile {
   title: string
@@ -85,7 +86,7 @@ function loadCategoryData() {
 }
 
 function toArticle(path: string) {
-  return { name: 'Article', params: { path: path.replace(/\.md$/, '').split('/') } }
+  return toLocalePath(`/article/${path.replace(/\.md$/, '')}`)
 }
 
 function isActive(path: string) {

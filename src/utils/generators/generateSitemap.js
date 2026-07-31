@@ -18,6 +18,8 @@ const publicDir = path.join(__dirname, '../../../public')
 
 const STATIC_ROUTES = ['/', '/about', '/resource', '/category']
 
+const LOCALE_PREFIXES = ['/zh', '/en']
+
 function collectArticleUrls() {
   const p = path.join(contentDir, 'categories.json')
   if (!fs.existsSync(p)) {
@@ -43,8 +45,12 @@ function collectArticleUrls() {
 function generateSitemap() {
   const articleUrls = collectArticleUrls()
   const entries = [
-    ...STATIC_ROUTES.map((loc) => ({ loc, lastmod: '' })),
-    ...articleUrls,
+    ...LOCALE_PREFIXES.flatMap((prefix) =>
+      STATIC_ROUTES.map((loc) => ({ loc: `${prefix}${loc}`, lastmod: '' })),
+    ),
+    ...LOCALE_PREFIXES.flatMap((prefix) =>
+      articleUrls.map((u) => ({ loc: `${prefix}${u.loc}`, lastmod: u.lastmod })),
+    ),
   ]
 
   const urlset = entries

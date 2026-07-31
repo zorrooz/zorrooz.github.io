@@ -10,21 +10,27 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { contentDev } from './src/utils/contentDevPlugin.js'
 
 function getArticleRoutes() {
-  const categoriesPath = path.resolve('src/content/categories.json')
-  if (!fs.existsSync(categoriesPath)) return []
-  const data = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8'))
-  const routes = []
-  if (Array.isArray(data)) {
-    for (const section of data) {
-      for (const item of section?.items ?? []) {
-        for (const art of item?.articles ?? []) routes.push(art.articleUrl)
-        for (const cat of item?.categories ?? []) {
-          for (const art of cat?.articles ?? []) routes.push(art.articleUrl)
+  const collect = (file) => {
+    const categoriesPath = path.resolve(file)
+    if (!fs.existsSync(categoriesPath)) return []
+    const data = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8'))
+    const routes = []
+    if (Array.isArray(data)) {
+      for (const section of data) {
+        for (const item of section?.items ?? []) {
+          for (const art of item?.articles ?? []) routes.push(art.articleUrl)
+          for (const cat of item?.categories ?? []) {
+            for (const art of cat?.articles ?? []) routes.push(art.articleUrl)
+          }
         }
       }
     }
+    return routes.filter(Boolean)
   }
-  return routes.filter(Boolean)
+  return [
+    ...collect('src/content/categories.json').map((r) => `/zh${r}`),
+    ...collect('src/content/categories-en.json').map((r) => `/en${r}`),
+  ]
 }
 
 // https://vite.dev/config/
@@ -66,10 +72,17 @@ export default defineConfig({
     },
   },
   ssgOptions: {
-    includedRoutes: (paths) => [
-      ...paths.filter((p) => !p.includes(':')),
-      ...getArticleRoutes(),
-    ],
+    // i18n.global.locale is a module singleton; serial rendering keeps each
+    // page's locale from being clobbered by a concurrent page's setup
+    concurrency: 1,
+    includedRoutes: (paths) => {
+      const redirectOnly = new Set(['/', '/category', '/resource', '/about'])
+      const prefixed = paths.filter((p) => !p.includes(':') && !redirectOnly.has(p))
+      return [
+        ...prefixed,
+        ...getArticleRoutes(),
+      ]
+    },
     onFinished: () => {
       fs.copyFileSync('dist/index.html', 'dist/404.html')
     },

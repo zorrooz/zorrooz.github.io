@@ -1,54 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zorrooz.github.io/</loc>
+    <loc>https://zorrooz.github.io/zh/</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/about</loc>
+    <loc>https://zorrooz.github.io/zh/about</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/resource</loc>
+    <loc>https://zorrooz.github.io/zh/resource</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/category</loc>
+    <loc>https://zorrooz.github.io/zh/category</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Omics/genomics/bwa/bwa</loc>
+    <loc>https://zorrooz.github.io/en/</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Omics/proteomics/maxquant/maxquant</loc>
+    <loc>https://zorrooz.github.io/en/about</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2</loc>
+    <loc>https://zorrooz.github.io/en/resource</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Programming/python/biopython/biopython</loc>
+    <loc>https://zorrooz.github.io/en/category</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Programming/python/fastq/fastq</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Omics/genomics/bwa/bwa</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Programming/python/pandas/pandas</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Omics/proteomics/maxquant/maxquant</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Programming/r/demo/demo</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Programming/r/ggplot2/ggplot2</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Programming/python/biopython/biopython</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/notes/Programming/shell/bash/bash</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Programming/python/fastq/fastq</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/projects/Biocrawler/api/api-demo/api-demo</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Programming/python/pandas/pandas</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/projects/Biocrawler/installation/installation-demo/installation-demo</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Programming/r/demo/demo</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Programming/r/ggplot2/ggplot2</loc>
   </url>
   <url>
-    <loc>https://zorrooz.github.io/article/topics/StructureOfProteinDemo/results/results-demo/results-demo</loc>
+    <loc>https://zorrooz.github.io/zh/article/notes/Programming/shell/bash/bash</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/zh/article/projects/Biocrawler/api/api-demo/api-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/zh/article/projects/Biocrawler/installation/installation-demo/installation-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/zh/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/zh/article/topics/StructureOfProteinDemo/results/results-demo/results-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Omics/genomics/bwa/bwa</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Omics/proteomics/maxquant/maxquant</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Programming/python/biopython/biopython</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Programming/python/fastq/fastq</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Programming/python/pandas/pandas</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Programming/r/demo/demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Programming/r/ggplot2/ggplot2</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/notes/Programming/shell/bash/bash</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/projects/Biocrawler/api/api-demo/api-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/projects/Biocrawler/installation/installation-demo/installation-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo</loc>
+  </url>
+  <url>
+    <loc>https://zorrooz.github.io/en/article/topics/StructureOfProteinDemo/results/results-demo/results-demo</loc>
   </url>
 </urlset>

@@ -20,7 +20,7 @@ if (!import.meta.env.SSR) import('bootstrap')
 export const createApp = ViteSSG(
   App,
   { routes },
-  ({ app, router, initialState, isClient }) => {
+  ({ app, router, initialState, isClient, routePath }) => {
     const pinia = createPinia()
     app.use(pinia)
     if (import.meta.env.SSR) {
@@ -35,6 +35,13 @@ export const createApp = ViteSSG(
 
     const appStore = useAppStore()
     appStore.initTheme()
+    // SSR: prerender each page in its own locale (/zh or /en path prefix)
+    if (import.meta.env.SSR) {
+      if (typeof routePath === 'string') {
+        const m = routePath.match(/^\/(zh|en)(\/|$)/)
+        if (m) appStore.setLocale(m[1] === 'en' ? 'en-US' : 'zh-CN')
+      }
+    }
     // SSR always renders zh-CN; restore the persisted locale on the client
     if (isClient) appStore.initLocale()
     // PWA: register the service worker on every page (index.html carries the manifest link)

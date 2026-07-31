@@ -40,6 +40,7 @@ import { nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import MiniSearch from 'minisearch'
+import { toLocalePath } from '@/utils/localePath'
 
 interface SearchDoc {
   id: string
@@ -129,7 +130,7 @@ function snippet(item: SearchDoc) {
 
 function goToResult(item: SearchDoc) {
   close()
-  router.push({ name: 'Article', params: { path: item.path.split('/') } })
+  router.push(toLocalePath(`/article/${item.path}`))
 }
 
 function openFirstResult() {
