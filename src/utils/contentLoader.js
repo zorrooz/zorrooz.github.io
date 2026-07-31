@@ -1,8 +1,14 @@
-
+// @ts-check
+/** @returns {string} */
 const getCurrentLocale = () => {
   return (typeof window !== 'undefined' ? localStorage.getItem('locale') : null) || 'zh-CN'
 }
 
+/**
+ * @param {string} baseName
+ * @param {string} [extension]
+ * @returns {string}
+ */
 const getLocalizedFileName = (baseName, extension = '.json') => {
   const locale = getCurrentLocale()
   const isEnglish = locale === 'en-US'
@@ -21,13 +27,17 @@ const htmlModules = import.meta.glob('../content/html/**/*.html', {
   eager: true,
 })
 
+/**
+ * @param {string} fileName
+ * @returns {any}
+ */
 const loadJsonContent = (fileName) => {
   const localizedFileName = getLocalizedFileName(fileName, '.json')
 
   const matchedKey = Object.keys(jsonModules).find((key) => key.includes(localizedFileName))
 
   if (matchedKey) {
-    return jsonModules[matchedKey].default || {}
+    return (/** @type {{ default?: any }} */ (jsonModules[matchedKey])).default || {}
   }
 
   console.error(`Failed to load JSON content: ${localizedFileName}`)
@@ -36,7 +46,7 @@ const loadJsonContent = (fileName) => {
     const fallbackKey = Object.keys(jsonModules).find((key) => key.includes(`${fileName}.json`))
 
     if (fallbackKey) {
-      return jsonModules[fallbackKey].default || {}
+      return (/** @type {{ default?: any }} */ (jsonModules[fallbackKey])).default || {}
     }
   }
 
@@ -50,6 +60,10 @@ const loadJsonContent = (fileName) => {
  * old `loadMarkdownContent` semantics:
  *   en-US: bwa-en.html -> bwa.html
  *   zh-CN: bwa.html (or bwa-en.html when the path itself carries -en)
+ */
+/**
+ * @param {string} filePath
+ * @returns {string}
  */
 export const loadHtmlContent = (filePath) => {
   const locale = getCurrentLocale()
@@ -70,7 +84,7 @@ export const loadHtmlContent = (filePath) => {
       key.includes(`/content/html/${candidate}.html`),
     )
     if (matchedKey) {
-      return htmlModules[matchedKey] || ''
+      return /** @type {string} */ (htmlModules[matchedKey]) || ''
     }
   }
 

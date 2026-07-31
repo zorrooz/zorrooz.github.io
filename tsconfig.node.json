@@ -23,6 +23,7 @@
     "src/utils/generators/**/*.js",
     "src/utils/translator/**/*.js",
     "src/utils/runAllGenerators.js",
-    "src/utils/contentDevPlugin.js"
+    "src/utils/contentDevPlugin.js",
+    "src/utils/markdownProcessor.js"
   ]
 }

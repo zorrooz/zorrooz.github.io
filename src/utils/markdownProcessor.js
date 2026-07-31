@@ -1,3 +1,4 @@
+// @ts-check
 // 构建期专用（Node 环境），勿在客户端 import
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
@@ -24,6 +25,10 @@ const processor = unified()
   .use(rehypeHighlight, { languages: common })
   .use(rehypeKatex, { throwOnError: false, errorColor: '#cc0000' })
   .use(rehypeStringify)
+/**
+ * @param {string} markdown
+ * @returns {Promise<string>}
+ */
 export async function renderMarkdown(markdown) {
   const result = await processor.process(markdown)
   return String(result)

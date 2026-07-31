@@ -1,3 +1,4 @@
+// @ts-check
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { setTheme } from './theme'
@@ -5,11 +6,13 @@ import i18n from './i18n'
 
 export const useAppStore = defineStore('app', () => {
   // 主题状态
+  /** @type {import('vue').Ref<string>} */
   const theme = ref(
     typeof window !== 'undefined' ? localStorage.getItem('theme') || 'auto' : 'auto'
   )
   
   // 语言状态
+  /** @type {import('vue').Ref<string>} */
   const locale = ref(
     typeof window !== 'undefined' ? localStorage.getItem('locale') || 'zh-CN' : 'zh-CN'
   )
@@ -31,7 +34,7 @@ export const useAppStore = defineStore('app', () => {
     locale.value = locales[nextIndex]
     
     // 更新i18n和localStorage
-    i18n.global.locale.value = locale.value
+    i18n.global.locale.value = /** @type {'zh-CN' | 'en-US'} */ (locale.value)
     localStorage.setItem('locale', locale.value)
     document.documentElement.lang = locale.value
   }
@@ -43,7 +46,7 @@ export const useAppStore = defineStore('app', () => {
   
   // 初始化语言
   const initLocale = () => {
-    i18n.global.locale.value = locale.value
+    i18n.global.locale.value = /** @type {'zh-CN' | 'en-US'} */ (locale.value)
     if (typeof document !== 'undefined') document.documentElement.lang = locale.value
   }
   

@@ -1,3 +1,5 @@
+// @ts-check
+/** @param {string} mode */
 export const setTheme = (mode) => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return
   const html = document.documentElement;

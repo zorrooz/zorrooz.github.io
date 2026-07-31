@@ -1,3 +1,4 @@
+// @ts-check
 import { createI18n } from 'vue-i18n'
 import zhCN from './locales/zh-CN.js'
 import enUS from './locales/en-US.js'
