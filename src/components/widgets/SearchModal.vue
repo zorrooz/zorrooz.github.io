@@ -187,6 +187,12 @@ nextTick(() => {
   color: var(--app-text);
 }
 
+.search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 .search-close {
   color: var(--app-text-muted);
   transition: color 0.15s ease-in-out;
