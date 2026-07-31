@@ -8,7 +8,7 @@
           <input ref="searchInput" v-model="keyword" class="search-input" type="search"
             :placeholder="t('searchPlaceholder')" @keydown.enter.prevent="openFirstResult" />
           <button class="search-close btn-icon" :aria-label="t('close')" @click="close">
-            <i class="fas fa-times"></i>
+            <span class="search-close-icon" aria-hidden="true"></span>
           </button>
         </div>
 
@@ -189,6 +189,38 @@ nextTick(() => {
 
 .search-close {
   color: var(--app-text-muted);
+  transition: color 0.15s ease-in-out;
+}
+
+.search-close:hover {
+  color: var(--app-text);
+}
+
+.search-close-icon {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
+.search-close-icon::before,
+.search-close-icon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.search-close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.search-close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .search-status {
