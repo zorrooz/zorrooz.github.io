@@ -337,14 +337,14 @@ watch(locale, (newLocale, oldLocale) => {
   }
 })
 
-watch(route, (to, from) => {
-  const oldPath = normalizeRoutePathParam(from?.params?.path)
-  const newPath = normalizeRoutePathParam(to?.params?.path)
+watch(() => route.params.path, (newPathParam, oldPathParam) => {
+  const oldPath = normalizeRoutePathParam(oldPathParam)
+  const newPath = normalizeRoutePathParam(newPathParam)
   if (oldPath !== newPath) {
     onThisPageRef.value?.resetToc()
     loadArticleContent()
   }
-}, { deep: true })
+})
 
 watch(rawMarkdown, () => {
   nextTick(() => updateSidebarDimensions())

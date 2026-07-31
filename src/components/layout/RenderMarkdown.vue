@@ -262,7 +262,7 @@ watch(() => props.rawMarkdown, initRender, { immediate: true, async: true })
 
 .markdown-body pre {
   background-color: var(--app-markdown-code-bg);
-  border-radius: 0 0 0.5em 0.5em;
+  border-radius: 0.5em;
   padding: 1em;
   margin: 0;
   overflow-x: auto;
@@ -312,8 +312,9 @@ watch(() => props.rawMarkdown, initRender, { immediate: true, async: true })
   color: var(--app-primary);
 }
 
-.markdown-body .hljs {
+.markdown-body pre code.hljs {
   background: var(--app-markdown-code-bg);
+  padding: 0;
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 

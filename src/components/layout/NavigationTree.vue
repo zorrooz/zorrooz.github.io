@@ -162,7 +162,7 @@ function syncPathAndBuild() {
   buildTree()
 }
 
-watch(route, syncPathAndBuild, { deep: true, immediate: true })
+watch(() => route.params.path, syncPathAndBuild, { immediate: true })
 
 watch(locale, () => {
   loadCategoryData()
