@@ -1,6 +1,6 @@
 # gblog 架构现代化执行计划
 
-> 状态：**执行中（Phase 0 已完成）**
+> 状态：**执行中（Phase 0-1 已完成）**
 > 制定日期：2026-07-31
 > 路由来源：AGENTS.md → 本文件（约定文档）
 > 执行方式：由用户切换到 build 模式，按 Phase 顺序逐个执行；每个 Phase 完成后更新本文件顶部的状态表
@@ -10,7 +10,7 @@
 | Phase | 内容 | 状态 |
 |-------|------|------|
 | Phase 0 | 基建：dev 热更新 + SSR 安全 + 高亮本地化 | ✅ 已完成 |
-| Phase 1 | Markdown 渲染移入构建期（bundle 瘦身） | ⬜ 待执行 |
+| Phase 1 | Markdown 渲染移入构建期（bundle 瘦身） | ✅ 已完成 |
 | Phase 2 | SSG 预渲染 + history 路由（核心升级） | ⬜ 待执行 |
 | Phase 3 | 内容层整理（生成器共享 core + sitemap） | ⬜ 待执行 |
 | Phase 4 | 组件现代化（`<script setup>` 迁移） | ⬜ 待执行 |
@@ -136,6 +136,17 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
 - 删除 `Article.vue:80` 重复声明的 md glob
 
 **验证**：build 产物对比 bundle 体积显著下降；全部 13 篇中文文章正文渲染逐篇与改造前对照（含代码块、表格、数学公式、标题层级）。
+
+---
+
+## Phase 1 — Markdown 渲染移入构建期
+
+**目标**：unified/remark/rehype/lowlight 从客户端 bundle 中移除（大幅瘦身）；文章 HTML 成为静态生成物，为 Phase 2 预渲染铺路。
+
+**执行记录（2026-07-31）**：
+- 1a-1d 按计划完成；主 bundle 从 1,047 kB → 302 kB（gzip 323 → 98 kB），KaTeX 字体文件不再打包
+- 源文章无数学公式（`$` 均为 shell 变量），katex 差异未触发；`katex.min.css` 保留（防未来公式内容）
+- `loadHtmlContent()` 回退语义与旧 `loadMarkdownContent` 对齐（en 优先 `-en.html` 再中文，zh 按路径原样）
 
 ---
 

@@ -73,7 +73,7 @@ import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
-import { loadCategories, loadMarkdownContent } from '@/utils/contentLoader'
+import { loadCategories, loadHtmlContent } from '@/utils/contentLoader'
 
 /*
   ArticleView
@@ -188,7 +188,10 @@ export default {
 
     readingMinutes() {
       if (!this.rawMarkdown) return 0;
-      const text = this.rawMarkdown.replace(/(```[\s\S]*?```)|(!\[.*?\]\(.*?\))|(\[.*?\]\(.*?\))|([#>*-]+)/g, '').trim();
+      const text = this.rawMarkdown
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&[a-zA-Z#0-9]+;/g, ' ')
+        .trim();
       return Math.max(1, Math.round(text.length / 800));
     }
   },
@@ -332,7 +335,7 @@ export default {
         if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`);
         this.currentPath = matchedPost.path;
 
-        this.rawMarkdown = await loadMarkdownContent(this.currentPath);
+        this.rawMarkdown = await loadHtmlContent(this.currentPath);
 
         this.$nextTick(() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });

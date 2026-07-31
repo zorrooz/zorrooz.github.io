@@ -23,6 +23,7 @@ import { generateTopicsJson } from './generators/generateTopics.js'
 import { generateCategoriesJson } from './generators/generateCategories.js'
 import { generatePostsJson } from './generators/generatePosts.js'
 import { generateTagsJson } from './generators/generateTags.js'
+import { generateHtml } from './generators/generateHtml.js'
 
 const isDirectRun =
   process.argv[1] &&
@@ -77,6 +78,10 @@ export async function runAllGenerators() {
 
   // 8. tags depends on posts - English
   await runStep('tags-en', () => generateTagsJson('en-US'))
+
+  // 9. article HTML (build-time markdown rendering) - Chinese + English
+  await runStep('html', () => generateHtml('zh-CN'))
+  await runStep('html-en', () => generateHtml('en-US'))
 
   console.log('== Generators: done ==')
 }

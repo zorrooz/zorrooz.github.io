@@ -6,10 +6,8 @@
 <script>
 /*
   RenderMarkdown
-  - 将 Markdown 渲染为 HTML，并处理图片路径、代码复制和标题锚点
+  - 接收构建期预渲染的 HTML，处理图片路径、代码复制和标题锚点
 */
-import { renderMarkdown } from '@/utils/markdownProcessor'
-
 const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true });
 
 export default {
@@ -23,9 +21,9 @@ export default {
     rawMarkdown: { handler: 'initRender', immediate: true, async: true }
   },
   methods: {
-    async initRender(markdownContent) {
-      const processedMarkdown = this.rewriteImageLinks(markdownContent, this.articlePath)
-      this.renderedMarkdown = await renderMarkdown(processedMarkdown)
+    async initRender(htmlContent) {
+      const processedHtml = this.rewriteImageLinks(htmlContent, this.articlePath)
+      this.renderedMarkdown = processedHtml
       this.$nextTick(() => {
         this.$emit('markdown-rendered')
         this.enhanceCodeBlocks()
@@ -33,7 +31,7 @@ export default {
       })
     },
 
-    rewriteImageLinks(md, articlePath) {
+    rewriteImageLinks(html, articlePath) {
       try {
         const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/');
 
@@ -54,16 +52,12 @@ export default {
           return relPath;
         };
 
-        return md
-          .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => {
-            const clean = src.trim().replace(/^<|>|&/g, '');
-            return `![${alt}](${toAssetUrl(clean)})`;
-          })
+        return html
           .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (m, pre, src, post) =>
             `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`);
       } catch (e) {
         console.warn('rewriteImageLinks failed', e);
-        return md;
+        return html;
       }
     },
 

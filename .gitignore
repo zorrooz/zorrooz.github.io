@@ -31,3 +31,9 @@ coverage
 
 # API Keys and sensitive configuration
 src/config/llmConfig.js
+
+# Generated content JSON (tracked) + build-time HTML (not tracked)
+src/content/html/
+
+# Qoder generated repo wiki index
+.qoder/

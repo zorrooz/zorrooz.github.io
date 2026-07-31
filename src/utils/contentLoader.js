@@ -15,7 +15,7 @@ const getLocalizedFileName = (baseName, extension = '.json') => {
 }
 
 const jsonModules = import.meta.glob('../content/**/*.json', { eager: true })
-const markdownModules = import.meta.glob('../content-src/**/*.md', {
+const htmlModules = import.meta.glob('../content/html/**/*.html', {
   query: '?raw',
   import: 'default',
   eager: false,
@@ -47,62 +47,39 @@ const loadJsonContent = async (fileName) => {
   }
 }
 
-export const loadMarkdownContent = async (filePath) => {
+/**
+ * Load pre-rendered article HTML.
+ * `filePath` uses the markdown-style path (e.g. `notes/Omics/genomics/bwa/bwa.md`);
+ * lookup prefers the localized file and falls back to Chinese, mirroring the
+ * old `loadMarkdownContent` semantics:
+ *   en-US: bwa-en.html -> bwa.html
+ *   zh-CN: bwa.html (or bwa-en.html when the path itself carries -en)
+ */
+export const loadHtmlContent = async (filePath) => {
   const locale = getCurrentLocale()
   const isEnglish = locale === 'en-US'
+  const base = filePath.replace(/\.md$/i, '')
 
-  const possiblePaths = []
-
-  const localizedPath = isEnglish ? filePath.replace('.md', '-en.md') : filePath
-  possiblePaths.push(localizedPath)
-
-  possiblePaths.push(filePath)
-
-  if (isEnglish) {
-    const chinesePath = filePath.replace('-en.md', '.md')
-    if (chinesePath !== filePath && chinesePath !== localizedPath) {
-      possiblePaths.push(chinesePath)
-    }
+  const candidates = []
+  if (base.endsWith('-en')) {
+    candidates.push(base)
+    if (isEnglish) candidates.push(base.replace(/-en$/, ''))
   } else {
-    const englishPath = filePath.replace('.md', '-en.md')
-    if (englishPath !== filePath && englishPath !== localizedPath) {
-      possiblePaths.push(englishPath)
+    candidates.push(isEnglish ? `${base}-en` : base)
+    candidates.push(base)
+  }
+
+  for (const candidate of candidates) {
+    const matchedKey = Object.keys(htmlModules).find((key) =>
+      key.endsWith(`../content/html/${candidate}.html`),
+    )
+    if (matchedKey) {
+      const content = await htmlModules[matchedKey]()
+      return content
     }
   }
 
-  try {
-    for (const path of possiblePaths) {
-      const searchPaths = [`../content-src/${path}`, `../content-src/${path}?raw`]
-
-      const matchedKey = Object.keys(markdownModules).find((key) =>
-        searchPaths.some((searchPath) => key.endsWith(searchPath)),
-      )
-
-      if (matchedKey) {
-        const content = await markdownModules[matchedKey]()
-        return content
-      }
-    }
-
-    throw new Error(`Markdown file not found for any of: ${possiblePaths.join(', ')}`)
-  } catch (error) {
-    console.error(`Failed to load markdown content: ${localizedPath}`, error)
-
-    if (isEnglish) {
-      const fallbackPaths = [`../content-src/${filePath}`, `../content-src/${filePath}?raw`]
-
-      const fallbackKey = Object.keys(markdownModules).find((key) =>
-        fallbackPaths.some((path) => key.endsWith(path)),
-      )
-
-      if (fallbackKey) {
-        const content = await markdownModules[fallbackKey]()
-        return content
-      }
-    }
-
-    return '# Content Not Available\n\nThe requested content could not be loaded.'
-  }
+  return '<h1>Content Not Available</h1>\n<p>The requested content could not be loaded.</p>'
 }
 
 export const loadCategories = () => loadJsonContent('categories')
