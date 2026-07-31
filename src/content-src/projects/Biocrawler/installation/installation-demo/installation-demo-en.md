@@ -1,8 +1,8 @@
 ---
 title: "BioCrawler Installation Guide"
-date: "2025-08-01"
+date: "2026-05-16"
 author: "zorrooz"
-tags: ["Installation", "Python", "Setup"]
+tags: ["Setup", "Python"]
 draft: false
 description: "BioCrawler installation and configuration demo"
 ---

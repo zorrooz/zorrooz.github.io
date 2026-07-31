@@ -1,72 +1,86 @@
 [
   {
-    "title": "BWA MEM Alignment to Human Genome in Practice",
-    "date": "2025-09-19",
+    "title": "Markdown & LaTeX Formula Rendering Demo",
+    "date": "2026-07-10",
     "tags": [
-      "BWA",
-      "Genome Alignment",
-      "NGS",
-      "Command Line",
-      "Human Genome",
-      "SAM/BAM"
-    ],
-    "draft": false,
-    "description": "Documenting the standard workflow and parameter tuning for BWA MEM in human WGS data",
-    "relativePath": "Omics/genomics/bwa/bwa-en",
-    "wordCount": 30,
-    "tagCount": 6
-  },
-  {
-    "title": "MaxQuant Proteomics Analysis Workflow",
-    "date": "2025-09-19",
-    "tags": [
-      "MaxQuant",
-      "Proteomics",
-      "Mass Spectrometry",
-      "Bioinformatics",
-      "Quantitative Analysis"
-    ],
-    "draft": false,
-    "description": "Detailed documentation of standard procedures and parameter settings for MaxQuant in proteomics data analysis",
-    "relativePath": "Omics/proteomics/maxquant/maxquant-en",
-    "wordCount": 63,
-    "tagCount": 5
-  },
-  {
-    "title": "RNA-Seq Analysis: HISAT2 Alignment Workflow",
-    "date": "2025-09-19",
-    "tags": [
-      "RNA-Seq",
-      "HISAT2",
-      "Transcriptome",
-      "Alignment",
+      "Markdown",
+      "LaTeX",
+      "KaTeX",
+      "Math",
       "Bioinformatics"
     ],
     "draft": false,
-    "description": "Standard workflow for aligning RNA-Seq data using HISAT2",
-    "relativePath": "Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en",
-    "wordCount": 51,
+    "description": "Demo of Markdown rendering and KaTeX math formula support",
+    "relativePath": "Programming/python/markdown-demo/markdown-demo-en",
+    "wordCount": 293,
     "tagCount": 5
   },
   {
-    "title": "Biopython Bioinformatics Applications",
-    "date": "2025-09-19",
+    "title": "Bash Shell Scripting",
+    "date": "2026-07-06",
     "tags": [
-      "Python",
-      "Biopython",
-      "Bioinformatics",
-      "Sequence Analysis",
-      "Genomics"
+      "Shell",
+      "Bash",
+      "Command Line",
+      "Scripting",
+      "Automation"
     ],
     "draft": false,
-    "description": "Applications of the Biopython library in sequence analysis and genomic data processing",
-    "relativePath": "Programming/python/biopython/biopython-en",
-    "wordCount": 43,
+    "description": "Automation Applications of Bash Shell Scripting in Bioinformatics Data Processing",
+    "relativePath": "Programming/shell/bash/bash-en",
+    "wordCount": 48,
+    "tagCount": 5
+  },
+  {
+    "title": "R Language ggplot2 Data Visualization",
+    "date": "2026-07-05",
+    "tags": [
+      "R Language",
+      "ggplot2",
+      "Data Visualization",
+      "Bioinformatics"
+    ],
+    "draft": false,
+    "description": "Application of ggplot2 in Bioinformatics Data Visualization",
+    "relativePath": "Programming/r/ggplot2/ggplot2-en",
+    "wordCount": 74,
+    "tagCount": 4
+  },
+  {
+    "title": "R Language Data Processing Example",
+    "date": "2026-07-04",
+    "tags": [
+      "R Language",
+      "Data Processing",
+      "Statistical Analysis",
+      "Data Visualization",
+      "Bioinformatics"
+    ],
+    "draft": false,
+    "description": "Demonstrating basic applications of R language in bioinformatics data processing",
+    "relativePath": "Programming/r/demo/demo-en",
+    "wordCount": 14,
+    "tagCount": 5
+  },
+  {
+    "title": "Python Pandas Data Processing in Practice",
+    "date": "2026-07-03",
+    "tags": [
+      "Python",
+      "Pandas",
+      "Data Processing",
+      "Analysis",
+      "Data Cleaning"
+    ],
+    "draft": false,
+    "description": "Common operations and techniques of the Pandas library in bioinformatics data processing",
+    "relativePath": "Programming/python/pandas/pandas-en",
+    "wordCount": 64,
     "tagCount": 5
   },
   {
     "title": "Processing FASTQ Quality Statistics with Pandas",
-    "date": "2025-09-19",
+    "date": "2026-07-02",
     "tags": [
       "Python",
       "Pandas",
@@ -82,67 +96,68 @@
     "tagCount": 6
   },
   {
-    "title": "Python Pandas Data Processing in Practice",
-    "date": "2025-09-19",
+    "title": "Biopython Bioinformatics Applications",
+    "date": "2026-07-01",
     "tags": [
       "Python",
-      "Pandas",
-      "Data Processing",
-      "Data Analysis",
-      "Data Cleaning"
+      "Biopython",
+      "Bioinformatics",
+      "Sequence Analysis",
+      "Genomics"
     ],
     "draft": false,
-    "description": "Common operations and techniques of the Pandas library in bioinformatics data processing",
-    "relativePath": "Programming/python/pandas/pandas-en",
-    "wordCount": 10,
+    "description": "Applications of the Biopython library in sequence analysis and genomic data processing",
+    "relativePath": "Programming/python/biopython/biopython-en",
+    "wordCount": 43,
     "tagCount": 5
   },
   {
-    "title": "R Language Data Processing Example",
-    "date": "2025-09-19",
+    "title": "RNA-Seq Analysis: HISAT2 Alignment Workflow",
+    "date": "2026-06-21",
     "tags": [
-      "R Language",
-      "Data Processing",
-      "Statistical Analysis",
-      "Data Visualization",
+      "RNA-Seq",
+      "HISAT2",
+      "Transcriptome",
+      "Alignment",
       "Bioinformatics"
     ],
     "draft": false,
-    "description": "Demonstrating basic applications of R language in bioinformatics data processing",
-    "relativePath": "Programming/r/demo/demo-en",
-    "wordCount": 14,
+    "description": "Standard workflow for aligning RNA-Seq data using HISAT2",
+    "relativePath": "Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en",
+    "wordCount": 51,
     "tagCount": 5
   },
   {
-    "title": "R Language ggplot2 Data Visualization",
-    "date": "2025-09-19",
+    "title": "MaxQuant Proteomics Analysis Workflow",
+    "date": "2026-06-20",
     "tags": [
-      "R Language",
-      "ggplot2",
-      "Data Visualization",
-      "Statistical Charts",
-      "Bioinformatics"
+      "MaxQuant",
+      "Proteomics",
+      "Mass Spectrometry",
+      "Bioinformatics",
+      "Quantitative Analysis"
     ],
     "draft": false,
-    "description": "Application of ggplot2 in Bioinformatics Data Visualization",
-    "relativePath": "Programming/r/ggplot2/ggplot2-en",
-    "wordCount": 16,
+    "description": "Detailed documentation of standard procedures and parameter settings for MaxQuant in proteomics data analysis",
+    "relativePath": "Omics/proteomics/maxquant/maxquant-en",
+    "wordCount": 63,
     "tagCount": 5
   },
   {
-    "title": "Bash Shell Scripting",
-    "date": "2025-09-19",
+    "title": "BWA MEM Alignment to Human Genome in Practice",
+    "date": "2026-06-19",
     "tags": [
-      "Shell",
-      "Bash",
+      "BWA",
+      "Alignment",
+      "NGS",
       "Command Line",
-      "Scripting",
-      "Automation"
+      "Human Genome",
+      "SAM/BAM"
     ],
     "draft": false,
-    "description": "Automation Applications of Bash Shell Scripting in Bioinformatics Data Processing",
-    "relativePath": "Programming/shell/bash/bash-en",
-    "wordCount": 21,
-    "tagCount": 5
+    "description": "Documenting the standard workflow and parameter tuning for BWA MEM in human WGS data",
+    "relativePath": "Omics/genomics/bwa/bwa-en",
+    "wordCount": 175,
+    "tagCount": 6
   }
 ]

@@ -13,17 +13,21 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "vite.config.js",
+    "vite.config.ts",
     "eslint.config.js",
-    "src/utils/generators/**/*.js",
-    "src/utils/translator/**/*.js",
-    "src/utils/runAllGenerators.js",
-    "src/utils/contentDevPlugin.js",
-    "src/utils/markdownProcessor.js"
+    "scripts/**/*.ts",
+    "src/config/**/*.ts",
+    "src/utils/generators/**/*.ts",
+    "src/utils/translator/**/*.ts",
+    "src/utils/tagMerger/**/*.ts",
+    "src/utils/runAllGenerators.ts",
+    "src/utils/contentDevPlugin.ts",
+    "src/utils/markdownProcessor.ts"
   ]
 }

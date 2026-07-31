@@ -1,6 +1,6 @@
 # gblog 架构现代化执行计划
 
-> 状态：**执行中（Phase 0-5 已完成）**
+> 状态：**执行中（Phase 0-6.5 已完成）**
 > 制定日期：2026-07-31
 > 路由来源：AGENTS.md → 本文件（约定文档）
 > 执行方式：由用户切换到 build 模式，按 Phase 顺序逐个执行；每个 Phase 完成后更新本文件顶部的状态表
@@ -16,6 +16,7 @@
 | Phase 4 | 组件现代化（`<script setup>` 迁移） | ✅ 已完成 |
 | Phase 5 | TypeScript 渐进迁移 | ✅ 已完成 |
 | Phase 6 | 体验增强（PWA / 搜索 / 资产本地化 / 双语言路径化） | ✅ 已完成 |
+| Phase 6.5 | 全量 TypeScript 化（.js → .ts，零运行时依赖） | ✅ 已完成 |
 
 ---
 
@@ -298,6 +299,30 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
   - `generateSitemap.js`：`LOCALE_PREFIXES = ['/zh','/en']` ×（4 静态 + 13 文章）= 34 条
   - 验证：typecheck ✅ / lint ✅ / build 34 页（zh 4 + en 4 + zh 13 文章 + en 13 文章）✅ / preview 全部 200（含 `/en/article/.../bwa-en` 预渲染 10,976B）✅ / zh 页含「分类」、en 页含 `Categories` 且无中文导航 ✅ / `/article/...` 旧路由 825B SPA 壳（预期——重定向）✅ / sitemap 34 条 ✅
   - 已知遗留（非本 Phase 引入）：SSR `<html lang="en">` 属性恒为 en（`git show 0fc55b2:dist/about.html` 早前即如此，来自 vite-ssg 的 useHead 默认值）
+
+---
+
+## Phase 6.5 — 全量 TypeScript 化（.js → .ts）
+
+Phase 5 是 JSDoc/`// @ts-check` 渐进式；本 Phase 将全部源码文件由 `.js` 改为 `.ts`，零运行时依赖改动。
+
+**执行记录（2026-07-31）**：
+- 策略：Node v24.18 原生 type stripping 直跑 `.ts`（`node ./xxx.ts` 无需转译）；跨文件 import 显式带 `.ts` 扩展名；两个 tsconfig 均开启 `allowImportingTsExtensions`（均 `noEmit`，安全）
+- node 侧（tsconfig.node.json）：11 个生成器 + `core/index.ts`（JSDoc typedef → interface：`NoteItem`/`ProjectItem`/`TopicItem`/`PostItem`/`CategoryEntry`/`FormattedArticle`/`DetailedSubCategory` 等）、`runAllGenerators.ts`、`contentDevPlugin.ts`（`configureServer` 标 `ViteDevServer`，返回类型 `Plugin`）、`markdownProcessor.ts`、translator 三件套
+- app 侧（tsconfig.app.json）：`main.ts`（入口改 `import './router/index.ts'` 等显式后缀）、`stores/{app,i18n,theme}.ts`（`setLocale` 参数收窄 `SupportedLocale` 联合类型）、`stores/locales/{zh-CN,en-US}.ts`（纯数据提前转，被 generateCategories.ts 引用）、`router/index.ts`、`utils/{localePath,contentLoader}.ts`、14 个 `.vue` 全量 `lang="ts"`（AppFooter 补空 `<script setup lang="ts">`）
+- 配置：
+  - `tsconfig.node.json` include 全量改 `.ts`；`tsconfig.app.json` exclude 同步改 `.ts` 名；均加 `allowImportingTsExtensions: true`
+  - `eslint.config.js`：新增 `app/ts` 块（`parser: tsParser`，拆出原 `app/vue-ts` 的 ts 部分——`parserOptions.parser` 仅对 vue 文件生效，纯 .ts 文件之前全部被 espree 误解析）；末尾 `app/ts-rules-override` 覆盖 `js.configs.recommended` 的 core `no-unused-vars`（core 版对 TS 类型位置误报）→ `@typescript-eslint/no-unused-vars`（`^_` 忽略模式）；`app/node-scripts` glob 改 `src/utils/**/*.{js,ts}`
+  - `package.json`：`prebuild`/`translate` 脚本改 `.ts`；`vite.config.js` import `contentDevPlugin.ts`
+  - 新 `src/config/llmConfig.d.ts`：`llmConfig.js` 被 gitignore（含 API key），`.ts` 下 import 无类型 → 仅提交声明文件，运行时仍读本地 `.js`
+- 迁移陷阱（已修）：
+  - 回调参数 implicit any：`Array.isArray(x) ? x.map((it) => ...)` 中 `it` 无推断 → 显式标注 `(it: Record<string, unknown>)`
+  - `contentDevPlugin` 的 `server` 参数 → `ViteDevServer` 类型
+  - `translator.ts` 的 `completion.choices[0].message.content` 可空 → `?? ''`
+  - `loadJsonContent` 保持 `any` 返回（原 JSDoc `@returns {any}`，视图层直接当数组用，收窄成 `unknown` 会牵连 7 个调用点）
+  - `import('bootstrap')` 无类型 → 新 `src/env.d.ts` 声明 `declare module 'bootstrap'`
+  - `scripts/subset-fa-icons.mjs` 顺带修复：`verifyCmap` 未使用参数 `family` 删除（lint 基线）
+- 验证：`npm run prebuild` 26 步全成功且产物与迁移前逐字节一致（`git diff src/content` 为空）；typecheck ✅ / lint ✅ / build 34 页 ✅；dist 仅 chunk hash 变化（模块路径 .js→.ts），页面内容零差异；`dist/.vite/ssr-manifest.json` 中模块名同步为 `.ts`（预期）
 
 ---
 

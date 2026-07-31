@@ -1,6 +1,6 @@
 ---
 title: "MaxQuant 蛋白质组学分析工作流"
-date: "2025-09-19"
+date: "2026-06-20"
 author: "zorrooz"
 tags: ["MaxQuant", "蛋白质组学", "质谱分析", "生物信息学", "定量分析"]
 draft: false

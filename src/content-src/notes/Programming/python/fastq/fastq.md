@@ -1,8 +1,8 @@
 ---
 title: "用 Pandas 处理 FASTQ 质量统计"
-date: "2025-09-19"
+date: "2026-07-02"
 author: "zorrooz"
-tags: ["Python", "Pandas", "FASTQ", "数据清洗", "生物信息", "入门"]
+tags: ["Python", "Pandas", "FASTQ", "数据清洗", "生物信息学", "入门"]
 draft: false
 description: "演示如何用 Python Pandas 快速分析测序数据质量报告。"
 ---

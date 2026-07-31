@@ -1,6 +1,10 @@
 [
   {
     "name": "Alignment",
+    "count": 2
+  },
+  {
+    "name": "Analysis",
     "count": 1
   },
   {
@@ -17,7 +21,7 @@
   },
   {
     "name": "Bioinformatics",
-    "count": 6
+    "count": 7
   },
   {
     "name": "Biopython",
@@ -30,10 +34,6 @@
   {
     "name": "Command Line",
     "count": 2
-  },
-  {
-    "name": "Data Analysis",
-    "count": 1
   },
   {
     "name": "Data Cleaning",
@@ -49,10 +49,6 @@
   },
   {
     "name": "FASTQ",
-    "count": 1
-  },
-  {
-    "name": "Genome Alignment",
     "count": 1
   },
   {
@@ -72,7 +68,23 @@
     "count": 1
   },
   {
+    "name": "KaTeX",
+    "count": 1
+  },
+  {
+    "name": "LaTeX",
+    "count": 1
+  },
+  {
+    "name": "Markdown",
+    "count": 1
+  },
+  {
     "name": "Mass Spectrometry",
+    "count": 1
+  },
+  {
+    "name": "Math",
     "count": 1
   },
   {
@@ -125,10 +137,6 @@
   },
   {
     "name": "Statistical Analysis",
-    "count": 1
-  },
-  {
-    "name": "Statistical Charts",
     "count": 1
   },
   {

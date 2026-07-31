@@ -1,6 +1,6 @@
 ---
 title: "Experimental Results - Protein Structure Determination"
-date: "2025-07-01"
+date: "2026-04-12"
 author: "zorrooz"
 tags: ["Results", "Structure", "Resolution", "Analysis"]
 draft: false

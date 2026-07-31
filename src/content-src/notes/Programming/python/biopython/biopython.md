@@ -1,6 +1,6 @@
 ---
 title: "Biopython 生物信息学应用"
-date: "2025-09-19"
+date: "2026-07-01"
 author: "zorrooz"
 tags: ["Python", "Biopython", "生物信息学", "序列分析", "基因组学"]
 draft: false

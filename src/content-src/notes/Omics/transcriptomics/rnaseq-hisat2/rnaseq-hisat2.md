@@ -1,6 +1,6 @@
 ---
 title: "RNA-Seq 分析：HISAT2 比对流程"
-date: "2025-09-19"
+date: "2026-06-21"
 author: "zorrooz"
 tags: ["RNA-Seq", "HISAT2", "转录组", "比对", "生物信息学"]
 draft: false

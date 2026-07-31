@@ -49,13 +49,13 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 
 ```
 src/
-├── main.js                   # Entry: createApp → Pinia → Router → i18n
+├── main.ts                    # Entry: createApp → Pinia → Router → i18n
 ├── App.vue                   # <AppHeader> + <router-view> + <AppFooter>
-├── router/index.js           # 5 hash-mode routes
+├── router/index.ts           # 5 hash-mode routes
 ├── stores/
-│   ├── app.js                # Pinia: theme + locale state
-│   ├── i18n.js               # vue-i18n (zh-CN / en-US)
-│   ├── locales/{zh-CN,en-US}.js
+│   ├── app.ts                # Pinia: theme + locale state
+│   ├── i18n.ts               # vue-i18n (zh-CN / en-US)
+│   ├── locales/{zh-CN,en-US}.ts
 │   └── styles/global.scss    # Bootstrap SCSS + CSS custom properties
 ├── views/
 │   ├── Home.vue              # ProfileCard + TagCloud + PostList
@@ -73,11 +73,13 @@ src/
 │   ├── projects/
 │   └── topics/
 ├── utils/
-│   ├── contentLoader.js      # Runtime: import.meta.glob for JSON & MD
-│   ├── markdownProcessor.js  # unified pipeline: remark → rehype
-│   ├── runAllGenerators.js   # Build orchestration
-│   ├── generators/           # 8 build-time Node.js scripts
+│   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD
+│   ├── markdownProcessor.ts  # unified pipeline: remark → rehype
+│   ├── runAllGenerators.ts   # Build orchestration
+│   ├── generators/           # 8 build-time Node.js scripts (.ts, run via Node type stripping)
 │   └── translator/           # AI translation via DeepSeek API
+├── config/
+│   └── llmConfig.ts           # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
 └── assets/
     ├── fonts/                # Agave-Regular, SourceHanSansSC
     └── icons/                # gblog.svg, theme/lang toggle PNGs
@@ -97,7 +99,7 @@ src/
 | Highlight | highlight.js (CDN, theme per `data-bs-theme`) |
 | Icons | Font Awesome 6.4 (CDN in index.html) |
 | Deployment | gh-pages |
-| Node | `^20.19.0 \|\| >=22.12.0` |
+| Node | `>=23.6.0`（Node 原生 type stripping 直跑 `.ts` 脚本，最低 22.6 需 `--experimental-strip-types`） |
 
 ## Content Pipeline (Critical Order)
 
@@ -110,7 +112,7 @@ src/
 6. generateTags      — posts.json → tags.json
 (1-6 for zh-CN, then repeat for en-US)
 
-generateAbout and generateResources run independently at import time in runAllGenerators.js.
+generateAbout and generateResources run independently at import time in runAllGenerators.ts.
 ```
 
 ## Content Source Organization
@@ -130,12 +132,12 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 
 ## Internationalization (Dual Layer)
 
-**Layer 1 — UI:** `src/stores/locales/{zh-CN,en-US}.js` via vue-i18n. Controls nav, buttons, labels.
+**Layer 1 — UI:** `src/stores/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
 
 **Layer 2 — Content:** `-en` suffix pattern:
 - Chinese: `article.md`, `categories.json`
 - English: `article-en.md`, `categories-en.json`
-- Auto-fallback in `contentLoader.js`: if English file missing, loads Chinese.
+- Auto-fallback in `contentLoader.ts`: if English file missing, loads Chinese.
 
 ## Theme System
 
@@ -168,11 +170,12 @@ CSS custom properties in `global.scss` for both themes. Highlight.js theme swapp
 5. English: `article-en.md` or `npm run translate`
 
 ### Utilities
-- `contentLoader.js` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`
-- `markdownProcessor.js` export: `renderMarkdown(markdown)` → HTML string
+- `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`
+- `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string
 - `appStore`: `toggleTheme()`, `toggleLanguage()`, `initTheme()`, `initLocale()`
 
 ## ESLint / Prettier
 - Flat config (`eslint.config.js`) with Vue + Prettier
-- `browser` globals for `*.{js,vue}`, `node` globals for `src/utils/**/*.js`
+- TS parsing: `@typescript-eslint/parser` for `**/*.ts` + vue files with `lang="ts"`
+- `browser` globals for `*.{js,vue}`, `node` globals for `src/utils/**/*.{js,ts}`
 - Ignored: `dist/`, `dist-ssr/`, `coverage/`

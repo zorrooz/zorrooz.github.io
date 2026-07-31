@@ -1,12 +1,22 @@
 [
   {
-    "title": "实验方法",
-    "relativePath": "StructureOfProteinDemo/methods/methods-demo/methods-demo",
-    "wordCount": 354
-  },
-  {
-    "title": "实验结果",
-    "relativePath": "StructureOfProteinDemo/results/results-demo/results-demo",
-    "wordCount": 460
+    "name": "StructureOfProteinDemo",
+    "title": "蛋白质结构解析演示课题",
+    "desc": "蛋白质结构解析方法与结果演示",
+    "date": "2026-04-12",
+    "tags": [
+      "Protein",
+      "Structure",
+      "Cryo-EM"
+    ],
+    "doi": "10.1234/demo-structure.2026",
+    "url": "https://www.demo-structure.org",
+    "status": "completed",
+    "journal": "Journal of Demo Science",
+    "year": 2026,
+    "authors": [
+      "Demo Author A",
+      "Demo Author B"
+    ]
   }
 ]

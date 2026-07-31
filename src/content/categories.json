@@ -7,26 +7,25 @@
         "title": "组学",
         "desc": "组学相关的学习记录与资料汇总",
         "tags": [
-          "BWA",
-          "基因组比对",
-          "NGS",
-          "命令行",
-          "人类基因组",
-          "SAM/BAM",
-          "MaxQuant",
-          "蛋白质组学",
-          "质谱分析",
-          "生物信息学",
-          "定量分析",
           "RNA-Seq",
           "HISAT2",
           "转录组",
-          "比对"
+          "比对",
+          "生物信息学",
+          "MaxQuant",
+          "蛋白质组学",
+          "质谱分析",
+          "定量分析",
+          "BWA",
+          "NGS",
+          "命令行",
+          "人类基因组",
+          "SAM/BAM"
         ],
         "stats": {
           "postsCount": 3,
-          "totalWords": 233,
-          "latestDate": "2025-09-19"
+          "totalWords": 453,
+          "latestDate": "2026-06-21"
         },
         "categories": [
           {
@@ -38,7 +37,7 @@
                 "articleUrl": "/article/notes/Omics/genomics/bwa/bwa",
                 "tags": [
                   "BWA",
-                  "基因组比对",
+                  "比对",
                   "NGS",
                   "命令行",
                   "人类基因组",
@@ -48,8 +47,8 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 46,
-              "latestDate": "2025-09-19"
+              "totalWords": 266,
+              "latestDate": "2026-06-19"
             }
           },
           {
@@ -71,7 +70,7 @@
             "stats": {
               "postsCount": 1,
               "totalWords": 114,
-              "latestDate": "2025-09-19"
+              "latestDate": "2026-06-20"
             }
           },
           {
@@ -93,7 +92,7 @@
             "stats": {
               "postsCount": 1,
               "totalWords": 73,
-              "latestDate": "2025-09-19"
+              "latestDate": "2026-06-21"
             }
           }
         ],
@@ -104,33 +103,34 @@
         "title": "编程",
         "desc": "编程相关的学习记录与资料汇总",
         "tags": [
-          "Python",
-          "Biopython",
+          "Markdown",
+          "LaTeX",
+          "KaTeX",
+          "数学公式",
           "生物信息学",
-          "序列分析",
-          "基因组学",
-          "Pandas",
-          "FASTQ",
-          "数据清洗",
-          "生物信息",
-          "入门",
-          "数据处理",
-          "数据分析",
-          "R语言",
-          "统计分析",
-          "数据可视化",
-          "ggplot2",
-          "统计图表",
           "Shell",
-          "Bash",
           "命令行",
           "脚本编程",
-          "自动化"
+          "自动化",
+          "R语言",
+          "ggplot2",
+          "数据可视化",
+          "数据处理",
+          "统计分析",
+          "Python",
+          "Pandas",
+          "数据分析",
+          "数据清洗",
+          "FASTQ",
+          "入门",
+          "Biopython",
+          "序列分析",
+          "基因组学"
         ],
         "stats": {
-          "postsCount": 6,
-          "totalWords": 215,
-          "latestDate": "2025-09-19"
+          "postsCount": 7,
+          "totalWords": 849,
+          "latestDate": "2026-07-06"
         },
         "categories": [
           {
@@ -138,26 +138,14 @@
             "title": "Python",
             "articles": [
               {
-                "title": "Biopython 生物信息学应用",
-                "articleUrl": "/article/notes/Programming/python/biopython/biopython",
+                "title": "Markdown 与 LaTeX 公式渲染示例",
+                "articleUrl": "/article/notes/Programming/python/markdown-demo/markdown-demo",
                 "tags": [
-                  "Python",
-                  "Biopython",
-                  "生物信息学",
-                  "序列分析",
-                  "基因组学"
-                ]
-              },
-              {
-                "title": "用 Pandas 处理 FASTQ 质量统计",
-                "articleUrl": "/article/notes/Programming/python/fastq/fastq",
-                "tags": [
-                  "Python",
-                  "Pandas",
-                  "FASTQ",
-                  "数据清洗",
-                  "生物信息",
-                  "入门"
+                  "Markdown",
+                  "LaTeX",
+                  "KaTeX",
+                  "数学公式",
+                  "生物信息学"
                 ]
               },
               {
@@ -170,18 +158,51 @@
                   "数据分析",
                   "数据清洗"
                 ]
+              },
+              {
+                "title": "用 Pandas 处理 FASTQ 质量统计",
+                "articleUrl": "/article/notes/Programming/python/fastq/fastq",
+                "tags": [
+                  "Python",
+                  "Pandas",
+                  "FASTQ",
+                  "数据清洗",
+                  "生物信息学",
+                  "入门"
+                ]
+              },
+              {
+                "title": "Biopython 生物信息学应用",
+                "articleUrl": "/article/notes/Programming/python/biopython/biopython",
+                "tags": [
+                  "Python",
+                  "Biopython",
+                  "生物信息学",
+                  "序列分析",
+                  "基因组学"
+                ]
               }
             ],
             "stats": {
-              "postsCount": 3,
-              "totalWords": 113,
-              "latestDate": "2025-09-19"
+              "postsCount": 4,
+              "totalWords": 568,
+              "latestDate": "2026-07-10"
             }
           },
           {
             "key": "r",
             "title": "R",
             "articles": [
+              {
+                "title": "R语言 ggplot2 数据可视化",
+                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2",
+                "tags": [
+                  "R语言",
+                  "ggplot2",
+                  "数据可视化",
+                  "生物信息学"
+                ]
+              },
               {
                 "title": "R语言数据处理示例",
                 "articleUrl": "/article/notes/Programming/r/demo/demo",
@@ -192,23 +213,12 @@
                   "数据可视化",
                   "生物信息学"
                 ]
-              },
-              {
-                "title": "R语言 ggplot2 数据可视化",
-                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2",
-                "tags": [
-                  "R语言",
-                  "ggplot2",
-                  "数据可视化",
-                  "统计图表",
-                  "生物信息学"
-                ]
               }
             ],
             "stats": {
               "postsCount": 2,
-              "totalWords": 71,
-              "latestDate": "2025-09-19"
+              "totalWords": 182,
+              "latestDate": "2026-07-05"
             }
           },
           {
@@ -220,7 +230,6 @@
                 "articleUrl": "/article/notes/Programming/shell/bash/bash",
                 "tags": [
                   "Shell",
-                  "Bash",
                   "命令行",
                   "脚本编程",
                   "自动化"
@@ -229,12 +238,12 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 31,
-              "latestDate": "2025-09-19"
+              "totalWords": 99,
+              "latestDate": "2026-07-06"
             }
           }
         ],
-        "root": "/article/notes/Programming/python/biopython/biopython"
+        "root": "/article/notes/Programming/python/markdown-demo/markdown-demo"
       }
     ]
   },
@@ -246,51 +255,45 @@
         "title": "BioCrawler",
         "desc": "面向生物数据抓取与处理的工具集",
         "tags": [
-          "Crawler",
+          "爬虫",
           "API",
-          "Bioinformatics"
+          "生物信息学"
         ],
         "stats": {
-          "postsCount": 2,
-          "totalWords": 306,
-          "latestDate": "2025-11-01"
+          "postsCount": 0,
+          "totalWords": 0,
+          "latestDate": "2026-05-16"
         },
         "categories": [
           {
             "key": "api",
             "title": "接口",
-            "articles": [
-              {
-                "title": "BioCrawler API 接口文档",
-                "articleUrl": "/article/projects/Biocrawler/api/api-demo/api-demo",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 165,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           },
           {
             "key": "installation",
             "title": "安装",
-            "articles": [
-              {
-                "title": "BioCrawler 安装指南",
-                "articleUrl": "/article/projects/Biocrawler/installation/installation-demo/installation-demo",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 141,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/projects/Biocrawler/api/api-demo/api-demo",
-        "github": "https://github.com/example/biocrawler"
+        "root": "",
+        "github": "https://github.com/example/biocrawler",
+        "status": "active",
+        "language": "Python",
+        "stars": 128,
+        "license": "MIT",
+        "version": "0.4.2",
+        "url": "https://github.com/example/biocrawler"
       }
     ]
   },
@@ -307,46 +310,42 @@
           "Cryo-EM"
         ],
         "stats": {
-          "postsCount": 2,
-          "totalWords": 814,
-          "latestDate": "2025-12-01"
+          "postsCount": 0,
+          "totalWords": 0,
+          "latestDate": "2026-04-12"
         },
         "categories": [
           {
             "key": "methods",
             "title": "方法",
-            "articles": [
-              {
-                "title": "实验方法",
-                "articleUrl": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 354,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           },
           {
             "key": "results",
             "title": "结果",
-            "articles": [
-              {
-                "title": "实验结果",
-                "articleUrl": "/article/topics/StructureOfProteinDemo/results/results-demo/results-demo",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 460,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo",
-        "doi": "www.demo-structure.org"
+        "root": "",
+        "doi": "10.1234/demo-structure.2026",
+        "status": "completed",
+        "journal": "Journal of Demo Science",
+        "year": 2026,
+        "authors": [
+          "Demo Author A",
+          "Demo Author B"
+        ],
+        "url": "https://www.demo-structure.org"
       }
     ]
   }

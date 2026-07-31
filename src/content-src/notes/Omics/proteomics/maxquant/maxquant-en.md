@@ -1,6 +1,6 @@
 ---
 title: "MaxQuant Proteomics Analysis Workflow"
-date: "2025-09-19"
+date: "2026-06-20"
 author: "zorrooz"
 tags: ["MaxQuant", "Proteomics", "Mass Spectrometry", "Bioinformatics", "Quantitative Analysis"]
 draft: false

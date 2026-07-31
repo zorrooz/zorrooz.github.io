@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": ">=23.6.0"
   },
   "scripts": {
-    "prebuild": "node ./src/utils/runAllGenerators.js",
+    "prebuild": "node ./src/utils/runAllGenerators.ts",
     "dev": "vite",
     "build": "vite-ssg build",
     "preview": "vite preview",
@@ -16,8 +16,9 @@
     "format": "prettier --write src/",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --repo https://github.com/zorrooz/zorrooz.github.io",
-    "translate": "node ./src/utils/translator/translatorCli.js",
-    "subset:icons": "node ./scripts/subset-fa-icons.mjs"
+    "translate": "node ./src/utils/translator/translatorCli.ts",
+    "tagmerge": "node ./src/utils/tagMerger/tagMergerCli.ts",
+    "subset:icons": "node ./scripts/subset-fa-icons.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.4.0",

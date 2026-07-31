@@ -1,6 +1,6 @@
 ---
 title: "RNA-Seq Analysis: HISAT2 Alignment Workflow"
-date: "2025-09-19"
+date: "2026-06-21"
 author: "zorrooz"
 tags: ["RNA-Seq", "HISAT2", "Transcriptome", "Alignment", "Bioinformatics"]
 draft: false

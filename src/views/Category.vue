@@ -28,8 +28,8 @@
                         target="_blank" rel="noopener noreferrer" class="icon-link" title="GitHub" @click.stop>
                         <i class="fab fa-github"></i>
                       </a>
-                      <a v-else-if="category.title === topicsTitle && item.doi" :href="normalizeUrl(item.doi)"
-                        target="_blank" rel="noopener noreferrer" class="icon-link" title="链接" @click.stop>
+                      <a v-else-if="category.title === topicsTitle && item.doi" :href="normalizeDoi(item.doi)"
+                        target="_blank" rel="noopener noreferrer" class="icon-link" title="DOI" @click.stop>
                         <i class="fas fa-link"></i>
                       </a>
                     </div>
@@ -37,6 +37,29 @@
                     <p class="mb-2 flex-grow-1 desc-text" :style="{ color: 'var(--app-text-secondary)' }">
                       {{ item.desc }}
                     </p>
+
+                    <div v-if="category.title === projectsTitle"
+                      class="d-flex flex-wrap align-items-center gap-2 mb-2 meta-row">
+                      <span v-if="item.language" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
+                        <i class="fas fa-code me-1 meta-icon"></i>{{ item.language }}
+                      </span>
+                      <span v-if="item.license" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
+                        <i class="fas fa-scale-balanced me-1 meta-icon"></i>{{ item.license }}
+                      </span>
+                      <span v-if="item.version" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
+                        <i class="fas fa-tag me-1 meta-icon"></i>v{{ item.version }}
+                      </span>
+                    </div>
+
+                    <div v-if="category.title === topicsTitle"
+                      class="d-flex flex-wrap align-items-center gap-2 mb-2 meta-row">
+                      <span v-if="item.journal" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
+                        <i class="fas fa-book-open me-1 meta-icon"></i>{{ item.journal }}
+                      </span>
+                      <span v-if="item.year" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
+                        <i class="fas fa-calendar-days me-1 meta-icon"></i>{{ item.year }}
+                      </span>
+                    </div>
 
                     <div v-if="category.title !== notesTitle && Array.isArray(item.tags) && item.tags.length"
                       class="d-flex flex-wrap gap-2 mb-2">
@@ -62,12 +85,7 @@
                       </div>
                     </div>
 
-                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2 meta-row">
-
-                    </div>
-
                     <hr class="my-2" />
-
                     <div class="text-end">
                       <span class="fw-medium d-inline-flex align-items-center gap-1 cursor-pointer see-more-text"
                         :style="{ color: 'var(--app-primary)' }" @click="() => handleSeeMore(item)">
@@ -130,6 +148,13 @@ function normalizeUrl(u: any) {
   return 'https://' + u.replace(/^\/+/, '')
 }
 
+function normalizeDoi(doi: any) {
+  if (typeof doi !== 'string' || !doi.trim()) return ''
+  if (/^https?:\/\//i.test(doi)) return doi
+  if (/^10\.\d{4,9}\//.test(doi)) return 'https://doi.org/' + doi
+  return 'https://' + doi.replace(/^\/+/, '')
+}
+
 function formatMonth(dateStr: string) {
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return dateStr
@@ -140,7 +165,7 @@ function formatMonth(dateStr: string) {
 
 function formatWords(n: any) {
   const num = Number(n)
-  if (!Number.isFinite(num)) return num
+  if (!Number.isFinite(num)) return n
   if (num >= 10000) return Math.round(num / 1000) + 'k'
   return String(num)
 }
@@ -156,7 +181,19 @@ function handleSeeMore(item: any) {
     return
   }
 
-  const doi = normalizeUrl(item?.doi)
+  const url = normalizeUrl(item?.url)
+  if (url) {
+    window.open(url, '_blank', 'noopener,noreferrer')
+    return
+  }
+
+  const github = normalizeUrl(item?.github)
+  if (github) {
+    window.open(github, '_blank', 'noopener,noreferrer')
+    return
+  }
+
+  const doi = normalizeDoi(item?.doi)
   if (doi) {
     window.open(doi, '_blank', 'noopener,noreferrer')
   }

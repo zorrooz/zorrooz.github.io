@@ -1,6 +1,6 @@
 ---
 title: "R Language Data Processing Example"
-date: "2025-09-19"
+date: "2026-07-04"
 author: "zorrooz"
 tags: ["R Language", "Data Processing", "Statistical Analysis", "Data Visualization", "Bioinformatics"]
 draft: false

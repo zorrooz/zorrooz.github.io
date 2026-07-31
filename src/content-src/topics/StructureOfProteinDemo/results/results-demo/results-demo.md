@@ -1,8 +1,8 @@
 ---
 title: "实验结果 - 蛋白质结构解析"
-date: "2025-07-01"
+date: "2026-04-12"
 author: "zorrooz"
-tags: ["Results", "Structure", "Resolution", "Analysis"]
+tags: ["Results", "Structure", "Resolution", "数据分析"]
 draft: false
 description: "蛋白质结构解析实验结果演示"
 ---

@@ -1,8 +1,8 @@
 ---
 title: "BioCrawler 安装指南"
-date: "2025-08-01"
+date: "2026-05-16"
 author: "zorrooz"
-tags: ["Installation", "Python", "Setup"]
+tags: ["Installation", "Python"]
 draft: false
 description: "BioCrawler 安装和配置演示"
 ---

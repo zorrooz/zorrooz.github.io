@@ -1,12 +1,20 @@
 [
   {
-    "title": "BioCrawler API 接口文档",
-    "relativePath": "Biocrawler/api/api-demo/api-demo",
-    "wordCount": 165
-  },
-  {
-    "title": "BioCrawler 安装指南",
-    "relativePath": "Biocrawler/installation/installation-demo/installation-demo",
-    "wordCount": 141
+    "name": "Biocrawler",
+    "title": "BioCrawler",
+    "desc": "面向生物数据抓取与处理的工具集",
+    "date": "2026-05-16",
+    "tags": [
+      "爬虫",
+      "API",
+      "生物信息学"
+    ],
+    "github": "https://github.com/example/biocrawler",
+    "url": "https://github.com/example/biocrawler",
+    "status": "active",
+    "language": "Python",
+    "stars": 128,
+    "license": "MIT",
+    "version": "0.4.2"
   }
 ]

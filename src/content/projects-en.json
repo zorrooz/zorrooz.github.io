@@ -1,12 +1,20 @@
 [
   {
-    "title": "BioCrawler API Documentation",
-    "relativePath": "Biocrawler/api/api-demo/api-demo-en",
-    "wordCount": 99
-  },
-  {
-    "title": "BioCrawler Installation Guide",
-    "relativePath": "Biocrawler/installation/installation-demo/installation-demo-en",
-    "wordCount": 95
+    "name": "Biocrawler",
+    "title": "BioCrawler",
+    "desc": "A toolkit for biological data crawling and processing",
+    "date": "2026-05-16",
+    "tags": [
+      "Crawler",
+      "API",
+      "Bioinformatics"
+    ],
+    "github": "https://github.com/example/biocrawler",
+    "url": "https://github.com/example/biocrawler",
+    "status": "active",
+    "language": "Python",
+    "stars": 128,
+    "license": "MIT",
+    "version": "0.4.2"
   }
 ]

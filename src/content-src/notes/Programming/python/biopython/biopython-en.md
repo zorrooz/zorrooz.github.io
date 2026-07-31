@@ -1,6 +1,6 @@
 ---
 title: "Biopython Bioinformatics Applications"
-date: "2025-09-19"
+date: "2026-07-01"
 author: "zorrooz"
 tags: ["Python", "Biopython", "Bioinformatics", "Sequence Analysis", "Genomics"]
 draft: false

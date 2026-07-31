@@ -256,7 +256,7 @@ contacts:
 
 在开始翻译前，请先完成API Key配置：
 
-请在`src/config`目录下新建`llmConfig.js`文件，并填入以下内容：
+请在`src/config`目录下新建`llmConfig.ts`文件，并填入以下内容：
 
 ```
 export default {

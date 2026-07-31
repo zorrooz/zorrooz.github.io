@@ -257,7 +257,7 @@ contacts:
 
 Before starting the translation, please complete the API Key configuration:
 
-Create a new file `llmConfig.js` in the `src/config` directory and add the following content:
+Create a new file `llmConfig.ts` in the `src/config` directory and add the following content:
 
 ```
 export default {

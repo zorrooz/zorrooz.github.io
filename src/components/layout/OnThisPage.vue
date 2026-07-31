@@ -86,14 +86,14 @@ function setupContainerObserver() {
     if (!otpObserver.value) {
       otpObserver.value = new MutationObserver(() => {
         clearTimeout(otpObserverTimer.value ?? undefined)
-        otpObserverTimer.value = setTimeout(() => refreshToc(), 100)
+        otpObserverTimer.value = window.setTimeout(() => refreshToc(), 100)
       })
       otpObserver.value.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] })
     }
     refreshToc()
   }
   checkContainer()
-  if (!otpPoller.value && !document.querySelector(props.containerSelector)) otpPoller.value = setInterval(checkContainer, 200)
+  if (!otpPoller.value && !document.querySelector(props.containerSelector)) otpPoller.value = window.setInterval(checkContainer, 200)
 }
 
 function getHeadingText(h: Element) {

@@ -1,7 +1,7 @@
 [
   {
     "name": "比对",
-    "count": 1
+    "count": 2
   },
   {
     "name": "蛋白质组学",
@@ -9,10 +9,6 @@
   },
   {
     "name": "定量分析",
-    "count": 1
-  },
-  {
-    "name": "基因组比对",
     "count": 1
   },
   {
@@ -36,12 +32,8 @@
     "count": 1
   },
   {
-    "name": "生物信息",
-    "count": 1
-  },
-  {
     "name": "生物信息学",
-    "count": 5
+    "count": 7
   },
   {
     "name": "数据处理",
@@ -60,11 +52,11 @@
     "count": 2
   },
   {
-    "name": "统计分析",
+    "name": "数学公式",
     "count": 1
   },
   {
-    "name": "统计图表",
+    "name": "统计分析",
     "count": 1
   },
   {
@@ -81,10 +73,6 @@
   },
   {
     "name": "自动化",
-    "count": 1
-  },
-  {
-    "name": "Bash",
     "count": 1
   },
   {
@@ -105,6 +93,18 @@
   },
   {
     "name": "HISAT2",
+    "count": 1
+  },
+  {
+    "name": "KaTeX",
+    "count": 1
+  },
+  {
+    "name": "LaTeX",
+    "count": 1
+  },
+  {
+    "name": "Markdown",
     "count": 1
   },
   {

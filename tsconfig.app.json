@@ -17,6 +17,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
@@ -25,8 +26,8 @@
   "exclude": [
     "src/utils/generators",
     "src/utils/translator",
-    "src/utils/runAllGenerators.js",
-    "src/utils/contentDevPlugin.js",
-    "src/utils/markdownProcessor.js"
+    "src/utils/runAllGenerators.ts",
+    "src/utils/contentDevPlugin.ts",
+    "src/utils/markdownProcessor.ts"
   ]
 }

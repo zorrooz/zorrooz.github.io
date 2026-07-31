@@ -1,6 +1,6 @@
 ---
 title: "R语言数据处理示例"
-date: "2025-09-19"
+date: "2026-07-04"
 author: "zorrooz"
 tags: ["R语言", "数据处理", "统计分析", "数据可视化", "生物信息学"]
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "Processing FASTQ Quality Statistics with Pandas"
-date: "2025-09-19"
+date: "2026-07-02"
 author: "zorrooz"
 tags: ["Python", "Pandas", "FASTQ", "Data Cleaning", "Bioinformatics", "Beginner"]
 draft: false

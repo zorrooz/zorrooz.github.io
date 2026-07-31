@@ -2,7 +2,7 @@ notes:
   - name: "Omics"
     title: "组学"
     desc: "组学相关的学习记录与资料汇总"
-    date: "2025-09-19"
+    date: "2026-06-21"
     categories:
       genomics: "基因组学"
       proteomics: "蛋白质组学"
@@ -11,7 +11,7 @@ notes:
   - name: "Programming"
     title: "编程"
     desc: "编程相关的学习记录与资料汇总"
-    date: "2025-09-19"
+    date: "2026-07-06"
     categories:
       python: "Python"
       r: "R"
@@ -21,9 +21,15 @@ projects:
   - name: "Biocrawler"
     title: "BioCrawler"
     desc: "面向生物数据抓取与处理的工具集"
-    date: "2025-11-01"
+    date: "2026-05-16"
     github: "https://github.com/example/biocrawler"
-    tags: ["Crawler", "API", "Bioinformatics"]
+    url: "https://github.com/example/biocrawler"
+    status: "active"
+    language: "Python"
+    stars: 128
+    license: "MIT"
+    version: "0.4.2"
+    tags: ["爬虫", "API", "生物信息学"]
     categories:
       api: "接口"
       installation: "安装"
@@ -32,8 +38,13 @@ topics:
   - name: "StructureOfProteinDemo"
     title: "蛋白质结构解析演示课题"
     desc: "蛋白质结构解析方法与结果演示"
-    date: "2025-12-01"
-    doi: "www.demo-structure.org"
+    date: "2026-04-12"
+    doi: "10.1234/demo-structure.2026"
+    url: "https://www.demo-structure.org"
+    status: "completed"
+    journal: "Journal of Demo Science"
+    year: 2026
+    authors: ["Demo Author A", "Demo Author B"]
     tags: ["Protein", "Structure", "Cryo-EM"]
     categories:
       methods: "方法"

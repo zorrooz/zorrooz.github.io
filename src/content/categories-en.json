@@ -7,26 +7,25 @@
         "title": "Omics",
         "desc": "Summary of learning records and materials related to omics",
         "tags": [
-          "BWA",
-          "Genome Alignment",
-          "NGS",
-          "Command Line",
-          "Human Genome",
-          "SAM/BAM",
-          "MaxQuant",
-          "Proteomics",
-          "Mass Spectrometry",
-          "Bioinformatics",
-          "Quantitative Analysis",
           "RNA-Seq",
           "HISAT2",
           "Transcriptome",
-          "Alignment"
+          "Alignment",
+          "Bioinformatics",
+          "MaxQuant",
+          "Proteomics",
+          "Mass Spectrometry",
+          "Quantitative Analysis",
+          "BWA",
+          "NGS",
+          "Command Line",
+          "Human Genome",
+          "SAM/BAM"
         ],
         "stats": {
           "postsCount": 3,
-          "totalWords": 144,
-          "latestDate": "2025-09-19"
+          "totalWords": 289,
+          "latestDate": "2026-06-21"
         },
         "categories": [
           {
@@ -38,7 +37,7 @@
                 "articleUrl": "/article/notes/Omics/genomics/bwa/bwa-en",
                 "tags": [
                   "BWA",
-                  "Genome Alignment",
+                  "Alignment",
                   "NGS",
                   "Command Line",
                   "Human Genome",
@@ -48,8 +47,8 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 30,
-              "latestDate": "2025-09-19"
+              "totalWords": 175,
+              "latestDate": "2026-06-19"
             }
           },
           {
@@ -71,7 +70,7 @@
             "stats": {
               "postsCount": 1,
               "totalWords": 63,
-              "latestDate": "2025-09-19"
+              "latestDate": "2026-06-20"
             }
           },
           {
@@ -93,7 +92,7 @@
             "stats": {
               "postsCount": 1,
               "totalWords": 51,
-              "latestDate": "2025-09-19"
+              "latestDate": "2026-06-21"
             }
           }
         ],
@@ -104,32 +103,35 @@
         "title": "Programming",
         "desc": "Summary of learning records and materials related to programming",
         "tags": [
-          "Python",
-          "Biopython",
+          "Markdown",
+          "LaTeX",
+          "KaTeX",
+          "Math",
           "Bioinformatics",
-          "Sequence Analysis",
-          "Genomics",
-          "Pandas",
-          "FASTQ",
-          "Data Cleaning",
-          "Beginner",
-          "Data Processing",
-          "Data Analysis",
-          "R Language",
-          "Statistical Analysis",
-          "Data Visualization",
-          "ggplot2",
-          "Statistical Charts",
           "Shell",
           "Bash",
           "Command Line",
           "Scripting",
-          "Automation"
+          "Automation",
+          "R Language",
+          "ggplot2",
+          "Data Visualization",
+          "Data Processing",
+          "Statistical Analysis",
+          "Python",
+          "Pandas",
+          "Analysis",
+          "Data Cleaning",
+          "FASTQ",
+          "Beginner",
+          "Biopython",
+          "Sequence Analysis",
+          "Genomics"
         ],
         "stats": {
-          "postsCount": 6,
-          "totalWords": 117,
-          "latestDate": "2025-09-19"
+          "postsCount": 7,
+          "totalWords": 549,
+          "latestDate": "2026-07-06"
         },
         "categories": [
           {
@@ -137,14 +139,25 @@
             "title": "Python",
             "articles": [
               {
-                "title": "Biopython Bioinformatics Applications",
-                "articleUrl": "/article/notes/Programming/python/biopython/biopython-en",
+                "title": "Markdown & LaTeX Formula Rendering Demo",
+                "articleUrl": "/article/notes/Programming/python/markdown-demo/markdown-demo-en",
+                "tags": [
+                  "Markdown",
+                  "LaTeX",
+                  "KaTeX",
+                  "Math",
+                  "Bioinformatics"
+                ]
+              },
+              {
+                "title": "Python Pandas Data Processing in Practice",
+                "articleUrl": "/article/notes/Programming/python/pandas/pandas-en",
                 "tags": [
                   "Python",
-                  "Biopython",
-                  "Bioinformatics",
-                  "Sequence Analysis",
-                  "Genomics"
+                  "Pandas",
+                  "Data Processing",
+                  "Analysis",
+                  "Data Cleaning"
                 ]
               },
               {
@@ -160,27 +173,37 @@
                 ]
               },
               {
-                "title": "Python Pandas Data Processing in Practice",
-                "articleUrl": "/article/notes/Programming/python/pandas/pandas-en",
+                "title": "Biopython Bioinformatics Applications",
+                "articleUrl": "/article/notes/Programming/python/biopython/biopython-en",
                 "tags": [
                   "Python",
-                  "Pandas",
-                  "Data Processing",
-                  "Data Analysis",
-                  "Data Cleaning"
+                  "Biopython",
+                  "Bioinformatics",
+                  "Sequence Analysis",
+                  "Genomics"
                 ]
               }
             ],
             "stats": {
-              "postsCount": 3,
-              "totalWords": 66,
-              "latestDate": "2025-09-19"
+              "postsCount": 4,
+              "totalWords": 413,
+              "latestDate": "2026-07-10"
             }
           },
           {
             "key": "r",
             "title": "R",
             "articles": [
+              {
+                "title": "R Language ggplot2 Data Visualization",
+                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2-en",
+                "tags": [
+                  "R Language",
+                  "ggplot2",
+                  "Data Visualization",
+                  "Bioinformatics"
+                ]
+              },
               {
                 "title": "R Language Data Processing Example",
                 "articleUrl": "/article/notes/Programming/r/demo/demo-en",
@@ -191,23 +214,12 @@
                   "Data Visualization",
                   "Bioinformatics"
                 ]
-              },
-              {
-                "title": "R Language ggplot2 Data Visualization",
-                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2-en",
-                "tags": [
-                  "R Language",
-                  "ggplot2",
-                  "Data Visualization",
-                  "Statistical Charts",
-                  "Bioinformatics"
-                ]
               }
             ],
             "stats": {
               "postsCount": 2,
-              "totalWords": 30,
-              "latestDate": "2025-09-19"
+              "totalWords": 88,
+              "latestDate": "2026-07-05"
             }
           },
           {
@@ -228,12 +240,12 @@
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 21,
-              "latestDate": "2025-09-19"
+              "totalWords": 48,
+              "latestDate": "2026-07-06"
             }
           }
         ],
-        "root": "/article/notes/Programming/python/biopython/biopython-en"
+        "root": "/article/notes/Programming/python/markdown-demo/markdown-demo-en"
       }
     ]
   },
@@ -250,46 +262,40 @@
           "Bioinformatics"
         ],
         "stats": {
-          "postsCount": 2,
-          "totalWords": 194,
-          "latestDate": "2025-11-01"
+          "postsCount": 0,
+          "totalWords": 0,
+          "latestDate": "2026-05-16"
         },
         "categories": [
           {
             "key": "api",
             "title": "API",
-            "articles": [
-              {
-                "title": "BioCrawler API Documentation",
-                "articleUrl": "/article/projects/Biocrawler/api/api-demo/api-demo-en",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 99,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           },
           {
             "key": "installation",
             "title": "Installation",
-            "articles": [
-              {
-                "title": "BioCrawler Installation Guide",
-                "articleUrl": "/article/projects/Biocrawler/installation/installation-demo/installation-demo-en",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 95,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/projects/Biocrawler/api/api-demo/api-demo-en",
-        "github": "https://github.com/example/biocrawler"
+        "root": "",
+        "github": "https://github.com/example/biocrawler",
+        "status": "active",
+        "language": "Python",
+        "stars": 128,
+        "license": "MIT",
+        "version": "0.4.2",
+        "url": "https://github.com/example/biocrawler"
       }
     ]
   },
@@ -306,46 +312,42 @@
           "Cryo-EM"
         ],
         "stats": {
-          "postsCount": 2,
-          "totalWords": 520,
-          "latestDate": "2025-12-01"
+          "postsCount": 0,
+          "totalWords": 0,
+          "latestDate": "2026-04-12"
         },
         "categories": [
           {
             "key": "methods",
             "title": "Methods",
-            "articles": [
-              {
-                "title": "Experimental Methods",
-                "articleUrl": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo-en",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 229,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           },
           {
             "key": "results",
             "title": "Results",
-            "articles": [
-              {
-                "title": "Experimental Results",
-                "articleUrl": "/article/topics/StructureOfProteinDemo/results/results-demo/results-demo-en",
-                "tags": []
-              }
-            ],
+            "articles": [],
             "stats": {
-              "postsCount": 1,
-              "totalWords": 291,
+              "postsCount": 0,
+              "totalWords": 0,
               "latestDate": ""
             }
           }
         ],
-        "root": "/article/topics/StructureOfProteinDemo/methods/methods-demo/methods-demo-en",
-        "doi": "www.demo-structure.org"
+        "root": "",
+        "doi": "10.1234/demo-structure.2026",
+        "status": "completed",
+        "journal": "Journal of Demo Science",
+        "year": 2026,
+        "authors": [
+          "Demo Author A",
+          "Demo Author B"
+        ],
+        "url": "https://www.demo-structure.org"
       }
     ]
   }

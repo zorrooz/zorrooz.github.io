@@ -16,6 +16,7 @@
 import { defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/stores/app'
+import { localeFromPrefix } from '@/config/site.ts'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import BackToTop from '@/components/widgets/BackToTop.vue'
@@ -28,7 +29,7 @@ const appStore = useAppStore()
 
 const syncLocaleFromPath = (path: string) => {
   const m = path.match(/^\/(zh|en)(\/|$)/)
-  if (m) appStore.setLocale(m[1] === 'en' ? 'en-US' : 'zh-CN')
+  if (m) appStore.setLocale(localeFromPrefix(m[1]))
 }
 
 watch(() => route.fullPath, syncLocaleFromPath)
