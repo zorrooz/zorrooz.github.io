@@ -34,6 +34,7 @@ import ProfileCard from '@/components/layout/ProfileCard.vue'
 import TagCloud from '@/components/layout/TagCloud.vue'
 import PostList from '@/components/layout/PostList.vue'
 import { useI18n } from 'vue-i18n'
+import { useHead } from '@unhead/vue'
 import { loadPosts } from '@/utils/contentLoader'
 
 /*
@@ -44,6 +45,7 @@ export default {
   name: 'HomeView',
   setup() {
     const { t, locale } = useI18n()
+    useHead({ title: 'gblog - Home' })
     return { t, locale }
   },
   components: { ProfileCard, TagCloud, PostList },
@@ -71,8 +73,8 @@ export default {
       return Array.from(set).sort()
     }
   },
-  async created() {
-    await this.loadPostData()
+  created() {
+    this.loadPostData()
   },
   mounted() {
     this.updateSidebarDimensions()
@@ -93,9 +95,9 @@ export default {
   methods: {
 
 
-    async loadPostData() {
+    loadPostData() {
       try {
-        this.postData = await loadPosts() || [];
+        this.postData = loadPosts() || [];
       } catch (error) {
         console.error('Failed to load post data:', error);
         this.postData = [];

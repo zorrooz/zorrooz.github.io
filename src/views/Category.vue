@@ -88,6 +88,7 @@
 
 <script>
 import { useI18n } from 'vue-i18n';
+import { useHead } from '@unhead/vue';
 import { loadCategories } from '@/utils/contentLoader';
 
 /*
@@ -98,6 +99,7 @@ export default {
   name: 'CategoryView',
   setup() {
     const { t, locale } = useI18n();
+    useHead({ title: 'gblog - Categories' });
     return { t, locale };
   },
   data() {
@@ -131,8 +133,8 @@ export default {
       return this.t('seeMore');
     }
   },
-  async created() {
-    await this.loadCategoryData();
+  created() {
+    this.loadCategoryData();
   },
 
   watch: {
@@ -142,9 +144,9 @@ export default {
   },
 
   methods: {
-    async loadCategoryData() {
+    loadCategoryData() {
       try {
-        const categoryData = await loadCategories();
+        const categoryData = loadCategories();
         this.categoryList = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || []);
       } catch (error) {
         console.error('Failed to load category data:', error);

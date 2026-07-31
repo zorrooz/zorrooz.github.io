@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "node ./src/utils/runAllGenerators.js",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite-ssg build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@unhead/vue": "^2.1.16",
     "bootstrap": "^5.3.7",
     "commander": "^13.1.0",
     "highlight.js": "^11.11.1",
@@ -37,6 +38,7 @@
     "remark-rehype": "^11.1.2",
     "sass": "^1.90.0",
     "unified": "^11.0.5",
+    "vite-ssg": "^28.3.0",
     "vue": "^3.5.24",
     "vue-i18n": "^12.0.0-alpha.3",
     "vue-router": "^4.5.1"

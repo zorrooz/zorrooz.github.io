@@ -1,6 +1,6 @@
 # gblog 架构现代化执行计划
 
-> 状态：**执行中（Phase 0-1 已完成）**
+> 状态：**执行中（Phase 0-2 已完成）**
 > 制定日期：2026-07-31
 > 路由来源：AGENTS.md → 本文件（约定文档）
 > 执行方式：由用户切换到 build 模式，按 Phase 顺序逐个执行；每个 Phase 完成后更新本文件顶部的状态表
@@ -11,7 +11,7 @@
 |-------|------|------|
 | Phase 0 | 基建：dev 热更新 + SSR 安全 + 高亮本地化 | ✅ 已完成 |
 | Phase 1 | Markdown 渲染移入构建期（bundle 瘦身） | ✅ 已完成 |
-| Phase 2 | SSG 预渲染 + history 路由（核心升级） | ⬜ 待执行 |
+| Phase 2 | SSG 预渲染 + history 路由（核心升级） | ✅ 已完成 |
 | Phase 3 | 内容层整理（生成器共享 core + sitemap） | ⬜ 待执行 |
 | Phase 4 | 组件现代化（`<script setup>` 迁移） | ⬜ 待执行 |
 | Phase 5 | TypeScript 渐进迁移 | ⬜ 待执行 |
@@ -180,10 +180,22 @@ Phase 0（基建）→ Phase 1（构建期渲染）→ Phase 2（SSG/路由）�
 - 构建后复制 `index.html` → `dist/404.html`（history 模式 SPA fallback；user site base `/` 无需改）
 - 实现方式：`ssgOptions.onFinished` 回调或 postbuild 脚本（优先 ssgOptions 内完成，不新增顶层脚本）
 
+**执行记录（2026-07-31）**：
+- 2a：安装 `vite-ssg@28.3.0` + `@unhead/vue@2.1.16`（降级至与 vite-ssg 内置 2.x 对齐）；最小 spike 验证 Vite 7 / Vue 3.5 兼容后删除
+- 2b：`src/router/index.js` 改为导出 `routes` 数组；ViteSSG 内部创建 router（SSR 用 memory history、客户端用 web history）
+- 2c：`src/main.js` 改 `export const createApp = ViteSSG(...)`；pinia 按 `initialState.pinia` 传递；i18n SSR 固定 zh-CN、客户端 `initLocale()` 恢复；bootstrap 改为 `if (!import.meta.env.SSR) import('bootstrap')`；`build` 脚本改 `vite-ssg build`
+- 2d：`ssgOptions.includedRoutes` 过滤含 `:` 的动态路径段（Windows 上 `dist\article\:path*.html` 会 ENOENT），再读 `src/content/categories.json` 展开 13 篇文章路径
+- 2e：`@unhead/vue` 2.x 无 `Head` 组件（且 `Head` 触犯 lint 保留名）→ 用 `app.mixin(VueHeadMixin)` + Article.vue 组件级 `head()`；Home/Category 用 `useHead`；`index.html` 补 meta description + OG
+- 2f：`ssgOptions.onFinished` 复制 `dist/index.html` → `dist/404.html`
+- **关键修复（正文空壳根因）**：eager glob `import: 'default'` 后模块值直接是字符串，`htmlModules[key].default` 恒为 `undefined` → 全部文章返回空；改 `htmlModules[key]`
+- **关键修复（SSR 不等待 async created）**：Home/Category 的 `async created() { await ... }` 在 SSR 不执行完成 → 列表为空；loaders 已同步化后改为同步调用
+- Article.vue `created()` 全同步化 + `updateSidebarDimensions`/`$nextTick` 回调加 SSR 守卫；TocDrawer/BackToTop 的 `window.innerHeight` 初始化加守卫
+- 构建产出 17 个 HTML（4 静态页 + 13 篇文章，正文/高亮/TOC 已内联，`data-server-rendered`）；主 bundle 含全部文章 HTML（37 KB）
+
 **验证**：
-- `npm run build` 后 `dist/article/**/*.html` 存在且正文内容已内联（非空壳）
-- `npm run preview` 直接刷新深链接（如 `/article/notes/Omics/genomics/bwa/bwa`）不 404
-- 全部导航链路、语言切换、主题切换回归
+- `npm run build` 后 `dist/article/**/*.html` 存在且正文内容已内联（非空壳）✅
+- `npm run preview` 直接刷新深链接（如 `/article/notes/Omics/genomics/bwa/bwa`）不 404 ✅（SPA fallback 返回 index.html，gh-pages 由 404.html 兜底）
+- 全部导航链路、语言切换、主题切换回归（dev server 启动无错误、HTTP 200 冒烟通过）
 
 ---
 

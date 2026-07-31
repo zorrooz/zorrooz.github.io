@@ -87,6 +87,14 @@ export default {
   },
   components: { RenderMarkdown, OnThisPage, NavigationTree, TocDrawer },
   props: { path: { type: [String, Array], default: '' } },
+  head() {
+    return {
+      title: this.currentPost ? `${this.currentPost.title} - gblog` : 'gblog',
+      meta: this.currentPost?.description
+        ? [{ name: 'description', content: this.currentPost.description }]
+        : [],
+    }
+  },
   data() {
     return {
       rawMarkdown: '',
@@ -195,9 +203,9 @@ export default {
       return Math.max(1, Math.round(text.length / 800));
     }
   },
-  async created() {
-    await this.buildFromCategories();
-    this.loadArticleContent();
+  created() {
+    this.buildFromCategories()
+    this.loadArticleContent()
   },
   watch: {
     locale: {
@@ -264,7 +272,7 @@ export default {
       };
 
       try {
-        const categoryData = await loadCategories();
+        const categoryData = loadCategories();
 
         if (Array.isArray(categoryData)) {
           categoryData.forEach(section => {
@@ -335,9 +343,10 @@ export default {
         if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`);
         this.currentPath = matchedPost.path;
 
-        this.rawMarkdown = await loadHtmlContent(this.currentPath);
+        this.rawMarkdown = loadHtmlContent(this.currentPath);
 
         this.$nextTick(() => {
+          if (typeof window === 'undefined') return
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.updateSidebarDimensions();
           this.$refs.onThisPageRef?.refreshToc();
@@ -345,6 +354,7 @@ export default {
       } catch {
         this.rawMarkdown = '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.';
         this.$nextTick(() => {
+          if (typeof window === 'undefined') return
           window.scrollTo({ top: 0, behavior: 'smooth' });
           this.$refs.onThisPageRef?.refreshToc();
         });
@@ -352,6 +362,7 @@ export default {
     },
 
     updateSidebarDimensions() {
+      if (typeof window === 'undefined' || typeof document === 'undefined') return;
       const header = document.querySelector('header'), footer = document.querySelector('footer');
       const leftContent = this.$refs.leftSidebarContent, rightContent = this.$refs.rightSidebarContent;
       if (!leftContent || !rightContent || !this.$refs.leftSidebarContainer || !this.$refs.rightSidebarContainer) return;

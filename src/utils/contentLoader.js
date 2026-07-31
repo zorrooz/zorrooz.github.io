@@ -1,6 +1,6 @@
 
 const getCurrentLocale = () => {
-  return localStorage.getItem('locale') || 'zh-CN'
+  return (typeof window !== 'undefined' ? localStorage.getItem('locale') : null) || 'zh-CN'
 }
 
 const getLocalizedFileName = (baseName, extension = '.json') => {
@@ -18,33 +18,29 @@ const jsonModules = import.meta.glob('../content/**/*.json', { eager: true })
 const htmlModules = import.meta.glob('../content/html/**/*.html', {
   query: '?raw',
   import: 'default',
-  eager: false,
+  eager: true,
 })
 
-const loadJsonContent = async (fileName) => {
+const loadJsonContent = (fileName) => {
   const localizedFileName = getLocalizedFileName(fileName, '.json')
 
-  try {
-    const matchedKey = Object.keys(jsonModules).find((key) => key.includes(localizedFileName))
+  const matchedKey = Object.keys(jsonModules).find((key) => key.includes(localizedFileName))
 
-    if (matchedKey) {
-      return jsonModules[matchedKey].default || {}
-    }
-
-    throw new Error(`JSON file not found: ${localizedFileName}`)
-  } catch (error) {
-    console.error(`Failed to load JSON content: ${localizedFileName}`, error)
-
-    if (getCurrentLocale() === 'en-US') {
-      const fallbackKey = Object.keys(jsonModules).find((key) => key.includes(`${fileName}.json`))
-
-      if (fallbackKey) {
-        return jsonModules[fallbackKey].default || {}
-      }
-    }
-
-    return {}
+  if (matchedKey) {
+    return jsonModules[matchedKey].default || {}
   }
+
+  console.error(`Failed to load JSON content: ${localizedFileName}`)
+
+  if (getCurrentLocale() === 'en-US') {
+    const fallbackKey = Object.keys(jsonModules).find((key) => key.includes(`${fileName}.json`))
+
+    if (fallbackKey) {
+      return jsonModules[fallbackKey].default || {}
+    }
+  }
+
+  return {}
 }
 
 /**
@@ -55,7 +51,7 @@ const loadJsonContent = async (fileName) => {
  *   en-US: bwa-en.html -> bwa.html
  *   zh-CN: bwa.html (or bwa-en.html when the path itself carries -en)
  */
-export const loadHtmlContent = async (filePath) => {
+export const loadHtmlContent = (filePath) => {
   const locale = getCurrentLocale()
   const isEnglish = locale === 'en-US'
   const base = filePath.replace(/\.md$/i, '')
@@ -71,11 +67,10 @@ export const loadHtmlContent = async (filePath) => {
 
   for (const candidate of candidates) {
     const matchedKey = Object.keys(htmlModules).find((key) =>
-      key.endsWith(`../content/html/${candidate}.html`),
+      key.includes(`/content/html/${candidate}.html`),
     )
     if (matchedKey) {
-      const content = await htmlModules[matchedKey]()
-      return content
+      return htmlModules[matchedKey] || ''
     }
   }
 

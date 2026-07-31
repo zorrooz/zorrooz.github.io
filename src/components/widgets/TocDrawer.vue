@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       sourceId: 'toc', rafPending: false, rafLastBaseTop: null,
-      visible: false, isDragging: false, startY: 0, initialTop: 0, buttonTop: window.innerHeight - 160, touchMoved: false,
+      visible: false, isDragging: false, startY: 0, initialTop: 0, buttonTop: (typeof window !== 'undefined' ? window.innerHeight : 1024) - 160, touchMoved: false,
       show: false,
       lockedScrollY: null
     };

@@ -26,7 +26,7 @@ export default {
       isDragging: false,
       startY: 0,
       initialTop: 0,
-      buttonTop: window.innerHeight - 100,
+      buttonTop: (typeof window !== 'undefined' ? window.innerHeight : 1024) - 100,
       touchMoved: false
     }
   },

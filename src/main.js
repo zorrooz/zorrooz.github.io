@@ -1,10 +1,10 @@
 //main.js
-import { createApp } from 'vue'
+import { ViteSSG } from 'vite-ssg'
 import { createPinia } from 'pinia'
+import { VueHeadMixin } from '@unhead/vue'
 
 import App from './App.vue'
-import router from './router'
-import 'bootstrap'
+import { routes } from './router'
 import './stores/styles/global.scss'
 import './assets/styles/highlight/github.css'
 import './assets/styles/highlight/github-dark-dimmed.css'
@@ -13,14 +13,28 @@ import 'katex/dist/katex.min.css'
 
 import { useAppStore } from './stores/app'
 
-const app = createApp(App)
+// bootstrap touches document at module scope; SSR build must not include it
+if (!import.meta.env.SSR) import('bootstrap')
 
-app.use(createPinia())
-app.use(router)
-app.use(i18n)
+export const createApp = ViteSSG(
+  App,
+  { routes },
+  ({ app, router, initialState, isClient }) => {
+    const pinia = createPinia()
+    app.use(pinia)
+    if (import.meta.env.SSR) {
+      initialState.pinia = pinia.state.value
+    } else if (initialState.pinia) {
+      pinia.state.value = initialState.pinia
+    }
 
-const appStore = useAppStore()
-appStore.initTheme()
-appStore.initLocale()
+    app.use(router)
+    app.use(i18n)
+    app.mixin(VueHeadMixin)
 
-app.mount('#app')
+    const appStore = useAppStore()
+    appStore.initTheme()
+    // SSR always renders zh-CN; restore the persisted locale on the client
+    if (isClient) appStore.initLocale()
+  },
+)

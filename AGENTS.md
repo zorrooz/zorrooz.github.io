@@ -17,6 +17,34 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 
 **Always lint and build after changes.**
 
+## Documents (约定文档索引)
+
+| 文档 | 说明 |
+|------|------|
+| `docs/modernization-plan.md` | **架构现代化执行计划**（Phase 0-6 分阶段执行；每阶段完成需更新其状态表） |
+| `.qoder/repowiki/` | **代码索引（Qoder 生成）**：项目 Wiki 文档树，按需加载上下文 |
+
+**注意**：架构改造期间（Phase 0-6 进行中），下文 Architecture 描述的是现状基线；涉及改造的文件与命令以 `docs/modernization-plan.md` 为准，每阶段完成后同步更新本文件。
+
+### Repowiki 代码索引（按需加载）
+
+`.qoder/repowiki/` 是 Qoder 自动生成的代码索引，含模块级知识卡与完整文档树。**需要了解某模块/子系统时，先按此加载上下文，再动手改代码**：
+
+```
+.qoder/repowiki/
+├── knowledge/zh/_index.yaml        # 模块索引（modules: name → scope 文件清单/子模块）
+├── knowledge/zh/<模块>/_module.yaml# 模块元数据（scope、依赖、关联）
+├── knowledge/zh/<模块>/*.md        # 模块知识卡：概览 / 架构设计 / 技术栈 / 应用结构 / 开发规范
+├── zh/content/                     # 完整文档树：架构、内容系统、样式、指南、API 参考等
+└── zh/meta/repowiki-metadata.json  # 文档间关系（parent-child 等）
+```
+
+使用规则：
+1. 定位模块：先读 `knowledge/zh/_index.yaml`，按 `dir_name`/`scope` 找到目标模块
+2. 加载上下文：读该模块知识卡与 `zh/content/` 对应章节，再读涉及的源码
+3. 修改代码前，按需加载受影响模块的文档，避免凭猜测改动
+4. 注意：该索引为**生成产物，可能滞后于代码**；内容与源码冲突时以源码为准，并在完成后可触发重新生成
+
 ## Architecture
 
 ```
