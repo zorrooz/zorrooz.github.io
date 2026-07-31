@@ -1290,8 +1290,8 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/minisearch/dist/es/index.js": [
-    "/assets/SearchModal-lQU9nd4e.js",
-    "/assets/SearchModal-CZaMHv4E.css"
+    "/assets/SearchModal-CfHwwWdc.js",
+    "/assets/SearchModal-kfvp8Hlb.css"
   ],
   "node_modules/pinia/dist/pinia.mjs": [
     "/assets/search-B_JFwR2K.png",
@@ -4198,16 +4198,16 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/SearchModal.vue": [
-    "/assets/SearchModal-lQU9nd4e.js",
-    "/assets/SearchModal-CZaMHv4E.css"
+    "/assets/SearchModal-CfHwwWdc.js",
+    "/assets/SearchModal-kfvp8Hlb.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-lQU9nd4e.js",
-    "/assets/SearchModal-CZaMHv4E.css"
+    "/assets/SearchModal-CfHwwWdc.js",
+    "/assets/SearchModal-kfvp8Hlb.css"
   ],
-  "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=b6cfa03f&lang.css": [
-    "/assets/SearchModal-lQU9nd4e.js",
-    "/assets/SearchModal-CZaMHv4E.css"
+  "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=8cd174be&lang.css": [
+    "/assets/SearchModal-CfHwwWdc.js",
+    "/assets/SearchModal-kfvp8Hlb.css"
   ],
   "src/components/widgets/TocDrawer.vue": [
     "/assets/search-B_JFwR2K.png",

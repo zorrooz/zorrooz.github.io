@@ -5,7 +5,7 @@
       <div class="search-panel" role="dialog" aria-modal="true" :aria-label="t('search')">
         <div class="search-input-row d-flex align-items-center">
           <i class="fas fa-search search-icon"></i>
-          <input ref="searchInput" v-model="keyword" class="search-input" type="search"
+          <input ref="searchInput" v-model="keyword" class="search-input" type="text" inputmode="search"
             :placeholder="t('searchPlaceholder')" @keydown.enter.prevent="openFirstResult" />
           <button class="search-close btn-icon" :aria-label="t('close')" @click="close">
             <span class="search-close-icon" aria-hidden="true"></span>
@@ -185,12 +185,6 @@ nextTick(() => {
   background: transparent;
   font-size: 1.05rem;
   color: var(--app-text);
-}
-
-.search-input::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  appearance: none;
-  display: none;
 }
 
 .search-close {
