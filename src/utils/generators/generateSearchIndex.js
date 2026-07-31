@@ -36,7 +36,23 @@ function stripHtmlToText(html) {
 
 /**
  * @param {'zh-CN' | 'en-US'} locale
- * @returns {Array<{ id: string, title: string, tags: string[], path: string, content: string }>}
+ * @returns {Map<string, string>} relativePath -> description (same source as posts.json preview)
+ */
+function loadDescriptions(locale) {
+  const notesPath = path.join(contentDir, locale === 'en-US' ? 'notes-en.json' : 'notes.json')
+  const map = new Map()
+  if (!fs.existsSync(notesPath)) return map
+  const notes = JSON.parse(fs.readFileSync(notesPath, 'utf-8'))
+  for (const note of Array.isArray(notes) ? notes : []) {
+    if (typeof note?.relativePath !== 'string') continue
+    map.set(note.relativePath, typeof note.description === 'string' ? note.description : '')
+  }
+  return map
+}
+
+/**
+ * @param {'zh-CN' | 'en-US'} locale
+ * @returns {Array<{ id: string, title: string, tags: string[], path: string, description: string, content: string }>}
  */
 function collectArticles(locale) {
   const categoriesPath = path.join(contentDir, locale === 'en-US' ? 'categories-en.json' : 'categories.json')
@@ -45,8 +61,9 @@ function collectArticles(locale) {
     return []
   }
 
+  const descriptions = loadDescriptions(locale)
   const data = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8'))
-  /** @type {Array<{ id: string, title: string, tags: string[], path: string, content: string }>} */
+  /** @type {Array<{ id: string, title: string, tags: string[], path: string, description: string, content: string }>} */
   const docs = []
 
   for (const section of Array.isArray(data) ? data : []) {
@@ -69,11 +86,18 @@ function collectArticles(locale) {
             }
           }
 
+          const key = rel.replace(/^notes\//, '')
+          let description = descriptions.get(key) || ''
+          if (!description && key.endsWith('-en')) {
+            description = descriptions.get(key.slice(0, -3)) || ''
+          }
+
           docs.push({
             id: rel,
             title: typeof art.title === 'string' ? art.title : '',
             tags,
             path: rel,
+            description,
             content,
           })
         }

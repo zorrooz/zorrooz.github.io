@@ -47,6 +47,7 @@ interface SearchDoc {
   title: string
   tags: string[]
   path: string
+  description: string
   content: string
 }
 
@@ -85,14 +86,14 @@ async function ensureEngine() {
   const mod = await loader()
   const docs = ((mod as { default?: SearchDoc[] }).default || []) as SearchDoc[]
   engine = new MiniSearch<SearchDoc>({
-    fields: ['title', 'content'],
-    storeFields: ['title', 'tags', 'path'],
+    fields: ['title', 'description', 'content'],
+    storeFields: ['title', 'tags', 'path', 'description'],
     tokenize: cjkTokenize,
     processTerm: (term) => term,
     searchOptions: {
       prefix: true,
       fuzzy: 0.2,
-      boost: { title: 3, content: 1 },
+      boost: { title: 3, description: 2, content: 1 },
     },
   })
   engine.addAll(docs)
@@ -124,7 +125,7 @@ async function runSearch() {
 }
 
 function snippet(item: SearchDoc) {
-  const text = item.content || item.title
+  const text = item.description || item.content || item.title
   return text.length > 140 ? `${text.slice(0, 140)}...` : text
 }
 
