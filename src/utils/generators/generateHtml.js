@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Generates static HTML for every article at build time.
  * Same file enumeration rules as generateNotes.js:
@@ -22,6 +23,7 @@ const htmlOutputDir = path.join(__dirname, '../../content/html')
 
 const sections = ['notes', 'projects', 'topics']
 
+/** @param {string} p @param {string} locale */
 function isTargetFile(p, locale) {
   if (locale === 'zh-CN') return /\.md$/i.test(p) && !p.endsWith('-en.md')
   return /-en\.md$/i.test(p)

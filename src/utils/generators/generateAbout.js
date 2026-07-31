@@ -1,3 +1,4 @@
+// @ts-check
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -15,14 +16,18 @@ const contentOutputDir = path.join(__dirname, '../../content')
 
 
 
+/**
+ * @param {Record<string, unknown>} [raw]
+ * @returns {{ introduction: string, section: Array<{ title: string, items: Array<{ item: string, desc: string }> }>, contacts: unknown[] }}
+ */
 function normalize(raw = {}) {
   const intro = typeof raw.introduction === 'string' ? raw.introduction : ''
 
   const section = Array.isArray(raw.section)
-    ? raw.section.map((s) => {
+    ? raw.section.map(/** @param {Record<string, unknown>} s */ (s) => {
       const title = typeof s?.title === 'string' ? s.title : ''
       const items = Array.isArray(s?.items)
-        ? s.items.map((it) => ({
+        ? s.items.map(/** @param {Record<string, unknown>} it */ (it) => ({
           item: typeof it?.item === 'string' ? it.item : '',
           desc: typeof it?.desc === 'string' ? it.desc : '',
         }))
@@ -47,15 +52,16 @@ function generateAboutJson(locale = 'zh-CN') {
     locale === 'zh-CN' ? 'about.json' : 'about-en.json',
   )
 
+  /** @type {Record<string, unknown>} */
   let raw = {}
   if (fs.existsSync(yamlPath)) {
     try {
       const yamlContent = fs.readFileSync(yamlPath, 'utf-8')
-      raw = yaml.load(yamlContent) || {}
+      raw = /** @type {Record<string, unknown>} */ (yaml.load(yamlContent) || {})
     } catch (e) {
       console.warn(
         `Warn: failed to parse YAML at ${yamlPath}, using empty object.`,
-        e?.message || e,
+        e instanceof Error ? e.message : e,
       )
       raw = {}
     }

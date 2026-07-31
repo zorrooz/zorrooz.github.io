@@ -1,3 +1,4 @@
+// @ts-check
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -26,6 +27,10 @@ function getFilePaths(locale = 'zh-CN') {
   }
 }
 
+/**
+ * @param {string} mdPath
+ * @returns {{ title: string, date: string, tags: string[], draft: boolean, description: string, relativePath: string, wordCount: number, tagCount: number }}
+ */
 function buildNoteItem(mdPath) {
   const raw = fs.readFileSync(mdPath, 'utf-8')
   const { frontmatter, body } = parseFrontMatterAndBody(raw)

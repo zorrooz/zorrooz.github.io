@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Generates sitemap.xml + robots.txt from the zh-CN categories output.
  * Reads src/content/categories.json (all article URLs + dates), adds the

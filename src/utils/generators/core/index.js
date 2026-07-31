@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Shared utilities for content generators.
  * Behavior must stay byte-identical to the original per-generator copies;
@@ -8,6 +9,7 @@ import fs from 'fs'
 import path from 'path'
 import yaml from 'js-yaml'
 
+/** @param {string} filePath */
 export function ensureDirectoryExistence(filePath) {
   const dirname = path.dirname(filePath)
   if (!fs.existsSync(dirname)) {
@@ -15,6 +17,12 @@ export function ensureDirectoryExistence(filePath) {
   }
 }
 
+/**
+ * @param {string} dir
+ * @param {(filePath: string) => boolean} [predicate]
+ * @param {string[]} [acc]
+ * @returns {string[]}
+ */
 export function walk(dir, predicate = () => true, acc = []) {
   if (!fs.existsSync(dir)) return acc
   const items = fs.readdirSync(dir, { withFileTypes: true })
@@ -26,6 +34,10 @@ export function walk(dir, predicate = () => true, acc = []) {
   return acc
 }
 
+/**
+ * @param {unknown} tags
+ * @returns {string[]}
+ */
 export function normalizeTags(tags) {
   if (Array.isArray(tags)) {
     return tags.map((t) => (typeof t === 'string' ? t.trim() : '')).filter(Boolean)
@@ -39,6 +51,10 @@ export function normalizeTags(tags) {
   return []
 }
 
+/**
+ * @param {string} raw
+ * @returns {{ frontmatter: Record<string, unknown>, body: string }}
+ */
 export function parseFrontMatterAndBody(raw) {
   if (raw.startsWith('---')) {
     const lines = raw.split(/\r?\n/)
@@ -51,11 +67,15 @@ export function parseFrontMatterAndBody(raw) {
     }
     if (endIdx !== -1) {
       const fmText = lines.slice(1, endIdx).join('\n')
+      /** @type {Record<string, unknown>} */
       let fm = {}
       try {
-        fm = yaml.load(fmText) || {}
+        fm = /** @type {Record<string, unknown>} */ (yaml.load(fmText) || {})
       } catch (e) {
-        console.warn('Warn: failed to parse frontmatter YAML. Using empty object.', e?.message || e)
+        console.warn(
+          'Warn: failed to parse frontmatter YAML. Using empty object.',
+          e instanceof Error ? e.message : e,
+        )
       }
       const body = lines.slice(endIdx + 1).join('\n')
       return { frontmatter: fm || {}, body }
@@ -65,6 +85,7 @@ export function parseFrontMatterAndBody(raw) {
 }
 
 // Crude markdown -> plain text for counting words
+/** @param {string} text @returns {string} */
 export function markdownToPlain(text) {
   // remove code fences first
   let t = text.replace(/```[\s\S]*?```/g, ' ')
@@ -86,18 +107,21 @@ export function markdownToPlain(text) {
   return t
 }
 
+/** @param {string} text @returns {number} */
 export function countWordsSmart(text) {
   const cjk = (text.match(/[\u4E00-\u9FFF\u3400-\u4DBF]/g) || []).length
   const words = (text.match(/[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?/g) || []).length
   return cjk + words
 }
 
+/** @param {string} fullPath @param {string} baseDir @returns {string} */
 export function toPosixRelativeNoExt(fullPath, baseDir) {
   const rel = path.relative(baseDir, fullPath)
   const noExt = rel.replace(/\.[^/.]+$/, '')
   return noExt.split(path.sep).join('/')
 }
 
+/** @param {string} raw @returns {string} */
 export function extractTitleFromH1(raw) {
   const lines = raw.split(/\r?\n/)
   for (const line of lines) {

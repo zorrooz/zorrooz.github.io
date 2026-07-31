@@ -1,3 +1,4 @@
+// @ts-check
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -19,6 +20,7 @@ function getFilePaths(locale = 'zh-CN') {
 
 
 
+/** @param {unknown} relativePath @returns {string[]} */
 function deriveCategory(relativePath) {
   if (typeof relativePath !== 'string' || !relativePath) return []
   const parts = relativePath.split('/')
@@ -27,6 +29,10 @@ function deriveCategory(relativePath) {
   return []
 }
 
+/**
+ * @param {unknown} categoriesArr
+ * @returns {Map<string, { groupTitle: string, subMap: Record<string, unknown> }>}
+ */
 function buildNotesCategoryMap(categoriesArr) {
   const map = new Map()
   if (!Array.isArray(categoriesArr)) return map
@@ -43,6 +49,11 @@ function buildNotesCategoryMap(categoriesArr) {
   return map
 }
 
+/**
+ * @param {Record<string, unknown>[]} notesArr
+ * @param {Map<string, { groupTitle: string, subMap: Record<string, unknown> }>} notesCategoryMap
+ * @returns {Array<{ id: number, no: number, title: string, date: string, category: string[], tags: unknown[], preview: string, wordCount: number }>}
+ */
 function buildPostsFromNotes(notesArr, notesCategoryMap) {
   const posts = []
   let id = 1
@@ -56,18 +67,20 @@ function buildPostsFromNotes(notesArr, notesCategoryMap) {
     const tags = Array.isArray(it.tags) ? it.tags : []
     const preview = typeof it.description === 'string' ? it.description : ''
     const [grp, sub] = deriveCategory(it.relativePath)
+    /** @type {string[]} */
     let category = []
     if (grp) {
-      const entry = notesCategoryMap && notesCategoryMap.get(grp)
+      const entry = notesCategoryMap.get(grp)
       if (entry) {
         const first = entry.groupTitle || grp
         const second = sub ? entry.subMap?.[sub] || sub : undefined
-        category = second ? [first, second] : [first]
+        category = second ? [first, String(second)] : [first]
       } else {
         category = sub ? [grp, sub] : [grp]
       }
     }
-    const wordCount = Number.isFinite(it.wordCount) ? it.wordCount : 0
+    const wordCount =
+      typeof it.wordCount === 'number' && Number.isFinite(it.wordCount) ? it.wordCount : 0
 
     posts.push({
       id: id,
@@ -109,7 +122,7 @@ function generatePostsJson(locale = 'zh-CN') {
   } catch (e) {
     console.error(
       `Failed to read/parse notes${locale === 'zh-CN' ? '' : '-en'}.json:`,
-      e?.message || e,
+      e instanceof Error ? e.message : e,
     )
     process.exitCode = 1
     return
@@ -134,7 +147,7 @@ function generatePostsJson(locale = 'zh-CN') {
     fs.writeFileSync(targetPath, JSON.stringify(posts, null, 2), 'utf-8')
     console.log(`Successfully generated: ${targetPath} (${posts.length} posts)`)
   } catch (e) {
-    console.error(`Failed to write ${locale} posts.json:`, e?.message || e)
+    console.error(`Failed to write ${locale} posts.json:`, e instanceof Error ? e.message : e)
     process.exitCode = 1
   }
 }

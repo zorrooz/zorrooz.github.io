@@ -1,3 +1,21 @@
+// @ts-check
+/**
+ * @typedef {Object} FormattedArticle
+ * @property {string} title
+ * @property {string} articleUrl
+ * @property {number} wordCount
+ * @property {string} date
+ * @property {string[]} tags
+ */
+
+/**
+ * @typedef {Object} DetailedSubCategory
+ * @property {string} key
+ * @property {unknown} title
+ * @property {Array<Record<string, unknown>>} articles
+ * @property {{ postsCount: number, totalWords: number, latestDate: string }} stats
+ */
+
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -25,10 +43,16 @@ function getFilePaths(locale = 'zh-CN') {
 
 
 
+/** @param {unknown} x @returns {unknown[]} */
 function safeArray(x) {
   return Array.isArray(x) ? x : []
 }
 
+/**
+ * @param {string} p
+ * @param {unknown[]} [fallback]
+ * @returns {unknown[]}
+ */
 function readJsonArray(p, fallback = []) {
   try {
     if (!fs.existsSync(p)) return fallback
@@ -40,18 +64,23 @@ function readJsonArray(p, fallback = []) {
   }
 }
 
+/**
+ * @param {string} p
+ * @param {Record<string, unknown>} [fallback]
+ * @returns {Record<string, unknown>}
+ */
 function readYaml(p, fallback = {}) {
   try {
     if (!fs.existsSync(p)) return fallback
     const raw = fs.readFileSync(p, 'utf-8')
     const obj = yaml.load(raw)
-    return obj || fallback
+    return /** @type {Record<string, unknown>} */ (obj) || fallback
   } catch {
     return fallback
   }
 }
 
-
+/** @param {unknown} url @returns {string} */
 function getSubCategoryKeyFromUrl(url) {
   if (typeof url !== 'string') return ''
   const parts = url.replace(/^\/+/, '').split('/')
@@ -59,30 +88,47 @@ function getSubCategoryKeyFromUrl(url) {
   return parts[articleIndex + 2] || ''
 }
 
+/**
+ * @param {Record<string, unknown>} article
+ * @param {string} type
+ * @returns {FormattedArticle}
+ */
 function formatArticle(article, type) {
-  const relativePath = article?.relativePath || ''
+  const relativePath = typeof article?.relativePath === 'string' ? article.relativePath : ''
   return {
     title:
       typeof article.title === 'string' ? article.title : relativePath.split('/').pop() || '未命名',
     articleUrl: `/article/${type}/${relativePath}`,
     wordCount: Number(article?.wordCount) || 0,
-    date: article?.date || '',
+    date: typeof article?.date === 'string' ? article.date : '',
     tags: safeArray(article?.tags).filter((t) => typeof t === 'string'),
   }
 }
 
+/**
+ * @param {Record<string, unknown>} rawDef
+ * @returns {{ name: string, title: string, desc: string, date: string, categories: Record<string, unknown> }}
+ */
 function normalizeNoteConfig(rawDef) {
+  const rawCats = rawDef?.categories
   return {
     name: typeof rawDef?.name === 'string' ? rawDef.name : '',
     title: typeof rawDef?.title === 'string' ? rawDef.title : '',
     desc: typeof rawDef?.desc === 'string' ? rawDef.desc : '',
     date: typeof rawDef?.date === 'string' ? rawDef.date : '',
     categories:
-      rawDef?.categories && typeof rawDef.categories === 'object' ? rawDef.categories : {},
+      typeof rawCats === 'object' && rawCats !== null
+        ? /** @type {Record<string, unknown>} */ (rawCats)
+        : {},
   }
 }
 
+/**
+ * @param {Record<string, unknown>} rawDef
+ * @returns {{ name: string, title: string, desc: string, date: string, tags: string[], github: string, doi: string, url: string, categories: Record<string, unknown> }}
+ */
 function normalizeProjectTopicConfig(rawDef) {
+  const rawCats = rawDef?.categories
   return {
     name: typeof rawDef?.name === 'string' ? rawDef.name : '',
     title: typeof rawDef?.title === 'string' ? rawDef.title : '',
@@ -93,10 +139,18 @@ function normalizeProjectTopicConfig(rawDef) {
     doi: typeof rawDef?.doi === 'string' ? rawDef.doi : '',
     url: typeof rawDef?.url === 'string' ? rawDef.url : '',
     categories:
-      rawDef?.categories && typeof rawDef.categories === 'object' ? rawDef.categories : {},
+      typeof rawCats === 'object' && rawCats !== null
+        ? /** @type {Record<string, unknown>} */ (rawCats)
+        : {},
   }
 }
 
+/**
+ * @param {Record<string, unknown>[]} noteConfigs
+ * @param {Record<string, unknown>[]} noteArticles
+ * @param {string} [locale]
+ * @returns {Array<{ name: string, title: string, desc: string, tags: string[], stats: DetailedSubCategory['stats'], categories: DetailedSubCategory[], root: string }>}
+ */
 function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN') {
   return noteConfigs
     .map((rawConfig) => {
@@ -106,7 +160,8 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
       const currentArticles = noteArticles
         .filter(
           (art) =>
-            typeof art?.relativePath === 'string' && art.relativePath.split('/')[0] === config.name,
+            typeof art?.relativePath === 'string' &&
+            art.relativePath.split('/')[0] === config.name,
         )
         .map((art) => formatArticle(art, 'notes'))
 
@@ -119,16 +174,17 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
           key,
           title,
           articles: catArticles.map((art) => {
-  const rest = { ...art }
-  delete rest.wordCount
-  delete rest.date
-  return rest
-}),
+            /** @type {Record<string, unknown>} */
+            const rest = { ...art }
+            delete rest.wordCount
+            delete rest.date
+            return rest
+          }),
           stats: {
             postsCount: catArticles.length,
             totalWords: catArticles.reduce((sum, art) => sum + art.wordCount, 0),
             latestDate: catArticles.length
-              ? catArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0].date
+              ? catArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date
               : '',
           },
         }
@@ -145,15 +201,16 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
           key: 'uncategorized',
           title: getCategoryTitles(locale).uncategorized,
           articles: uncategorizedArticles.map((art) => {
-  const rest = { ...art }
-  delete rest.wordCount
-  delete rest.date
-  return rest
-}),
+            /** @type {Record<string, unknown>} */
+            const rest = { ...art }
+            delete rest.wordCount
+            delete rest.date
+            return rest
+          }),
           stats: {
             postsCount: uncategorizedArticles.length,
             totalWords: uncategorizedArticles.reduce((sum, art) => sum + art.wordCount, 0),
-            latestDate: uncategorizedArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+            latestDate: uncategorizedArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
               .date,
           },
         })
@@ -165,7 +222,7 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
         latestDate:
           config.date ||
           (currentArticles.length
-            ? currentArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0].date
+            ? currentArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date
             : ''),
       }
 
@@ -177,8 +234,9 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
         ),
       )
 
-      const rootUrl =
+      const rootUrl = /** @type {string} */ (
         detailedSubCats.find((cat) => cat.stats.postsCount > 0)?.articles[0]?.articleUrl || ''
+      )
 
       return {
         name: config.name,
@@ -190,9 +248,16 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
         root: rootUrl,
       }
     })
-    .filter(Boolean)
+    .filter((item) => item !== null)
 }
 
+/**
+ * @param {Record<string, unknown>[]} ptConfigs
+ * @param {Record<string, unknown>[]} ptArticles
+ * @param {string} type
+ * @param {string} [locale]
+ * @returns {Array<{ name: string, title: string, desc: string, tags: string[], stats: DetailedSubCategory['stats'], categories: DetailedSubCategory[], root: string, github?: string, doi?: string }>}
+ */
 function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale = 'zh-CN') {
   return ptConfigs
     .map((rawConfig) => {
@@ -222,16 +287,17 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
           key,
           title,
           articles: catArticles.map((art) => {
-  const rest = { ...art }
-  delete rest.wordCount
-  delete rest.date
-  return rest
-}),
+            /** @type {Record<string, unknown>} */
+            const rest = { ...art }
+            delete rest.wordCount
+            delete rest.date
+            return rest
+          }),
           stats: {
             postsCount: catArticles.length,
             totalWords: catArticles.reduce((sum, art) => sum + art.wordCount, 0),
             latestDate: catArticles.length
-              ? catArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0].date
+              ? catArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date
               : '',
           },
         }
@@ -248,15 +314,16 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
           key: 'uncategorized',
           title: getCategoryTitles(locale).uncategorized,
           articles: uncategorizedArticles.map((art) => {
-  const rest = { ...art }
-  delete rest.wordCount
-  delete rest.date
-  return rest
-}),
+            /** @type {Record<string, unknown>} */
+            const rest = { ...art }
+            delete rest.wordCount
+            delete rest.date
+            return rest
+          }),
           stats: {
             postsCount: uncategorizedArticles.length,
             totalWords: uncategorizedArticles.reduce((sum, art) => sum + art.wordCount, 0),
-            latestDate: uncategorizedArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+            latestDate: uncategorizedArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
               .date,
           },
         })
@@ -268,7 +335,7 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
         latestDate:
           config.date ||
           (currentArticles.length
-            ? currentArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0].date
+            ? currentArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date
             : ''),
       }
 
@@ -276,8 +343,9 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
       if (config.url && config.url.startsWith('/article/')) {
         rootUrl = config.url
       } else {
-        rootUrl =
+        rootUrl = /** @type {string} */ (
           detailedSubCats.find((cat) => cat.stats.postsCount > 0)?.articles[0]?.articleUrl || ''
+        )
       }
 
       const extraFields = type === 'project' ? { github: config.github } : { doi: config.doi }
@@ -293,9 +361,13 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
         ...extraFields,
       }
     })
-    .filter(Boolean)
+    .filter((item) => item !== null)
 }
 
+/**
+ * @param {string} [locale]
+ * @returns {{ notes: string, projects: string, topics: string, uncategorized: string }}
+ */
 function getCategoryTitles(locale = 'zh-CN') {
   const l = locale === 'en-US' ? enUS : zhCN
   return {
@@ -325,14 +397,23 @@ function generateCategoriesJson(locale = 'zh-CN') {
       topics: safeArray(yamlConfig?.topics),
     }
 
-    const detailedNotes = buildDetailedNoteCategories(noteConfigs, noteArticles, locale)
+    const detailedNotes = buildDetailedNoteCategories(
+      /** @type {Record<string, unknown>[]} */ (noteConfigs),
+      /** @type {Record<string, unknown>[]} */ (noteArticles),
+      locale,
+    )
     const detailedProjects = buildDetailedProjectTopicCategories(
-      projectConfigs,
-      projectArticles,
+      /** @type {Record<string, unknown>[]} */ (projectConfigs),
+      /** @type {Record<string, unknown>[]} */ (projectArticles),
       'project',
       locale,
     )
-    const detailedTopics = buildDetailedProjectTopicCategories(topicConfigs, topicArticles, 'topic', locale)
+    const detailedTopics = buildDetailedProjectTopicCategories(
+      /** @type {Record<string, unknown>[]} */ (topicConfigs),
+      /** @type {Record<string, unknown>[]} */ (topicArticles),
+      'topic',
+      locale,
+    )
 
     const finalStructure = [
       {

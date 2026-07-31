@@ -1,3 +1,4 @@
+// @ts-check
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -18,6 +19,10 @@ function getFilePaths(locale = 'zh-CN') {
 
 
 
+/**
+ * @param {Array<{ tags?: unknown }>} posts
+ * @returns {Array<{ name: string, count: number }>}
+ */
 function generateTagsFromPosts(posts) {
   const map = new Map()
   for (const p of posts) {
@@ -56,7 +61,7 @@ function generateTagsJson(locale = 'zh-CN') {
   } catch (e) {
     console.error(
       `Failed to read/parse posts${locale === 'zh-CN' ? '' : '-en'}.json:`,
-      e?.message || e,
+      e instanceof Error ? e.message : e,
     )
     process.exitCode = 1
     return
@@ -70,7 +75,7 @@ function generateTagsJson(locale = 'zh-CN') {
     fs.writeFileSync(targetPath, JSON.stringify(tags, null, 2), 'utf-8')
     console.log(`Successfully generated: ${targetPath} (${tags.length} tags)`)
   } catch (e) {
-    console.error(`Failed to write ${locale} tags.json:`, e?.message || e)
+    console.error(`Failed to write ${locale} tags.json:`, e instanceof Error ? e.message : e)
     process.exitCode = 1
   }
 }

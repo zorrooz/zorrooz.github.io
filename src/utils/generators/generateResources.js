@@ -1,3 +1,4 @@
+// @ts-check
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -15,15 +16,19 @@ const contentOutputDir = path.join(__dirname, '../../content')
 
 
 
+/**
+ * @param {unknown} raw
+ * @returns {Array<{ title: string, children: Array<{ title: string, items: Array<{ name: string, url: string, desc: string }> }> }>}
+ */
 function normalize(raw) {
   const list = Array.isArray(raw) ? raw : []
-  return list.map((cat) => {
+  return list.map(/** @param {Record<string, unknown>} cat */ (cat) => {
     const title = typeof cat?.title === 'string' ? cat.title : ''
     const children = Array.isArray(cat?.children) ? cat.children : []
-    const normChildren = children.map((sub) => {
+    const normChildren = children.map(/** @param {Record<string, unknown>} sub */ (sub) => {
       const st = typeof sub?.title === 'string' ? sub.title : ''
       const items = Array.isArray(sub?.items) ? sub.items : []
-      const normItems = items.map((it) => ({
+      const normItems = items.map(/** @param {Record<string, unknown>} it */ (it) => ({
         name: typeof it?.name === 'string' ? it.name : '',
         url: typeof it?.url === 'string' ? it.url : '',
         desc: typeof it?.desc === 'string' ? it.desc : '',
@@ -44,6 +49,7 @@ function generateResourcesJson(locale = 'zh-CN') {
     locale === 'zh-CN' ? 'resources.json' : 'resources-en.json',
   )
 
+  /** @type {unknown} */
   let raw = []
   if (fs.existsSync(yamlPath)) {
     try {
@@ -51,7 +57,10 @@ function generateResourcesJson(locale = 'zh-CN') {
       const parsed = yaml.load(yamlContent)
       raw = parsed || []
     } catch (e) {
-      console.warn(`Warn: failed to parse YAML at ${yamlPath}, using empty array.`, e?.message || e)
+      console.warn(
+        `Warn: failed to parse YAML at ${yamlPath}, using empty array.`,
+        e instanceof Error ? e.message : e,
+      )
       raw = []
     }
   } else {
