@@ -36,5 +36,11 @@ export const createApp = ViteSSG(
     appStore.initTheme()
     // SSR always renders zh-CN; restore the persisted locale on the client
     if (isClient) appStore.initLocale()
+    // PWA: register the service worker on every page (index.html carries the manifest link)
+    if (isClient && import.meta.env.PROD && 'serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {})
+      })
+    }
   },
 )

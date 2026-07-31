@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import { VitePWA } from 'vite-plugin-pwa'
 
 import { contentDev } from './src/utils/contentDevPlugin.js'
 
@@ -31,6 +32,32 @@ export default defineConfig({
   plugins: [
     vue(),
     contentDev(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: false,
+      includeAssets: ['favicon.ico', 'icons/gblog-512.svg'],
+      manifest: {
+        name: 'gblog',
+        short_name: 'gblog',
+        description: '个人技术博客：生物信息学、编程与科研笔记',
+        lang: 'zh-CN',
+        display: 'standalone',
+        start_url: '/',
+        theme_color: '#047aff',
+        background_color: '#ffffff',
+        icons: [
+          { src: 'favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+          { src: 'icons/gblog-512.svg', sizes: '512x512', type: 'image/svg+xml' },
+          { src: 'icons/gblog-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,woff2,ttf,otf,png,svg,ico,json}'],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/sw\.js$/],
+        maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
+      },
+    }),
     process.env.NODE_ENV !== 'production' && vueDevTools(),
   ].filter(Boolean),
   server: {
