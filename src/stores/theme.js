@@ -1,4 +1,5 @@
 export const setTheme = (mode) => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return
   const html = document.documentElement;
 
   if (mode === 'auto') {

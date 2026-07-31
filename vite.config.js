@@ -4,9 +4,20 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
+import { contentDev } from './src/utils/contentDevPlugin.js'
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), process.env.NODE_ENV !== 'production' && vueDevTools()].filter(Boolean),
+  plugins: [
+    vue(),
+    contentDev(),
+    process.env.NODE_ENV !== 'production' && vueDevTools(),
+  ].filter(Boolean),
+  server: {
+    watch: {
+      ignored: ['**/src/content/**'],
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {

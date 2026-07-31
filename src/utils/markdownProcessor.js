@@ -1,3 +1,4 @@
+// 构建期专用（Node 环境），勿在客户端 import
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkFrontmatter from 'remark-frontmatter'
@@ -12,42 +13,6 @@ import rehypeStringify from 'rehype-stringify'
 
 import { common } from 'lowlight'
 
-const loadHighlightStyle = () => {
-  if (typeof window === 'undefined') return
-
-  const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark'
-  const existingStyle = document.getElementById('highlight-style')
-
-  if (existingStyle) {
-    existingStyle.remove()
-  }
-
-  const link = document.createElement('link')
-  link.id = 'highlight-style'
-  link.rel = 'stylesheet'
-  link.href = isDark
-    ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark-dimmed.min.css'
-    : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css'
-
-  document.head.appendChild(link)
-}
-
-if (typeof window !== 'undefined') {
-  loadHighlightStyle()
-
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === 'data-bs-theme') {
-        loadHighlightStyle()
-      }
-    })
-  })
-
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-bs-theme'],
-  })
-}
 const processor = unified()
   .use(remarkParse)
   .use(remarkFrontmatter, ['yaml', 'toml'])

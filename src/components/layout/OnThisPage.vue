@@ -57,9 +57,9 @@ export default {
     return {
       toc: [],
       activeId: '',
-      _otpObserver: null,
-      _otpObserverTimer: null,
-      _otpPoller: null
+      otpObserver: null,
+      otpObserverTimer: null,
+      otpPoller: null
     }
   },
   mounted() {
@@ -86,9 +86,9 @@ export default {
     refreshToc() { this.buildToc(); this.onScrollSpy(); },
 
     cleanupObservers() {
-      if (this._otpObserver) { this._otpObserver.disconnect(); this._otpObserver = null; }
-      if (this._otpObserverTimer) { clearTimeout(this._otpObserverTimer); this._otpObserverTimer = null; }
-      if (this._otpPoller) { clearInterval(this._otpPoller); this._otpPoller = null; }
+      if (this.otpObserver) { this.otpObserver.disconnect(); this.otpObserver = null; }
+      if (this.otpObserverTimer) { clearTimeout(this.otpObserverTimer); this.otpObserverTimer = null; }
+      if (this.otpPoller) { clearInterval(this.otpPoller); this.otpPoller = null; }
     },
 
     setupContainerObserver() {
@@ -96,18 +96,18 @@ export default {
       const checkContainer = () => {
         const root = document.querySelector(this.containerSelector);
         if (!root) return;
-        if (this._otpPoller) { clearInterval(this._otpPoller); this._otpPoller = null; }
-        if (!this._otpObserver) {
-          this._otpObserver = new MutationObserver(() => { clearTimeout(this._otpObserverTimer); this._otpObserverTimer = setTimeout(() => this.refreshToc(), 100); });
-          this._otpObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] });
+        if (this.otpPoller) { clearInterval(this.otpPoller); this.otpPoller = null; }
+        if (!this.otpObserver) {
+          this.otpObserver = new MutationObserver(() => { clearTimeout(this.otpObserverTimer); this.otpObserverTimer = setTimeout(() => this.refreshToc(), 100); });
+          this.otpObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['id'] });
         }
         this.refreshToc();
       };
       checkContainer();
-      if (!this._otpPoller && !document.querySelector(this.containerSelector)) this._otpPoller = setInterval(checkContainer, 200);
+      if (!this.otpPoller && !document.querySelector(this.containerSelector)) this.otpPoller = setInterval(checkContainer, 200);
     },
 
-    getHeadingText(h) { try { const clone = h.cloneNode(true); clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove()); return (clone.textContent || '').replace(/\s*#\s*$/, '').trim(); } catch (e) { return (h.textContent || '').replace(/\s*#\s*$/, '').trim(); } },
+    getHeadingText(h) { try { const clone = h.cloneNode(true); clone.querySelectorAll('.heading-anchor')?.forEach(a => a.remove()); return (clone.textContent || '').replace(/\s*#\s*$/, '').trim(); } catch { return (h.textContent || '').replace(/\s*#\s*$/, '').trim(); } },
 
     buildToc() {
       const root = document.querySelector(this.containerSelector);
@@ -210,7 +210,7 @@ export default {
         } else {
           doScroll();
         }
-      } catch (e) {
+      } catch {
         doScroll();
       }
     }

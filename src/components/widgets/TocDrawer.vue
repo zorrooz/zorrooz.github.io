@@ -35,7 +35,7 @@ export default {
       sourceId: 'toc', rafPending: false, rafLastBaseTop: null,
       visible: false, isDragging: false, startY: 0, initialTop: 0, buttonTop: window.innerHeight - 160, touchMoved: false,
       show: false,
-      _lockedScrollY: null
+      lockedScrollY: null
     };
   },
   mounted() {
@@ -63,11 +63,11 @@ export default {
     onTouchStart(e) { e.preventDefault(); this.isDragging = true; this.touchMoved = false; this.startY = e.touches[0].clientY; this.initialTop = this.buttonTop; },
     onTouchMove(e) { this.touchMoved = true; const currentY = e.touches[0].clientY; const diffY = currentY - this.startY; let newTop = this.clampTop(this.initialTop + diffY); this.buttonTop = newTop; const { gap } = this.getBounds(); this.rafDispatchBaseTop(newTop + gap); e.preventDefault(); },
     onTouchEnd(e) { e.preventDefault(); this.isDragging = false; if (!this.touchMoved) this.openDrawer(); },
-    onNavigate(id) { this.close(); },
+    onNavigate() { this.close(); },
     lockScroll() {
       try {
         const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-        this._lockedScrollY = scrollY;
+        this.lockedScrollY = scrollY;
         const body = document.body;
         if (body) {
           body.style.position = 'fixed';
@@ -79,7 +79,7 @@ export default {
         if (document.documentElement) {
           document.documentElement.style.overscrollBehavior = 'contain';
         }
-      } catch (e) {
+      } catch {
         const docEl = document.documentElement;
         const body = document.body;
         if (docEl) { docEl.style.overflow = 'hidden'; docEl.style.overscrollBehavior = 'contain'; }
@@ -99,11 +99,11 @@ export default {
         if (document.documentElement) {
           document.documentElement.style.overscrollBehavior = '';
         }
-        if (typeof this._lockedScrollY === 'number') {
-          window.scrollTo(0, this._lockedScrollY);
-          this._lockedScrollY = null;
+        if (typeof this.lockedScrollY === 'number') {
+          window.scrollTo(0, this.lockedScrollY);
+          this.lockedScrollY = null;
         }
-      } catch (e) {
+      } catch {
         const docEl = document.documentElement;
         const body = document.body;
         if (docEl) { docEl.style.overflow = ''; docEl.style.overscrollBehavior = ''; }

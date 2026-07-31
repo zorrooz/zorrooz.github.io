@@ -75,10 +75,6 @@ import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadMarkdownContent } from '@/utils/contentLoader'
 
-
-
-const markdownModules = import.meta.glob('../content-src/**/*.md', { query: '?raw', import: 'default', eager: false });
-
 /*
   ArticleView
   - 文章页面
@@ -289,7 +285,7 @@ export default {
 
         this.allArticles = all;
         this.categoryList = categoryData;
-      } catch (error) {
+      } catch {
         this.allArticles = [];
         this.categoryList = [];
       }
@@ -343,7 +339,7 @@ export default {
           this.updateSidebarDimensions();
           this.$refs.onThisPageRef?.refreshToc();
         });
-      } catch (error) {
+      } catch {
         this.rawMarkdown = '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.';
         this.$nextTick(() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -129,7 +129,7 @@ export default {
         const code = pre.querySelector('code')
         if (!code) return
 
-        const language = (code.className.match(/language-(\w+)/) || [, 'text'])[1]
+        const language = (code.className.match(/language-(\w+)/) || ['', 'text'])[1]
         const header = document.createElement('div')
         header.className = 'code-block-header d-flex align-items-center justify-content-between'
 

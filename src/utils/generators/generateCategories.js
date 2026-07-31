@@ -120,7 +120,12 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
         return {
           key,
           title,
-          articles: catArticles.map(({ wordCount, date, ...rest }) => rest),
+          articles: catArticles.map((art) => {
+  const rest = { ...art }
+  delete rest.wordCount
+  delete rest.date
+  return rest
+}),
           stats: {
             postsCount: catArticles.length,
             totalWords: catArticles.reduce((sum, art) => sum + art.wordCount, 0),
@@ -141,7 +146,12 @@ function buildDetailedNoteCategories(noteConfigs, noteArticles, locale = 'zh-CN'
         detailedSubCats.push({
           key: 'uncategorized',
           title: getCategoryTitles(locale).uncategorized,
-          articles: uncategorizedArticles.map(({ wordCount, date, ...rest }) => rest),
+          articles: uncategorizedArticles.map((art) => {
+  const rest = { ...art }
+  delete rest.wordCount
+  delete rest.date
+  return rest
+}),
           stats: {
             postsCount: uncategorizedArticles.length,
             totalWords: uncategorizedArticles.reduce((sum, art) => sum + art.wordCount, 0),
@@ -213,7 +223,12 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
         return {
           key,
           title,
-          articles: catArticles.map(({ wordCount, date, ...rest }) => rest),
+          articles: catArticles.map((art) => {
+  const rest = { ...art }
+  delete rest.wordCount
+  delete rest.date
+  return rest
+}),
           stats: {
             postsCount: catArticles.length,
             totalWords: catArticles.reduce((sum, art) => sum + art.wordCount, 0),
@@ -234,7 +249,12 @@ function buildDetailedProjectTopicCategories(ptConfigs, ptArticles, type, locale
         detailedSubCats.push({
           key: 'uncategorized',
           title: getCategoryTitles(locale).uncategorized,
-          articles: uncategorizedArticles.map(({ wordCount, date, ...rest }) => rest),
+          articles: uncategorizedArticles.map((art) => {
+  const rest = { ...art }
+  delete rest.wordCount
+  delete rest.date
+  return rest
+}),
           stats: {
             postsCount: uncategorizedArticles.length,
             totalWords: uncategorizedArticles.reduce((sum, art) => sum + art.wordCount, 0),

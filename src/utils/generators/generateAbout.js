@@ -6,6 +6,9 @@ import yaml from 'js-yaml'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const isDirectRun =
+  process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+
 const contentSrcDir = path.join(__dirname, '../../content-src')
 const contentOutputDir = path.join(__dirname, '../../content')
 
@@ -82,6 +85,6 @@ function main() {
   console.log('about.json generation complete.')
 }
 
-main()
+if (isDirectRun) main()
 
 export { generateAboutJson }

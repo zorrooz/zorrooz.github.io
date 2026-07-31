@@ -5,10 +5,14 @@ import i18n from './i18n'
 
 export const useAppStore = defineStore('app', () => {
   // 主题状态
-  const theme = ref(localStorage.getItem('theme') || 'auto')
+  const theme = ref(
+    typeof window !== 'undefined' ? localStorage.getItem('theme') || 'auto' : 'auto'
+  )
   
   // 语言状态
-  const locale = ref(localStorage.getItem('locale') || 'zh-CN')
+  const locale = ref(
+    typeof window !== 'undefined' ? localStorage.getItem('locale') || 'zh-CN' : 'zh-CN'
+  )
   
   // 主题切换
   const toggleTheme = () => {
@@ -40,7 +44,7 @@ export const useAppStore = defineStore('app', () => {
   // 初始化语言
   const initLocale = () => {
     i18n.global.locale.value = locale.value
-    document.documentElement.lang = locale.value
+    if (typeof document !== 'undefined') document.documentElement.lang = locale.value
   }
   
   return {

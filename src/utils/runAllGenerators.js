@@ -6,13 +6,17 @@
  * 3) posts (depends on notes, optionally categories)
  * 4) tags (depends on posts)
  *
- * About/resources execute on import (their files call main() at top-level),
- * so importing them once is enough; do NOT call their exported functions again.
+ * About/resources are YAML-only generators, no dependencies; run first.
+ *
+ * Exported as `runAllGenerators` for reuse (dev plugin, tests).
+ * Auto-runs only when executed directly via `node runAllGenerators.js`.
  */
 
-import './generators/generateAbout.js'
-import './generators/generateResources.js'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
+import { generateAboutJson } from './generators/generateAbout.js'
+import { generateResourcesJson } from './generators/generateResources.js'
 import { generateNotesJson } from './generators/generateNotes.js'
 import { generateProjectsJson } from './generators/generateProjects.js'
 import { generateTopicsJson } from './generators/generateTopics.js'
@@ -20,24 +24,31 @@ import { generateCategoriesJson } from './generators/generateCategories.js'
 import { generatePostsJson } from './generators/generatePosts.js'
 import { generateTagsJson } from './generators/generateTags.js'
 
-function runStep(name, fn) {
+const isDirectRun =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+
+async function runStep(name, fn) {
   try {
-    const ret = fn()
-    // handle sync or promise
-    if (ret && typeof ret.then === 'function') {
-      return ret.catch((err) => {
-        console.error(`[Generator][${name}] failed:`, err)
-        process.exitCode = 1
-      })
-    }
+    await fn()
   } catch (err) {
     console.error(`[Generator][${name}] failed:`, err)
-    process.exitCode = 1
+    throw err
   }
 }
 
-async function main() {
+export async function runAllGenerators() {
   console.log('== Generators: start ==')
+
+  // 0. standalone YAML sources - Chinese + English
+  await runStep('about', () => {
+    generateAboutJson('zh-CN')
+    generateAboutJson('en-US')
+  })
+  await runStep('resources', () => {
+    generateResourcesJson('zh-CN')
+    generateResourcesJson('en-US')
+  })
 
   // 1. basic indexes - Chinese
   await runStep('notes', () => generateNotesJson('zh-CN'))
@@ -70,7 +81,9 @@ async function main() {
   console.log('== Generators: done ==')
 }
 
-main().catch((err) => {
-  console.error('Generators main failed:', err)
-  process.exitCode = 1
-})
+if (isDirectRun) {
+  runAllGenerators().catch((err) => {
+    console.error('Generators main failed:', err)
+    process.exitCode = 1
+  })
+}
