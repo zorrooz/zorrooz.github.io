@@ -25,6 +25,7 @@ import { generatePostsJson } from './generators/generatePosts.js'
 import { generateTagsJson } from './generators/generateTags.js'
 import { generateSitemap } from './generators/generateSitemap.js'
 import { generateHtml } from './generators/generateHtml.js'
+import { generateSearchIndex } from './generators/generateSearchIndex.js'
 
 const isDirectRun =
   process.argv[1] &&
@@ -86,6 +87,12 @@ export async function runAllGenerators() {
 
   // 10. sitemap + robots.txt (depends on zh categories.json)
   await runStep('sitemap', () => generateSitemap())
+
+  // 11. search index (depends on html + categories) - Chinese + English
+  await runStep('search-index', () => {
+    generateSearchIndex('zh-CN')
+    generateSearchIndex('en-US')
+  })
 
   console.log('== Generators: done ==')
 }

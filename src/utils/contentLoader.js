@@ -20,7 +20,8 @@ const getLocalizedFileName = (baseName, extension = '.json') => {
   return isEnglish ? `${baseName}-en${extension}` : `${baseName}${extension}`
 }
 
-const jsonModules = import.meta.glob('../content/**/*.json', { eager: true })
+// eager for the core JSON set; search-index* is excluded (lazy chunk in SearchModal)
+const jsonModules = import.meta.glob('../content/[bcnprt]*.json', { eager: true })
 const htmlModules = import.meta.glob('../content/html/**/*.html', {
   query: '?raw',
   import: 'default',

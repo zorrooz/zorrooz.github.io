@@ -6,6 +6,11 @@ export default {
   prevPage: 'Previous',
   nextPage: 'Next',
   pagination: 'Pagination',
+  search: 'Search',
+  close: 'Close',
+  searchPlaceholder: 'Search articles by title or content...',
+  searchNoResults: 'No matching articles found',
+  searchUnavailable: 'Search index failed to load',
 
   // 导航
   categories: 'Categories',

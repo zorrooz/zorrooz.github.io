@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" style="background-color: var(--app-bg);">
-    <AppHeader />
+    <AppHeader @open-search="searchOpen = true" />
 
     <main class="main-content" style="background-color: var(--app-bg-tertiary);">
       <router-view />
@@ -8,13 +8,18 @@
 
     <AppFooter />
     <BackToTop />
+    <SearchModal v-if="searchOpen" @close="searchOpen = false" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent, ref } from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import BackToTop from '@/components/widgets/BackToTop.vue'
+
+const searchOpen = ref(false)
+const SearchModal = defineAsyncComponent(() => import('@/components/widgets/SearchModal.vue'))
 </script>
 
 <style scoped>

@@ -10,6 +10,10 @@
           </RouterLink>
 
           <div class="d-flex d-lg-none ms-auto">
+            <button class="btn btn-sm mx-1 p-2 btn-icon" style="font-size: 1.2em;" @click="emit('open-search')"
+              @focus="blurFocus" :aria-label="t('search')">
+              <i class="fas fa-search"></i>
+            </button>
             <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
             </button>
@@ -35,6 +39,10 @@
           </div>
 
           <div class="d-none d-lg-flex ms-auto">
+            <button class="btn btn-sm me-2 btn-icon" style="font-size: 1.2em;" @click="emit('open-search')"
+              @focus="blurFocus" :aria-label="t('search')">
+              <i class="fas fa-search"></i>
+            </button>
             <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
               <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
             </button>
@@ -93,6 +101,7 @@ const appStore = useAppStore();
 const mobileMenuOpen = ref(false);
 const showMobileSidebar = ref(false);
 const logoStyle = ref<Record<string, string>>({});
+const emit = defineEmits(['open-search']);
 
 const blurFocus = (event: FocusEvent) => {
   (event.currentTarget as HTMLButtonElement | null)?.blur()

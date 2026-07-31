@@ -6,6 +6,11 @@ export default {
   prevPage: '上一页',
   nextPage: '下一页',
   pagination: '分页导航',
+  search: '搜索',
+  close: '关闭',
+  searchPlaceholder: '搜索文章标题或正文...',
+  searchNoResults: '未找到匹配的文章',
+  searchUnavailable: '搜索索引加载失败',
 
   // 导航
   categories: '分类',

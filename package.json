@@ -26,6 +26,7 @@
     "highlight.js": "^11.11.1",
     "js-yaml": "^4.1.0",
     "katex": "^0.16.22",
+    "minisearch": "^7.2.0",
     "openai": "^5.20.1",
     "pinia": "^3.0.3",
     "rehype-highlight": "^7.0.2",
