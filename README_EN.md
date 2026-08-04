@@ -319,7 +319,7 @@ This project was developed personally by Zorrooz, with assistance from multiple 
 
 ## 📄 License
 
-Copyright (c) 2025 Zorrooz. All rights reserved.
+Copyright (c) 2025-2026 Zorrooz. All rights reserved.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 

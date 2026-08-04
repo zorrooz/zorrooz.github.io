@@ -317,7 +317,7 @@ npm run prebuild
 
 ## 📄 许可证
 
-版权所有 (c) 2025 Zorrooz。保留所有权利。
+版权所有 (c) 2025-2026 Zorrooz。保留所有权利。
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
