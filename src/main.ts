@@ -8,11 +8,14 @@ import { routes } from './router/index.ts'
 import './stores/styles/global.scss'
 import './assets/styles/highlight/github.css'
 import './assets/styles/highlight/github-dark-dimmed.css'
-import './assets/styles/fa-subset.css'
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css'
+import '@fortawesome/fontawesome-free/css/solid.min.css'
+import '@fortawesome/fontawesome-free/css/brands.min.css'
 import i18n from './stores/i18n.ts'
 import 'katex/dist/katex.min.css'
 
 import { useAppStore } from './stores/app.ts'
+import { reveal } from './utils/reveal'
 
 import { localeFromPrefix } from './config/site.ts'
 
@@ -34,6 +37,7 @@ export const createApp = ViteSSG(
     app.use(router)
     app.use(i18n)
     app.mixin(VueHeadMixin)
+    app.directive('reveal', reveal)
 
     const appStore = useAppStore()
     appStore.initTheme()
@@ -41,7 +45,12 @@ export const createApp = ViteSSG(
     if (import.meta.env.SSR) {
       if (typeof routePath === 'string') {
         const m = routePath.match(/^\/(zh|en)(\/|$)/)
-        if (m) appStore.setLocale(localeFromPrefix(m[1]))
+        if (m) {
+          const locale = localeFromPrefix(m[1])
+          appStore.setLocale(locale)
+          // contentLoader (no router context) reads this during prerender
+          ;(globalThis as { __GBLOG_LOCALE__?: string }).__GBLOG_LOCALE__ = locale
+        }
       }
     }
     // SSR always renders zh-CN; restore the persisted locale on the client

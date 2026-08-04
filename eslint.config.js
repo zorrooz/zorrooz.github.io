@@ -12,7 +12,14 @@ export default defineConfig([
     files: ['**/*.{js,mjs,jsx,ts,vue}'],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  globalIgnores([
+    '**/dist/**',
+    '**/dist-ssr/**',
+    '**/coverage/**',
+    '**/.opencode/**',
+    '**/.qoder/**',
+    '**/.reasonix/**',
+  ]),
 
   {
     languageOptions: {
@@ -54,16 +61,6 @@ export default defineConfig([
   {
     name: 'app/node-scripts',
     files: ['src/utils/**/*.{js,ts}'],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-    },
-  },
-
-  {
-    name: 'app/scripts',
-    files: ['scripts/**/*.ts'],
     languageOptions: {
       globals: {
         ...globals.node,

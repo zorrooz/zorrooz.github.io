@@ -1,4 +1,7 @@
 const getCurrentLocale = (): string => {
+  // SSR prerender: locale injected by main.ts from the /zh|/en route prefix
+  const injected = (globalThis as { __GBLOG_LOCALE__?: string }).__GBLOG_LOCALE__
+  if (injected) return injected
   return (typeof window !== 'undefined' ? localStorage.getItem('locale') : null) || 'zh-CN'
 }
 

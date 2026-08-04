@@ -1,115 +1,156 @@
 <!-- Home.vue -->
 <template>
-  <div class="container view-container home-view">
-    <div class="row py-4 px-0">
-      <div class="col-12 col-lg-9 order-1 order-lg-2 typography-body mb-4 mb-lg-0" ref="mainContent">
-        <div class="row">
-          <div class="col">
-            <div v-if="currentTag" class="mb-3 d-flex align-items-center gap-2">
-              <span>{{ filteredByText }}：</span>
-              <span class="current-tag-chip d-inline-flex">
-                <span># {{ currentTag }}</span>
-                <button class="chip-close" @click="clearTag">×</button>
-              </span>
-            </div>
-            <PostList :docs="filteredDocs" :perPage="5" />
-          </div>
-        </div>
+  <div class="page-section home-section">
+
+    <header class="hero">
+      <div class="hero__main">
+        <span class="hero__greeting"><span class="hero__greeting-mark">{{ t('greetingPrefix') }}</span>{{ t('greeting') }}</span>
+        <h1 class="hero__name">{{ siteAuthor }}</h1>
+        <p class="hero__bio">{{ t('developer') }}</p>
       </div>
 
-      <div class="col-12 col-lg-3 order-2 order-lg-1" ref="sidebarContainer">
-        <div class="sticky-sidebar" ref="sidebarContent">
-          <div class="d-flex flex-column w-100 gap-4">
-            <ProfileCard class="w-100" />
-            <TagCloud class="w-100" :tagData="tagList" />
-          </div>
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <span class="hero__stat-num num">{{ postCount }}</span>
+          <span class="hero__stat-label">{{ t('articles') }}</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-num num">{{ tagCount }}</span>
+          <span class="hero__stat-label">{{ t('tags') }}</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-num num">{{ totalWordsDisplay }}</span>
+          <span class="hero__stat-label">{{ t('words') }}</span>
         </div>
       </div>
+    </header>
+
+    <div class="tags-row" v-if="!currentTag" v-reveal>
+      <span v-for="tag in tagList" :key="tag.name" class="tag" :class="`tag--${tag.level}`"
+        @click="goTag(tag.name)">{{ tag.name }}</span>
     </div>
+
+    <div class="posts-header" v-reveal>
+      <h2 class="posts-header__title" :class="{ 'posts-header__title--tag': currentTag }">
+        <template v-if="currentTag">
+          <span class="posts-header__tag-title"># {{ currentTag }}</span>
+        </template>
+        <template v-else>{{ t('recentPosts') }}</template>
+      </h2>
+      <div class="posts-header__actions">
+        <button v-if="fromPath" class="chip-close" @click="goBackFromTag" :aria-label="t('backToArticle')">
+          <i class="fas fa-arrow-left"></i>{{ t('backToArticle') }}
+        </button>
+        <button v-if="currentTag" class="chip-close" @click="clearTag" :aria-label="t('close')">
+          <i class="fas fa-times"></i>{{ t('clearFilter') }}
+        </button>
+      </div>
+    </div>
+
+    <PostList :docs="filteredDocs" :perPage="5" />
   </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({ name: 'HomeView' })
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
-import ProfileCard from '@/components/layout/ProfileCard.vue'
-import TagCloud from '@/components/layout/TagCloud.vue'
 import PostList from '@/components/layout/PostList.vue'
-import { loadPosts } from '@/utils/contentLoader'
+import { loadPosts, loadTags } from '@/utils/contentLoader'
+import { SITE } from '@/config/site.ts'
 
-useHead({ title: 'gblog - Home' })
+useHead({ title: 'zorrooz’s blog - Home' })
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
 const postData = ref<any[]>([])
-const sidebarContent = useTemplateRef('sidebarContent')
-const sidebarContainer = useTemplateRef('sidebarContainer')
+const tagsData = ref<any[]>([])
 
-const filteredByText = computed(() => t('filteredBy'))
+const siteAuthor = SITE.author
 const currentTag = computed(() => route.query.tag || '')
+const fromPath = computed(() => (typeof route.query.from === 'string' ? route.query.from : ''))
 const filteredDocs = computed(() => {
   const tag = currentTag.value
   if (!tag) return postData.value
   return postData.value.filter(p => Array.isArray(p.tags) && p.tags.includes(tag))
 })
-const tagList = computed(() => {
-  const set = new Set<string>()
-  postData.value.forEach(p => (p.tags || []).forEach((t: any) => set.add(t)))
-  return Array.from(set).sort()
+interface TagItem {
+  name: string
+  count: number
+  level: 'lg' | 'md' | 'sm'
+}
+
+const tagList = computed<TagItem[]>(() => {
+  const map = new Map<string, number>()
+  postData.value.forEach(p => (p.tags || []).forEach((t: any) => map.set(t, (map.get(t) || 0) + 1)))
+  const list = Array.from(map.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+  const total = list.length
+  const third = Math.ceil(total / 3)
+  const rank = new Map(
+    [...list].sort((a, b) => b.count - a.count).map((item, idx) => [item.name, idx])
+  )
+  return list.map(item => {
+    const idx = rank.get(item.name) ?? 0
+    return { ...item, level: idx < third ? 'lg' : idx < third * 2 ? 'md' : 'sm' }
+  })
+})
+const postCount = computed(() => (Array.isArray(postData.value) ? postData.value.length : 0))
+const tagCount = computed(() => (Array.isArray(tagsData.value) ? tagsData.value.length : 0))
+const totalWords = computed(() => {
+  if (!Array.isArray(postData.value)) return 0
+  return postData.value.reduce((sum, p) => {
+    const n = typeof p?.wordCount === 'number' ? p.wordCount : 0
+    return sum + (Number.isFinite(n) ? n : 0)
+  }, 0)
+})
+const totalWordsDisplay = computed(() => {
+  const n = totalWords.value
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 ? 1 : 0) + 'M'
+  if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 ? 1 : 0) + 'K'
+  return String(n)
 })
 
 function loadPostData() {
   try {
     postData.value = loadPosts() || []
+    tagsData.value = loadTags() || []
   } catch (error) {
     console.error('Failed to load post data:', error)
     postData.value = []
+    tagsData.value = []
   }
-}
-
-function updateSidebarDimensions() {
-  if (window.innerWidth < 992) return
-
-  const header = document.querySelector('header')
-  const footer = document.querySelector('footer')
-  const content = sidebarContent.value
-  const sidebarContainerEl = sidebarContainer.value
-
-  if (!content || !sidebarContainerEl) return
-
-  const headerHeight = header?.offsetHeight || 0
-  const footerHeight = footer?.offsetHeight || 0
-  const viewportHeight = window.innerHeight
-  const scrollTop = window.scrollY
-  const documentHeight = document.documentElement.scrollHeight
-
-  const remainingPageHeight = Math.max(
-    0,
-    documentHeight - scrollTop - headerHeight - footerHeight - 40
-  )
-  const availableHeight = Math.min(
-    viewportHeight - headerHeight - 40,
-    remainingPageHeight
-  )
-
-  content.style.maxHeight = `${availableHeight}px`
-  content.style.overflowY = content.scrollHeight > availableHeight ? 'auto' : 'visible'
 }
 
 function clearTag() {
   const q = { ...route.query }
   delete q.tag
+  delete q.from
   q.page = '1'
   router.push({ path: route.path, query: q }).catch(() => { })
   nextTick(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     loadPostData()
   })
+}
+
+function goBackFromTag() {
+  if (fromPath.value) {
+    router.push(fromPath.value).catch(() => { })
+  }
+}
+
+function goTag(tag: string) {
+  if (!tag) return
+  const q = { ...route.query, tag: tag, page: '1' }
+  const prefix = locale.value === 'en-US' ? '/en' : '/zh'
+  router.push({ path: `${prefix}/`, query: q }).catch(() => { })
+  nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
 }
 
 loadPostData()
@@ -125,54 +166,208 @@ watch(locale, (newLocale, oldLocale) => {
 })
 
 onMounted(() => {
-  updateSidebarDimensions()
-  window.addEventListener('scroll', updateSidebarDimensions)
-  window.addEventListener('resize', updateSidebarDimensions)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', updateSidebarDimensions)
-  window.removeEventListener('resize', updateSidebarDimensions)
+  loadPostData()
 })
 </script>
 
 <style scoped>
-.sticky-sidebar {
-  position: sticky;
-  top: 30px;
-  box-sizing: border-box;
-  width: 100%;
-  -webkit-overflow-scrolling: touch;
-  transition: max-height 0.2s ease;
+.home-section {
+  overflow: hidden;
 }
 
-.current-tag-chip {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--app-chip-text);
-  background: var(--app-chip-bg);
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--app-chip-border);
-  box-shadow: var(--app-card-shadow);
-  border-radius: 12px;
+.hero {
+  position: relative;
+  padding: var(--sp-24) 0 var(--sp-20);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--sp-16);
+}
+
+.hero__main {
+  min-width: 0;
+}
+
+.hero__greeting {
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 10px;
+  color: var(--fg-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--sp-6);
+}
+
+.hero__greeting-mark {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.hero__name {
+  font-size: clamp(46px, 7.5vw, 76px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: var(--sp-6);
+  color: var(--fg);
+}
+
+.hero__bio {
+  font-size: var(--text-lg);
+  color: var(--fg-2);
+  line-height: 1.65;
+  max-width: 540px;
+  margin: 0;
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-8);
+  padding: 0 0 var(--sp-2);
+  white-space: nowrap;
+  min-width: 320px;
+}
+
+.hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero__stat-num {
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__stat-label {
+  font-size: 12px;
+  color: var(--fg-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  padding: var(--sp-8) 0 var(--sp-8);
+}
+
+.posts-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--sp-8) 0 var(--sp-6);
+  border-top: 1px solid var(--line);
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.posts-header__title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.posts-header__title::before {
+  content: '';
+  width: 3px;
+  height: 20px;
+  border-radius: 99px;
+  background: var(--primary);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.posts-header__title--tag::before {
+  display: none;
+}
+
+.posts-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.posts-header__tag-title {
+  color: var(--primary);
 }
 
 .chip-close {
-  font-size: 1.2rem;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: 500;
   background: transparent;
   border: none;
-  color: var(--app-chip-close-text);
-  padding: 0;
-  margin-left: 2px;
+  color: var(--fg-3);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  opacity: 1;
-  transition: color 0.2s ease;
+  transition: color 0.14s ease, background-color 0.14s ease;
 }
 
 .chip-close:hover {
-  color: var(--app-primary);
+  color: var(--primary);
+  background: var(--tint);
+}
+
+.chip-close i {
+  font-size: 12px;
+}
+
+@media (max-width: 991px) {
+  .hero {
+    padding: var(--sp-16) 0 var(--sp-12);
+    grid-template-columns: 1fr;
+    gap: var(--sp-10);
+  }
+
+  .hero__name {
+    font-size: clamp(42px, 9vw, 60px);
+  }
+
+  .hero__stats {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding: var(--sp-12) 0 var(--sp-10);
+  }
+
+  .hero__name {
+    font-size: 40px;
+  }
+
+  .hero__bio {
+    font-size: 16px;
+  }
+
+  .hero__stats {
+    gap: var(--sp-6);
+  }
+
+  .hero__stat-num {
+    font-size: 32px;
+  }
 }
 </style>

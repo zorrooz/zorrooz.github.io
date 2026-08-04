@@ -1,53 +1,124 @@
 <!-- AppHeader.vue -->
 <template>
-  <header class="shadow-sm" style="background-color: var(--app-header-bg);">
+  <header class="app-header">
     <div class="container px-0">
-      <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid d-flex">
-          <RouterLink class="navbar-brand" :to="toLocalePath('/')" @mouseover="enlargeLogo" @mouseleave="resetLogo" :style="logoStyle"
-            @click="mobileMenuOpen = false">
-            <img src="@/assets/icons/gblog.svg" alt="gblog" class="logo-icon" height="40">
+      <nav class="navbar navbar-expand-lg app-nav">
+        <div class="container-fluid d-flex app-nav__inner">
+          <RouterLink class="navbar-brand app-nav__brand" :to="toLocalePath('/')" @click="mobileMenuOpen = false">
+            <span class="app-nav__wordmark">{{ SITE.author }}<span class="app-nav__apos">’</span>s blog</span>
           </RouterLink>
 
-          <div class="d-flex d-lg-none ms-auto">
-            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="emit('open-search')" @focus="blurFocus"
+          <div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile">
+            <button class="icon-btn" @click="emit('open-search')" @focus="blurFocus"
               :aria-label="t('search')">
-              <img src="@/assets/icons/search.png" alt="" width="20" height="20">
+              <svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
             </button>
-            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
-              <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
+            <button class="icon-btn" @click="toggleTheme" @focus="blurFocus"
+              :aria-label="t('theme')">
+              <svg v-if="isDark" class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+              <svg v-else class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
             </button>
-            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="toggleLanguage" @focus="blurFocus">
-              <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
+            <button class="icon-btn" @click="toggleLanguage" @focus="blurFocus"
+              :aria-label="t('language')">
+              <svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="m5 8 6 6" />
+                <path d="m4 14 6-6 2-3" />
+                <path d="M2 5h12" />
+                <path d="M7 2h1" />
+                <path d="m22 22-5-10-5 10" />
+                <path d="M14 18h6" />
+              </svg>
             </button>
-            <button class="btn btn-sm mx-1 p-2 btn-icon" @click="onMobileMenuClick"
-              style="font-size: 1.2em; background: none; border: none;" @focus="blurFocus">
-              <img src="@/assets/icons/menu.png" alt="菜单" width="20" height="20">
+            <button class="icon-btn" @click="onMobileMenuClick" @focus="blurFocus"
+              :aria-label="t('menu')">
+              <svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
             </button>
           </div>
 
           <div :class="['navbar-collapse collapse', { 'show': mobileMenuOpen }]">
-            <ul class="navbar-nav mb-2 mb-lg-0">
+            <ul class="navbar-nav mb-2 mb-lg-0 app-nav__links">
+              <li v-if="navItems.length" class="app-nav__link-divider" aria-hidden="true"></li>
               <li class="nav-item" v-for="item in navItems" :key="item.text">
-                <RouterLink class="nav-link px-3 py-2 rounded d-flex align-items-center" :to="item.href"
-                  @click="mobileMenuOpen = false" :class="{ 'active': $route.path === item.href }">
-                  <i :class="['fas', item.icon]" style="flex-shrink: 0; width: 20px; margin-right: 8px;"></i>
+                <RouterLink class="nav-link app-nav__link" :to="item.href"
+                  @click="mobileMenuOpen = false" :class="{ 'active': isActive(item.href) }">
                   {{ item.text }}
                 </RouterLink>
               </li>
             </ul>
           </div>
 
-          <div class="d-none d-lg-flex ms-auto">
-            <button class="btn btn-sm me-2 btn-icon" @click="emit('open-search')" @focus="blurFocus"
+          <div class="d-none d-lg-flex ms-auto app-nav__actions">
+            <button class="icon-btn" @click="emit('open-search')" @focus="blurFocus"
               :aria-label="t('search')">
-              <img src="@/assets/icons/search.png" alt="" width="20" height="20">
+              <svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
             </button>
-            <button class="btn btn-sm me-2 btn-icon" @click="toggleTheme" @focus="blurFocus">
-              <img src="@/assets/icons/change-theme.png" alt="主题" width="20" height="20">
+            <button class="icon-btn" @click="toggleTheme" @focus="blurFocus"
+              :aria-label="t('theme')">
+              <svg v-if="isDark" class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+              <svg v-else class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"
+                stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
             </button>
-            <button class="btn btn-sm btn-icon" @click="toggleLanguage" @focus="blurFocus">
-              <img src="@/assets/icons/change-language.png" alt="切换语言" width="20" height="20">
+            <button class="icon-btn" @click="toggleLanguage" @focus="blurFocus"
+              :aria-label="t('language')">
+              <svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="m5 8 6 6" />
+                <path d="m4 14 6-6 2-3" />
+                <path d="M2 5h12" />
+                <path d="M7 2h1" />
+                <path d="m22 22-5-10-5 10" />
+                <path d="M14 18h6" />
+              </svg>
             </button>
           </div>
         </div>
@@ -56,17 +127,17 @@
   </header>
 
   <div v-if="showMobileSidebar" class="mobile-offcanvas d-lg-none" @click.self="closeMobileSidebar">
-    <div class="offcanvas-panel border-end rounded-0"
-      :style="{ 'border-color': 'var(--app-border)', 'box-shadow': 'var(--app-offcanvas-shadow)' }">
+    <div class="offcanvas-panel">
 
       <div class="offcanvas-section">
+        <div class="offcanvas-head">{{ t('menu') }}</div>
         <div class="offcanvas-card">
           <ul class="list-unstyled m-0">
             <li v-for="item in navItems" :key="item.text" class="my-1">
               <RouterLink :to="item.href" class="offcanvas-link d-flex align-items-center"
-                :class="{ active: $route.path === item.href }" @click="closeMobileSidebar">
-                <i :class="['fas', item.icon]" style="flex-shrink: 0; width: 20px; margin-right: 8px;"></i>
+                :class="{ active: isActive(item.href) }" @click="closeMobileSidebar">
                 <span>{{ item.text }}</span>
+                <i class="fas fa-chevron-right offcanvas-link__chevron"></i>
               </RouterLink>
             </li>
           </ul>
@@ -74,6 +145,7 @@
       </div>
 
       <div v-if="isArticle" class="offcanvas-section">
+        <div class="offcanvas-head">{{ t('tableOfContents') }}</div>
         <div class="offcanvas-tree offcanvas-card" @click="handleDirectoryClick">
           <NavigationTree />
         </div>
@@ -85,14 +157,11 @@
 </template>
 
 <script setup lang="ts">
-/*
-  AppHeader
-  - 顶部导航，包含移动抽屉与语言/主题按钮
-*/
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useAppStore } from '@/stores/app';
+import { useAppStore } from '@/stores/app'
+import { SITE } from '@/config/site.ts';
 import { toLocalePath } from '@/utils/localePath';
 import NavigationTree from '@/components/layout/NavigationTree.vue';
 
@@ -100,9 +169,17 @@ const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 const appStore = useAppStore();
+
+const isDark = computed(() => {
+  if (appStore.theme === 'dark') return true
+  if (appStore.theme === 'light') return false
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  )
+})
 const mobileMenuOpen = ref(false);
 const showMobileSidebar = ref(false);
-const logoStyle = ref<Record<string, string>>({});
 const emit = defineEmits(['open-search']);
 
 const blurFocus = (event: FocusEvent) => {
@@ -110,23 +187,17 @@ const blurFocus = (event: FocusEvent) => {
 };
 
 const navItems = computed(() => [
-  { icon: 'fa-layer-group', text: t('categories'), href: toLocalePath('/category') },
-  { icon: 'fa-folder-open', text: t('resources'), href: toLocalePath('/resource') },
-  { icon: 'fa-info-circle', text: t('about'), href: toLocalePath('/about') },
+  { text: t('categories'), href: toLocalePath('/category') },
+  { text: t('resources'), href: toLocalePath('/resource') },
+  { text: t('about'), href: toLocalePath('/about') },
 ])
 
+const isActive = (href: string) => {
+  if (href === route.path) return true
+  return href !== toLocalePath('/') && route.path.startsWith(href)
+}
+
 const isArticle = computed(() => route.path.includes('/article/'));
-
-const enlargeLogo = () => {
-  logoStyle.value = {
-    transform: 'scale(1.1)',
-    transition: 'transform 0.2s ease'
-  };
-};
-
-const resetLogo = () => {
-  logoStyle.value = {};
-};
 
 const toggleTheme = () => {
   appStore.toggleTheme();
@@ -195,12 +266,125 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-:global([data-bs-theme="dark"] .btn-icon img) {
-  filter: invert(1);
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background: var(--app-header-bg);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--line);
 }
 
-.header {
-  background-color: var(--app-header-bg);
+/* 175%+ 显示缩放下等效视口落入 <1200px：header 内容贴边，不缩在 Bootstrap container 居中 */
+@media (max-width: 1199.98px) {
+  .app-header .container {
+    max-width: 100%;
+  }
+}
+
+.app-nav {
+  height: 64px;
+  padding: 0;
+}
+
+.app-nav__inner {
+  gap: var(--sp-4);
+  height: 100%;
+}
+
+@media (max-width: 767px) {
+  .app-nav__inner {
+    padding-inline: 20px;
+  }
+}
+
+.app-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-family: var(--font-serif);
+  color: var(--fg);
+  padding: 0;
+  white-space: nowrap;
+}
+
+.app-nav__wordmark {
+  color: var(--fg);
+  line-height: 1;
+  padding-top: 1px;
+}
+
+/* 弯撇必须用西文字体渲染：思源宋体的 U+2019 是全角引号（1000/1000em），会撑开间距 */
+.app-nav__apos {
+  font-family: Georgia, 'Times New Roman', 'SourceHanSerifCN', serif;
+}
+
+.app-nav__links {
+  display: flex;
+  height: 64px;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-left: var(--sp-5);
+}
+
+.app-nav__links .nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.app-nav__link-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--line-strong);
+  margin-right: var(--sp-3);
+  flex-shrink: 0;
+}
+
+.app-nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 4px;
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--fg-2);
+  transition: color var(--dur-fast) ease;
+  letter-spacing: 0.01em;
+}
+
+.app-nav__link:hover {
+  color: var(--fg);
+}
+
+.app-nav__link.active,
+.app-nav__link.active:hover,
+.app-nav__link.router-link-active,
+.app-nav__link.router-link-active:hover,
+.navbar .app-nav__link.active,
+.navbar .app-nav__link.active:hover,
+.navbar .app-nav__link.router-link-active,
+.navbar .app-nav__link.router-link-active:hover {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.app-nav__actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.app-nav__actions--mobile {
+  gap: 2px;
+}
+
+.app-nav__icon {
+  display: block;
 }
 
 .mobile-offcanvas {
@@ -221,38 +405,51 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   bottom: 0;
-  width: min(85vw, 320px);
-  background: var(--app-offcanvas-bg);
-  box-shadow: var(--app-offcanvas-shadow);
+  width: min(84vw, 320px);
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  box-shadow: var(--shadow-lift);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0.75rem 0.75rem 1rem;
+  padding: 1.25rem 1rem 1.5rem;
   z-index: 2;
 }
 
-.offcanvas-header {
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.5rem;
+.offcanvas-head {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding: 0 var(--sp-2) var(--sp-2);
 }
 
-.offcanvas-section+.offcanvas-section {
+.offcanvas-link__chevron {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.14s ease;
+}
+
+.offcanvas-link:hover .offcanvas-link__chevron,
+.offcanvas-link.active .offcanvas-link__chevron {
+  opacity: 1;
+}
+
+.offcanvas-section + .offcanvas-section {
   margin-top: 0.75rem;
 }
 
-.section-title {
-  font-size: 0.95rem;
-  color: var(--app-text-muted);
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-}
-
 .offcanvas-link {
-  display: block;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  color: var(--app-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-sm);
+  color: var(--fg-2);
   text-decoration: none;
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.14s ease, color 0.14s ease;
   line-height: 1.5;
   background-color: transparent;
   border: none;
@@ -260,14 +457,14 @@ onBeforeUnmount(() => {
 
 .offcanvas-link:hover,
 .offcanvas-link:focus {
-  color: var(--app-primary) !important;
-  background-color: var(--app-primary-bg-subtle) !important;
+  color: var(--primary);
+  background-color: var(--tint);
 }
 
 .offcanvas-link.active {
-  color: var(--app-primary) !important;
-  background-color: transparent !important;
-  font-weight: 500;
+  color: var(--primary);
+  background-color: var(--tint);
+  font-weight: 600;
 }
 
 .offcanvas-link:focus {
@@ -277,14 +474,13 @@ onBeforeUnmount(() => {
 
 .offcanvas-link i {
   flex-shrink: 0;
-  width: 20px;
-  margin-right: 8px;
+  font-size: 12px;
 }
 
 .offcanvas-link:hover i,
 .offcanvas-link:focus i,
 .offcanvas-link.active i {
-  color: var(--app-primary) !important;
+  color: var(--primary);
 }
 
 .offcanvas-tree {
@@ -292,10 +488,10 @@ onBeforeUnmount(() => {
 }
 
 .offcanvas-card {
-  background-color: var(--app-card-bg);
-  border: none;
-  border-radius: 0.5rem;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   padding: 0.5rem;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 </style>

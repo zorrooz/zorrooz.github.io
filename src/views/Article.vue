@@ -1,8 +1,10 @@
 <!-- Article.vue -->
 <template>
   <div class="container view-container article-view">
+    <div class="reading-progress" :style="{ width: progressPercent + '%' }" aria-hidden="true"></div>
+
     <div class="row py-4 px-0">
-      <div class="col-12 col-lg-2 order-2 order-lg-1" ref="leftSidebarContainer">
+      <div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col">
         <div class="sticky-sidebar" ref="leftSidebarContent">
           <div v-if="isDesktop" class="navigation-container mb-0">
             <NavigationTree />
@@ -10,21 +12,24 @@
         </div>
       </div>
 
-      <div class="col-12 col-lg-8 order-1 order-lg-2" ref="mainContent">
-        <div class="card shadow-sm border-0 rounded-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-          <div class="card-body p-4">
+      <div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" ref="mainContent">
+        <div class="article-panel">
+          <div class="article-panel__body">
             <div class="article-content">
-              <div v-if="currentPost" class="article-meta pb-2 mb-0">
-                <h1 class="article-title mb-3">{{ currentPost.title }}</h1>
-                <div class="d-flex flex-wrap gap-3 align-items-center" :style="{ color: 'var(--app-text-muted)' }">
-                  <span v-if="isNote && currentPost.date"><i class="fas fa-calendar-alt me-1"></i>{{ updatedAtText }} {{
-                    currentPost.date }}</span>
-                  <span v-if="readingMinutes > 0"><i class="fas fa-clock me-1"></i>{{ getReadingTimeText(readingMinutes)
-                    }}</span>
+              <div v-if="currentPost" class="article-meta">
+                <h1 class="article-title">{{ currentPost.title }}</h1>
+                <div class="article-meta__row">
+                  <span v-if="isNote && currentPost.date" class="meta-line"><i class="fas fa-calendar-alt"></i>{{ updatedAtText }} {{ currentPost.date }}</span>
+                  <span v-if="readingMinutes > 0" class="meta-line"><i class="fas fa-clock"></i>{{ getReadingTimeText(readingMinutes) }}</span>
+                  <button type="button" class="article-copy-btn"
+                    :class="{ 'article-copy-btn--copied': copyFeedback }" @click="copyArticle"
+                    :aria-label="t('copyArticle')" aria-live="polite">
+                    <i :class="copyFeedback ? 'fas fa-check' : 'fas fa-copy'"></i>
+                    <span>{{ copyFeedback ? t('copied') : t('copyArticle') }}</span>
+                  </button>
                 </div>
-                <div v-if="currentPost.tags?.length" class="d-flex flex-wrap gap-2 mt-2">
-                  <span v-for="(tag, idx) in currentPost.tags" :key="idx"
-                    class="badge tag-badge fw-normal py-1 px-2 rounded-3">
+                <div v-if="currentPost.tags?.length" class="article-meta__tags">
+                  <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="article-tag" @click="onTagClick(tag)">
                     # {{ tag }}
                   </span>
                 </div>
@@ -34,19 +39,22 @@
                 :articleTitle="currentPost?.title || ''" @markdown-rendered="handleMarkdownRendered" />
 
               <nav class="article-navigation" v-if="rawMarkdown">
+                <span v-if="!prevPost && nextPost" class="article-nav-spacer" aria-hidden="true"></span>
+
                 <router-link v-if="prevPost" :to="toArticle(prevPost.path)" class="article-nav-item prev">
-                  <div class="nav-arrow">&lt;</div>
+                  <div class="nav-arrow"><i class="fas fa-arrow-left"></i></div>
                   <div class="nav-details">
                     <div class="nav-label">{{ prevPageText }}</div>
                     <div class="nav-title">{{ prevPost.title }}</div>
                   </div>
                 </router-link>
+
                 <router-link v-if="nextPost" :to="toArticle(nextPost.path)" class="article-nav-item next">
                   <div class="nav-details">
                     <div class="nav-label">{{ nextPageText }}</div>
                     <div class="nav-title">{{ nextPost.title }}</div>
                   </div>
-                  <div class="nav-arrow">&gt;</div>
+                  <div class="nav-arrow"><i class="fas fa-arrow-right"></i></div>
                 </router-link>
               </nav>
             </div>
@@ -54,10 +62,10 @@
         </div>
       </div>
 
-      <div class="col-12 col-lg-2 order-3" ref="rightSidebarContainer">
+      <div class="col-12 col-lg-2 order-3 docs-toc-col">
         <div class="sticky-sidebar" ref="rightSidebarContent">
           <div v-if="isDesktop" class="toc-container mt-0">
-            <OnThisPage ref="onThisPageRef" containerSelector=".markdown-body" :levels="[2, 3]" />
+            <OnThisPage ref="onThisPageRef" containerSelector=".markdown-body" :levels="[2, 3]" :offset="88" />
           </div>
         </div>
       </div>
@@ -70,19 +78,20 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadHtmlContent } from '@/utils/contentLoader'
 import { toLocalePath } from '@/utils/localePath'
+import { readingTimeMinutes } from '@/utils/readingTime'
 
 defineOptions({
   name: 'ArticleView',
   head() {
     return {
-      title: this.currentPost ? `${this.currentPost.title} - gblog` : 'gblog',
+      title: this.currentPost ? `${this.currentPost.title} - zorrooz’s blog` : 'zorrooz’s blog',
       meta: this.currentPost?.description
         ? [{ name: 'description', content: this.currentPost.description }]
         : [],
@@ -92,6 +101,7 @@ defineOptions({
 
 const { t, locale } = useI18n()
 const route = useRoute()
+const router = useRouter()
 
 defineProps({ path: { type: [String, Array], default: '' } })
 
@@ -100,12 +110,14 @@ const currentPath = ref('')
 const allArticles = ref<any[]>([])
 const categoryList = ref<any[]>([])
 const viewportWidth = ref((typeof window !== 'undefined' ? window.innerWidth : 1024))
+const progressPercent = ref(0)
+const copyFeedback = ref(false)
+let copyFeedbackTimer: number | null = null
+let scrollTicking = false
 
 const onThisPageRef = useTemplateRef<InstanceType<typeof OnThisPage>>('onThisPageRef')
 const leftSidebarContent = useTemplateRef<HTMLElement>('leftSidebarContent')
 const rightSidebarContent = useTemplateRef<HTMLElement>('rightSidebarContent')
-const leftSidebarContainer = useTemplateRef<HTMLElement>('leftSidebarContainer')
-const rightSidebarContainer = useTemplateRef<HTMLElement>('rightSidebarContainer')
 
 const isDesktop = computed(() => viewportWidth.value >= 992)
 const isNote = computed(() => !!(currentPost.value?.path && currentPost.value.path.startsWith('notes/')))
@@ -182,28 +194,56 @@ const nextPost = computed(() => {
 })
 
 const readingMinutes = computed(() => {
-  if (!rawMarkdown.value) return 0
-  const text = rawMarkdown.value
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&[a-zA-Z#0-9]+;/g, ' ')
-    .trim()
-  return Math.max(1, Math.round(text.length / 800))
+  const wc = currentPost.value?.wordCount
+  return typeof wc === 'number' ? readingTimeMinutes(wc) : 0
 })
 
 function getReadingTimeText(minutes: number) {
-  const isEnglish = locale.value === 'en-US'
-  const template = isEnglish ? 'Reading about {minutes} minutes' : '阅读约 {minutes} 分钟'
-  return template.replace('{minutes}', minutes.toString())
+  return t('articleReadingTime', { minutes })
 }
 
 function toArticle(p: string) {
   return toLocalePath(`/article/${p.replace(/\.md$/, '')}`)
 }
 
+function onTagClick(tag: string) {
+  if (!tag) return
+  const prefix = locale.value === 'en-US' ? '/en' : '/zh'
+  router.push({ path: `${prefix}/`, query: { tag, from: route.fullPath } })
+}
+
+async function copyArticle() {
+  const body = document.querySelector('.markdown-body')
+  if (!body || !currentPost.value) return
+  const clone = body.cloneNode(true) as HTMLElement
+  clone
+    .querySelectorAll('.heading-anchor, .code-block-header, .copy-button, .table-copy-btn')
+    .forEach(el => el.remove())
+  const bodyText = (clone.innerText || '').trim()
+  const text = `${currentPost.value.title}\n\n${bodyText}`
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (err) {
+    console.error(t('copyFailed'), err)
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+  } finally {
+    copyFeedback.value = true
+    if (copyFeedbackTimer) clearTimeout(copyFeedbackTimer)
+    copyFeedbackTimer = window.setTimeout(() => {
+      copyFeedback.value = false
+    }, 1200)
+  }
+}
+
 function buildFromCategories() {
   const all: any[] = []
 
-  const pushArticle = (artTitle: string, articleUrl: string, tags: any[] = [], dateStr: string = '') => {
+  const pushArticle = (artTitle: string, articleUrl: string, tags: any[] = [], dateStr: string = '', wordCount = 0) => {
     if (typeof articleUrl !== 'string' || !articleUrl.trim()) return
     const parts = articleUrl.replace(/^\/+/, '').split('/')
     const idxArticle = parts[0] === 'article' ? 1 : 0
@@ -213,7 +253,7 @@ function buildFromCategories() {
     const rest = restParts.join('/')
     const pathNoExt = `${t}/${g}/${rest}`
 
-    const art = { title: artTitle, path: `${pathNoExt}.md`, date: dateStr || '', tags: Array.isArray(tags) ? tags : [], preview: '', category: `${t}/${g}/${subKey}` }
+    const art = { title: artTitle, path: `${pathNoExt}.md`, date: dateStr || '', tags: Array.isArray(tags) ? tags : [], preview: '', category: `${t}/${g}/${subKey}`, wordCount: typeof wordCount === 'number' ? wordCount : 0 }
     all.push(art)
   }
 
@@ -226,13 +266,13 @@ function buildFromCategories() {
         section.items.forEach((item: any) => {
           const itemLatest = item?.stats?.latestDate || ''
           if (Array.isArray(item.articles)) {
-            item.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest))
+            item.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest, a?.wordCount))
           }
           if (Array.isArray(item.categories)) {
             item.categories.forEach((cat: any) => {
               const catLatest = cat?.stats?.latestDate || itemLatest || ''
               if (Array.isArray(cat.articles)) {
-                cat.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest))
+                cat.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest, a?.wordCount))
               }
             })
           }
@@ -251,6 +291,17 @@ function buildFromCategories() {
 function onResize() {
   viewportWidth.value = window.innerWidth
   updateSidebarDimensions()
+}
+
+function onScroll() {
+  if (scrollTicking) return
+  scrollTicking = true
+  requestAnimationFrame(() => {
+    scrollTicking = false
+    const doc = document.documentElement
+    const max = doc.scrollHeight - window.innerHeight
+    progressPercent.value = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0
+  })
 }
 
 function normalizeRoutePathParam(p: string | string[]) {
@@ -307,20 +358,16 @@ function loadArticleContent() {
 }
 
 function updateSidebarDimensions() {
-  if (typeof window === 'undefined' || typeof document === 'undefined') return
-  const header = document.querySelector('header'), footer = document.querySelector('footer')
-  const leftContent = leftSidebarContent.value, rightContent = rightSidebarContent.value
-  if (!leftContent || !rightContent || !leftSidebarContainer.value || !rightSidebarContainer.value) return
-
-  const headerH = header?.offsetHeight || 0, footerH = footer?.offsetHeight || 0
-  const viewportH = window.innerHeight, scrollTop = window.scrollY, docH = document.documentElement.scrollHeight
-  const remainingH = Math.max(0, docH - scrollTop - headerH - footerH - 40)
-  const availableH = Math.min(viewportH - headerH - 40, remainingH)
-
-  const sidebarEls = [leftContent, rightContent]
+  if (typeof window === 'undefined') return
+  const header = document.querySelector('header')
+  const headerH = header?.offsetHeight || 60
+  const viewportH = window.innerHeight
+  const availableH = Math.max(200, viewportH - headerH - 24 - 24)
+  const sidebarEls = [leftSidebarContent.value, rightSidebarContent.value]
   sidebarEls.forEach(el => {
+    if (!el) return
     el.style.maxHeight = `${availableH}px`
-    el.style.overflowY = el.scrollHeight > availableH ? 'auto' : 'visible'
+    el.style.overflowY = 'auto'
   })
 }
 
@@ -355,19 +402,48 @@ watch(rawMarkdown, () => {
 onMounted(() => {
   viewportWidth.value = window.innerWidth
   window.addEventListener('resize', onResize)
-  window.addEventListener('scroll', updateSidebarDimensions)
+  window.addEventListener('scroll', onScroll, { passive: true })
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
-  window.removeEventListener('scroll', updateSidebarDimensions)
+  window.removeEventListener('scroll', onScroll)
+  if (copyFeedbackTimer) clearTimeout(copyFeedbackTimer)
 })
 </script>
 
 <style scoped>
+.article-view {
+  max-width: 1280px;
+}
+
+.article-panel {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--primary);
+  z-index: 1045;
+  border-radius: 0 99px 99px 0;
+  pointer-events: none;
+  transition: width 0.08s linear;
+}
+
+.article-panel__body {
+  padding: var(--sp-12) 0;
+}
+
 .sticky-sidebar {
   position: sticky;
-  top: 30px;
+  top: 92px;
   box-sizing: border-box;
   width: 100%;
   -webkit-overflow-scrolling: touch;
@@ -376,139 +452,214 @@ onBeforeUnmount(() => {
 
 .article-content {
   min-height: 400px;
-  padding: 0;
+  max-width: 820px;
+  margin: 0 auto;
 }
 
 .article-meta {
-  padding-bottom: 0.75rem !important;
-  border-bottom: none !important;
+  margin-bottom: var(--sp-10);
+  padding-bottom: var(--sp-8);
+  border-bottom: 1px solid var(--line);
 }
 
-.article-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--app-text-emphasis);
+.article-meta__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  align-items: center;
+  margin-top: var(--sp-5);
+  font-size: var(--text-sm);
+  color: var(--fg-3);
 }
 
-.article-meta .text-secondary {
-  font-size: 1rem;
-  color: var(--app-text-muted);
+.article-meta .meta-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
-.article-meta .badge {
-  font-size: 0.95rem;
+.article-meta .meta-line i {
+  font-size: 12px;
+  color: var(--primary-muted);
+}
+
+.article-meta__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+}
+
+.article-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: var(--text-sm);
   font-weight: 500;
+  color: var(--fg-3);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-btn);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.14s ease, background-color 0.14s ease;
 }
 
-.article-meta .tag-badge {
-  color: var(--app-tag-text) !important;
-  background-color: var(--app-tag-bg) !important;
+.article-copy-btn:hover {
+  color: var(--primary);
+  background: var(--tint);
+}
+
+.article-copy-btn--copied {
+  color: var(--primary);
+}
+
+.article-tag {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--fg-2);
+  background: var(--surface-2);
+  padding: 4px 13px;
+  border-radius: var(--radius-pill);
+  transition: color 0.14s ease, background-color 0.14s ease;
+  cursor: pointer;
+}
+
+.article-tag:hover {
+  color: var(--primary);
+  background: var(--tint);
+}
+
+@media (min-width: 992px) {
+  .docs-sidebar-col {
+    border-right: 1px solid var(--line);
+    padding-right: var(--sp-5);
+  }
+
+  .docs-toc-col {
+    padding-left: var(--sp-5);
+  }
+
+  .docs-main-col {
+    padding-left: var(--sp-8);
+    padding-right: var(--sp-8);
+  }
 }
 
 :deep(.markdown-body) {
-  font-size: 1.125rem;
-  line-height: 1.8;
-  color: var(--app-text);
+  font-size: var(--text-body);
+  line-height: 1.75;
+  color: var(--fg);
 }
 
 :deep(.markdown-body p) {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.1rem;
 }
 
-
 :deep(.markdown-body h1) {
-  font-size: 1.9rem;
+  font-size: var(--text-4xl);
   font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
 }
 
 :deep(.markdown-body h2) {
-  font-size: 1.65rem;
+  font-size: var(--text-3xl);
   font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 0.875rem;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.015em;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
 }
 
 :deep(.markdown-body h3) {
-  font-size: 1.45rem;
-  font-weight: 700;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-top: 2.25rem;
+  margin-bottom: 0.875rem;
+  letter-spacing: -0.01em;
+}
+
+:deep(.markdown-body h4) {
+  font-size: 18px;
+  font-weight: 600;
   margin-top: 1.75rem;
   margin-bottom: 0.75rem;
 }
 
-:deep(.markdown-body h4) {
-  font-size: 1.3rem;
-  font-weight: 700;
+:deep(.markdown-body h5) {
+  font-size: var(--text-body);
+  font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.625rem;
 }
 
-:deep(.markdown-body h5) {
-  font-size: 1.2rem;
-  font-weight: 700;
+:deep(.markdown-body h6) {
+  font-size: var(--text-sm);
+  font-weight: 600;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
+  color: var(--fg-2);
 }
-
-:deep(.markdown-body h6) {
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin-top: 1rem;
-  margin-bottom: 0.375rem;
-}
-
-
 
 .article-navigation {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: none !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-16);
+  padding-top: var(--sp-8);
+  border-top: 1px solid var(--line);
+}
+
+.article-nav-spacer {
+  display: block;
 }
 
 .article-nav-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  border: 1px solid var(--app-border);
-  border-radius: .5rem;
-  padding: 1rem;
+  gap: var(--sp-4);
+  padding: var(--sp-5) var(--sp-6);
   text-decoration: none;
-  color: var(--app-text);
-  transition: all 0.2s ease-in-out;
+  color: var(--fg);
+  transition: color 0.14s ease, background-color 0.14s ease, border-color 0.14s ease,
+    box-shadow 0.18s ease;
   min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
 }
 
 .article-nav-item:hover {
-  border-color: var(--app-primary);
-  color: var(--app-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--app-primary-rgb-01);
-}
-
-.article-nav-item.prev {
-  grid-column: 1;
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-soft);
 }
 
 .article-nav-item.next {
-  grid-column: 2;
   justify-content: flex-end;
-  text-align: right;
+  text-align: left;
 }
 
 .nav-arrow {
-  font-size: 1.5rem;
-  font-weight: 300;
-  line-height: 1;
-  color: var(--app-nav-arrow-color);
-  transition: color 0.2s ease-in-out;
+  font-size: 14px;
+  color: var(--fg-3);
+  transition: color 0.14s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .article-nav-item:hover .nav-arrow {
-  color: var(--app-primary);
+  color: var(--primary);
+}
+
+.article-nav-item.next:hover .nav-arrow {
+  transform: none;
 }
 
 .nav-details {
@@ -516,6 +667,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   overflow: hidden;
   min-width: 0;
+  gap: 3px;
 }
 
 .article-nav-item.next .nav-details {
@@ -524,26 +676,27 @@ onBeforeUnmount(() => {
 }
 
 .nav-label {
-  font-size: 0.875rem;
-  color: var(--app-text-muted);
-  transition: color 0.2s ease-in-out;
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+  transition: color 0.14s ease;
 }
 
 .article-nav-item:hover .nav-label {
-  color: var(--app-primary);
+  color: var(--primary);
 }
 
 .nav-title {
-  font-weight: 500;
+  font-size: var(--text-md);
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   direction: ltr;
+  max-width: 300px;
 }
 
 .article-nav-item.next .nav-title {
   text-align: left;
-  max-width: 100%;
 }
 
 @media (max-width: 991px) {
@@ -554,7 +707,6 @@ onBeforeUnmount(() => {
     max-height: none !important;
     overflow-y: visible !important;
   }
-
   .navigation-container {
     margin-bottom: 1rem;
     margin-top: 1rem;
@@ -565,124 +717,66 @@ onBeforeUnmount(() => {
     margin-bottom: 1rem;
   }
 
-  .card-body {
-    padding: 0.75rem !important;
-  }
-
-  .article-content {
-    padding: 0.25rem;
-  }
-
-  .article-title {
-    font-size: 1.8rem;
-  }
-
-  .article-meta .d-flex.flex-wrap.gap-3 {
-    gap: 0.5rem !important;
-  }
-
-  .article-meta .d-flex.flex-wrap.gap-2 {
-    gap: 0.5rem !important;
+  .article-panel__body {
+    padding: var(--sp-8) 0;
   }
 }
 
 @media (max-width: 768px) {
-  .article-title {
-    font-size: 1.6rem;
+  .article-view .row {
+    --bs-gutter-x: 2.5rem;
   }
 
-  .article-meta .d-flex.flex-wrap.gap-3 {
-    gap: 0.5rem !important;
+  .article-navigation {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
   }
 
-  .article-meta .d-flex.flex-wrap.gap-2 {
-    gap: 0.5rem !important;
+  .article-nav-spacer {
+    display: none;
+  }
+
+  .article-nav-item.next {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .article-nav-item.next .nav-details {
+    align-items: flex-start;
+  }
+
+  .article-nav-item.next .nav-title {
+    text-align: left;
   }
 
   :deep(.markdown-body h1) {
-    font-size: 1.65rem;
-    margin-top: 2rem;
-    margin-bottom: 0.875rem;
+    font-size: 26px;
   }
 
   :deep(.markdown-body h2) {
-    font-size: 1.5rem;
-    margin-top: 1.75rem;
-    margin-bottom: 0.75rem;
+    font-size: 22px;
   }
 
   :deep(.markdown-body h3) {
-    font-size: 1.35rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.625rem;
-  }
-
-  :deep(.markdown-body h4) {
-    font-size: 1.25rem;
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  :deep(.markdown-body h5) {
-    font-size: 1.15rem;
-    margin-top: 1rem;
-    margin-bottom: 0.375rem;
-  }
-
-  :deep(.markdown-body h6) {
-    font-size: 1.125rem;
-    margin-top: 0.875rem;
-    margin-bottom: 0.25rem;
+    font-size: 19px;
   }
 }
 
 @media (max-width: 576px) {
-  .article-title {
-    font-size: 1.5rem;
-  }
-
-  .article-meta .d-flex.flex-wrap.gap-3 {
-    gap: 0.375rem !important;
-  }
-
-  .article-meta .d-flex.flex-wrap.gap-2 {
-    gap: 0.375rem !important;
+  :deep(.markdown-body) {
+    font-size: 16px;
   }
 
   :deep(.markdown-body h1) {
-    font-size: 1.55rem;
-    margin-top: 1.75rem;
-    margin-bottom: 0.75rem;
+    font-size: 24px;
   }
 
   :deep(.markdown-body h2) {
-    font-size: 1.45rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.625rem;
+    font-size: 20px;
   }
 
   :deep(.markdown-body h3) {
-    font-size: 1.35rem;
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-
-  :deep(.markdown-body h4) {
-    font-size: 1.25rem;
-    margin-top: 1rem;
-    margin-bottom: 0.375rem;
-  }
-
-  :deep(.markdown-body h5) {
-    font-size: 1.15rem;
-    margin-top: 0.875rem;
-    margin-bottom: 0.25rem;
-  }
-
-  :deep(.markdown-body h6) {
-    font-size: 1.125rem;
-    margin-top: 0.75rem;
-    margin-bottom: 0.125rem;
+    font-size: 18px;
   }
 }
 </style>

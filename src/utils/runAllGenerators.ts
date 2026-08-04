@@ -22,13 +22,15 @@ import { generateProjectsJson } from './generators/generateProjects.ts'
 import { generateTopicsJson } from './generators/generateTopics.ts'
 import { generateCategoriesJson } from './generators/generateCategories.ts'
 import { generatePostsJson } from './generators/generatePosts.ts'
-import { generateTagsJson } from './generators/generateTags.ts'
+import { generateTagsJson, checkTagsConsistency } from './generators/generateTags.ts'
 import { generateSitemap } from './generators/generateSitemap.ts'
 import { generateHtml } from './generators/generateHtml.ts'
 import { generateSearchIndex } from './generators/generateSearchIndex.ts'
 
 const isDirectRun =
   process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+
+const contentSrcDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../content-src')
 
 async function runStep(name: string, fn: () => Promise<void> | void) {
   try {
@@ -66,6 +68,45 @@ export async function runAllGenerators() {
   // 4. tags depends on posts - Chinese
   await runStep('tags', () => generateTagsJson('zh-CN'))
 
+  // 4.5 incremental translation (notes articles + about/categories/resources yaml).
+  //      English yaml is generated from the Chinese yaml by the translator —
+  //      hand-written -en.yaml files are not maintained. Skips up-to-date -en files;
+  //      failure warns without blocking the build.
+  await runStep('translate', async () => {
+    if (process.env.GBLOG_NO_TRANSLATE === '1') {
+      console.log('== Translators: skipped (GBLOG_NO_TRANSLATE=1) ==')
+      return
+    }
+    try {
+      const { default: manager } = await import('./translator/translator.ts')
+      await manager.translate(contentSrcDir, { skipExisting: true })
+    } catch (err) {
+      console.warn('[Warn] incremental translation failed (build continues):', err)
+    }
+  })
+
+  // 4.6 tagMerger mapping — 增量补齐 zh→en 标签映射（缓存命中 0 token）
+  await runStep('tag-mapping', async () => {
+    if (process.env.GBLOG_NO_TRANSLATE === '1') return
+    try {
+      const { ensureTagTranslation } = await import('./tagMerger/tagMerger.ts')
+      await ensureTagTranslation()
+    } catch (err) {
+      console.warn('[Warn] tag mapping sync failed (en 标签将保持中文):', err)
+    }
+  })
+
+  // 4.7 tag 一致性自动解决（tagMerger）：以 zh 文件为基准重写 -en 文件 tags
+  await runStep('tag-consistency', async () => {
+    if (process.env.GBLOG_NO_TRANSLATE === '1') return
+    try {
+      const { fixTagConsistency } = await import('./tagMerger/tagMerger.ts')
+      fixTagConsistency()
+    } catch (err) {
+      console.warn('[Warn] tag consistency fix failed:', err)
+    }
+  })
+
   // 5. basic indexes - English
   await runStep('notes-en', () => generateNotesJson('en-US'))
   await runStep('projects-en', () => generateProjectsJson('en-US'))
@@ -79,6 +120,12 @@ export async function runAllGenerators() {
 
   // 8. tags depends on posts - English
   await runStep('tags-en', () => generateTagsJson('en-US'))
+
+  // 8.5 中英标签一致性校验（数量与名称必须一致）
+  await runStep('tags-consistency', () => {
+    const contentDir = path.join(contentSrcDir, '../content')
+    checkTagsConsistency(contentDir)
+  })
 
   // 9. article HTML (build-time markdown rendering) - Chinese + English
   await runStep('html', () => generateHtml('zh-CN'))

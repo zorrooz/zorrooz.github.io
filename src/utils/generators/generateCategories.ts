@@ -103,7 +103,7 @@ function normalizeNoteConfig(rawDef: Record<string, unknown>): NormalizedNoteCon
   }
 }
 
-interface NormalizedProjectTopicConfig extends NormalizedNoteConfig {
+interface NormalizedProjectTopicConfig extends Omit<NormalizedNoteConfig, 'categories'> {
   tags: string[]
   github: string
   doi: string
@@ -121,7 +121,6 @@ interface NormalizedProjectTopicConfig extends NormalizedNoteConfig {
 function normalizeProjectTopicConfig(
   rawDef: Record<string, unknown>,
 ): NormalizedProjectTopicConfig {
-  const rawCats = rawDef?.categories
   return {
     name: typeof rawDef?.name === 'string' ? rawDef.name : '',
     title: typeof rawDef?.title === 'string' ? rawDef.title : '',
@@ -139,8 +138,6 @@ function normalizeProjectTopicConfig(
     journal: typeof rawDef?.journal === 'string' ? rawDef.journal : '',
     year: Number(rawDef?.year) || 0,
     authors: safeArray(rawDef?.authors).filter((t) => typeof t === 'string'),
-    categories:
-      typeof rawCats === 'object' && rawCats !== null ? (rawCats as Record<string, unknown>) : {},
   }
 }
 
@@ -182,7 +179,6 @@ function buildDetailedNoteCategories(
           title,
           articles: catArticles.map((art) => {
             const rest: Record<string, unknown> = { ...art }
-            delete rest.wordCount
             delete rest.date
             return rest
           }),
@@ -208,7 +204,6 @@ function buildDetailedNoteCategories(
           title: getCategoryTitles(locale).uncategorized,
           articles: uncategorizedArticles.map((art) => {
             const rest: Record<string, unknown> = { ...art }
-            delete rest.wordCount
             delete rest.date
             return rest
           }),
@@ -264,7 +259,6 @@ function buildDetailedProjectTopicCategories(
   ptConfigs: Record<string, unknown>[],
   ptArticles: Record<string, unknown>[],
   type: string,
-  locale = 'zh-CN',
 ): DetailedProjectTopicCategory[] {
   return ptConfigs
     .map((rawConfig) => {
@@ -285,54 +279,8 @@ function buildDetailedProjectTopicCategories(
         })
         .map((art) => formatArticle(art, `${type}s`))
 
-      const predefinedSubCats = Object.entries(config.categories)
-      const detailedSubCats: DetailedSubCategory[] = predefinedSubCats.map(([key, title]) => {
-        const catArticles = currentArticles.filter(
-          (art) => getSubCategoryKeyFromUrl(art.articleUrl) === key,
-        )
-        return {
-          key,
-          title,
-          articles: catArticles.map((art) => {
-            const rest: Record<string, unknown> = { ...art }
-            delete rest.wordCount
-            delete rest.date
-            return rest
-          }),
-          stats: {
-            postsCount: catArticles.length,
-            totalWords: catArticles.reduce((sum, art) => sum + art.wordCount, 0),
-            latestDate: catArticles.length
-              ? catArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date
-              : '',
-          },
-        }
-      })
-
-      const categorizedUrls = detailedSubCats.flatMap((cat) =>
-        cat.articles.map((art) => art.articleUrl),
-      )
-      const uncategorizedArticles = currentArticles.filter(
-        (art) => !categorizedUrls.includes(art.articleUrl),
-      )
-      if (uncategorizedArticles.length > 0) {
-        detailedSubCats.push({
-          key: 'uncategorized',
-          title: getCategoryTitles(locale).uncategorized,
-          articles: uncategorizedArticles.map((art) => {
-            const rest: Record<string, unknown> = { ...art }
-            delete rest.wordCount
-            delete rest.date
-            return rest
-          }),
-          stats: {
-            postsCount: uncategorizedArticles.length,
-            totalWords: uncategorizedArticles.reduce((sum, art) => sum + art.wordCount, 0),
-            latestDate: uncategorizedArticles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
-              .date,
-          },
-        })
-      }
+      // projects/topics 为纯元数据（无文章），不再生成子分类
+      const detailedSubCats: DetailedSubCategory[] = []
 
       const globalStats = {
         postsCount: currentArticles.length,
@@ -426,13 +374,11 @@ function generateCategoriesJson(locale = 'zh-CN') {
       projectConfigs as Record<string, unknown>[],
       projectArticles as Record<string, unknown>[],
       'project',
-      locale,
     )
     const detailedTopics = buildDetailedProjectTopicCategories(
       topicConfigs as Record<string, unknown>[],
       topicArticles as Record<string, unknown>[],
       'topic',
-      locale,
     )
 
     const finalStructure = [

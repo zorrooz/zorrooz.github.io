@@ -1,25 +1,53 @@
 {
-  "introduction": "Hello, this is a placeholder for self-introduction.",
+  "introduction": "Hello, I am zorrooz, currently focused on structural analysis and functional studies of biological macromolecules, while also exploring computational biology.\n",
+  "experience": [
+    {
+      "year": "2021 – 2025",
+      "title": "Lanzhou University · B.S. in Bioinformatics",
+      "desc": "Basic programming training and foundational knowledge in biology"
+    },
+    {
+      "year": "2025 – present",
+      "title": "Lanzhou University · M.S. in Biology",
+      "desc": "Structural and functional studies of biological macromolecules"
+    }
+  ],
   "section": [
     {
-      "title": "Experience",
+      "title": "Common Tools",
       "items": [
         {
-          "item": "Star University Bachelor's · Bioinformatics (2021 – 2025)",
-          "desc": "Bachelor's degree obtained"
+          "name": "Python · R · Bash · Git",
+          "desc": "Primary languages and version control tools for daily research and development"
         },
         {
-          "item": "Star University Bachelor's · Biology (2025 – present)",
-          "desc": "Master's degree in progress"
+          "name": "Nextflow · Snakemake",
+          "desc": "Bioinformatics pipeline orchestration and workflow management"
+        },
+        {
+          "name": "RELION · cryoSPARC",
+          "desc": "Cryo-EM single-particle reconstruction and 3D structure validation"
+        },
+        {
+          "name": "VS Code · Ubuntu · WSL",
+          "desc": "Development environment and terminal workflow"
         }
       ]
     },
     {
-      "title": "Projects",
+      "title": "Fields",
       "items": [
         {
-          "item": "Example",
-          "desc": "Pretend this is a project."
+          "name": "Structural Biology",
+          "desc": "Cryo-EM"
+        },
+        {
+          "name": "Computational Biology",
+          "desc": "Binder design and virtual screening"
+        },
+        {
+          "name": "Programming",
+          "desc": "R · Python · C · Perl · Bash · JavaScript"
         }
       ]
     }

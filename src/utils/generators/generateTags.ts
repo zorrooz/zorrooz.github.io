@@ -85,6 +85,57 @@ function main() {
   console.log('tags.json generation complete.')
 }
 
+/**
+ * 中英标签一致性校验（构建时自动运行）：
+ * zh/en tags.json 的数量与名称必须一致（翻译器保留 frontmatter tags 原文，
+ * 不一致说明内容数据有问题——如手写 -en.md 或 yaml tags 被改动）。
+ */
+export function checkTagsConsistency(contentDir: string): void {
+  const readNames = (suffix: string): string[] => {
+    const p = path.join(contentDir, `tags${suffix}.json`)
+    if (!fs.existsSync(p)) return []
+    try {
+      const arr = JSON.parse(fs.readFileSync(p, 'utf-8'))
+      return Array.isArray(arr)
+        ? arr.map((t: { name?: unknown }) => String(t?.name ?? '')).filter(Boolean)
+        : []
+    } catch {
+      return []
+    }
+  }
+
+  const zh = readNames('')
+  const en = readNames('-en')
+
+  // 每篇文章 tags 数量配对检查（posts 按 id 配对）
+  const readPosts = (suffix: string): Array<{ id?: unknown; tags?: unknown }> => {
+    const p = path.join(contentDir, `posts${suffix}.json`)
+    try {
+      const arr = JSON.parse(fs.readFileSync(p, 'utf-8'))
+      return Array.isArray(arr) ? (arr as Array<{ id?: unknown; tags?: unknown }>) : []
+    } catch {
+      return []
+    }
+  }
+  const zhPosts = readPosts('')
+  const enPosts = readPosts('-en')
+  const mismatches: string[] = []
+  for (const p of zhPosts) {
+    const e = enPosts.find((x) => x?.id === p?.id)
+    const zc = Array.isArray(p?.tags) ? p.tags.length : 0
+    const ec = Array.isArray(e?.tags) ? e.tags.length : 0
+    if (zc !== ec) mismatches.push(`id=${p?.id}: zh=${zc} en=${ec}`)
+  }
+
+  if (zh.length !== en.length || mismatches.length) {
+    console.warn(`[Warn] 中英标签不一致: 总数 zh=${zh.length} en=${en.length}`)
+    if (mismatches.length) console.warn(`  [文章级差异] ${mismatches.join('; ')}`)
+    console.warn('  提示：md frontmatter 的 tags 由 zh→en 映射翻译，数量必须守恒；请检查 -en.md 或映射文件')
+  } else {
+    console.log(`[OK] 中英标签一致 (${zh.length} = ${en.length})`)
+  }
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main()
 }

@@ -9,7 +9,9 @@ lerna-debug.log*
 
 node_modules
 .DS_Store
-# dist
+
+# Build output
+dist/
 dist-ssr
 coverage
 *.local
@@ -34,9 +36,13 @@ src/config/llmConfig.ts
 
 # Generated content JSON (tracked) + build-time HTML (not tracked)
 src/content/html/
+**/.translate-state.json
 
 # Qoder generated repo wiki index
 .qoder/
 
 # Reasonix session metadata
 .reasonix/
+
+# opencode local config
+.opencode/

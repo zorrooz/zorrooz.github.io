@@ -1,6 +1,8 @@
 import OpenAI from 'openai'
 import fs from 'fs/promises'
+import fsSync from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 import llmConfig from '../../config/llmConfig.ts'
 
 const openai = new OpenAI({
@@ -30,6 +32,13 @@ async function translateText(text: string, fileType = 'md'): Promise<string> {
       temperature: 0.3,
     })
 
+    const usage = completion.usage
+    if (usage) {
+      console.log(
+        `[TOKENS] prompt=${usage.prompt_tokens} completion=${usage.completion_tokens} total=${usage.total_tokens}`,
+      )
+    }
+
     return (completion.choices[0].message.content ?? '').trim()
   } catch (error) {
     console.error('翻译时发生错误:', (error as Error).message)
@@ -38,22 +47,61 @@ async function translateText(text: string, fileType = 'md'): Promise<string> {
 }
 
 /**
- * 检查文件是否需要翻译（增量翻译）
+ * 内容哈希（增量翻译判定依据）：比 mtime 可靠——
+ * 文件被复制/同步/切换分支导致 mtime 变化时不会误触发重新翻译。
+ */
+function contentHash(content: string): string {
+  return crypto.createHash('md5').update(content, 'utf-8').digest('hex')
+}
+
+interface TranslationState {
+  [sourcePath: string]: string
+}
+
+function stateFilePath(dir: string): string {
+  return path.join(dir, '.translate-state.json')
+}
+
+function loadState(dir: string): TranslationState {
+  try {
+    return JSON.parse(fsSync.readFileSync(stateFilePath(dir), 'utf-8')) as TranslationState
+  } catch {
+    return {}
+  }
+}
+
+function saveState(dir: string, state: TranslationState): void {
+  // 防御：空状态不写，避免覆盖已建立的翻译状态（否则下次会全量重翻）
+  if (!state || Object.keys(state).length === 0) return
+  try {
+    fsSync.writeFileSync(stateFilePath(dir), JSON.stringify(state, null, 2), 'utf-8')
+  } catch (e) {
+    console.warn(
+      `[Warn] 翻译状态写入失败（不影响本次翻译，但下次会重复翻译）: ${
+        e instanceof Error ? e.message : e
+      }`,
+    )
+  }
+}
+
+/**
+ * 检查文件是否需要翻译（增量翻译）：目标不存在，或源文件内容哈希与上次翻译时不同。
  * @param {string} sourcePath - 源文件路径
  * @param {string} targetPath - 目标文件路径
+ * @param {TranslationState} state - 翻译状态（源路径 → 内容哈希）
  * @returns {Promise<boolean>} 是否需要翻译
  */
-async function needsTranslation(sourcePath: string, targetPath: string): Promise<boolean> {
+async function needsTranslation(
+  sourcePath: string,
+  targetPath: string,
+  state: TranslationState,
+): Promise<boolean> {
   try {
     // 检查目标文件是否存在
     await fs.access(targetPath)
-
-    // 获取两个文件的修改时间
-    const sourceStats = await fs.stat(sourcePath)
-    const targetStats = await fs.stat(targetPath)
-
-    // 如果源文件比目标文件新，则需要重新翻译
-    return sourceStats.mtime > targetStats.mtime
+    // 内容哈希比对：只有源内容真正变化才重新翻译
+    const source = await fs.readFile(sourcePath, 'utf-8')
+    return state[path.resolve(sourcePath)] !== contentHash(source)
   } catch {
     return true
   }
@@ -66,6 +114,53 @@ interface TranslateFileOptions {
 }
 
 /**
+ * md 翻译后，用 zh→en 标签映射查表替换 frontmatter 的 tags（一对一、数量守恒，
+ * en 界面显示英文标签）。缺失映射的标签保持中文并提示（tagMerger 会增量补齐映射）。
+ * 支持单行数组（tags: ["a", "b"]）与多行数组（tags:\n  - a\n  - b）。
+ */
+let translationCache: Record<string, string> | null = null
+
+function loadTranslationMapping(): Record<string, string> {
+  if (translationCache) return translationCache
+  translationCache = {}
+  try {
+    // ESM 无 __dirname，用 import.meta.dirname（Node 20.11+）
+    const mappingPath = path.join(import.meta.dirname, '../content-src/tag-mapping.json')
+    const raw = fsSync.readFileSync(mappingPath, 'utf-8')
+    const parsed = JSON.parse(raw) as { translation?: Record<string, string> }
+    if (parsed?.translation && typeof parsed.translation === 'object') {
+      translationCache = parsed.translation
+    }
+  } catch (e) {
+    console.warn(
+      `[Warn] 标签映射加载失败（en 标签将保持中文）: ${e instanceof Error ? e.message : e}`,
+    )
+  }
+  return translationCache
+}
+
+function translateFrontmatterTags(source: string, translated: string): string {
+  const srcMatch = source.match(/^---\n([\s\S]*?)\n---/)
+  if (!srcMatch) return translated
+  const srcTags = srcMatch[1].match(/^tags:\s*(\[[\s\S]*?\])/m)
+  if (!srcTags) return translated
+
+  const translation = loadTranslationMapping()
+  const zhTags = JSON.parse(srcTags[1]) as string[]
+  const enTags = zhTags.map((tag) => {
+    const en = translation[tag]
+    if (!en) console.warn(`[Warn] 标签「${tag}」缺少 zh→en 映射（保持中文，请运行 tagMerger 补齐）`)
+    return en || tag
+  })
+  const enTagsJson = JSON.stringify(enTags)
+  // 只替换 LLM 输出的 frontmatter 区域，避免 tags 正则吞掉正文内容
+  const fmMatch = translated.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!fmMatch) return translated
+  const fm = fmMatch[1].replace(/^tags:\s*\[[\s\S]*?\]/m, `tags: ${enTagsJson}`)
+  return `---\n${fm}\n---${translated.slice(fmMatch[0].length)}`
+}
+
+/**
  * 翻译单个文件
  * @param {string} inputFilePath - 输入文件路径
  * @param {Object} options - 选项
@@ -74,12 +169,18 @@ interface TranslateFileOptions {
 async function translateFile(
   inputFilePath: string,
   options: TranslateFileOptions = {},
+  state?: TranslationState,
 ): Promise<string | null> {
   const {
     force = false, // 强制重新翻译
     skipExisting = true, // 跳过已存在的翻译文件
     outputSuffix = '-en', // 输出文件后缀
   } = options
+
+  // 独立调用时加载状态；目录批量调用由 translateDirectory 统一管理
+  const dir = path.dirname(inputFilePath)
+  const localState = state ?? loadState(dir)
+  const saveLocal = !state
 
   try {
     // 检查文件扩展名
@@ -93,9 +194,9 @@ async function translateFile(
     const basename = path.basename(inputFilePath, ext)
     const outputPath = path.join(path.dirname(inputFilePath), `${basename}${outputSuffix}${ext}`)
 
-    // 检查是否需要翻译
+    // 检查是否需要翻译（内容哈希增量判定）
     if (skipExisting && !force) {
-      const shouldTranslate = await needsTranslation(inputFilePath, outputPath)
+      const shouldTranslate = await needsTranslation(inputFilePath, outputPath, localState)
       if (!shouldTranslate) {
         console.log(`[INFO] 跳过已翻译文件: ${inputFilePath}`)
         return null // 返回null而不是undefined
@@ -108,11 +209,20 @@ async function translateFile(
     // 翻译
     console.log(`[INFO] 正在翻译文件: ${inputFilePath}`)
     const fileType = ext === '.yaml' || ext === '.yml' ? 'yaml' : 'md'
-    const translated = await translateText(content, fileType)
+    let translated = await translateText(content, fileType)
+
+    // md 文章：frontmatter 的 tags 用 zh→en 映射查表翻译（一对一、数量守恒，
+    // en 界面显示英文标签；缺失映射的标签保持中文并告警）
+    if (fileType === 'md') {
+      translated = translateFrontmatterTags(content, translated)
+    }
 
     // 写入翻译后文件
     await fs.writeFile(outputPath, translated, 'utf-8')
     console.log(`[INFO] 翻译完成: ${outputPath}`)
+    // 记录源内容哈希，下次跳过
+    localState[path.resolve(inputFilePath)] = contentHash(content)
+    if (saveLocal) saveState(dir, localState)
 
     return outputPath
   } catch (error) {
@@ -125,6 +235,7 @@ interface TranslateDirectoryOptions extends TranslateFileOptions {
   recursive?: boolean
   filePatterns?: string[]
   excludePatterns?: string[]
+  concurrency?: number
 }
 
 /**
@@ -179,18 +290,30 @@ async function translateDirectory(
 
     console.log(`[INFO] 找到 ${files.length} 个需要翻译的文件`)
 
-    // 批量翻译文件
-    const results: string[] = []
-    for (const file of files) {
-      try {
-        const result = await translateFile(file, translateOptions)
-        if (result) results.push(result)
-      } catch (error) {
-        console.error(`[ERROR] 翻译失败: ${file}`, (error as Error).message)
-      }
-    }
+    // 统一加载翻译状态（内容哈希增量，杜绝 mtime 误判导致的重复翻译）
+    const state = loadState(directoryPath)
 
-    console.log(`[INFO] 批量翻译完成，成功翻译 ${results.length} 个文件`)
+    // 并发翻译：LLM 调用是 IO 密集，默认 4 路并发显著提速
+    const concurrency = Math.max(1, Math.min(8, options.concurrency ?? 4))
+    const results: string[] = []
+    let cursor = 0
+    const workers = Array.from({ length: concurrency }, async () => {
+      while (cursor < files.length) {
+        const file = files[cursor++]
+        try {
+          const result = await translateFile(file, translateOptions, state)
+          if (result) results.push(result)
+        } catch (error) {
+          console.error(`[ERROR] 翻译失败: ${file}`, (error as Error).message)
+        }
+      }
+    })
+    await Promise.all(workers)
+
+    // 保存翻译状态（下次仅翻译内容变化的源文件）
+    saveState(directoryPath, state)
+
+    console.log(`[INFO] 批量翻译完成，成功翻译 ${results.length} 个文件（并发 ${concurrency}）`)
     return results
   } catch (error) {
     console.error('[ERROR] 批量翻译时出错:', (error as Error).message)

@@ -1,25 +1,53 @@
 {
-  "introduction": "你好，这是自我介绍占位符。",
+  "introduction": "你好，我是 zorrooz，当前专注于生物大分子的结构解析与功能研究，同时涉猎计算生物学。\n",
+  "experience": [
+    {
+      "year": "2021 – 2025",
+      "title": "兰州大学 本科 · 生物信息学",
+      "desc": "基本编程训练与生物学基础知识"
+    },
+    {
+      "year": "2025 – 至今",
+      "title": "兰州大学 硕士 · 生物学",
+      "desc": "生物大分子的结构与功能研究"
+    }
+  ],
   "section": [
     {
-      "title": "经历",
+      "title": "常用工具",
       "items": [
         {
-          "item": "星星大学 本科 · 生物信息学（2021 – 2025）",
-          "desc": "已获学士学位"
+          "name": "Python · R · Bash · Git",
+          "desc": "日常研究与开发的主力语言与版本控制工具"
         },
         {
-          "item": "星星大学 本科 · 生物学（2025 – 至今）",
-          "desc": "硕士在读"
+          "name": "Nextflow · Snakemake",
+          "desc": "生信流水线编排与工作流管理"
+        },
+        {
+          "name": "RELION · cryoSPARC",
+          "desc": "冷冻电镜单颗粒重构与三维结构验证"
+        },
+        {
+          "name": "VS Code · Ubuntu · WSL",
+          "desc": "开发环境与终端工作流"
         }
       ]
     },
     {
-      "title": "项目",
+      "title": "领域",
       "items": [
         {
-          "item": "样例",
-          "desc": "假装这里是一个项目。"
+          "name": "结构生物学",
+          "desc": "冷冻电镜"
+        },
+        {
+          "name": "计算生物学",
+          "desc": "binder 设计与虚拟筛选"
+        },
+        {
+          "name": "编程",
+          "desc": "R · Python · C · Perl · Bash · JavaScript"
         }
       ]
     }

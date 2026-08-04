@@ -19,8 +19,9 @@ gblog is a fully-featured static blog system designed for personal knowledge man
 ### 🎯 Core Features
 
 - **Bilingual Support**: Built-in English and Chinese language switching
-- **Theme Switching**: Supports light/dark theme modes
+- **Theme Switching**: Supports light / dark / system-follow modes
 - **Markdown Rendering**: Full Markdown support with code highlighting and mathematical formulas
+- **Content Copying**: One-click copy for articles and tables (tables copied as TSV, paste-ready for Excel)
 - **Content Organization**: Multi-dimensional content management with categories, resources, about page, etc.
 - **Auto Translation**: Integrated AI translation tool for automatic English-Chinese content translation
 - **Responsive Design**: Adapts to various screen sizes
@@ -43,9 +44,9 @@ gblog is a fully-featured static blog system designed for personal knowledge man
 ```
 src/  
 ├── content-src/         # Source content files  
-│   ├── notes/           # Note articles  
-│   ├── projects/        # Project documentation  
-│   ├── topics/          # Research topics  
+│   ├── notes/           # Note articles (only directory with markdown)  
+│   ├── projects/        # Project metadata (yaml only, no articles)  
+│   ├── topics/          # Topic metadata (yaml only, no articles)  
 │   ├── categories.yaml  # Category definitions  
 │   ├── about.yaml       # About page content  
 │   └── resources.yaml   # Resources page content  
@@ -61,7 +62,7 @@ src/
 
 ### 🌍 Environment
 
-- **Node.js**: `^20.19.0` or `>=22.12.0`
+- **Node.js**: `>=23.6.0` (Node native type stripping runs `.ts` generators directly)
 
 ### 💻 Installation
 
@@ -176,7 +177,7 @@ File organization structure:
 ```
 src/content-src/  
 ├── categories.yaml          # Category definitions  
-├── notes/                   # Notes directory  
+├── notes/                   # Notes directory (only directory with markdown)  
 │   ├── category_identifier/  
 │   │   ├── subcategory/  
 │   │   │   └── article_name/
@@ -185,25 +186,9 @@ src/content-src/
 │   │       └── article_name/
 │   │           └── article_name.md  
 │   └── other_category/  
-├── projects/                # Projects directory  
-│   ├── project_identifier/  
-│   │   ├── subcategory/  
-│   │   │   └── article_name/
-│   │   │       └── article_name.md  
-│   │   └── other_subcategory/  
-│   │       └── article_name/
-│   │           └── article_name.md  
-│   └── other_project/  
-└── topics/                  # Topics directory  
-    ├── topic_identifier/  
-    │   ├── subcategory/  
-    │   │   └── article_name/
-    │   │       └── article_name.md  
-    │   └── other_subcategory/  
-    │       └── article_name/
-    │           └── article_name.md  
-    └── other_topic/  
 ```
+
+> Note: **projects and topics are metadata-only (yaml)** — defined in `categories.yaml` (fields like github/doi/url/language/license), with no markdown articles; their cards link out to GitHub / DOI directly.
 
 Workflow:
 

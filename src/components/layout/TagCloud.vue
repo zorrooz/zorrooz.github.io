@@ -1,16 +1,13 @@
 <!-- TagCloud.vue -->
 <template>
-  <div class="card shadow-sm border-0 mb-3" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-    <div class="card-header border-0 px-4 pt-3 pb-2" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-      <h6 class="m-0" :style="{ color: 'var(--app-text-muted)' }">{{ tagsText }}</h6>
+  <div class="tag-cloud-card">
+    <div class="tag-cloud-header">
+      <h6 class="m-0">{{ tagsText }}</h6>
     </div>
-    <div class="card-body px-4 pt-2 pb-3">
-      <div class="d-flex flex-wrap gap-2">
-        <span v-for="t in cloudTags" :key="t.name" class="badge tag-badge fw-normal py-1 px-2 rounded-3 cursor-pointer"
-          @click="goTag(t.name)">
-          # {{ t.name }}
-        </span>
-      </div>
+    <div class="tag-cloud-body">
+      <span v-for="t in cloudTags" :key="t.name" class="tag" @click="goTag(t.name)">
+        <i class="fas fa-hashtag"></i>{{ t.name }}
+      </span>
     </div>
   </div>
 </template>
@@ -51,13 +48,33 @@ function goTag(name: string) {
 </script>
 
 <style scoped>
-.card .badge {
-  font-size: 0.85rem;
-  font-weight: 500;
+.tag-cloud-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
-.tag-badge {
-  color: var(--app-tag-text) !important;
-  background-color: var(--app-tag-bg) !important;
+.tag-cloud-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+.tag-cloud-header {
+  padding: 1.25rem 1.5rem 0.5rem;
+}
+
+.tag-cloud-header h6 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.tag-cloud-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  padding: 0.5rem 1.5rem 1.25rem;
 }
 </style>

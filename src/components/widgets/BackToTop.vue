@@ -1,7 +1,7 @@
 <!-- BackToTop.vue -->
 <template>
   <button v-show="showBackToTop" class="back-to-top d-flex align-items-center justify-content-center"
-    @click="handleClick" aria-label="回到顶部" @touchstart.prevent.stop="handleTouchStart"
+    @click="handleClick" :aria-label="t('backToTop')" @touchstart.prevent.stop="handleTouchStart"
     @touchmove.prevent.stop="handleTouchMove" @touchend.prevent.stop="handleTouchEnd"
     :style="{ top: buttonTop + 'px' }">
     <i class="fas fa-arrow-up"></i>
@@ -10,6 +10,9 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const sourceId = 'btt'
 const rafPending = ref(false)
@@ -21,6 +24,8 @@ const startY = ref(0)
 const initialTop = ref(0)
 const buttonTop = ref((typeof window !== 'undefined' ? window.innerHeight : 1024) - 100)
 const touchMoved = ref(false)
+const scrollObserver = ref<IntersectionObserver | null>(null)
+const scrollSentinel = ref<HTMLDivElement | null>(null)
 
 function getBounds() {
   const BUTTON_HEIGHT = 40
@@ -52,14 +57,30 @@ function syncBaseTop(e: Event) {
   if (typeof base === 'number') buttonTop.value = clampTop(base)
 }
 
-function handleScroll() {
-  if (!isDragging.value) {
-    showBackToTop.value = window.scrollY > 180
-    if (showBackToTop.value) rafDispatchBaseTop(buttonTop.value)
-  }
+function setupScrollObserver() {
+  if (scrollObserver.value) return
+  const sentinel = document.createElement('div')
+  sentinel.style.cssText =
+    'position:absolute;left:0;top:0;width:1px;height:181px;pointer-events:none;visibility:hidden'
+  document.body.appendChild(sentinel)
+  scrollSentinel.value = sentinel
+
+  scrollObserver.value = new IntersectionObserver(
+    ([entry]) => {
+      showBackToTop.value = !entry.isIntersecting
+      if (showBackToTop.value) rafDispatchBaseTop(buttonTop.value)
+    },
+    { threshold: 0 }
+  )
+  scrollObserver.value.observe(sentinel)
 }
 
-function backToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) }
+function backToTop() {
+  const reduceMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
+}
 function handleClick() { if (!isDragging.value) backToTop() }
 function handleTouchStart(e: TouchEvent) {
   e.preventDefault(); isDragging.value = true; touchMoved.value = false; startY.value = e.touches[0].clientY; initialTop.value = buttonTop.value
@@ -75,15 +96,15 @@ function handleTouchMove(e: TouchEvent) {
 function handleTouchEnd(e: TouchEvent) { e.preventDefault(); isDragging.value = false; if (!touchMoved.value) backToTop() }
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
+  setupScrollObserver()
   window.addEventListener('floating-buttons-base-top', syncBaseTop)
-  handleScroll()
   buttonTop.value = window.innerHeight - 100
   rafDispatchBaseTop(buttonTop.value)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
+  if (scrollObserver.value) { scrollObserver.value.disconnect(); scrollObserver.value = null }
+  if (scrollSentinel.value) { scrollSentinel.value.remove(); scrollSentinel.value = null }
   window.removeEventListener('floating-buttons-base-top', syncBaseTop)
 })
 </script>
@@ -91,29 +112,32 @@ onBeforeUnmount(() => {
 <style scoped>
 .back-to-top {
   position: fixed;
-  right: 30px;
+  right: 28px;
   width: 40px;
   height: 40px;
-  background-color: var(--app-btn-bg);
-  color: var(--app-text);
-  border: 1px solid var(--app-border);
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  background-color: var(--surface);
+  color: var(--fg-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 13px;
   cursor: pointer;
-  box-shadow: var(--app-btn-shadow);
+  box-shadow: var(--shadow-soft);
   z-index: 1000;
   outline: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
+  transition: background-color 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease,
+    color 0.14s ease, border-color 0.14s ease;
 }
 
 .back-to-top:hover {
-  background-color: var(--app-btn-hover-bg);
-  box-shadow: var(--app-btn-hover-shadow);
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-color: transparent;
+  box-shadow: var(--shadow-lift);
 }
 
 .back-to-top:active {
-  transform: scale(0.95);
+  transform: scale(0.93);
 }
 </style>

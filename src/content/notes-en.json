@@ -1,163 +1,210 @@
 [
   {
-    "title": "Markdown & LaTeX Formula Rendering Demo",
-    "date": "2026-07-10",
+    "title": "Mainstream Tools for Protein Design",
+    "date": "2026-08-04",
     "tags": [
-      "Markdown",
-      "LaTeX",
-      "KaTeX",
-      "Math",
-      "Bioinformatics"
+      "Protein Design",
+      "Rosetta",
+      "AlphaFold",
+      "RFdiffusion",
+      "Computational Biology"
     ],
     "draft": false,
-    "description": "Demo of Markdown rendering and KaTeX math formula support",
-    "relativePath": "Programming/python/markdown-demo/markdown-demo-en",
-    "wordCount": 293,
+    "description": "A panorama of protein design tools: Rosetta energy optimization, AlphaFold structure prediction, RFdiffusion generative design, ESMFold fast prediction, and binder design workflow",
+    "relativePath": "ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en",
+    "wordCount": 618,
     "tagCount": 5
   },
   {
-    "title": "Bash Shell Scripting",
-    "date": "2026-07-06",
+    "title": "Mainstream Tools for Virtual Screening",
+    "date": "2026-08-04",
     "tags": [
-      "Shell",
+      "Virtual Screening",
+      "Molecular Docking",
+      "AutoDock Vina",
+      "Computational Biology"
+    ],
+    "draft": false,
+    "description": "A comprehensive overview of virtual screening tools: docking software such as AutoDock Vina, Glide, and DOCK, receptor/ligand preparation, scoring functions, high-throughput screening workflows, and validation strategies",
+    "relativePath": "ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en",
+    "wordCount": 593,
+    "tagCount": 4
+  },
+  {
+    "title": "Bash Programming: Variables, Conditionals, Loops, and Practical Scripts",
+    "date": "2026-08-04",
+    "tags": [
       "Bash",
-      "Command Line",
+      "Shell",
       "Scripting",
-      "Automation"
+      "Tutorial"
     ],
     "draft": false,
-    "description": "Automation Applications of Bash Shell Scripting in Bioinformatics Data Processing",
-    "relativePath": "Programming/shell/bash/bash-en",
-    "wordCount": 48,
+    "description": "A complete Bash scripting tutorial: variables and parameters, conditional statements, loops, functions, arrays, and string processing, with practical scripts for batch processing and bioinformatics",
+    "relativePath": "Programming/bash/bash-scripting/bash-scripting-en",
+    "wordCount": 185,
+    "tagCount": 4
+  },
+  {
+    "title": "Linux Command Line Basics: File System, Permissions, and Text Processing",
+    "date": "2026-08-04",
+    "tags": [
+      "Linux",
+      "Command Line",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "Core skills for the Linux command line: file system navigation, file operations, permission management, the three musketeers of text processing (grep/sed/awk), and process management",
+    "relativePath": "Programming/linux/linux-basics/linux-basics-en",
+    "wordCount": 238,
+    "tagCount": 3
+  },
+  {
+    "title": "Python Advanced: Functions, Classes, and Modules",
+    "date": "2026-08-04",
+    "tags": [
+      "Python",
+      "Advanced",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "Deep dive into Python functional and object-oriented programming: parameter passing, lambda, decorators, classes and inheritance, exception handling, modules and packages",
+    "relativePath": "Programming/python/python-advanced/python-advanced-en",
+    "wordCount": 244,
+    "tagCount": 3
+  },
+  {
+    "title": "Introduction to Python Programming: Environment, Syntax, and Data Types",
+    "date": "2026-08-04",
+    "tags": [
+      "Python",
+      "Getting Started",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "Learn Python from scratch: environment setup, basic syntax, built-in data types, and control flow, with runnable example code.",
+    "relativePath": "Programming/python/python-basics/python-basics-en",
+    "wordCount": 333,
+    "tagCount": 3
+  },
+  {
+    "title": "Python Data Processing in Practice: File IO, Regex, and NumPy/Pandas",
+    "date": "2026-08-04",
+    "tags": [
+      "Python",
+      "NumPy",
+      "Pandas",
+      "Data Processing",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "A complete practical tutorial on file I/O, regular expressions, and the scientific computing stack (NumPy/Pandas), covering common data scenarios in bioinformatics",
+    "relativePath": "Programming/python/python-data/python-data-en",
+    "wordCount": 314,
     "tagCount": 5
   },
   {
-    "title": "R Language ggplot2 Data Visualization",
-    "date": "2026-07-05",
+    "title": "R Language Primer: Data Structures, Vectorization, and Functions",
+    "date": "2026-08-04",
+    "tags": [
+      "R Language",
+      "Getting Started",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "Core R fundamentals: environment setup, vectors/matrices/data frames/lists, vectorized operations, control flow, and function definitions",
+    "relativePath": "Programming/r/r-basics/r-basics-en",
+    "wordCount": 256,
+    "tagCount": 3
+  },
+  {
+    "title": "R ggplot2 Data Visualization: Grammar of Graphics and Common Charts",
+    "date": "2026-08-04",
     "tags": [
       "R Language",
       "ggplot2",
       "Data Visualization",
-      "Bioinformatics"
+      "Tutorial"
     ],
     "draft": false,
-    "description": "Application of ggplot2 in Bioinformatics Data Visualization",
-    "relativePath": "Programming/r/ggplot2/ggplot2-en",
-    "wordCount": 74,
+    "description": "Introduction to the ggplot2 Grammar of Graphics: scatter plots, boxplots, histograms, bar charts, and theme customization for publication-ready figures",
+    "relativePath": "Programming/r/r-ggplot2/r-ggplot2-en",
+    "wordCount": 157,
     "tagCount": 4
   },
   {
-    "title": "R Language Data Processing Example",
-    "date": "2026-07-04",
+    "title": "R tidyverse Data Manipulation: dplyr Pipelines and Data Cleaning",
+    "date": "2026-08-04",
     "tags": [
       "R Language",
+      "tidyverse",
+      "dplyr",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "Chain dplyr verbs (filter/select/mutate/group_by/summarise/join) with pipes, and use tidyr to complete a full data cleaning workflow.",
+    "relativePath": "Programming/r/r-tidyverse/r-tidyverse-en",
+    "wordCount": 245,
+    "tagCount": 4
+  },
+  {
+    "title": "Review of Cryo-EM Technology",
+    "date": "2026-08-04",
+    "tags": [
+      "Cryo-Electron Microscopy",
+      "cryo-EM",
+      "Review"
+    ],
+    "draft": false,
+    "description": "The technological revolution of single-particle cryo-EM: direct electron detectors, the stability revolution, and the advent of the AI era, along with the future landscape of structural biology",
+    "relativePath": "StructuralBiology/cryoem/cryoem-overview/cryoem-overview-en",
+    "wordCount": 977,
+    "tagCount": 3
+  },
+  {
+    "title": "Cryo-EM Single Particle Analysis: Full Data Processing Workflow",
+    "date": "2026-08-04",
+    "tags": [
+      "Cryo-Electron Microscopy",
+      "cryo-EM",
       "Data Processing",
-      "Statistical Analysis",
-      "Data Visualization",
-      "Bioinformatics"
+      "RELION"
     ],
     "draft": false,
-    "description": "Demonstrating basic applications of R language in bioinformatics data processing",
-    "relativePath": "Programming/r/demo/demo-en",
-    "wordCount": 14,
+    "description": "From micrographs to atomic models: the complete workflow of cryo-EM single particle analysis (SPA), covering preprocessing, particle picking, 2D/3D classification, refinement, and resolution assessment",
+    "relativePath": "StructuralBiology/cryoem/cryoem-workflow/cryoem-workflow-en",
+    "wordCount": 765,
+    "tagCount": 4
+  },
+  {
+    "title": "Atomic Modeling and Refinement",
+    "date": "2026-08-04",
+    "tags": [
+      "Atomic Modeling",
+      "Coot",
+      "phenix",
+      "Structure Refinement",
+      "Tutorial"
+    ],
+    "draft": false,
+    "description": "Complete workflow for atomic model building and refinement from cryo-EM density maps: automatic modeling, Coot manual correction, phenix refinement, model quality assessment metrics",
+    "relativePath": "StructuralBiology/modeling/atomic-modeling/atomic-modeling-en",
+    "wordCount": 566,
     "tagCount": 5
   },
   {
-    "title": "Python Pandas Data Processing in Practice",
-    "date": "2026-07-03",
+    "title": "Biomacromolecular Structure Visualization: PyMOL and ChimeraX in Practice",
+    "date": "2026-08-04",
     "tags": [
-      "Python",
-      "Pandas",
-      "Data Processing",
-      "Analysis",
-      "Data Cleaning"
+      "Structure Visualization",
+      "PyMOL",
+      "ChimeraX",
+      "Tutorial"
     ],
     "draft": false,
-    "description": "Common operations and techniques of the Pandas library in bioinformatics data processing",
-    "relativePath": "Programming/python/pandas/pandas-en",
-    "wordCount": 64,
-    "tagCount": 5
-  },
-  {
-    "title": "Processing FASTQ Quality Statistics with Pandas",
-    "date": "2026-07-02",
-    "tags": [
-      "Python",
-      "Pandas",
-      "FASTQ",
-      "Data Cleaning",
-      "Bioinformatics",
-      "Beginner"
-    ],
-    "draft": false,
-    "description": "Demonstrates how to quickly analyze sequencing data quality reports using Python Pandas.",
-    "relativePath": "Programming/python/fastq/fastq-en",
-    "wordCount": 13,
-    "tagCount": 6
-  },
-  {
-    "title": "Biopython Bioinformatics Applications",
-    "date": "2026-07-01",
-    "tags": [
-      "Python",
-      "Biopython",
-      "Bioinformatics",
-      "Sequence Analysis",
-      "Genomics"
-    ],
-    "draft": false,
-    "description": "Applications of the Biopython library in sequence analysis and genomic data processing",
-    "relativePath": "Programming/python/biopython/biopython-en",
-    "wordCount": 43,
-    "tagCount": 5
-  },
-  {
-    "title": "RNA-Seq Analysis: HISAT2 Alignment Workflow",
-    "date": "2026-06-21",
-    "tags": [
-      "RNA-Seq",
-      "HISAT2",
-      "Transcriptome",
-      "Alignment",
-      "Bioinformatics"
-    ],
-    "draft": false,
-    "description": "Standard workflow for aligning RNA-Seq data using HISAT2",
-    "relativePath": "Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en",
-    "wordCount": 51,
-    "tagCount": 5
-  },
-  {
-    "title": "MaxQuant Proteomics Analysis Workflow",
-    "date": "2026-06-20",
-    "tags": [
-      "MaxQuant",
-      "Proteomics",
-      "Mass Spectrometry",
-      "Bioinformatics",
-      "Quantitative Analysis"
-    ],
-    "draft": false,
-    "description": "Detailed documentation of standard procedures and parameter settings for MaxQuant in proteomics data analysis",
-    "relativePath": "Omics/proteomics/maxquant/maxquant-en",
-    "wordCount": 63,
-    "tagCount": 5
-  },
-  {
-    "title": "BWA MEM Alignment to Human Genome in Practice",
-    "date": "2026-06-19",
-    "tags": [
-      "BWA",
-      "Alignment",
-      "NGS",
-      "Command Line",
-      "Human Genome",
-      "SAM/BAM"
-    ],
-    "draft": false,
-    "description": "Documenting the standard workflow and parameter tuning for BWA MEM in human WGS data",
-    "relativePath": "Omics/genomics/bwa/bwa-en",
-    "wordCount": 175,
-    "tagCount": 6
+    "description": "Visualizing protein/nucleic acid structures with PyMOL and UCSF ChimeraX: PDB data retrieval, rendering modes, script batch processing, and cryo-EM density map display",
+    "relativePath": "StructuralBiology/visualization/structure-visualization/structure-visualization-en",
+    "wordCount": 362,
+    "tagCount": 4
   }
 ]

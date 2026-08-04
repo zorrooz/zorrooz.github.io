@@ -10,7 +10,7 @@
     <div class="offcanvas-panel offcanvas-right border-start rounded-0 shadow-sm">
       <div class="offcanvas-section">
         <div class="offcanvas-card">
-          <OnThisPage containerSelector=".markdown-body" :levels="[2, 3]" :offset="8" @navigate="onNavigate" />
+          <OnThisPage containerSelector=".markdown-body" :levels="[2, 3]" :offset="88" @navigate="onNavigate" />
         </div>
       </div>
     </div>
@@ -75,13 +75,6 @@ function onResize() {
   const isMobile = window.innerWidth < 992
   visible.value = isMobile
   buttonTop.value = clampTop(buttonTop.value)
-}
-
-function onScroll() {
-  if (!isDragging.value) {
-    const isMobile = window.innerWidth < 992
-    visible.value = isMobile
-  }
 }
 
 function openDrawer() {
@@ -165,16 +158,14 @@ function unlockScroll() {
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', onResize, { passive: true })
   window.addEventListener('floating-buttons-base-top', syncBaseTop)
-  onResize(); onScroll()
+  onResize()
   const GAP = 48
   rafDispatchBaseTop(buttonTop.value + GAP)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScroll)
   window.removeEventListener('resize', onResize)
   window.removeEventListener('floating-buttons-base-top', syncBaseTop)
   unlockScroll()
@@ -184,30 +175,33 @@ onBeforeUnmount(() => {
 <style scoped>
 .toc-drawer-btn {
   position: fixed;
-  right: 30px;
+  right: 28px;
   width: 40px;
   height: 40px;
-  background-color: var(--app-btn-bg);
-  color: var(--app-text);
-  border: 1px solid var(--app-border);
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  background-color: var(--surface);
+  color: var(--fg-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: var(--app-btn-shadow);
+  box-shadow: var(--shadow-soft);
   z-index: 1000;
   outline: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
+  transition: background-color 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease,
+    color 0.14s ease, border-color 0.14s ease;
 }
 
 .toc-drawer-btn:hover {
-  background-color: var(--app-btn-hover-bg);
-  box-shadow: var(--app-btn-hover-shadow);
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-color: transparent;
+  box-shadow: var(--shadow-lift);
 }
 
 .toc-drawer-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.93);
 }
 
 .mobile-offcanvas {
@@ -227,12 +221,13 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: min(85vw, 320px);
-  background: var(--app-offcanvas-bg);
-  box-shadow: var(--app-offcanvas-shadow);
+  width: min(82vw, 300px);
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow-lift);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0.75rem 0.75rem 1rem;
+  padding: 1rem 0.75rem 1.5rem;
   z-index: 2;
 }
 
@@ -240,22 +235,15 @@ onBeforeUnmount(() => {
   right: 0;
 }
 
-.offcanvas-section+.offcanvas-section {
+.offcanvas-section + .offcanvas-section {
   margin-top: 0.75rem;
 }
 
-.section-title {
-  font-size: 0.95rem;
-  color: var(--app-text-muted);
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-}
-
 .offcanvas-card {
-  background-color: var(--app-card-bg);
-  border: none;
-  border-radius: 0.5rem;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   padding: 0.5rem;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 </style>

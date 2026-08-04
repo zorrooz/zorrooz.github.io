@@ -1,6 +1,6 @@
 # AGENTS.md — gblog
 
-A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown + YAML source files are processed at build-time into JSON metadata, loaded by a Vue SPA at runtime. Bilingual (zh-CN / en-US), theme switching, GitHub Pages deployment.
+A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown + YAML source files are processed at build-time into JSON metadata, loaded by a Vue SPA at runtime. Bilingual (zh-CN / en-US), GitHub Pages deployment.
 
 ## Quick Start
 
@@ -21,10 +21,7 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 
 | 文档 | 说明 |
 |------|------|
-| `docs/modernization-plan.md` | **架构现代化执行计划**（Phase 0-6 分阶段执行；每阶段完成需更新其状态表） |
 | `.qoder/repowiki/` | **代码索引（Qoder 生成）**：项目 Wiki 文档树，按需加载上下文 |
-
-**注意**：架构改造期间（Phase 0-6 进行中），下文 Architecture 描述的是现状基线；涉及改造的文件与命令以 `docs/modernization-plan.md` 为准，每阶段完成后同步更新本文件。
 
 ### Repowiki 代码索引（按需加载）
 
@@ -35,7 +32,7 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 ├── knowledge/zh/_index.yaml        # 模块索引（modules: name → scope 文件清单/子模块）
 ├── knowledge/zh/<模块>/_module.yaml# 模块元数据（scope、依赖、关联）
 ├── knowledge/zh/<模块>/*.md        # 模块知识卡：概览 / 架构设计 / 技术栈 / 应用结构 / 开发规范
-├── zh/content/                     # 完整文档树：架构、内容系统、样式、指南、API 参考等
+├── zh/content/                     # 完整文档树：架构、内容系统、指南、API 参考等
 └── zh/meta/repowiki-metadata.json  # 文档间关系（parent-child 等）
 ```
 
@@ -53,51 +50,47 @@ src/
 ├── App.vue                   # <AppHeader> + <router-view> + <AppFooter>
 ├── router/index.ts           # 5 hash-mode routes
 ├── stores/
-│   ├── app.ts                # Pinia: theme + locale state
+│   ├── app.ts                # Pinia: app state
 │   ├── i18n.ts               # vue-i18n (zh-CN / en-US)
 │   ├── locales/{zh-CN,en-US}.ts
-│   └── styles/global.scss    # Bootstrap SCSS + CSS custom properties
 ├── views/
-│   ├── Home.vue              # ProfileCard + TagCloud + PostList
+│   ├── Home.vue              # hero（greeting + name + stats）+ TagCloud + PostList
 │   ├── Category.vue          # Notes/Projects/Topics cards with stats
-│   ├── Resource.vue          # Hierarchical resource catalog
-│   ├── About.vue             # Timeline + sections + contacts
+│   ├── Resource.vue          # Hierarchical resource catalog（侧栏 + 卡片）
+│   ├── About.vue             # 头部（左介绍 + 右名片） + stats + 时间线 + sections
 │   └── Article.vue           # NavigationTree + RenderMarkdown + OnThisPage
 ├── components/
-│   ├── layout/               # AppHeader, AppFooter, PostList, ProfileCard, etc.
-│   └── widgets/              # BackToTop, TocDrawer
+│   ├── layout/               # AppHeader, AppFooter, PostList, TagCloud, RenderMarkdown, etc.
+│   └── widgets/              # BackToTop, SearchModal, TocDrawer
 ├── content/                  # GENERATED JSON (do not edit)
 ├── content-src/              # SOURCE: YAML + Markdown (edit here)
 │   ├── {categories,about,resources}.yaml
 │   ├── notes/                # articles under category/subcategory/
-│   ├── projects/
-│   └── topics/
 ├── utils/
 │   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD
 │   ├── markdownProcessor.ts  # unified pipeline: remark → rehype
+│   ├── reveal.ts             # IntersectionObserver 滚动显现
 │   ├── runAllGenerators.ts   # Build orchestration
 │   ├── generators/           # 8 build-time Node.js scripts (.ts, run via Node type stripping)
 │   └── translator/           # AI translation via DeepSeek API
 ├── config/
 │   └── llmConfig.ts           # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
 └── assets/
-    ├── fonts/                # Agave-Regular, SourceHanSansSC
-    └── icons/                # gblog.svg, theme/lang toggle PNGs
+    ├── fonts/                # 完整字体 OTF（思源宋体×2、思源黑体、Agave）
+    ├── styles/               # global.scss
+    └── avatar.*              # 关于页头像（任意格式，存在即自动使用）
 ```
 
 ## Framework
 
 | Layer | Tech |
 |-------|------|
-| UI | Vue 3 Composition API (`<script>`, Options API mix) |
+| Vue | Vue 3 Composition API (`<script>`, Options API mix) |
 | Build | Vite 7 (ESM, `"type": "module"`) |
 | State | Pinia |
 | Routing | Vue Router 4, hash mode (`createWebHashHistory`) |
 | i18n | vue-i18n (locale in localStorage) |
-| Styling | Bootstrap 5 SCSS + CSS custom properties |
 | Markdown | unified → remark-parse → remark-gfm → remark-breaks → remark-math → remark-rehype → rehype-highlight → rehype-katex → rehype-stringify |
-| Highlight | highlight.js (CDN, theme per `data-bs-theme`) |
-| Icons | Font Awesome 6.4 (CDN in index.html) |
 | Deployment | gh-pages |
 | Node | `>=23.6.0`（Node 原生 type stripping 直跑 `.ts` 脚本，最低 22.6 需 `--experimental-strip-types`） |
 
@@ -105,24 +98,33 @@ src/
 
 ```
 1. generateNotes     — reads content-src/notes/**/*.md → notes.json
-2. generateProjects  — reads content-src/projects/**/*.md → projects.json
-3. generateTopics    — reads content-src/topics/**/*.md → topics.json
+2. generateProjects  — reads `projects` section of categories.yaml → projects.json
+3. generateTopics    — reads `topics` section of categories.yaml → topics.json
 4. generateCategories— YAML + notes/projects/topics → categories.json
 5. generatePosts     — notes.json + categories.json → posts.json
 6. generateTags      — posts.json → tags.json
 (1-6 for zh-CN, then repeat for en-US)
+
+4.5 incremental translate — 内容 hash 增量翻译（仅缺失/变化的 zh 源 → -en 文件；tag 经 zh→en 映射查表翻译；GBLOG_NO_TRANSLATE=1 关闭）
+4.6 tagMerger mapping     — ensureTagTranslation 增量补齐 zh→en 标签映射（缓存于 tag-mapping.json，命中 0 token）
+4.7 tag consistency fix   — 以 zh 文件为基准自动重写 -en 文件 tags（解决中英标签数量/名称不一致，失败仅告警）
+8.5 tags-consistency check— 构建产物级中英标签一致性校验（输出 [OK]/[Warn]）
 
 generateAbout and generateResources run independently at import time in runAllGenerators.ts.
 ```
 
 ## Content Source Organization
 
+**只有 notes 有 markdown 文章**；projects/topics 为纯 yaml 元数据（无 md 文件、无文章页，卡片外链到 GitHub/DOI）。
+
 ```
-content-src/{notes|projects|topics}/<category>/<subcategory>/<article-dir>/<article-dir>.md
+content-src/notes/<category>/<subcategory>/<article-dir>/<article-dir>.md
 ```
 
-- Directory name under `notes/`/`projects/`/`topics/` must match a `name` field in `categories.yaml`.
-- No YAML frontmatter in .md — metadata is in `categories.yaml`.
+- notes 目录名必须匹配 `categories.yaml` 中 `notes` 段的 `name` 字段。
+- 每篇文章 md 自带 **YAML frontmatter**：`title` / `date` / `author` / `tags` / `draft` / `description`（zh/en 各自文件分别定义）
+- `categories.yaml` 定义分类层级（`name`/`title`/`desc`/`categories` 子分类映射）；projects/topics 的全部元数据（`github`/`doi`/`url`/`status`/`language`/`license`/`journal`/`year`/`authors` 等）也在此定义
+- **中英 frontmatter `tags` 必须一一对应**（同一篇文章 zh/en 标签数量与语义对称），否则 TagCloud 双语标签数不一致（如 zh `Shell` / en 误写 `Shell`+`Bash`）
 
 ### URL Mapping
 
@@ -132,18 +134,12 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 
 ## Internationalization (Dual Layer)
 
-**Layer 1 — UI:** `src/stores/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
+**Layer 1 — App:** `src/stores/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
 
 **Layer 2 — Content:** `-en` suffix pattern:
 - Chinese: `article.md`, `categories.json`
 - English: `article-en.md`, `categories-en.json`
 - Auto-fallback in `contentLoader.ts`: if English file missing, loads Chinese.
-
-## Theme System
-
-Three modes cycle: `auto` → `light` → `dark`. Persisted in `localStorage.theme`.
-Mechanism: `document.documentElement.setAttribute('data-bs-theme', mode)`
-CSS custom properties in `global.scss` for both themes. Highlight.js theme swapped via MutationObserver.
 
 ## Key Conventions
 
@@ -163,7 +159,7 @@ CSS custom properties in `global.scss` for both themes. Highlight.js theme swapp
 - **Topics** (课题): research case studies, DOI-linked
 
 ### Adding Content
-1. Create directory under `content-src/{notes|projects|topics}/`
+1. Create directory under `content-src/notes/`
 2. Create `.md` file
 3. Add category in `categories.yaml`
 4. Run `npm run prebuild`
@@ -173,6 +169,123 @@ CSS custom properties in `global.scss` for both themes. Highlight.js theme swapp
 - `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`
 - `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string
 - `appStore`: `toggleTheme()`, `toggleLanguage()`, `initTheme()`, `initLocale()`
+
+## Layout & Shape Conventions（布局与形状规则）
+
+### 内容宽度
+
+- 内容页（首页/分类/资源/关于）：`.page-section` max-width **1120px**，左右 padding 48px（`<992px` 32px，`<768px` 20px）
+- 文章页：Bootstrap `container` max-width **1280px**，正文 `.article-content` max-width 820px 居中，左右 sidebar 各约 220px
+- **移动端水平边距全局统一 20px**（header / footer / 内容页 / 文章页 gutter），不得各页面自定
+- **显示缩放断点**：`<1200px`（含 175% 缩放等效视口）header `.container` 放宽为 `max-width: 100%` 贴边；footer 在大缩放下内容居中排列
+- 原因：文章页需容纳三栏（导航/正文/TOC）故放宽；其余页面单栏 1120px 保证行宽
+
+### 圆角分层（controls 6 / buttons 8 / cards 12 / panels 16 / pills full）
+
+| 层级 | 值 | 用途 |
+|------|-----|------|
+| `--radius-sm` 6px | 树形导航项、输入框、kbd、search-result | 小控件 |
+| `--radius-btn` 8px | 文本/数字按钮（page-btn、icon-btn、chip-close） | 按钮 |
+| `--radius` 12px | 卡片（cat-card、res-card、offcanvas-card、post 卡片） | 容器 |
+| `--radius-lg` 16px | 大面板（search-panel）、头像块 | 强调容器 |
+| `--radius-pill` 9999px | 标签 pill、圆形图标按钮 | 全圆角 |
+
+**规则**：圆形（`border-radius: 50%`）仅用于图标操作按钮（footer 外链、BackToTop、TocDrawer、cat-card/res-card 外链、page-btn--nav）；方形按钮一律 8px。同一容器内不可混用两种按钮形状。
+
+### 页面 header 模式
+
+- **列表页标题**（首页 posts-header、分类页 section header）：26px serif `section-title` + 左侧 3px 蓝色 indicator（或 tint 图标块）+ hairline 下边框
+- **页面级 H1**（分类/资源/关于页头、文章标题）：`article-title` 风格（clamp(32-46px) serif）
+- 规则：一页只出现一种 header 组合；列表分组标题用「小号大写标签 + hairline」或「带 indicator 的 section-title」，不重复堆叠 H1 样式
+
+### 字体
+
+思源宋体（标题）、思源黑体（时间线中文/代码块中文注释）与 Agave（等宽）均以**完整字体文件**直接引用（`src/assets/fonts/*.otf`，`@font-face` + `font-display: swap`），**无子集化、无任何构建脚本**。新增内容不影响字体渲染。
+
+### 图标
+
+- **操作图标**（header search/theme/language/menu、复制按钮）：内联 stroke SVG——`viewBox 24`、`stroke-width 1.75`、`fill none`、`stroke currentColor`、渲染 18px，颜色随 `--fg-3` → hover `--primary` 自动变化。**禁止 PNG 位图图标**。
+- **内容/装饰图标**（footer 外链、时间线、section 卡片）：FontAwesome（`fa-solid` / `fa-brands`），类名由数据驱动（`about.yaml` 的 `icon` 字段、页面模板硬编码类名），不依赖任何本地图标文件。
+
+### 品牌与头像
+
+- 品牌为**文字 Logo**：`zorrooz's blog`（`.app-nav__brand`，`--font-serif` 宋体），无图形 logo、无 favicon 文件。
+- 关于页头像：`src/assets/avatar.*`（任意图片格式），`About.vue` 通过 `import.meta.glob('../../assets/avatar.*')` 自动接入（有图用图、无图回退字母 monogram）；头像框为**黑色线框**（`1.5px solid var(--ink)`，无底色）。
+
+### 复制功能
+
+- **复制文章**：Article.vue 头部按钮，克隆 `.markdown-body` 清理辅助元素后取 `innerText`（标题 + 正文纯文本）。
+- **复制表格**：RenderMarkdown 对每个 `<table>` 包 `.table-block-wrapper` + header + 复制按钮，复制为 **TSV**（`\t` 连接单元格，可直接粘贴 Excel）。
+
+## Color System — 三色映射规范
+
+gblog 仅用 **3 色族**：蓝色（主色）、灰色（中性色）、黑/白（基底）。所有语义 token 必须从这三族派生，禁止硬编码 rgba。
+
+### 色板
+
+| Token | 亮色值 | 暗色值 | 用途 |
+|-------|--------|--------|------|
+| `blue-600` | `#3b82f6` | `#6cb2ff` | **主色**：链接、active、按钮、焦点环、进度条 |
+| `blue-500` | `#5aa0f8` | `#4d9fff` | 辅助蓝：选中背景、轻量强调（非交互主色） |
+| `blue-200` | `#e6f1ff` | `#1e3352` | 强 tint：hover 背景加深 |
+| `blue-100` | `#f2f8ff` | `#16263d` | 弱 tint：标签/卡片 hover 底、selection 底 |
+| `gray-50` | `#f5f6f8` | `#1a202b` | surface-2：次级表面、灰底 |
+| `gray-100` | `#e4e7ec` | `#232936` | 分割线 |
+| `gray-200` | `#d0d5dd` | `#323a4a` | 强分割线、序号 |
+| `gray-400` | `#6f7684` | `#8e96a6` | 弱文字（meta、caption） |
+| `gray-500` | `#4d5563` | `#a2a9b8` | 次文字 |
+| `ink` | `#16191f` | `#e7e9ee` | 正文/标题（近黑/近白） |
+
+### 语义映射规则
+
+```
+--primary        = blue-600   (#3b82f6)   主交互色（链接、active、按钮填充）
+--primary-hover  = blue-700   (#2563eb)   hover 加深（比 primary 暗一档）
+--primary-active = blue-800   (#1d4ed8)   active/click 最暗
+--primary-light  = blue-500   (#5aa0f8)   轻量强调（选中背景、非核心高亮）
+--tint           = blue-100   浅底（hover 背景、tag 底、selection 底）
+--tint-strong    = blue-200   中浅底（hover 背景加深）
+```
+
+### 映射禁忌
+
+1. **主色反转**：`--primary` 必须是最深的交互蓝（blue-600），不能是浅蓝（blue-500）。hover 在 primary 基础上再暗一档。
+2. **硬编码 rgba**：禁止 `rgba(90, 160, 248, x)` 或 `rgba(59, 130, 246, x)`，必须用 `var(--primary)` + opacity 或 `color-mix()`。
+3. **灰色跳跃**：灰色 scale 必须等距递进（50→100→200→400→500），不能跳级。
+4. **暗色 primary 亮度反转**：暗色模式下 primary 仍是最亮蓝（blue-600 = `#6cb2ff`），hover 更亮（`#93c5fd`），保持「hover = 更强」语义。
+
+### 组件颜色分配
+
+| 组件区域 | 颜色 Token | 说明 |
+|----------|-----------|------|
+| 正文/标题 | `--fg`（ink） | 最高对比 |
+| 次要文字 | `--fg-2`（gray-500） | 描述、摘要 |
+| 弱文字/meta | `--fg-3`（gray-400） | 日期、分类、caption |
+| 链接默认 | `--primary`（blue-600） | 正文内链 |
+| 链接 hover | `--primary-hover` | 加深一档 |
+| Active 导航 | `--primary` + `font-weight: 600` | 当前页高亮 |
+| 按钮填充 | `--primary` | CTA、分页 active |
+| 按钮 hover | `--primary-hover` | 深一档 |
+| 标签默认 | `--surface-2` + `--fg-2` | 灰底灰字 |
+| 标签 hover | `--tint` + `--primary` | 蓝底蓝字 |
+| 卡片边框 | `--line`（gray-100） | 默认分割 |
+| 卡片 hover 边框 | `rgba(var(--primary), 0.3)` | 蓝色微光 |
+| 分割线 | `--line` | hairline |
+| 表面背景 | `--surface`（白/`#141821`） | 卡片、面板底 |
+| 次级表面 | `--surface-2`（gray-50） | 灰底区域 |
+| 代码行内 | `--primary-light`（blue-500） | `color` 属性 |
+| 代码块背景 | `--app-markdown-code-bg` | 灰底 |
+| 引用块边框 | `--primary`（3px left border） | 标识性 |
+| 焦点环 | `--primary`（2px outline） | 无障碍 |
+| 选中背景 | `--tint`（blue-100 + 16% opacity） | 文字选中 |
+
+### 添加新组件时
+
+1. 文字色：优先用 `--fg` / `--fg-2` / `--fg-3`，不自造色值
+2. 交互色：链接/按钮/active 一律用 `--primary`
+3. 背景层次：`--surface` → `--surface-2` → `--tint`，三级递进
+4. 边框：`--line`（默认） → `--line-strong`（强调）
+5. hover 效果：边框用 `rgba(color, 0.3)`，背景用 `--tint`
 
 ## ESLint / Prettier
 - Flat config (`eslint.config.js`) with Vue + Prettier

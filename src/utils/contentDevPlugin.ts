@@ -15,7 +15,7 @@ const contentSrcDir = path.resolve(import.meta.dirname, '../content-src')
 export function contentDev(): Plugin {
   let timer: ReturnType<typeof setTimeout> | null = null
   return {
-    name: 'gblog:content-dev',
+    name: 'zorrooz:content-dev',
     apply: 'serve',
     async configureServer(server: ViteDevServer) {
       const run = async (label: string) => {
@@ -30,7 +30,12 @@ export function contentDev(): Plugin {
 
       await run('startup')
 
-      const watcher = watch(contentSrcDir, { ignoreInitial: true })
+      // 忽略翻译器产物（*-en.md / *-en.yaml / 翻译状态文件）：
+      // 否则翻译写入会再次触发重建，形成「翻译→触发→翻译」循环
+      const watcher = watch(contentSrcDir, {
+        ignoreInitial: true,
+        ignored: /(?:^|[\\/])(?:[^\\/]*?-en\.(?:md|ya?ml)|\.translate-state\.json)$/i,
+      })
       watcher.on('all', (event) => {
         if (timer) clearTimeout(timer)
         timer = setTimeout(() => {

@@ -1,103 +1,51 @@
 <!-- Category.vue -->
 <template>
-  <div class="container py-4 px-3 view-container category-view">
-    <div class="row justify-content-center">
-      <div class="col-lg-10 col-xl-8 typography-body">
-        <div class="text-center mb-4">
-          <h1 class="article-title mb-3">{{ pageTitle }}</h1>
-        </div>
+  <div class="page-section category-view">
+    <div class="category-head">
+      <h1 class="article-title">{{ pageTitle }}</h1>
+    </div>
 
-        <div class="d-flex flex-column" style="gap: 2rem;">
-          <section v-for="(category, index) in categoryList" :key="index">
-            <h2 class="h4 fw-semibold pb-2 mb-3 heading-underline" style="color: var(--app-text-emphasis);">
-              {{ category.title }}
-            </h2>
+    <div v-for="(category, index) in categoryList" :key="index" class="cat-section">
+      <div class="cat-section__header">
+        <h2 class="cat-section__title">
+          <i :class="['fas', sectionIcon(category.title)]" class="cat-section__icon" aria-hidden="true"></i>
+          {{ category.title }}
+        </h2>
+        <span class="cat-section__count">{{ sectionCount(category) }}</span>
+      </div>
 
-            <div class="row g-3">
-              <div v-for="(item, idx) in category.items" :key="idx" class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0" :style="{ backgroundColor: 'var(--app-card-bg)' }">
-                  <div class="card-body p-4 d-flex flex-column">
-                    <h3 class="h5 fw-semibold mb-1" :style="{ color: 'var(--app-text-emphasis)' }">
-                      {{ item.title || item.name }}
-                    </h3>
-                    <div v-if="getLatestDate(item)" class="d-inline-flex align-items-center gap-2 mb-2">
-                      <i class="fas fa-calendar-alt meta-icon"></i>
-                      <small class="meta-text" :style="{ color: 'var(--app-text-muted)' }">{{
-                        formatMonth(getLatestDate(item)) }}</small>
-                      <a v-if="category.title === projectsTitle && item.github" :href="normalizeUrl(item.github)"
-                        target="_blank" rel="noopener noreferrer" class="icon-link" title="GitHub" @click.stop>
-                        <i class="fab fa-github"></i>
-                      </a>
-                      <a v-else-if="category.title === topicsTitle && item.doi" :href="normalizeDoi(item.doi)"
-                        target="_blank" rel="noopener noreferrer" class="icon-link" title="DOI" @click.stop>
-                        <i class="fas fa-link"></i>
-                      </a>
-                    </div>
-
-                    <p class="mb-2 flex-grow-1 desc-text" :style="{ color: 'var(--app-text-secondary)' }">
-                      {{ item.desc }}
-                    </p>
-
-                    <div v-if="category.title === projectsTitle"
-                      class="d-flex flex-wrap align-items-center gap-2 mb-2 meta-row">
-                      <span v-if="item.language" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
-                        <i class="fas fa-code me-1 meta-icon"></i>{{ item.language }}
-                      </span>
-                      <span v-if="item.license" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
-                        <i class="fas fa-scale-balanced me-1 meta-icon"></i>{{ item.license }}
-                      </span>
-                      <span v-if="item.version" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
-                        <i class="fas fa-tag me-1 meta-icon"></i>v{{ item.version }}
-                      </span>
-                    </div>
-
-                    <div v-if="category.title === topicsTitle"
-                      class="d-flex flex-wrap align-items-center gap-2 mb-2 meta-row">
-                      <span v-if="item.journal" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
-                        <i class="fas fa-book-open me-1 meta-icon"></i>{{ item.journal }}
-                      </span>
-                      <span v-if="item.year" class="meta-text" :style="{ color: 'var(--app-text-muted)' }">
-                        <i class="fas fa-calendar-days me-1 meta-icon"></i>{{ item.year }}
-                      </span>
-                    </div>
-
-                    <div v-if="category.title !== notesTitle && Array.isArray(item.tags) && item.tags.length"
-                      class="d-flex flex-wrap gap-2 mb-2">
-                      <span v-for="(tag, tIdx) in item.tags" :key="tIdx"
-                        class="badge tag-badge fw-normal py-1 px-2 rounded-3">
-                        # {{ tag }}
-                      </span>
-                    </div>
-
-                    <div v-if="category.title === t('notes')" class="row g-0 text-center stats-row mb-2 w-100"
-                      :style="{ 'border-color': 'var(--app-border)' }">
-                      <div v-if="Array.isArray(item.tags) && item.tags.length" class="col border-end">
-                        <div class="fw-bold stat-num">{{ item.tags.length }}</div>
-                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">{{ t('tags') }}</div>
-                      </div>
-                      <div v-if="item.stats && item.stats.postsCount" class="col border-end">
-                        <div class="fw-bold stat-num">{{ item.stats.postsCount }}</div>
-                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">{{ articlesText }}</div>
-                      </div>
-                      <div v-if="item.stats && item.stats.totalWords" class="col">
-                        <div class="fw-bold stat-num">{{ formatWords(item.stats.totalWords) }}</div>
-                        <div class="stat-label" :style="{ color: 'var(--app-text-muted)' }">{{ wordsText }}</div>
-                      </div>
-                    </div>
-
-                    <hr class="my-2" />
-                    <div class="text-end">
-                      <span class="fw-medium d-inline-flex align-items-center gap-1 cursor-pointer see-more-text"
-                        :style="{ color: 'var(--app-primary)' }" @click="() => handleSeeMore(item)">
-                        {{ seeMoreText }}
-                        <i class="fas fa-arrow-right"></i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <div class="cat-grid">
+        <div v-for="(item, idx) in category.items" :key="idx" class="cat-card" v-reveal
+          :style="{ '--reveal-delay': Math.min(Number(idx), 5) * 40 + 'ms' }">
+          <div class="cat-card__head">
+            <div class="cat-card__name">{{ item.title }}</div>
+            <div class="cat-card__ext-links">
+              <a v-if="item.github" :href="normalizeUrl(item.github)" target="_blank" rel="noopener noreferrer"
+                class="cat-card__ext-link" :aria-label="'GitHub'"><i class="fab fa-github"></i></a>
+              <a v-if="item.doi" :href="normalizeDoi(item.doi)" target="_blank" rel="noopener noreferrer"
+                class="cat-card__ext-link" :aria-label="'DOI'"><i class="fas fa-link"></i></a>
             </div>
-          </section>
+          </div>
+          <p class="cat-card__desc">{{ item.desc }}</p>
+          <div v-if="category.title === notesTitle" class="cat-card__stats">
+            <span v-if="item.stats?.postsCount" class="cat-stat"><i class="fas fa-file-lines"></i>{{ t('countPosts', { count: item.stats.postsCount }) }}</span>
+            <span v-if="item.stats?.totalWords" class="cat-stat"><i class="fas fa-font"></i>{{ t('countWords', { count: item.stats.totalWords }) }}</span>
+            <span v-if="getLatestDate(item)" class="cat-stat"><i class="fas fa-clock"></i>{{ getLatestDate(item) }}</span>
+          </div>
+          <div v-else class="cat-card__stats">
+            <span v-if="item.language" class="cat-stat"><i class="fas fa-code"></i>{{ item.language }}</span>
+            <span v-if="item.year" class="cat-stat"><i class="fas fa-calendar"></i>{{ item.year }}</span>
+            <span v-if="item.license" class="cat-stat"><i class="fas fa-scale-balanced"></i>{{ item.license }}</span>
+          </div>
+
+          <div v-if="Array.isArray(item.tags) && item.tags.length" class="cat-card__tags">
+            <span v-for="(tag, tIdx) in item.tags" :key="tIdx" class="cat-card__tag">{{ tag }}</span>
+          </div>
+
+          <div class="cat-card__links">
+            <a v-if="hasExternalLink(item) || item.root" class="cat-card__link" @click.prevent="handleSeeMore(item)">{{ seeMoreText }}<i
+                class="fas fa-arrow-right"></i></a>
+          </div>
         </div>
       </div>
     </div>
@@ -113,7 +61,7 @@ import { useRouter } from 'vue-router'
 import { toLocalePath } from '@/utils/localePath'
 import { loadCategories } from '@/utils/contentLoader'
 
-useHead({ title: 'gblog - Categories' })
+useHead({ title: 'zorrooz’s blog - Categories' })
 
 const { t, locale } = useI18n()
 const router = useRouter()
@@ -124,8 +72,6 @@ const pageTitle = computed(() => t('categories'))
 const notesTitle = computed(() => t('notes'))
 const projectsTitle = computed(() => t('projects'))
 const topicsTitle = computed(() => t('topics'))
-const articlesText = computed(() => t('articles'))
-const wordsText = computed(() => t('words'))
 const seeMoreText = computed(() => t('seeMore'))
 
 function loadCategoryData() {
@@ -136,6 +82,23 @@ function loadCategoryData() {
     console.error('Failed to load category data:', error)
     categoryList.value = []
   }
+}
+
+function sectionIcon(title: string) {
+  if (title === notesTitle.value) return 'fa-book-open'
+  if (title === projectsTitle.value) return 'fa-folder-open'
+  if (title === topicsTitle.value) return 'fa-flask'
+  return 'fa-folder'
+}
+
+function sectionCount(category: any) {
+  const items = category?.items || []
+  if (category.title === notesTitle.value) {
+    const posts = items.reduce((s: number, it: any) => s + (it.stats?.postsCount || 0), 0)
+    return t('countPosts', { count: posts })
+  }
+  if (category.title === projectsTitle.value) return t('countProjects', { count: items.length })
+  return t('countTopics', { count: items.length })
 }
 
 function getLatestDate(item: any) {
@@ -155,19 +118,8 @@ function normalizeDoi(doi: any) {
   return 'https://' + doi.replace(/^\/+/, '')
 }
 
-function formatMonth(dateStr: string) {
-  const d = new Date(dateStr)
-  if (isNaN(d.getTime())) return dateStr
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  return `${y}-${m}`
-}
-
-function formatWords(n: any) {
-  const num = Number(n)
-  if (!Number.isFinite(num)) return n
-  if (num >= 10000) return Math.round(num / 1000) + 'k'
-  return String(num)
+function hasExternalLink(item: any) {
+  return !!(item?.url || item?.github || item?.doi)
 }
 
 function handleSeeMore(item: any) {
@@ -207,111 +159,205 @@ watch(locale, () => {
 </script>
 
 <style scoped>
-.typography-body {
-  font-size: 1.125rem;
-  line-height: 1.8;
+.category-head {
+  margin-bottom: var(--sp-16);
 }
 
-.typography-body p {
-  margin-bottom: 0.75rem;
+.cat-section {
+  margin-bottom: var(--sp-24);
 }
 
-.heading-underline {
-  border-bottom: 1px solid var(--app-border);
+.cat-section__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
 }
 
-.desc-text {
-  font-size: 1rem;
-  line-height: 1.6;
+.cat-section__title {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0;
 }
 
-.see-more-text {
-  font-size: 0.9rem;
+.cat-section__icon {
+  font-size: 15px;
+  color: var(--primary);
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
-.icon-link {
-  color: var(--app-icon-color);
-  font-size: 1.1rem;
+.cat-section__count {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--tint);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.02em;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: var(--sp-5);
+}
+
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cat-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+.cat-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.cat-card__name {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  line-height: 1.3;
+  min-width: 0;
+  transition: color 0.14s ease;
+}
+
+.cat-card:hover .cat-card__name {
+  color: var(--primary);
+}
+
+.cat-card__ext-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cat-card__ext-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--fg-3);
+  font-size: 14px;
   text-decoration: none;
+  transition: color 0.14s ease, background-color 0.14s ease;
 }
 
-.icon-link:hover {
-  color: var(--app-icon-hover-color);
-  text-decoration: none;
+.cat-card__ext-link:hover {
+  color: var(--primary);
+  background: var(--tint);
 }
 
-.icon-link i {
-  font-size: 1rem;
-  line-height: 1;
+.cat-card__desc {
+  font-size: var(--text-md);
+  color: var(--fg-2);
+  line-height: 1.65;
+  margin: var(--sp-4) 0 var(--sp-5);
 }
 
-.meta-row {
-  row-gap: 0.25rem;
+.cat-card__stats {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: var(--sp-2);
 }
 
-.meta-text {
-  font-size: 0.95rem;
-}
-
-.meta-icon {
-  font-size: 0.95rem;
-  color: var(--app-text-muted);
-}
-
-.stats-row {}
-
-.stats-row .col {
-  padding: 4px 0;
-}
-
-.stats-row .col:not(:last-child) {
-  border-right: 1px solid var(--app-border);
-}
-
-.stat-num {
-  font-size: 1rem;
-  line-height: 1.2;
-  font-weight: 700;
-  color: var(--app-stat-num-color);
-  margin-bottom: 0;
-}
-
-.stat-label {
-  font-size: 0.85rem;
-  line-height: 1.2;
-  color: var(--app-text-muted);
-  margin-top: 0;
-}
-
-.badge {
-  font-size: 0.85rem;
+.cat-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
   font-weight: 500;
+  color: var(--fg-3);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.tag-badge {
-  color: var(--app-tag-text) !important;
-  background-color: var(--app-tag-bg) !important;
-  font-size: 0.85rem !important;
+.cat-stat i {
+  font-size: 10px;
+  color: var(--primary);
 }
 
-.card {
-  border-radius: 0.75rem;
+.cat-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
 }
 
-.card-body {
-  padding: 1.5rem !important;
+.cat-card__tag {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  padding: 3px 11px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--fg-2);
 }
 
-.see-more-text {
-  transition: transform 0.2s ease;
+.cat-card__links {
+  display: flex;
+  gap: var(--sp-5);
+  margin-top: auto;
+  padding-top: var(--sp-5);
+  font-size: var(--text-sm);
 }
 
-.see-more-text:hover {
-  transform: translateX(2px);
+.cat-card__link {
+  color: var(--app-link);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: var(--text-sm);
+  transition: color 0.14s ease, gap 0.14s ease;
+}
+
+.cat-card__link i {
+  font-size: 12px;
+}
+
+.cat-card__link:hover {
+  color: var(--primary-strong, var(--primary));
+  gap: 9px;
+}
+
+@media (max-width: 767px) {
+  .cat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cat-card {
+    padding: var(--sp-6);
+  }
 }
 </style>

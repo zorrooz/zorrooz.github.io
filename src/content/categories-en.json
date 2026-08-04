@@ -3,135 +3,100 @@
     "title": "Notes",
     "items": [
       {
-        "name": "Omics",
-        "title": "Omics",
-        "desc": "Summary of learning records and materials related to omics",
+        "name": "ComputationalBiology",
+        "title": "Computational Biology",
+        "desc": "Mainstream tools for protein design and virtual screening",
         "tags": [
-          "RNA-Seq",
-          "HISAT2",
-          "Transcriptome",
-          "Alignment",
-          "Bioinformatics",
-          "MaxQuant",
-          "Proteomics",
-          "Mass Spectrometry",
-          "Quantitative Analysis",
-          "BWA",
-          "NGS",
-          "Command Line",
-          "Human Genome",
-          "SAM/BAM"
+          "Protein Design",
+          "Rosetta",
+          "AlphaFold",
+          "RFdiffusion",
+          "Computational Biology",
+          "Virtual Screening",
+          "Molecular Docking",
+          "AutoDock Vina"
         ],
         "stats": {
-          "postsCount": 3,
-          "totalWords": 289,
-          "latestDate": "2026-06-21"
+          "postsCount": 2,
+          "totalWords": 1211,
+          "latestDate": "2026-08-04"
         },
         "categories": [
           {
-            "key": "genomics",
-            "title": "Genomics",
+            "key": "protein-design",
+            "title": "Protein Design",
             "articles": [
               {
-                "title": "BWA MEM Alignment to Human Genome in Practice",
-                "articleUrl": "/article/notes/Omics/genomics/bwa/bwa-en",
+                "title": "Mainstream Tools for Protein Design",
+                "articleUrl": "/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en",
+                "wordCount": 618,
                 "tags": [
-                  "BWA",
-                  "Alignment",
-                  "NGS",
-                  "Command Line",
-                  "Human Genome",
-                  "SAM/BAM"
+                  "Protein Design",
+                  "Rosetta",
+                  "AlphaFold",
+                  "RFdiffusion",
+                  "Computational Biology"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 175,
-              "latestDate": "2026-06-19"
+              "totalWords": 618,
+              "latestDate": "2026-08-04"
             }
           },
           {
-            "key": "proteomics",
-            "title": "Proteomics",
+            "key": "virtual-screening",
+            "title": "Virtual Screening",
             "articles": [
               {
-                "title": "MaxQuant Proteomics Analysis Workflow",
-                "articleUrl": "/article/notes/Omics/proteomics/maxquant/maxquant-en",
+                "title": "Mainstream Tools for Virtual Screening",
+                "articleUrl": "/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en",
+                "wordCount": 593,
                 "tags": [
-                  "MaxQuant",
-                  "Proteomics",
-                  "Mass Spectrometry",
-                  "Bioinformatics",
-                  "Quantitative Analysis"
+                  "Virtual Screening",
+                  "Molecular Docking",
+                  "AutoDock Vina",
+                  "Computational Biology"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 63,
-              "latestDate": "2026-06-20"
-            }
-          },
-          {
-            "key": "transcriptomics",
-            "title": "Transcriptomics",
-            "articles": [
-              {
-                "title": "RNA-Seq Analysis: HISAT2 Alignment Workflow",
-                "articleUrl": "/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2-en",
-                "tags": [
-                  "RNA-Seq",
-                  "HISAT2",
-                  "Transcriptome",
-                  "Alignment",
-                  "Bioinformatics"
-                ]
-              }
-            ],
-            "stats": {
-              "postsCount": 1,
-              "totalWords": 51,
-              "latestDate": "2026-06-21"
+              "totalWords": 593,
+              "latestDate": "2026-08-04"
             }
           }
         ],
-        "root": "/article/notes/Omics/genomics/bwa/bwa-en"
+        "root": "/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en"
       },
       {
         "name": "Programming",
         "title": "Programming",
-        "desc": "Summary of learning records and materials related to programming",
+        "desc": "Detailed tutorials on R, Python, Linux, and Bash programming",
         "tags": [
-          "Markdown",
-          "LaTeX",
-          "KaTeX",
-          "Math",
-          "Bioinformatics",
-          "Shell",
           "Bash",
-          "Command Line",
+          "Shell",
           "Scripting",
-          "Automation",
+          "Tutorial",
+          "Linux",
+          "Command Line",
+          "Python",
+          "Advanced",
+          "Getting Started",
+          "NumPy",
+          "Pandas",
+          "Data Processing",
           "R Language",
           "ggplot2",
           "Data Visualization",
-          "Data Processing",
-          "Statistical Analysis",
-          "Python",
-          "Pandas",
-          "Analysis",
-          "Data Cleaning",
-          "FASTQ",
-          "Beginner",
-          "Biopython",
-          "Sequence Analysis",
-          "Genomics"
+          "tidyverse",
+          "dplyr"
         ],
         "stats": {
-          "postsCount": 7,
-          "totalWords": 549,
-          "latestDate": "2026-07-06"
+          "postsCount": 8,
+          "totalWords": 1972,
+          "latestDate": "2026-08-04"
         },
         "categories": [
           {
@@ -139,55 +104,42 @@
             "title": "Python",
             "articles": [
               {
-                "title": "Markdown & LaTeX Formula Rendering Demo",
-                "articleUrl": "/article/notes/Programming/python/markdown-demo/markdown-demo-en",
+                "title": "Python Advanced: Functions, Classes, and Modules",
+                "articleUrl": "/article/notes/Programming/python/python-advanced/python-advanced-en",
+                "wordCount": 244,
                 "tags": [
-                  "Markdown",
-                  "LaTeX",
-                  "KaTeX",
-                  "Math",
-                  "Bioinformatics"
+                  "Python",
+                  "Advanced",
+                  "Tutorial"
                 ]
               },
               {
-                "title": "Python Pandas Data Processing in Practice",
-                "articleUrl": "/article/notes/Programming/python/pandas/pandas-en",
+                "title": "Introduction to Python Programming: Environment, Syntax, and Data Types",
+                "articleUrl": "/article/notes/Programming/python/python-basics/python-basics-en",
+                "wordCount": 333,
                 "tags": [
                   "Python",
+                  "Getting Started",
+                  "Tutorial"
+                ]
+              },
+              {
+                "title": "Python Data Processing in Practice: File IO, Regex, and NumPy/Pandas",
+                "articleUrl": "/article/notes/Programming/python/python-data/python-data-en",
+                "wordCount": 314,
+                "tags": [
+                  "Python",
+                  "NumPy",
                   "Pandas",
                   "Data Processing",
-                  "Analysis",
-                  "Data Cleaning"
-                ]
-              },
-              {
-                "title": "Processing FASTQ Quality Statistics with Pandas",
-                "articleUrl": "/article/notes/Programming/python/fastq/fastq-en",
-                "tags": [
-                  "Python",
-                  "Pandas",
-                  "FASTQ",
-                  "Data Cleaning",
-                  "Bioinformatics",
-                  "Beginner"
-                ]
-              },
-              {
-                "title": "Biopython Bioinformatics Applications",
-                "articleUrl": "/article/notes/Programming/python/biopython/biopython-en",
-                "tags": [
-                  "Python",
-                  "Biopython",
-                  "Bioinformatics",
-                  "Sequence Analysis",
-                  "Genomics"
+                  "Tutorial"
                 ]
               }
             ],
             "stats": {
-              "postsCount": 4,
-              "totalWords": 413,
-              "latestDate": "2026-07-10"
+              "postsCount": 3,
+              "totalWords": 891,
+              "latestDate": "2026-08-04"
             }
           },
           {
@@ -195,57 +147,194 @@
             "title": "R",
             "articles": [
               {
-                "title": "R Language ggplot2 Data Visualization",
-                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2-en",
+                "title": "R Language Primer: Data Structures, Vectorization, and Functions",
+                "articleUrl": "/article/notes/Programming/r/r-basics/r-basics-en",
+                "wordCount": 256,
+                "tags": [
+                  "R Language",
+                  "Getting Started",
+                  "Tutorial"
+                ]
+              },
+              {
+                "title": "R ggplot2 Data Visualization: Grammar of Graphics and Common Charts",
+                "articleUrl": "/article/notes/Programming/r/r-ggplot2/r-ggplot2-en",
+                "wordCount": 157,
                 "tags": [
                   "R Language",
                   "ggplot2",
                   "Data Visualization",
-                  "Bioinformatics"
+                  "Tutorial"
                 ]
               },
               {
-                "title": "R Language Data Processing Example",
-                "articleUrl": "/article/notes/Programming/r/demo/demo-en",
+                "title": "R tidyverse Data Manipulation: dplyr Pipelines and Data Cleaning",
+                "articleUrl": "/article/notes/Programming/r/r-tidyverse/r-tidyverse-en",
+                "wordCount": 245,
                 "tags": [
                   "R Language",
-                  "Data Processing",
-                  "Statistical Analysis",
-                  "Data Visualization",
-                  "Bioinformatics"
+                  "tidyverse",
+                  "dplyr",
+                  "Tutorial"
                 ]
               }
             ],
             "stats": {
-              "postsCount": 2,
-              "totalWords": 88,
-              "latestDate": "2026-07-05"
+              "postsCount": 3,
+              "totalWords": 658,
+              "latestDate": "2026-08-04"
             }
           },
           {
-            "key": "shell",
-            "title": "Shell",
+            "key": "linux",
+            "title": "Linux",
             "articles": [
               {
-                "title": "Bash Shell Scripting",
-                "articleUrl": "/article/notes/Programming/shell/bash/bash-en",
+                "title": "Linux Command Line Basics: File System, Permissions, and Text Processing",
+                "articleUrl": "/article/notes/Programming/linux/linux-basics/linux-basics-en",
+                "wordCount": 238,
                 "tags": [
-                  "Shell",
-                  "Bash",
+                  "Linux",
                   "Command Line",
-                  "Scripting",
-                  "Automation"
+                  "Tutorial"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 48,
-              "latestDate": "2026-07-06"
+              "totalWords": 238,
+              "latestDate": "2026-08-04"
+            }
+          },
+          {
+            "key": "bash",
+            "title": "Bash",
+            "articles": [
+              {
+                "title": "Bash Programming: Variables, Conditionals, Loops, and Practical Scripts",
+                "articleUrl": "/article/notes/Programming/bash/bash-scripting/bash-scripting-en",
+                "wordCount": 185,
+                "tags": [
+                  "Bash",
+                  "Shell",
+                  "Scripting",
+                  "Tutorial"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 185,
+              "latestDate": "2026-08-04"
             }
           }
         ],
-        "root": "/article/notes/Programming/python/markdown-demo/markdown-demo-en"
+        "root": "/article/notes/Programming/python/python-advanced/python-advanced-en"
+      },
+      {
+        "name": "StructuralBiology",
+        "title": "Structural Biology",
+        "desc": "Cryo-EM data processing, visualization of biomacromolecular structures, and atomic modeling",
+        "tags": [
+          "Cryo-Electron Microscopy",
+          "cryo-EM",
+          "Review",
+          "Data Processing",
+          "RELION",
+          "Atomic Modeling",
+          "Coot",
+          "phenix",
+          "Structure Refinement",
+          "Tutorial",
+          "Structure Visualization",
+          "PyMOL",
+          "ChimeraX"
+        ],
+        "stats": {
+          "postsCount": 4,
+          "totalWords": 2670,
+          "latestDate": "2026-08-04"
+        },
+        "categories": [
+          {
+            "key": "cryoem",
+            "title": "Cryo-EM",
+            "articles": [
+              {
+                "title": "Review of Cryo-EM Technology",
+                "articleUrl": "/article/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview-en",
+                "wordCount": 977,
+                "tags": [
+                  "Cryo-Electron Microscopy",
+                  "cryo-EM",
+                  "Review"
+                ]
+              },
+              {
+                "title": "Cryo-EM Single Particle Analysis: Full Data Processing Workflow",
+                "articleUrl": "/article/notes/StructuralBiology/cryoem/cryoem-workflow/cryoem-workflow-en",
+                "wordCount": 765,
+                "tags": [
+                  "Cryo-Electron Microscopy",
+                  "cryo-EM",
+                  "Data Processing",
+                  "RELION"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 1742,
+              "latestDate": "2026-08-04"
+            }
+          },
+          {
+            "key": "visualization",
+            "title": "Structural Visualization",
+            "articles": [
+              {
+                "title": "Biomacromolecular Structure Visualization: PyMOL and ChimeraX in Practice",
+                "articleUrl": "/article/notes/StructuralBiology/visualization/structure-visualization/structure-visualization-en",
+                "wordCount": 362,
+                "tags": [
+                  "Structure Visualization",
+                  "PyMOL",
+                  "ChimeraX",
+                  "Tutorial"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 362,
+              "latestDate": "2026-08-04"
+            }
+          },
+          {
+            "key": "modeling",
+            "title": "Atomic Modeling",
+            "articles": [
+              {
+                "title": "Atomic Modeling and Refinement",
+                "articleUrl": "/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling-en",
+                "wordCount": 566,
+                "tags": [
+                  "Atomic Modeling",
+                  "Coot",
+                  "phenix",
+                  "Structure Refinement",
+                  "Tutorial"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 566,
+              "latestDate": "2026-08-04"
+            }
+          }
+        ],
+        "root": "/article/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview-en"
       }
     ]
   },
@@ -253,49 +342,54 @@
     "title": "Projects",
     "items": [
       {
-        "name": "Biocrawler",
-        "title": "BioCrawler",
-        "desc": "A toolkit for biological data crawling and processing",
+        "name": "Plotit",
+        "title": "plotit",
+        "desc": "Declarative plotting package for R — a verb-prefix API based on ggplot2, in early development stage",
         "tags": [
-          "Crawler",
-          "API",
-          "Bioinformatics"
+          "R",
+          "ggplot2",
+          "Data Visualization",
+          "Declarative API"
         ],
         "stats": {
           "postsCount": 0,
           "totalWords": 0,
-          "latestDate": "2026-05-16"
+          "latestDate": "2025-12-30"
         },
-        "categories": [
-          {
-            "key": "api",
-            "title": "API",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "installation",
-            "title": "Installation",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          }
-        ],
+        "categories": [],
         "root": "",
-        "github": "https://github.com/example/biocrawler",
+        "github": "https://github.com/zorrooz/plotit",
         "status": "active",
-        "language": "Python",
-        "stars": 128,
+        "language": "R",
+        "stars": 0,
         "license": "MIT",
-        "version": "0.4.2",
-        "url": "https://github.com/example/biocrawler"
+        "version": "",
+        "url": "https://zorrooz.github.io/plotit"
+      },
+      {
+        "name": "ZorroozBlog",
+        "title": "zorrooz.github.io",
+        "desc": "Personal blog system — built with Vue 3 + Vite, supporting bilingual Chinese/English, theme switching, and Markdown article management",
+        "tags": [
+          "Vue",
+          "Vite",
+          "Blog",
+          "Markdown"
+        ],
+        "stats": {
+          "postsCount": 0,
+          "totalWords": 0,
+          "latestDate": "2025-08-29"
+        },
+        "categories": [],
+        "root": "",
+        "github": "https://github.com/zorrooz/zorrooz.github.io",
+        "status": "active",
+        "language": "Vue",
+        "stars": 0,
+        "license": "MIT",
+        "version": "",
+        "url": "https://zorrooz.github.io/"
       }
     ]
   },
@@ -304,8 +398,8 @@
     "items": [
       {
         "name": "StructureOfProteinDemo",
-        "title": "Protein Structure Analysis Demo Project",
-        "desc": "Demonstration of protein structure analysis methods and results",
+        "title": "Protein Structure Determination Demo Project",
+        "desc": "Protein structure placeholder demo",
         "tags": [
           "Protein",
           "Structure",
@@ -316,28 +410,7 @@
           "totalWords": 0,
           "latestDate": "2026-04-12"
         },
-        "categories": [
-          {
-            "key": "methods",
-            "title": "Methods",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "results",
-            "title": "Results",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          }
-        ],
+        "categories": [],
         "root": "",
         "doi": "10.1234/demo-structure.2026",
         "status": "completed",

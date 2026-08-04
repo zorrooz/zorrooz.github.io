@@ -36,16 +36,8 @@ export const TRANSLATION_CONFIG = {
 
 // 翻译目标配置（基于项目根的绝对路径，不依赖 cwd）
 export const TRANSLATION_TARGETS = {
-  // 主要翻译目录
+  // 主要翻译目录（notes 文章 + yaml 配置文件）
   CONTENT_SRC: path.join(projectRoot, 'src/content-src'),
-
-  // 子目录配置
-  SUBDIRECTORIES: {
-    NOTES: path.join(projectRoot, 'src/content-src/notes'),
-    PROJECTS: path.join(projectRoot, 'src/content-src/projects'),
-    TOPICS: path.join(projectRoot, 'src/content-src/topics'),
-    TEST: path.join(projectRoot, 'src/content-src/test'),
-  },
 
   // 配置文件
   CONFIG_FILES: {

@@ -4,71 +4,201 @@
     "children": [
       {
         "title": "Data Exploration",
-        "items": [
+        "children": [
           {
-            "name": "tidyverse",
-            "url": "https://www.tidyverse.org/",
-            "desc": "A comprehensive set of packages in R for data science, covering data import, cleaning, transformation, and visualization"
+            "title": "R Language",
+            "items": [
+              {
+                "name": "tidyverse",
+                "url": "https://www.tidyverse.org/",
+                "desc": "A suite of R packages for data science, covering data import, cleaning, transformation, and visualization"
+              },
+              {
+                "name": "data.table",
+                "url": "https://rdatatable.gitlab.io/data.table/",
+                "desc": "High-performance data manipulation package, extremely fast for processing data frames with millions of rows"
+              },
+              {
+                "name": "readr",
+                "url": "https://readr.tidyverse.org/",
+                "desc": "A tool for fast reading of CSV/TSV and other tabular files, with automatic column type inference"
+              }
+            ]
           },
           {
-            "name": "Pandas",
-            "url": "https://pandas.pydata.org/",
-            "desc": "A powerful data analysis library in Python, providing efficient data manipulation and processing capabilities"
-          },
-          {
-            "name": "Polars",
-            "url": "https://www.pola.rs/",
-            "desc": "A high-performance data processing library based on Apache Arrow, supporting multi-language interfaces"
+            "title": "Python",
+            "items": [
+              {
+                "name": "NumPy",
+                "url": "https://numpy.org/",
+                "desc": "The fundamental library for scientific computing in Python, providing multidimensional arrays and vectorized operations"
+              },
+              {
+                "name": "Pandas",
+                "url": "https://pandas.pydata.org/",
+                "desc": "A powerful data analysis library based on Python, providing efficient data manipulation and processing capabilities"
+              },
+              {
+                "name": "Polars",
+                "url": "https://www.pola.rs/",
+                "desc": "A high-performance data processing library based on Apache Arrow, supporting multiple language interfaces"
+              },
+              {
+                "name": "Jupyter",
+                "url": "https://jupyter.org/",
+                "desc": "An interactive notebook environment that supports mixing code, text, and visualizations"
+              }
+            ]
           }
         ]
       },
       {
         "title": "Data Visualization",
-        "items": [
+        "children": [
           {
-            "name": "ggplot2",
-            "url": "https://ggplot2.tidyverse.org/",
-            "desc": "A powerful data visualization package in R, based on the grammar of graphics"
+            "title": "R Language",
+            "items": [
+              {
+                "name": "ggplot2",
+                "url": "https://ggplot2.tidyverse.org/",
+                "desc": "A powerful data visualization package in R, based on the grammar of graphics"
+              },
+              {
+                "name": "plotly (R)",
+                "url": "https://plotly.com/r/",
+                "desc": "The R interface to the interactive chart library, capable of generating web-interactive graphics"
+              },
+              {
+                "name": "patchwork",
+                "url": "https://patchwork.data-imaginist.com/",
+                "desc": "A multi-panel composition tool that easily combines ggplot graphics using + and / symbols"
+              },
+              {
+                "name": "RColorBrewer",
+                "url": "https://cran.r-project.org/web/packages/RColorBrewer/",
+                "desc": "Publication-quality color schemes, providing carefully designed discrete palettes"
+              }
+            ]
           },
           {
-            "name": "Matplotlib",
-            "url": "https://matplotlib.org/",
-            "desc": "A widely used plotting library in Python, supporting various chart types"
-          },
-          {
-            "name": "Vega.js",
-            "url": "https://vega.github.io/vega/",
-            "desc": "A JSON-based declarative visualization library, suitable for creating interactive charts"
+            "title": "Python",
+            "items": [
+              {
+                "name": "Matplotlib",
+                "url": "https://matplotlib.org/",
+                "desc": "A widely used plotting library in Python, supporting many chart types"
+              },
+              {
+                "name": "Seaborn",
+                "url": "https://seaborn.pydata.org/",
+                "desc": "A statistical visualization library based on Matplotlib, with built-in attractive themes and statistical plots"
+              },
+              {
+                "name": "Plotly",
+                "url": "https://plotly.com/python/",
+                "desc": "An interactive visualization library supporting scatter, 3D, maps, and many other chart types"
+              },
+              {
+                "name": "Altair",
+                "url": "https://altair-viz.github.io/",
+                "desc": "A declarative statistical visualization library based on Vega-Lite"
+              }
+            ]
           }
         ]
       },
       {
         "title": "Statistical Analysis",
-        "items": [
+        "children": [
           {
-            "name": "R Stats",
-            "url": "https://www.r-project.org/",
-            "desc": "Built-in statistical analysis functions in R, covering a wide range of statistical methods and models"
+            "title": "R Language",
+            "items": [
+              {
+                "name": "R Stats",
+                "url": "https://www.r-project.org/",
+                "desc": "The built-in statistical analysis functionality in R, covering a wide range of statistical methods and models"
+              },
+              {
+                "name": "rstatix",
+                "url": "https://rpkgs.datanovia.com/rstatix/",
+                "desc": "Pipe-friendly wrappers for statistical tests (t-tests, ANOVA, rank-sum tests, etc.)"
+              },
+              {
+                "name": "broom",
+                "url": "https://broom.tidymodels.org/",
+                "desc": "A tool for tidying statistical model outputs into clean data frames"
+              },
+              {
+                "name": "lme4",
+                "url": "https://cran.r-project.org/web/packages/lme4/",
+                "desc": "Linear and nonlinear mixed-effects models, suitable for repeated-measures data"
+              }
+            ]
           },
           {
-            "name": "SciPy Stats",
-            "url": "https://scipy.org/",
-            "desc": "The statistics module in Python's SciPy library, providing various statistical distributions and test methods"
+            "title": "Python",
+            "items": [
+              {
+                "name": "SciPy Stats",
+                "url": "https://scipy.org/",
+                "desc": "The statistics module in the Python scientific computing library SciPy, providing many statistical distributions and test methods"
+              },
+              {
+                "name": "statsmodels",
+                "url": "https://www.statsmodels.org/",
+                "desc": "A statistical modeling library supporting regression, time series, hypothesis testing, and more"
+              },
+              {
+                "name": "pingouin",
+                "url": "https://pingouin-stats.org/",
+                "desc": "A simple and user-friendly statistical testing library covering common parametric and nonparametric tests"
+              }
+            ]
           }
         ]
       },
       {
         "title": "Machine Learning",
-        "items": [
+        "children": [
           {
-            "name": "scikit-learn",
-            "url": "https://scikit-learn.org/",
-            "desc": "A Python-based machine learning library, offering a rich set of algorithms and tools"
+            "title": "Python",
+            "items": [
+              {
+                "name": "scikit-learn",
+                "url": "https://scikit-learn.org/",
+                "desc": "A machine learning library based on Python, providing a rich set of algorithms and tools"
+              },
+              {
+                "name": "PyTorch",
+                "url": "https://pytorch.org/",
+                "desc": "A deep learning framework supporting dynamic computation graphs and efficient tensor operations"
+              },
+              {
+                "name": "TensorFlow",
+                "url": "https://www.tensorflow.org/",
+                "desc": "A deep learning framework with a mature ecosystem, supporting production-level deployment"
+              },
+              {
+                "name": "XGBoost",
+                "url": "https://xgboost.readthedocs.io/",
+                "desc": "A gradient boosting tree library, the top choice for tabular data competitions and engineering"
+              },
+              {
+                "name": "LightGBM",
+                "url": "https://lightgbm.readthedocs.io/",
+                "desc": "A gradient boosting framework from Microsoft, with fast training speed and low memory usage"
+              }
+            ]
           },
           {
-            "name": "PyTorch",
-            "url": "https://pytorch.org/",
-            "desc": "A deep learning framework supporting dynamic computation graphs and efficient tensor operations"
+            "title": "R Language",
+            "items": [
+              {
+                "name": "tidymodels",
+                "url": "https://www.tidymodels.org/",
+                "desc": "A unified modeling framework in R, covering data preprocessing, modeling, and evaluation"
+              }
+            ]
           }
         ]
       }
@@ -79,71 +209,341 @@
     "children": [
       {
         "title": "Data Platforms",
-        "items": [
+        "children": [
           {
-            "name": "NCBI",
-            "url": "https://www.ncbi.nlm.nih.gov/",
-            "desc": "National Center for Biotechnology Information, providing important databases such as GenBank"
+            "title": "Sequence Databases",
+            "items": [
+              {
+                "name": "NCBI",
+                "url": "https://www.ncbi.nlm.nih.gov/",
+                "desc": "The National Center for Biotechnology Information in the United States, providing important databases such as GenBank"
+              },
+              {
+                "name": "EMBL-EBI",
+                "url": "https://www.ebi.ac.uk/",
+                "desc": "The European Molecular Biology Laboratory, providing a variety of bioinformatics resources and tools"
+              },
+              {
+                "name": "DDBJ",
+                "url": "https://www.ddbj.nig.ac.jp/",
+                "desc": "The DNA Data Bank of Japan, providing storage and access for nucleic acid and protein sequence data"
+              },
+              {
+                "name": "UniProt",
+                "url": "https://www.uniprot.org/",
+                "desc": "The most comprehensive database for protein sequences and functional annotation"
+              },
+              {
+                "name": "Ensembl",
+                "url": "https://www.ensembl.org/",
+                "desc": "A genome annotation and comparative genomics database for vertebrates"
+              },
+              {
+                "name": "UCSC Genome Browser",
+                "url": "https://genome.ucsc.edu/",
+                "desc": "A genome browser supporting visualization of multiple species genomes and custom tracks"
+              }
+            ]
           },
           {
-            "name": "EMBL",
-            "url": "https://www.ebi.ac.uk/",
-            "desc": "European Molecular Biology Laboratory, offering various bioinformatics resources and tools"
+            "title": "Sequencing Data",
+            "items": [
+              {
+                "name": "SRA",
+                "url": "https://www.ncbi.nlm.nih.gov/sra",
+                "desc": "The NCBI Sequence Read Archive, storing raw high-throughput sequencing data"
+              },
+              {
+                "name": "GEO",
+                "url": "https://www.ncbi.nlm.nih.gov/geo/",
+                "desc": "A gene expression database containing microarray and sequencing expression data"
+              },
+              {
+                "name": "ENA",
+                "url": "https://www.ebi.ac.uk/ena",
+                "desc": "The European Nucleotide Archive, Europe's storage center for raw sequencing data"
+              }
+            ]
           },
           {
-            "name": "DDBJ",
-            "url": "https://www.ddbj.nig.ac.jp/",
-            "desc": "DNA Data Bank of Japan, providing storage and access to nucleic acid and protein sequence data"
+            "title": "Protein Interactions and Pathways",
+            "items": [
+              {
+                "name": "STRING",
+                "url": "https://string-db.org/",
+                "desc": "A protein-protein interaction database supporting multiple species"
+              },
+              {
+                "name": "KEGG",
+                "url": "https://www.kegg.jp/",
+                "desc": "A comprehensive database of pathways, genes, and compounds"
+              },
+              {
+                "name": "GO",
+                "url": "http://geneontology.org/",
+                "desc": "Gene Ontology, providing a standardized system for gene function annotation"
+              }
+            ]
           }
         ]
       },
       {
         "title": "Analysis Software",
-        "items": [
+        "children": [
           {
-            "name": "scikit-bio",
-            "url": "https://scikit-bio.org/",
-            "desc": "A Python library for bioinformatics, providing various biological data processing and analysis tools"
+            "title": "Command Line",
+            "items": [
+              {
+                "name": "FastQC",
+                "url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+                "desc": "A quality assessment tool for sequencing data, generating visual QC reports"
+              },
+              {
+                "name": "Trimmomatic",
+                "url": "http://www.usadellab.org/cms/?page=trimmomatic",
+                "desc": "A read trimming tool for sequencing data, removing adapters and low-quality bases"
+              },
+              {
+                "name": "cutadapt",
+                "url": "https://cutadapt.readthedocs.io/",
+                "desc": "A command-line adapter removal tool supporting multiple sequencing platforms"
+              },
+              {
+                "name": "BWA",
+                "url": "https://github.com/lh3/bwa",
+                "desc": "A short-read alignment tool, the standard choice for genome alignment"
+              },
+              {
+                "name": "STAR",
+                "url": "https://github.com/alexdobin/STAR",
+                "desc": "An ultra-fast splice-aware aligner for RNA-seq"
+              },
+              {
+                "name": "HISAT2",
+                "url": "https://daehwankimlab.github.io/hisat2/",
+                "desc": "A graph-based index alignment tool for RNA-seq"
+              },
+              {
+                "name": "SAMtools",
+                "url": "https://www.htslib.org/",
+                "desc": "A toolset for processing SAM/BAM files, the standard for post-alignment processing"
+              },
+              {
+                "name": "bcftools",
+                "url": "https://samtools.github.io/bcftools/",
+                "desc": "A tool for processing VCF/BCF variant files, supporting filtering and statistics"
+              },
+              {
+                "name": "GATK",
+                "url": "https://gatk.broadinstitute.org/",
+                "desc": "The Genome Analysis Toolkit, the industry standard for variant detection"
+              },
+              {
+                "name": "MultiQC",
+                "url": "https://multiqc.info/",
+                "desc": "Aggregates multiple QC reports into a single interactive HTML report"
+              }
+            ]
           },
           {
-            "name": "Bioconductor",
-            "url": "https://bioconductor.org/",
-            "desc": "A collection of bioinformatics software packages based on R, covering genomics, transcriptomics, and other fields"
+            "title": "Python",
+            "items": [
+              {
+                "name": "Biopython",
+                "url": "https://biopython.org/",
+                "desc": "The core Python library for bioinformatics, covering sequences, structures, and file parsing"
+              },
+              {
+                "name": "scikit-bio",
+                "url": "https://scikit-bio.org/",
+                "desc": "A Python library for bioinformatics, providing various tools for biological data processing and analysis"
+              },
+              {
+                "name": "scanpy",
+                "url": "https://scanpy.readthedocs.io/",
+                "desc": "A Python library for single-cell transcriptomics analysis, deeply integrated with AnnData"
+              }
+            ]
+          },
+          {
+            "title": "R Language",
+            "items": [
+              {
+                "name": "Bioconductor",
+                "url": "https://bioconductor.org/",
+                "desc": "A collection of bioinformatics software packages based on R, covering genomics, transcriptomics, and other fields"
+              },
+              {
+                "name": "Seurat",
+                "url": "https://satijalab.org/seurat/",
+                "desc": "A mainstream R package for single-cell transcriptomics analysis, providing a complete analysis workflow"
+              },
+              {
+                "name": "DESeq2",
+                "url": "https://bioconductor.org/packages/release/bioc/html/DESeq2.html",
+                "desc": "The standard tool for differential expression analysis based on the negative binomial model"
+              },
+              {
+                "name": "edgeR",
+                "url": "https://bioconductor.org/packages/release/bioc/html/edgeR.html",
+                "desc": "A differential expression analysis tool based on empirical Bayes"
+              },
+              {
+                "name": "limma",
+                "url": "https://bioconductor.org/packages/release/bioc/html/limma.html",
+                "desc": "A differential analysis tool using linear models, applicable to both microarray and sequencing data"
+              }
+            ]
           }
         ]
       }
     ]
   },
   {
-    "title": "Electron Microscopy Structure Determination",
+    "title": "Cryo-EM Structure Determination",
     "children": [
       {
         "title": "Software Tools",
-        "items": [
+        "children": [
           {
-            "name": "RELION",
-            "url": "https://www3.mrc-lmb.cam.ac.uk/groups/scheres/index.php",
-            "desc": "A Bayesian-based cryo-electron microscopy 3D reconstruction software, widely used for high-resolution structure determination"
+            "title": "3D Reconstruction",
+            "items": [
+              {
+                "name": "RELION",
+                "url": "https://www3.mrc-lmb.cam.ac.uk/groups/scheres/index.php",
+                "desc": "A Bayesian approach-based software for cryo-EM 3D reconstruction, widely used for high-resolution structure determination"
+              },
+              {
+                "name": "cryoSPARC",
+                "url": "https://cryoem.slac.stanford.edu/",
+                "desc": "A high-performance cryo-EM data processing platform with an intuitive user interface"
+              },
+              {
+                "name": "cisTEM",
+                "url": "https://cistem.org/",
+                "desc": "A free, open-source cryo-EM processing software supporting a complete single-particle workflow"
+              },
+              {
+                "name": "SPHIRE",
+                "url": "https://sphire.mpg.de/",
+                "desc": "A modular cryo-EM processing suite supporting high-resolution reconstruction"
+              }
+            ]
           },
           {
-            "name": "cryoSPARC",
-            "url": "https://cryoem.slac.stanford.edu/",
-            "desc": "A high-performance cryo-electron microscopy data processing platform with an intuitive user interface"
+            "title": "Preprocessing",
+            "items": [
+              {
+                "name": "MotionCor2",
+                "url": "https://emcore.ucsf.edu/ucsf-software",
+                "desc": "A frame-by-frame motion correction tool that eliminates sample drift caused by the electron beam"
+              },
+              {
+                "name": "CTFFIND4",
+                "url": "https://grigoriefflab.umassmed.edu/ctffind4",
+                "desc": "A classic tool for CTF estimation, evaluating defocus and astigmatism"
+              },
+              {
+                "name": "Gctf",
+                "url": "https://www.mrc-lmb.cam.ac.uk/kzhang/Gctf/",
+                "desc": "A GPU-accelerated CTF estimation tool with high speed and precision"
+              },
+              {
+                "name": "Warp",
+                "url": "http://www.warpem.com/",
+                "desc": "A fast preprocessing tool integrating motion correction, CTF estimation, and particle picking"
+              }
+            ]
+          },
+          {
+            "title": "Particle Picking",
+            "items": [
+              {
+                "name": "crYOLO",
+                "url": "https://cryolo.readthedocs.io/",
+                "desc": "A deep learning-based particle picking tool supporting real-time picking"
+              },
+              {
+                "name": "Topaz",
+                "url": "https://topaz.readthedocs.io/",
+                "desc": "A CNN-based particle picking tool with excellent performance on low signal-to-noise ratio samples"
+              }
+            ]
+          },
+          {
+            "title": "Modeling and Visualization",
+            "items": [
+              {
+                "name": "PyMOL",
+                "url": "https://pymol.org/",
+                "desc": "A molecular visualization software, the standard tool for scripted rendering and structure analysis"
+              },
+              {
+                "name": "UCSF ChimeraX",
+                "url": "https://www.cgl.ucsf.edu/chimerax/",
+                "desc": "A modern molecular visualization software with outstanding density map processing capabilities"
+              },
+              {
+                "name": "Coot",
+                "url": "https://www2.mrc-lmb.cam.ac.uk/personal/pemsley/coot/",
+                "desc": "A manual model building tool for interactive adjustment of density maps and models"
+              },
+              {
+                "name": "phenix",
+                "url": "https://phenix-online.org/",
+                "desc": "A structure refinement and validation suite supporting cryo-EM and crystallography"
+              },
+              {
+                "name": "ISOLDE",
+                "url": "https://isolde.cimr.cam.ac.uk/",
+                "desc": "An interactive real-time molecular dynamics modeling tool based on ChimeraX"
+              },
+              {
+                "name": "ModelAngelo",
+                "url": "https://github.com/3dem/model-angelo",
+                "desc": "A deep learning-based automatic atomic modeling tool for density maps"
+              }
+            ]
           }
         ]
       },
       {
         "title": "Database Resources",
-        "items": [
+        "children": [
           {
-            "name": "EMDB",
-            "url": "https://www.ebi.ac.uk/emdb/",
-            "desc": "Electron Microscopy Data Bank, storing and distributing cryo-electron microscopy 3D density maps"
-          },
-          {
-            "name": "RCSB PDB",
-            "url": "https://www.rcsb.org/",
-            "desc": "Protein Data Bank, containing biomolecular structures determined by X-ray, NMR, and cryo-electron microscopy"
+            "title": "Structures and Density Maps",
+            "items": [
+              {
+                "name": "EMDB",
+                "url": "https://www.ebi.ac.uk/emdb/",
+                "desc": "The Electron Microscopy Data Bank, storing and distributing 3D density maps from cryo-EM"
+              },
+              {
+                "name": "EMPIAR",
+                "url": "https://www.ebi.ac.uk/empiar/",
+                "desc": "The Electron Microscopy Public Image Archive, providing raw movies and particle data"
+              },
+              {
+                "name": "RCSB PDB",
+                "url": "https://www.rcsb.org/",
+                "desc": "The Protein Data Bank, containing biological macromolecular structures determined by X-ray, NMR, and cryo-EM"
+              },
+              {
+                "name": "wwPDB",
+                "url": "https://www.wwpdb.org/",
+                "desc": "The worldwide PDB coordination body, uniformly managing structural data standards"
+              },
+              {
+                "name": "PDBe",
+                "url": "https://www.ebi.ac.uk/pdbe/",
+                "desc": "The European PDB node, providing structural data and visualization tools"
+              },
+              {
+                "name": "AlphaFold DB",
+                "url": "https://alphafold.ebi.ac.uk/",
+                "desc": "The AlphaFold protein structure database, covering hundreds of millions of proteins"
+              }
+            ]
           }
         ]
       }

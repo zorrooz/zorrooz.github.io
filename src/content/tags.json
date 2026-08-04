@@ -1,90 +1,94 @@
 [
   {
-    "name": "比对",
+    "name": "蛋白质设计",
+    "count": 1
+  },
+  {
+    "name": "分子对接",
+    "count": 1
+  },
+  {
+    "name": "计算生物学",
     "count": 2
-  },
-  {
-    "name": "蛋白质组学",
-    "count": 1
-  },
-  {
-    "name": "定量分析",
-    "count": 1
-  },
-  {
-    "name": "基因组学",
-    "count": 1
   },
   {
     "name": "脚本编程",
     "count": 1
   },
   {
-    "name": "命令行",
+    "name": "教程",
+    "count": 10
+  },
+  {
+    "name": "结构精修",
+    "count": 1
+  },
+  {
+    "name": "结构可视化",
+    "count": 1
+  },
+  {
+    "name": "进阶",
+    "count": 1
+  },
+  {
+    "name": "冷冻电镜",
     "count": 2
   },
   {
-    "name": "人类基因组",
+    "name": "命令行",
     "count": 1
   },
   {
     "name": "入门",
-    "count": 1
-  },
-  {
-    "name": "生物信息学",
-    "count": 7
+    "count": 2
   },
   {
     "name": "数据处理",
     "count": 2
   },
   {
-    "name": "数据分析",
-    "count": 1
-  },
-  {
     "name": "数据可视化",
+    "count": 1
+  },
+  {
+    "name": "虚拟筛选",
+    "count": 1
+  },
+  {
+    "name": "原子建模",
+    "count": 1
+  },
+  {
+    "name": "综述",
+    "count": 1
+  },
+  {
+    "name": "AlphaFold",
+    "count": 1
+  },
+  {
+    "name": "AutoDock Vina",
+    "count": 1
+  },
+  {
+    "name": "Bash",
+    "count": 1
+  },
+  {
+    "name": "ChimeraX",
+    "count": 1
+  },
+  {
+    "name": "Coot",
+    "count": 1
+  },
+  {
+    "name": "cryo-EM",
     "count": 2
   },
   {
-    "name": "数据清洗",
-    "count": 2
-  },
-  {
-    "name": "数学公式",
-    "count": 1
-  },
-  {
-    "name": "统计分析",
-    "count": 1
-  },
-  {
-    "name": "序列分析",
-    "count": 1
-  },
-  {
-    "name": "质谱分析",
-    "count": 1
-  },
-  {
-    "name": "转录组",
-    "count": 1
-  },
-  {
-    "name": "自动化",
-    "count": 1
-  },
-  {
-    "name": "Biopython",
-    "count": 1
-  },
-  {
-    "name": "BWA",
-    "count": 1
-  },
-  {
-    "name": "FASTQ",
+    "name": "dplyr",
     "count": 1
   },
   {
@@ -92,32 +96,24 @@
     "count": 1
   },
   {
-    "name": "HISAT2",
+    "name": "Linux",
     "count": 1
   },
   {
-    "name": "KaTeX",
-    "count": 1
-  },
-  {
-    "name": "LaTeX",
-    "count": 1
-  },
-  {
-    "name": "Markdown",
-    "count": 1
-  },
-  {
-    "name": "MaxQuant",
-    "count": 1
-  },
-  {
-    "name": "NGS",
+    "name": "NumPy",
     "count": 1
   },
   {
     "name": "Pandas",
-    "count": 2
+    "count": 1
+  },
+  {
+    "name": "phenix",
+    "count": 1
+  },
+  {
+    "name": "PyMOL",
+    "count": 1
   },
   {
     "name": "Python",
@@ -125,18 +121,26 @@
   },
   {
     "name": "R语言",
-    "count": 2
+    "count": 3
   },
   {
-    "name": "RNA-Seq",
+    "name": "RELION",
     "count": 1
   },
   {
-    "name": "SAM/BAM",
+    "name": "RFdiffusion",
+    "count": 1
+  },
+  {
+    "name": "Rosetta",
     "count": 1
   },
   {
     "name": "Shell",
+    "count": 1
+  },
+  {
+    "name": "tidyverse",
     "count": 1
   }
 ]

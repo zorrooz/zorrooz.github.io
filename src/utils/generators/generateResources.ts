@@ -19,14 +19,31 @@ interface ResourceItem {
   desc: string
 }
 
-interface ResourceSubCategory {
+interface ResourceNode {
   title: string
-  items: ResourceItem[]
+  items?: ResourceItem[]
+  children?: ResourceNode[]
 }
 
 interface ResourceCategory {
   title: string
-  children: ResourceSubCategory[]
+  children: ResourceNode[]
+}
+
+function normalizeNode(raw: Record<string, unknown>): ResourceNode {
+  const title = typeof raw?.title === 'string' ? raw.title : ''
+  const items = Array.isArray(raw?.items)
+    ? raw.items.map((it: Record<string, unknown>): ResourceItem => ({
+        name: typeof it?.name === 'string' ? it.name : '',
+        url: typeof it?.url === 'string' ? it.url : '',
+        desc: typeof it?.desc === 'string' ? it.desc : '',
+      }))
+    : []
+  const children = Array.isArray(raw?.children) ? raw.children.map(normalizeNode) : []
+  const node: ResourceNode = { title }
+  if (items.length) node.items = items
+  if (children.length) node.children = children
+  return node
 }
 
 function normalize(raw: unknown): ResourceCategory[] {
@@ -34,18 +51,7 @@ function normalize(raw: unknown): ResourceCategory[] {
   return list.map((cat: Record<string, unknown>) => {
     const title = typeof cat?.title === 'string' ? cat.title : ''
     const children = Array.isArray(cat?.children) ? cat.children : []
-    const normChildren: ResourceSubCategory[] = children.map(
-      (sub: Record<string, unknown>) => {
-        const st = typeof sub?.title === 'string' ? sub.title : ''
-        const items = Array.isArray(sub?.items) ? sub.items : []
-        const normItems: ResourceItem[] = items.map((it: Record<string, unknown>) => ({
-        name: typeof it?.name === 'string' ? it.name : '',
-        url: typeof it?.url === 'string' ? it.url : '',
-        desc: typeof it?.desc === 'string' ? it.desc : '',
-      }))
-      return { title: st, items: normItems }
-    })
-    return { title, children: normChildren }
+    return { title, children: children.map(normalizeNode) }
   })
 }
 

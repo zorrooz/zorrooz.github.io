@@ -1,50 +1,52 @@
 <!-- Resource.vue -->
 <template>
-  <div class="container py-4 px-3 view-container resource-view">
-    <div class="row justify-content-center">
-      <div class="col-lg-10 col-xl-8 typography-body">
-        <div class="text-center mb-4">
-          <h1 class="article-title mb-3">{{ pageTitle }}</h1>
-          <p style="color: var(--app-text-secondary); margin-top: 0.75rem; margin-bottom: 0;">
-            {{ pageSubtitle }}
-          </p>
+  <div class="page-section resource-view">
+    <header class="resource-head">
+      <h1 class="article-title">{{ pageTitle }}</h1>
+      <p class="resource-subtitle"><i class="fas fa-circle-info resource-head__icon"></i>{{ pageSubtitle }}</p>
+    </header>
+
+    <div class="res-layout">
+      <aside class="res-sidebar">
+        <div v-for="category in resources" :key="category.title" class="res-group">
+          <div class="res-group__label">
+            <span>{{ category.title }}</span>
+            <span class="res-group__count num">{{ category.children?.length || 0 }}</span>
+          </div>
+          <div class="res-group__items">
+            <button v-for="sub in category.children" :key="sub.title" class="res-item"
+              :class="{ 'res-item--active': isActiveSub(sub) }" @click="selectSub(sub)">
+              {{ sub.title }}
+            </button>
+          </div>
         </div>
+      </aside>
 
-        <div class="d-flex flex-column" style="gap: 2rem;">
-          <section v-for="category in resources" :key="category.title">
-            <h2 class="h4 fw-semibold pb-2 mb-3 heading-underline" style="color: var(--app-text-emphasis);">
-              {{ category.title }}
-            </h2>
+      <div class="res-divider" aria-hidden="true"></div>
 
-            <div class="ms-3">
-              <div v-for="sub in category.children" :key="sub.title" class="mb-4">
-                <h3 class="h5 fw-semibold mb-3" style="color: var(--app-text-muted);">
-                  {{ sub.title }}
-                </h3>
-
-                <ul class="list-unstyled mb-0">
-                  <li v-for="item in sub.items" :key="item.name" class="mb-3">
-                    <a :href="item.url" target="_blank" rel="noopener noreferrer" class="text-decoration-none fw-medium"
-                      style="color: var(--app-primary);">
-                      {{ item.name }}
-                    </a>
-                    <p style="color: var(--app-text-secondary); margin-bottom: 0; margin-left: 0.75rem;">
-                      {{ item.desc }}
-                    </p>
-                  </li>
-                </ul>
-              </div>
+      <main class="res-main">
+        <div class="res-groups">
+          <section v-for="group in groups" :key="group.title" class="res-group-block">
+            <h3 class="res-group-block__title">{{ group.title }}</h3>
+            <div class="res-grid">
+              <a v-for="item in group.items" :key="item.name" :href="item.url" target="_blank" rel="noopener noreferrer"
+                class="res-card">
+                <div class="res-card__head">
+                  <span class="res-card__name">{{ item.name }}</span>
+                  <span class="res-card__ext-links">
+                    <span v-if="isDoi(item.url)" class="res-card__ext-link" aria-label="DOI"><i class="fas fa-link"></i></span>
+                  </span>
+                </div>
+                <p class="res-card__desc">{{ item.desc }}</p>
+                <div class="res-card__footer">
+                  <span class="res-card__url">{{ displayUrl(item.url) }}</span>
+                  <i class="fas fa-arrow-up-right-from-square res-card__arrow"></i>
+                </div>
+              </a>
             </div>
           </section>
         </div>
-
-        <div class="text-center mt-5 pt-4" style="border-top: 1px solid var(--app-custom-border-color);">
-          <p style="color: var(--app-text-secondary); margin-bottom: 0;">
-            <i class="fas fa-info-circle me-1"></i>
-            {{ footerText }}
-          </p>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
@@ -58,17 +60,44 @@ import { loadResources } from '@/utils/contentLoader'
 const { t, locale } = useI18n()
 
 const resources = ref<any[]>([])
+const activeSub = ref<any>(null)
 
 const pageTitle = computed(() => t('resources'))
 const pageSubtitle = computed(() => t('resourceSubtitle'))
-const footerText = computed(() => t('updating'))
+
+const groups = computed(() => {
+  if (!activeSub.value) return []
+  if (Array.isArray(activeSub.value.children) && activeSub.value.children.length) {
+    return activeSub.value.children.filter((g: any) => Array.isArray(g.items) && g.items.length)
+  }
+  return Array.isArray(activeSub.value.items) ? [{ title: activeSub.value.title, items: activeSub.value.items }] : []
+})
+
+function selectSub(sub: any) {
+  activeSub.value = sub
+}
+
+function isActiveSub(sub: any) {
+  return activeSub.value === sub
+}
+
+function displayUrl(url: string) {
+  if (!url) return ''
+  return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+}
+
+function isDoi(url: string) {
+  return !!url && (url.includes('doi.org') || /^10\.\d{4,9}\//.test(url))
+}
 
 function loadResourcesData() {
   try {
     resources.value = loadResources() || []
+    activeSub.value = resources.value[0]?.children?.[0] || null
   } catch (error) {
     console.error('Failed to load resources data:', error)
     resources.value = []
+    activeSub.value = null
   }
 }
 
@@ -80,12 +109,306 @@ watch(locale, () => {
 </script>
 
 <style scoped>
-.typography-body {
-  font-size: 1.125rem;
-  line-height: 1.8;
+.resource-head {
+  margin-bottom: var(--sp-12);
 }
 
-.typography-body p {
-  margin-bottom: 0.75rem;
+.resource-head__icon {
+  font-size: 14px;
+  color: var(--primary);
+  margin-right: 8px;
+}
+
+.resource-subtitle {
+  color: var(--fg-2);
+  font-size: var(--text-md);
+  margin-top: var(--sp-3);
+  margin-bottom: 0;
+}
+
+.res-layout {
+  display: grid;
+  grid-template-columns: 230px 1px 1fr;
+  gap: 0;
+  min-height: 420px;
+}
+
+/* ---------- Sidebar ---------- */
+.res-sidebar {
+  padding: var(--sp-2) var(--sp-5) var(--sp-2) 0;
+  position: sticky;
+  top: 92px;
+  align-self: start;
+  max-height: calc(100vh - 116px);
+  overflow-y: auto;
+}
+
+.res-group {
+  margin-bottom: var(--sp-8);
+}
+
+.res-group__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding: 0 var(--sp-2);
+  margin-bottom: var(--sp-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.res-group__count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-3);
+  background: var(--surface-2);
+  border-radius: 99px;
+  padding: 1px 8px;
+}
+
+.res-group__items {
+  display: flex;
+  flex-direction: column;
+}
+
+.res-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--text-base);
+  color: var(--fg-2);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.res-item:hover {
+  background: var(--surface-2);
+  color: var(--fg);
+}
+
+.res-item--active {
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--tint);
+}
+
+.res-divider {
+  width: 1px;
+  background: var(--line);
+  align-self: stretch;
+}
+
+/* ---------- Main ---------- */
+.res-main {
+  padding: var(--sp-2) 0 var(--sp-2) var(--sp-10);
+  min-width: 0;
+}
+
+.res-group-block {
+  margin-bottom: var(--sp-8);
+}
+
+.res-group-block:last-child {
+  margin-bottom: 0;
+}
+
+.res-group-block__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  margin: 0 0 var(--sp-4);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.res-group-block__title::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  border-radius: 99px;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.res-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sp-4);
+}
+
+.res-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--fg);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.res-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+.res-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.res-card__name {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--fg);
+  min-width: 0;
+  transition: color 0.14s ease;
+}
+
+.res-card:hover .res-card__name {
+  color: var(--primary);
+}
+
+.res-card__ext-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.res-card__ext-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--primary-muted);
+  font-size: 14px;
+  transition: color 0.14s ease, background-color 0.14s ease;
+}
+
+.res-card__ext-link:hover {
+  color: var(--primary);
+  background: var(--tint);
+}
+
+.res-card__ext-link i {
+  pointer-events: none;
+}
+
+.res-card__desc {
+  font-size: var(--text-base);
+  color: var(--fg-2);
+  line-height: 1.6;
+  margin: var(--sp-3) 0 var(--sp-4);
+  flex-grow: 1;
+}
+
+.res-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-3);
+}
+
+.res-card__url {
+  font-size: var(--text-xs);
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.res-card__arrow {
+  font-size: 12px;
+  color: var(--fg-3);
+  padding: 4px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity var(--dur-base) ease, transform var(--dur-base) ease, color var(--dur-fast) ease;
+}
+
+.res-card:hover .res-card__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.res-card__arrow:hover {
+  color: var(--primary);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1023px) {
+  .res-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .res-divider {
+    display: none;
+  }
+
+  .res-sidebar {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+    margin-bottom: var(--sp-8);
+  }
+
+  .res-group {
+    margin-bottom: 0;
+  }
+
+  .res-group__items {
+    flex-direction: row;
+    gap: var(--sp-2);
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .res-item {
+    flex-shrink: 0;
+    width: auto;
+    margin-bottom: 0;
+    border-radius: var(--radius-pill);
+    background: var(--surface-2);
+    padding: 7px 15px;
+    font-size: var(--text-sm);
+  }
+
+  .res-item--active {
+    background: var(--tint);
+  }
+
+  .res-main {
+    padding-left: 0;
+  }
 }
 </style>

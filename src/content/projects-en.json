@@ -1,20 +1,40 @@
 [
   {
-    "name": "Biocrawler",
-    "title": "BioCrawler",
-    "desc": "A toolkit for biological data crawling and processing",
-    "date": "2026-05-16",
+    "name": "Plotit",
+    "title": "plotit",
+    "desc": "Declarative plotting package for R — a verb-prefix API based on ggplot2, in early development stage",
+    "date": "2025-12-30",
     "tags": [
-      "Crawler",
-      "API",
-      "Bioinformatics"
+      "R",
+      "ggplot2",
+      "Data Visualization",
+      "Declarative API"
     ],
-    "github": "https://github.com/example/biocrawler",
-    "url": "https://github.com/example/biocrawler",
+    "github": "https://github.com/zorrooz/plotit",
+    "url": "https://zorrooz.github.io/plotit",
     "status": "active",
-    "language": "Python",
-    "stars": 128,
+    "language": "R",
+    "stars": 0,
     "license": "MIT",
-    "version": "0.4.2"
+    "version": ""
+  },
+  {
+    "name": "ZorroozBlog",
+    "title": "zorrooz.github.io",
+    "desc": "Personal blog system — built with Vue 3 + Vite, supporting bilingual Chinese/English, theme switching, and Markdown article management",
+    "date": "2025-08-29",
+    "tags": [
+      "Vue",
+      "Vite",
+      "Blog",
+      "Markdown"
+    ],
+    "github": "https://github.com/zorrooz/zorrooz.github.io",
+    "url": "https://zorrooz.github.io/",
+    "status": "active",
+    "language": "Vue",
+    "stars": 0,
+    "license": "MIT",
+    "version": ""
   }
 ]

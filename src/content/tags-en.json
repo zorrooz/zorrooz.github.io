@@ -1,14 +1,18 @@
 [
   {
-    "name": "Alignment",
-    "count": 2
-  },
-  {
-    "name": "Analysis",
+    "name": "Advanced",
     "count": 1
   },
   {
-    "name": "Automation",
+    "name": "AlphaFold",
+    "count": 1
+  },
+  {
+    "name": "Atomic Modeling",
+    "count": 1
+  },
+  {
+    "name": "AutoDock Vina",
     "count": 1
   },
   {
@@ -16,27 +20,27 @@
     "count": 1
   },
   {
-    "name": "Beginner",
-    "count": 1
-  },
-  {
-    "name": "Bioinformatics",
-    "count": 7
-  },
-  {
-    "name": "Biopython",
-    "count": 1
-  },
-  {
-    "name": "BWA",
+    "name": "ChimeraX",
     "count": 1
   },
   {
     "name": "Command Line",
+    "count": 1
+  },
+  {
+    "name": "Computational Biology",
     "count": 2
   },
   {
-    "name": "Data Cleaning",
+    "name": "Coot",
+    "count": 1
+  },
+  {
+    "name": "Cryo-Electron Microscopy",
+    "count": 2
+  },
+  {
+    "name": "cryo-EM",
     "count": 2
   },
   {
@@ -45,62 +49,46 @@
   },
   {
     "name": "Data Visualization",
+    "count": 1
+  },
+  {
+    "name": "dplyr",
+    "count": 1
+  },
+  {
+    "name": "Getting Started",
     "count": 2
-  },
-  {
-    "name": "FASTQ",
-    "count": 1
-  },
-  {
-    "name": "Genomics",
-    "count": 1
   },
   {
     "name": "ggplot2",
     "count": 1
   },
   {
-    "name": "HISAT2",
+    "name": "Linux",
     "count": 1
   },
   {
-    "name": "Human Genome",
+    "name": "Molecular Docking",
     "count": 1
   },
   {
-    "name": "KaTeX",
-    "count": 1
-  },
-  {
-    "name": "LaTeX",
-    "count": 1
-  },
-  {
-    "name": "Markdown",
-    "count": 1
-  },
-  {
-    "name": "Mass Spectrometry",
-    "count": 1
-  },
-  {
-    "name": "Math",
-    "count": 1
-  },
-  {
-    "name": "MaxQuant",
-    "count": 1
-  },
-  {
-    "name": "NGS",
+    "name": "NumPy",
     "count": 1
   },
   {
     "name": "Pandas",
-    "count": 2
+    "count": 1
   },
   {
-    "name": "Proteomics",
+    "name": "phenix",
+    "count": 1
+  },
+  {
+    "name": "Protein Design",
+    "count": 1
+  },
+  {
+    "name": "PyMOL",
     "count": 1
   },
   {
@@ -108,19 +96,23 @@
     "count": 3
   },
   {
-    "name": "Quantitative Analysis",
-    "count": 1
-  },
-  {
     "name": "R Language",
-    "count": 2
+    "count": 3
   },
   {
-    "name": "RNA-Seq",
+    "name": "RELION",
     "count": 1
   },
   {
-    "name": "SAM/BAM",
+    "name": "Review",
+    "count": 1
+  },
+  {
+    "name": "RFdiffusion",
+    "count": 1
+  },
+  {
+    "name": "Rosetta",
     "count": 1
   },
   {
@@ -128,19 +120,27 @@
     "count": 1
   },
   {
-    "name": "Sequence Analysis",
-    "count": 1
-  },
-  {
     "name": "Shell",
     "count": 1
   },
   {
-    "name": "Statistical Analysis",
+    "name": "Structure Refinement",
     "count": 1
   },
   {
-    "name": "Transcriptome",
+    "name": "Structure Visualization",
+    "count": 1
+  },
+  {
+    "name": "tidyverse",
+    "count": 1
+  },
+  {
+    "name": "Tutorial",
+    "count": 10
+  },
+  {
+    "name": "Virtual Screening",
     "count": 1
   }
 ]

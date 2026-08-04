@@ -4,13 +4,25 @@
 </template>
 
 <script setup lang="ts">
-/*
-  RenderMarkdown
-  - 接收构建期预渲染的 HTML，处理图片路径、代码复制和标题锚点
-*/
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
+
+const COPY_ICON_SVG = `
+  <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">
+    <path d="M3 2C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2H3ZM1 3C1 1.89543 1.89543 1 3 1H9C10.1046 1 11 1.89543 11 3V9C11 10.1046 10.1046 11 9 11H3C1.89543 11 1 10.1046 1 9V3Z"/>
+    <path d="M5 4C4.44772 4 4 4.44772 4 5V11C4 11.5523 4.44772 12 5 12H11C11.5523 12 12 11.5523 12 11V5C12 4.44772 11.5523 4 11 4H5Z"/>
+  </svg>
+`
+
+const CHECK_ICON_SVG = `
+  <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">
+    <path d="M11.3536 3.64645C11.5488 3.84171 11.5488 4.15829 11.3536 4.35355L5.35355 10.3536C5.15829 10.5488 4.84171 10.5488 4.64645 10.3536L2.64645 8.35355C2.45118 8.15829 2.45118 7.84171 2.64645 7.64645C2.84171 7.45118 3.15829 7.45118 3.35355 7.64645L5 9.29289L10.6464 3.64645C10.8417 3.45118 11.1583 3.45118 11.3536 3.64645Z"/>
+  </svg>
+`
 
 const props = withDefaults(
   defineProps<{
@@ -36,6 +48,7 @@ async function initRender(htmlContent: string) {
   await nextTick()
   emit('markdown-rendered')
   enhanceCodeBlocks()
+  enhanceTables()
   enhanceHeadings()
 }
 
@@ -91,7 +104,7 @@ function cleanDuplicateH1(container: HTMLElement) {
 
 function addAnchorLinks(container: HTMLElement) {
   const scrollToHeading = (heading: Element, anchorBtn: HTMLButtonElement) => {
-    const targetTop = window.scrollY + heading.getBoundingClientRect().top - 8
+    const targetTop = window.scrollY + heading.getBoundingClientRect().top - 88
     window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
     setTimeout(() => anchorBtn.blur(), 300)
   }
@@ -102,7 +115,7 @@ function addAnchorLinks(container: HTMLElement) {
       type: 'button',
       className: 'heading-anchor',
       textContent: '#',
-      ariaLabel: '置顶当前标题',
+      ariaLabel: t('anchorHeading'),
       tabIndex: 0,
       ariaHidden: 'false'
     })
@@ -142,13 +155,8 @@ function enhanceCodeBlocks() {
     const copyButton = document.createElement('button')
     copyButton.type = 'button'
     copyButton.className = 'copy-button btn-icon d-flex align-items-center justify-content-center'
-    copyButton.setAttribute('aria-label', '复制代码')
-    copyButton.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 14 14" fill="currentColor">
-        <path d="M3 2C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2H3ZM1 3C1 1.89543 1.89543 1 3 1H9C10.1046 1 11 1.89543 11 3V9C11 10.1046 10.1046 11 9 11H3C1.89543 11 1 10.1046 1 9V3Z"/>
-        <path d="M5 4C4.44772 4 4 4.44772 4 5V11C4 11.5523 4.44772 12 5 12H11C11.5523 12 12 11.5523 12 11V5C12 4.44772 11.5523 4 11 4H5Z"/>
-      </svg>
-    `
+    copyButton.setAttribute('aria-label', t('copyCode'))
+    copyButton.innerHTML = COPY_ICON_SVG
     copyButton.addEventListener('click', () => copyToClipboard(code.textContent ?? '', copyButton))
 
     header.append(langLabel, copyButton)
@@ -159,11 +167,44 @@ function enhanceCodeBlocks() {
   })
 }
 
+function enhanceTables() {
+  const container = markdownContainer.value
+  if (!container) return
+
+  container.querySelectorAll('table').forEach(table => {
+    if (table.closest('.table-copyable')) return
+
+    const wrapper = document.createElement('div')
+    wrapper.className = 'table-copyable'
+
+    const copyButton = document.createElement('button')
+    copyButton.type = 'button'
+    copyButton.className = 'table-copy-btn'
+    copyButton.setAttribute('aria-label', t('copyTable'))
+    copyButton.innerHTML = COPY_ICON_SVG
+    copyButton.addEventListener('click', () => copyTableToClipboard(table, copyButton))
+
+    wrapper.append(copyButton)
+    table.parentNode?.insertBefore(wrapper, table)
+    wrapper.append(table)
+  })
+}
+
+function copyTableToClipboard(table: HTMLTableElement, button: HTMLButtonElement) {
+  const rows = Array.from(table.querySelectorAll('tr'))
+  const lines = rows.map(tr =>
+    Array.from(tr.querySelectorAll('th, td'))
+      .map(cell => (cell.textContent || '').trim().replace(/\s+/g, ' '))
+      .join('\t')
+  )
+  copyToClipboard(lines.join('\n'), button)
+}
+
 async function copyToClipboard(text: string, button: HTMLButtonElement) {
   try {
     await navigator.clipboard.writeText(text)
   } catch (err) {
-    console.error('复制失败:', err)
+    console.error(t('copyFailed'), err)
     const textArea = document.createElement('textarea')
     textArea.value = text
     document.body.appendChild(textArea)
@@ -176,19 +217,19 @@ async function copyToClipboard(text: string, button: HTMLButtonElement) {
 }
 
 function showCopyFeedback(button: HTMLButtonElement) {
-  const originalColor = button.style.color
-  button.style.color = 'var(--app-success)'
-  setTimeout(() => button.style.color = originalColor, 1000)
+  const original = button.innerHTML
+  button.style.color = 'var(--primary)'
+  button.innerHTML = CHECK_ICON_SVG
+  setTimeout(() => {
+    button.innerHTML = original
+    button.style.color = ''
+  }, 1200)
 }
 
 watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate: true })
 </script>
 
 <style>
-/* 
-  RenderMarkdown 
-  - markdown相关样式
-*/
 @font-face {
   font-family: 'CodeFont';
   src: local('Agave Regular'), local('Agave-Regular'), url('@/assets/fonts/Agave-Regular.ttf') format('truetype');
@@ -210,7 +251,7 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   width: 100%;
   padding: 0;
   color: var(--app-text);
-  line-height: 1.8;
+  line-height: 1.75;
 }
 
 .markdown-body ul,
@@ -238,41 +279,86 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
 }
 
 .markdown-body a {
-  color: var(--app-primary);
+  color: var(--app-link);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.14s ease;
 }
 
 .markdown-body a:hover {
-  color: var(--app-primary);
+  color: var(--app-link);
   text-decoration: underline;
 }
 
 .markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]) {
   color: var(--app-markdown-external-link-color);
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
+}
+
+.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"])::after {
+  content: '\f08e';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 0.72em;
+  margin-left: 0.35em;
+  opacity: 0.5;
+  transition: opacity 0.14s ease;
+}
+
+.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]):hover::after {
+  opacity: 1;
 }
 
 .markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]):hover {
   text-decoration: underline;
 }
 
+.markdown-body kbd {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  font-weight: 600;
+  color: var(--fg-2);
+  background: var(--tint);
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+}
+
+.markdown-body hr {
+  border: none;
+  height: 1px;
+  background: var(--line);
+  margin: 2em 0;
+}
+
+.markdown-body li.task-list-item {
+  list-style: none;
+  margin-left: -1.4em;
+}
+
+.markdown-body .task-list-item-checkbox {
+  accent-color: var(--seed-primary);
+  margin-right: 0.5em;
+}
+
 .markdown-body code:not(pre code) {
   background-color: var(--app-markdown-code-bg);
   color: var(--app-markdown-code-color);
-  padding: 0.2em 0.4em;
-  border-radius: 0.25em;
-  font-size: 0.9em;
+  padding: 0.18em 0.45em;
+  border-radius: var(--radius-sm);
+  font-size: 0.88em;
+  border: 1px solid var(--line);
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
 .markdown-body pre {
   background-color: var(--app-markdown-code-bg);
-  border-radius: 0.5em;
-  padding: 1em;
+  padding: 1.1em 1.25em;
   margin: 0;
   overflow-x: auto;
+  font-size: 13.5px;
+  line-height: 1.65;
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
@@ -285,32 +371,79 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
 
 .markdown-body .code-block-wrapper {
   position: relative;
-  margin: 1em 0;
-  border-radius: 0.5em;
+  margin: 1.5em 0;
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-soft);
+}
+
+.markdown-body .table-copyable {
+  position: relative;
+}
+
+.markdown-body .table-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  color: var(--fg-3);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.14s ease, color 0.14s ease, background-color 0.14s ease;
+}
+
+@media (hover: hover) {
+  .markdown-body .table-copyable:hover .table-copy-btn,
+  .markdown-body .table-copy-btn:focus-visible {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .markdown-body .table-copy-btn {
+    opacity: 0.8;
+  }
+}
+
+.markdown-body .table-copy-btn:hover,
+.markdown-body .table-copy-btn:focus-visible {
+  color: var(--primary);
+  background: var(--tint);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .markdown-body .code-block-header {
-  padding: 0.4em 1em;
-  background-color: var(--app-markdown-code-header-bg, rgba(0, 0, 0, 0.05));
-  border-bottom: 1px solid var(--app-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55em 1.1em;
+  background-color: var(--app-markdown-code-header-bg);
+  border-bottom: 1px solid var(--line);
 }
 
 .markdown-body .code-language {
-  font-size: 0.85em;
-  font-weight: 500;
-  color: var(--app-code-header-text);
-  font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: var(--font-mono);
   text-transform: lowercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   padding: 0;
 }
 
 .markdown-body .copy-button {
   background: transparent;
   border: none;
-  padding: 0.25em;
+  padding: 0.2em;
   cursor: pointer;
   color: var(--app-text-muted);
 }
@@ -323,14 +456,6 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   background: var(--app-markdown-code-bg);
   padding: 0;
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-}
-
-.markdown-body img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 1em auto;
-  border-radius: 0.25em;
 }
 
 .markdown-body p {
@@ -420,10 +545,10 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   display: inline-block;
   margin-left: 0.3em;
   color: var(--app-text-muted);
-  font-size: 0.9em;
+  font-size: 0.85em;
   font-weight: 400;
-  opacity: 0.6;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  opacity: 0.4;
+  transition: opacity 0.14s ease, color 0.14s ease;
   cursor: pointer;
   background: none;
   border: none;
@@ -449,28 +574,64 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
 }
 
 .markdown-body blockquote {
-  border-left: 4px solid var(--app-border);
-  padding-left: 1em;
-  margin: 1em 0;
-  color: var(--app-text-muted);
+  border: none;
+  border-left: 3px solid var(--primary);
+  background: transparent;
+  padding: 0.1em 0 0.1em 1.2em;
+  margin: 1.5em 0;
+  color: var(--app-text-secondary);
   font-style: normal;
 }
 
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
 .markdown-body table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
-  margin: 1em 0;
+  margin: 1.5em 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 0.94em;
 }
 
 .markdown-body th,
 .markdown-body td {
-  border: 1px solid var(--app-border);
-  padding: 0.5em;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  padding: 0.6em 0.9em;
   text-align: left;
 }
 
+.markdown-body th:last-child,
+.markdown-body td:last-child {
+  border-right: none;
+}
+
+.markdown-body tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-body tbody tr:hover td {
+  background: var(--surface-2);
+}
+
 .markdown-body th {
-  background-color: var(--app-bg-light);
+  background-color: var(--app-markdown-code-header-bg);
   font-weight: 600;
+  color: var(--app-text-emphasis);
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5em auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
 }
 </style>

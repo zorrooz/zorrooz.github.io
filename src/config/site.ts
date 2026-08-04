@@ -1,6 +1,5 @@
 export const SITE = {
   url: 'https://zorrooz.github.io',
-  name: 'gblog',
   author: 'zorrooz',
   email: 'zorrooz@163.com',
   github: 'https://github.com/zorrooz',

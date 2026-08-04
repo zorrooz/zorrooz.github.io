@@ -1,17 +1,19 @@
 <!-- NavigationTree.vue -->
 <template>
   <div class="navigation-tree">
-    <div v-for="category in navigationTree" :key="category.name" class="category-group">
-      <h3 class="category-name">{{ category.name }}</h3>
+    <div v-for="category in navigationTree" :key="category.name" class="tree-group">
+      <div class="tree-label">{{ category.name }}</div>
       <ul class="article-list article-list-root">
         <template v-for="dir in category.children" :key="dir.name">
           <li v-if="dir.files && dir.files.length" class="article-item">
             <div class="directory-node">
-              <span class="directory-name level-2">{{ dir.name }}</span>
+              <div class="tree-item tree-item--folder">
+                {{ dir.name }}
+              </div>
               <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
                 <li v-for="file in dir.files" :key="file.path" class="article-item">
-                  <router-link :to="toArticle(file.path)" class="article-link level-3"
-                    :class="{ active: isActive(file.path) }">
+                  <router-link :to="toArticle(file.path)" class="tree-item tree-item--child"
+                    :class="{ 'tree-item--active': isActive(file.path) }">
                     {{ file.title }}
                   </router-link>
                 </li>
@@ -19,11 +21,13 @@
               <ul v-if="dir.children && dir.children.length" class="article-list sub-list">
                 <li v-for="sub in dir.children" :key="sub.name" class="article-item">
                   <div class="directory-node">
-                    <span class="directory-name level-2">{{ sub.name }}</span>
+                    <div class="tree-item tree-item--folder">
+                      {{ sub.name }}
+                    </div>
                     <ul v-if="sub.files && sub.files.length" class="article-list sub-list files-level">
                       <li v-for="file in sub.files" :key="file.path" class="article-item">
-                        <router-link :to="toArticle(file.path)" class="article-link level-3"
-                          :class="{ active: isActive(file.path) }">
+                        <router-link :to="toArticle(file.path)" class="tree-item tree-item--child"
+                          :class="{ 'tree-item--active': isActive(file.path) }">
                           {{ file.title }}
                         </router-link>
                       </li>
@@ -35,7 +39,8 @@
           </li>
         </template>
         <li v-for="file in category.files" :key="file.path" class="article-item">
-          <router-link :to="toArticle(file.path)" class="article-link level-3" :class="{ active: isActive(file.path) }">
+          <router-link :to="toArticle(file.path)" class="tree-item tree-item--child"
+            :class="{ 'tree-item--active': isActive(file.path) }">
             {{ file.title }}
           </router-link>
         </li>
@@ -197,79 +202,106 @@ onMounted(() => {
 
 <style scoped>
 .navigation-tree {
-  padding: 0.5rem 0;
-  font-size: 0.95rem;
+  padding: 0.25rem 0;
+  font-size: var(--text-base);
 }
 
-.category-group {
-  margin-bottom: 0.5rem;
+.tree-group {
+  margin-bottom: var(--sp-6);
 }
 
-.category-group:last-child {
-  margin-bottom: 0;
+.tree-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding: 0 var(--sp-2);
+  margin-bottom: var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
 }
 
-.category-name {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--app-text-muted);
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.75rem;
+.tree-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
 }
 
 .article-list {
   list-style: none;
   padding-left: 0;
+  margin: 0;
 }
 
 .article-list-root {
   padding-left: 0;
 }
 
-.directory-node {
-  padding: 0.25rem 0;
+.article-item {
+  margin-bottom: 1px;
 }
 
-.directory-name.level-2 {
-  display: block;
-  font-weight: 700;
-  color: var(--app-text-emphasis);
-  margin-left: 0;
-  padding-left: 0.75rem;
+.directory-node {
+  padding: 0.1rem 0;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  color: var(--fg-2);
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1px;
+  transition: color 0.14s ease, background-color 0.14s ease;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  position: relative;
+  text-decoration: none;
+  line-height: 1.45;
+}
+
+.tree-item:hover {
+  background: var(--surface-2);
+  color: var(--fg);
+}
+
+/* 当前文章 hover 保持蓝色，不落入 hover 的黑色 */
+.tree-item--active:hover {
+  color: var(--primary);
+  background: var(--tint-strong);
+}
+
+.tree-item--active {
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--tint);
+}
+
+.tree-item--folder {
+  font-weight: 600;
+  color: var(--fg);
+  cursor: default;
+}
+
+.tree-item--child {
+  padding-left: 10px;
+  font-size: var(--text-sm);
+}
+
+/* 子目录内的文章（二级及更深）比分类直属文章小一档 */
+.files-level .tree-item--child {
+  font-size: 13px;
 }
 
 .sub-list {
-  padding-left: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-.files-level {
-  padding-left: 0.75rem;
-}
-
-.article-item {
-  margin-bottom: 0.3rem;
-}
-
-.article-link {
-  display: block;
-  padding: 0.5rem 0.75rem;
-  text-decoration: none;
-  color: var(--app-text-muted);
-  border-radius: 0.25rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.article-link:hover,
-.article-link:focus {
-  background-color: var(--app-primary-bg-subtle);
-  color: var(--app-primary);
-}
-
-.article-link.active {
-  background-color: transparent;
-  color: var(--app-primary);
-  font-weight: 700;
+  padding-left: 0;
 }
 </style>

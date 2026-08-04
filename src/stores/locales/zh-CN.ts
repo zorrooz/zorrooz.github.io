@@ -7,42 +7,70 @@ export default {
   nextPage: '下一页',
   pagination: '分页导航',
   search: '搜索',
+  theme: '主题',
+  language: '语言',
+  menu: '菜单',
   close: '关闭',
   searchPlaceholder: '搜索文章标题或正文...',
   searchNoResults: '未找到匹配的文章',
   searchUnavailable: '搜索索引加载失败',
+  searchEnterHint: 'Enter 打开',
+  searchEscHint: 'Esc 关闭',
+  searchResultsLabel: '条结果',
 
   // 导航
+  home: '首页',
   categories: '分类',
   resources: '资源',
   about: '关于',
 
   // 首页
+  greeting: '你好，我是',
+  greetingPrefix: '//',
   avatar: '头像',
   developer: '开发者',
+  wordUnit: '字',
+  recentPosts: '最近文章',
 
   // 分类页面
   notes: '笔记',
   projects: '项目',
   topics: '课题',
   seeMore: '查看更多',
+  countPosts: '{count} 篇',
+  countProjects: '{count} 个项目',
+  countTopics: '{count} 个课题',
+  countWords: '{count} 字',
+  copyCode: '复制代码',
+  copyFailed: '复制失败',
+  copyArticle: '复制文章',
+  copyTable: '复制表格',
+  copied: '已复制',
+  anchorHeading: '置顶当前标题',
   // 未分类
   uncategorized: '未分类',
 
   // 文章页面
   updatedAt: '更新于',
-  readingTime: '阅读约 {minutes} 分钟',
+  postReadingTime: '{minutes} 分钟',
+  articleReadingTime: '阅读约 {minutes} 分钟',
   tableOfContents: '本页目录',
+  openToc: '打开目录',
+  backToTop: '回到顶部',
 
   // 资源页面
   resourceSubtitle: '生物信息学与结构生物学领域常用工具',
-  updating: '资源页面正在持续更新中，敬请期待更多优质内容',
+  resourceItems: '项',
 
   // 关于页面
+  experience: '经历',
   introduction: '自我介绍',
   contact: '联系我',
   thanks: '感谢您的关注！',
+  designedByPrefix: '由',
+  designedBySuffix: '设计',
 
   // 过滤功能
-  filteredBy: '筛选条件'
+  clearFilter: '清除筛选',
+  backToArticle: '返回文章'
 }

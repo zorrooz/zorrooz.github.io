@@ -13,13 +13,25 @@ const isDirectRun =
 const contentSrcDir = path.join(__dirname, '../../content-src')
 const contentOutputDir = path.join(__dirname, '../../content')
 
+interface ExperienceItem {
+  year: string
+  title: string
+  desc: string
+}
+
+interface AboutSectionItem {
+  name: string
+  desc: string
+}
+
 interface AboutSection {
   title: string
-  items: Array<{ item: string; desc: string }>
+  items: AboutSectionItem[]
 }
 
 interface AboutData {
   introduction: string
+  experience: ExperienceItem[]
   section: AboutSection[]
   contacts: unknown[]
 }
@@ -27,12 +39,20 @@ interface AboutData {
 function normalize(raw: Record<string, unknown> = {}): AboutData {
   const intro = typeof raw.introduction === 'string' ? raw.introduction : ''
 
+  const experience: ExperienceItem[] = Array.isArray(raw.experience)
+    ? raw.experience.map((it: Record<string, unknown>) => ({
+        year: typeof it?.year === 'string' ? it.year : '',
+        title: typeof it?.title === 'string' ? it.title : '',
+        desc: typeof it?.desc === 'string' ? it.desc : '',
+      }))
+    : []
+
   const section: AboutSection[] = Array.isArray(raw.section)
     ? raw.section.map((s: Record<string, unknown>) => {
         const title = typeof s?.title === 'string' ? s.title : ''
         const items = Array.isArray(s?.items)
           ? s.items.map((it: Record<string, unknown>) => ({
-              item: typeof it?.item === 'string' ? it.item : '',
+              name: typeof it?.name === 'string' ? it.name : typeof it?.item === 'string' ? it.item : '',
               desc: typeof it?.desc === 'string' ? it.desc : '',
             }))
           : []
@@ -44,6 +64,7 @@ function normalize(raw: Record<string, unknown> = {}): AboutData {
 
   return {
     introduction: intro,
+    experience,
     section,
     contacts,
   }

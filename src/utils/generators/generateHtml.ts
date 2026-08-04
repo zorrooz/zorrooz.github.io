@@ -7,7 +7,7 @@
  * (e.g. notes/Omics/genomics/bwa/bwa.html, .../bwa-en.html)
  *
  * Only `notes` are rendered: projects/topics are metadata-only
- * (their md sources are kept in content-src but not published).
+ * (their md sources are removed from content-src).
  */
 
 import fs from 'fs'

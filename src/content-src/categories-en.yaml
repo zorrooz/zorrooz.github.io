@@ -1,43 +1,58 @@
 notes:
-  - name: "Omics"
-    title: "Omics"
-    desc: "Summary of learning records and materials related to omics"
-    date: "2026-06-21"
-    categories:
-      genomics: "Genomics"
-      proteomics: "Proteomics"
-      transcriptomics: "Transcriptomics"
-
   - name: "Programming"
     title: "Programming"
-    desc: "Summary of learning records and materials related to programming"
-    date: "2026-07-06"
+    desc: "Detailed tutorials on R, Python, Linux, and Bash programming"
+    date: "2026-08-04"
     categories:
       python: "Python"
       r: "R"
-      shell: "Shell"
+      linux: "Linux"
+      bash: "Bash"
+
+  - name: "StructuralBiology"
+    title: "Structural Biology"
+    desc: "Cryo-EM data processing, visualization of biomacromolecular structures, and atomic modeling"
+    date: "2026-08-04"
+    categories:
+      cryoem: "Cryo-EM"
+      visualization: "Structural Visualization"
+      modeling: "Atomic Modeling"
+
+  - name: "ComputationalBiology"
+    title: "Computational Biology"
+    desc: "Mainstream tools for protein design and virtual screening"
+    date: "2026-08-04"
+    categories:
+      protein-design: "Protein Design"
+      virtual-screening: "Virtual Screening"
 
 projects:
-  - name: "Biocrawler"
-    title: "BioCrawler"
-    desc: "A toolkit for biological data crawling and processing"
-    date: "2026-05-16"
-    github: "https://github.com/example/biocrawler"
-    url: "https://github.com/example/biocrawler"
+  - name: "Plotit"
+    title: "plotit"
+    desc: "Declarative plotting package for R — a verb-prefix API based on ggplot2, in early development stage"
+    date: "2025-12-30"
+    github: "https://github.com/zorrooz/plotit"
+    url: "https://zorrooz.github.io/plotit"
     status: "active"
-    language: "Python"
-    stars: 128
+    language: "R"
     license: "MIT"
-    version: "0.4.2"
-    tags: ["Crawler", "API", "Bioinformatics"]
-    categories:
-      api: "API"
-      installation: "Installation"
+    tags: ["R","ggplot2","Data Visualization","Declarative API"]
+
+  - name: "ZorroozBlog"
+    title: "zorrooz.github.io"
+    desc: "Personal blog system — built with Vue 3 + Vite, supporting bilingual Chinese/English, theme switching, and Markdown article management"
+    date: "2025-08-29"
+    github: "https://github.com/zorrooz/zorrooz.github.io"
+    url: "https://zorrooz.github.io/"
+    status: "active"
+    language: "Vue"
+    license: "MIT"
+    tags: ["Vue","Vite","Blog","Markdown"]
 
 topics:
   - name: "StructureOfProteinDemo"
-    title: "Protein Structure Analysis Demo Project"
-    desc: "Demonstration of protein structure analysis methods and results"
+    title: "Protein Structure Determination Demo Project"
+    desc: "Protein structure placeholder demo"
     date: "2026-04-12"
     doi: "10.1234/demo-structure.2026"
     url: "https://www.demo-structure.org"
@@ -45,7 +60,4 @@ topics:
     journal: "Journal of Demo Science"
     year: 2026
     authors: ["Demo Author A", "Demo Author B"]
-    tags: ["Protein", "Structure", "Cryo-EM"]
-    categories:
-      methods: "Methods"
-      results: "Results"
+    tags: ["Protein","Structure","Cryo-EM"]

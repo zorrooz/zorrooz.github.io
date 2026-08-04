@@ -58,11 +58,13 @@ const activeId = ref('')
 const otpObserver = ref<MutationObserver | null>(null)
 const otpObserverTimer = ref<number | null>(null)
 const otpPoller = ref<number | null>(null)
+const spyObserver = ref<IntersectionObserver | null>(null)
 
 function cleanupObservers() {
   if (otpObserver.value) { otpObserver.value.disconnect(); otpObserver.value = null }
   if (otpObserverTimer.value) { clearTimeout(otpObserverTimer.value); otpObserverTimer.value = null }
   if (otpPoller.value) { clearInterval(otpPoller.value); otpPoller.value = null }
+  if (spyObserver.value) { spyObserver.value.disconnect(); spyObserver.value = null }
 }
 
 function resetToc() {
@@ -74,7 +76,7 @@ function resetToc() {
 
 function refreshToc() {
   buildToc()
-  onScrollSpy()
+  setupScrollSpy()
 }
 
 function setupContainerObserver() {
@@ -156,35 +158,24 @@ function buildToc() {
   toc.value = tocList
 }
 
-function bindScrollSpy() {
-  window.addEventListener('scroll', onScrollSpy, { passive: true })
-  window.addEventListener('resize', onScrollSpy)
-  onScrollSpy()
-}
-
-function onScrollSpy() {
+function setupScrollSpy() {
+  if (spyObserver.value) { spyObserver.value.disconnect(); spyObserver.value = null }
   const root = document.querySelector(props.containerSelector)
   if (!root) return
 
   const selector = props.levels.map(l => `h${l}`).join(',')
   const headings = Array.from(root.querySelectorAll(selector))
-  if (headings.length === 0) {
-    activeId.value = ''
-    return
-  }
+  if (headings.length === 0) return
 
-  const scrollY = window.scrollY || window.pageYOffset
-
-  let current = ''
-  for (const h of headings) {
-    const top = h.getBoundingClientRect().top + scrollY
-    if (top - props.offset <= scrollY + 1) {
-      current = h.id
-    } else {
-      break
-    }
-  }
-  activeId.value = current || (headings[0]?.id || '')
+  spyObserver.value = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) activeId.value = (entry.target as HTMLElement).id
+      }
+    },
+    { rootMargin: `-${props.offset}px 0px -60% 0px`, threshold: 0 }
+  )
+  headings.forEach(h => spyObserver.value?.observe(h))
 }
 
 function scrollToId(id: string) {
@@ -195,10 +186,13 @@ function scrollToId(id: string) {
     return
   }
   const top = el.getBoundingClientRect().top + window.scrollY - props.offset
+  const reduceMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const doScroll = () => {
     window.scrollTo({
       top,
-      behavior: 'smooth'
+      behavior: reduceMotion ? 'auto' : 'smooth'
     })
   }
 
@@ -216,7 +210,7 @@ function scrollToId(id: string) {
 
 onMounted(() => {
   buildToc()
-  bindScrollSpy()
+  setupScrollSpy()
 
   nextTick(() => {
     setupContainerObserver()
@@ -224,8 +218,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScrollSpy)
-  window.removeEventListener('resize', onScrollSpy)
   cleanupObservers()
 })
 
@@ -234,22 +226,23 @@ defineExpose({ refreshToc, resetToc })
 
 <style scoped>
 .on-this-page {
-  --otp-active-bg: var(--app-primary-bg-subtle);
-  --otp-active: var(--app-primary);
   padding: 0.25rem 0;
-  font-size: 0.95rem;
+  font-size: var(--text-base);
 }
 
 .otp-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+  gap: var(--sp-2);
+  margin-bottom: 0.75rem;
 }
 
 .otp-title {
   font-weight: 600;
-  color: var(--app-text-emphasis);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-3);
 }
 
 .otp-list {
@@ -259,50 +252,73 @@ defineExpose({ refreshToc, resetToc })
 }
 
 .otp-item {
-  margin: 0.125rem 0;
+  margin: 1px 0;
   padding-left: 0;
 }
 
 .otp-link {
-  display: block;
-  padding: 0.3rem 0.5rem;
-  color: var(--app-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 10px;
+  color: var(--fg-2);
   text-decoration: none;
-  border-radius: 0.25rem;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  transition: color 0.14s ease, background-color 0.14s ease;
+  position: relative;
+  line-height: 1.5;
+  cursor: pointer;
 }
 
 .otp-link:hover {
-  color: var(--app-primary);
+  color: var(--primary);
+  background-color: var(--surface-2);
 }
 
-.otp-item.active>.otp-link {
-  color: var(--otp-active);
+.otp-item.active > .otp-link {
+  color: var(--primary);
   font-weight: 600;
+}
+
+.otp-item.active > .otp-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 12px;
+  border-radius: 99px;
+  background: var(--primary);
 }
 
 .otp-sublist {
   list-style: none;
-  padding-left: 1.25rem;
-  margin: 0.25rem 0 0.25rem 0;
+  padding-left: 12px;
+  margin: 2px 0;
+  border-left: 1px solid var(--line);
 }
 
 .otp-subitem .otp-sublink {
   display: block;
-  padding: 0.25rem 0.5rem;
-  color: var(--app-text-muted);
+  padding: 4px 10px;
+  color: var(--fg-3);
   text-decoration: none;
-  border-radius: 0.25rem;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+  transition: color 0.14s ease, background-color 0.14s ease;
+  cursor: pointer;
+  line-height: 1.5;
 }
 
 .otp-sublink:hover {
-  color: var(--app-primary);
+  color: var(--primary);
+  background-color: var(--surface-2);
 }
 
-.otp-subitem.active>.otp-sublink {
-  color: var(--otp-active);
+.otp-subitem.active > .otp-sublink {
+  color: var(--primary);
   font-weight: 600;
 }
 </style>

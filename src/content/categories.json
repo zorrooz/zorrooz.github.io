@@ -3,134 +3,100 @@
     "title": "笔记",
     "items": [
       {
-        "name": "Omics",
-        "title": "组学",
-        "desc": "组学相关的学习记录与资料汇总",
+        "name": "ComputationalBiology",
+        "title": "计算生物学",
+        "desc": "蛋白质设计与虚拟筛选的主流工具",
         "tags": [
-          "RNA-Seq",
-          "HISAT2",
-          "转录组",
-          "比对",
-          "生物信息学",
-          "MaxQuant",
-          "蛋白质组学",
-          "质谱分析",
-          "定量分析",
-          "BWA",
-          "NGS",
-          "命令行",
-          "人类基因组",
-          "SAM/BAM"
+          "蛋白质设计",
+          "Rosetta",
+          "AlphaFold",
+          "RFdiffusion",
+          "计算生物学",
+          "虚拟筛选",
+          "分子对接",
+          "AutoDock Vina"
         ],
         "stats": {
-          "postsCount": 3,
-          "totalWords": 453,
-          "latestDate": "2026-06-21"
+          "postsCount": 2,
+          "totalWords": 1899,
+          "latestDate": "2026-08-04"
         },
         "categories": [
           {
-            "key": "genomics",
-            "title": "基因组学",
+            "key": "protein-design",
+            "title": "蛋白质设计",
             "articles": [
               {
-                "title": "BWA MEM 比对人类基因组实战",
-                "articleUrl": "/article/notes/Omics/genomics/bwa/bwa",
+                "title": "蛋白质设计主流工具",
+                "articleUrl": "/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools",
+                "wordCount": 1002,
                 "tags": [
-                  "BWA",
-                  "比对",
-                  "NGS",
-                  "命令行",
-                  "人类基因组",
-                  "SAM/BAM"
+                  "蛋白质设计",
+                  "Rosetta",
+                  "AlphaFold",
+                  "RFdiffusion",
+                  "计算生物学"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 266,
-              "latestDate": "2026-06-19"
+              "totalWords": 1002,
+              "latestDate": "2026-08-04"
             }
           },
           {
-            "key": "proteomics",
-            "title": "蛋白质组学",
+            "key": "virtual-screening",
+            "title": "虚拟筛选",
             "articles": [
               {
-                "title": "MaxQuant 蛋白质组学分析工作流",
-                "articleUrl": "/article/notes/Omics/proteomics/maxquant/maxquant",
+                "title": "虚拟筛选主流工具",
+                "articleUrl": "/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools",
+                "wordCount": 897,
                 "tags": [
-                  "MaxQuant",
-                  "蛋白质组学",
-                  "质谱分析",
-                  "生物信息学",
-                  "定量分析"
+                  "虚拟筛选",
+                  "分子对接",
+                  "AutoDock Vina",
+                  "计算生物学"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 114,
-              "latestDate": "2026-06-20"
-            }
-          },
-          {
-            "key": "transcriptomics",
-            "title": "转录组学",
-            "articles": [
-              {
-                "title": "RNA-Seq 分析：HISAT2 比对流程",
-                "articleUrl": "/article/notes/Omics/transcriptomics/rnaseq-hisat2/rnaseq-hisat2",
-                "tags": [
-                  "RNA-Seq",
-                  "HISAT2",
-                  "转录组",
-                  "比对",
-                  "生物信息学"
-                ]
-              }
-            ],
-            "stats": {
-              "postsCount": 1,
-              "totalWords": 73,
-              "latestDate": "2026-06-21"
+              "totalWords": 897,
+              "latestDate": "2026-08-04"
             }
           }
         ],
-        "root": "/article/notes/Omics/genomics/bwa/bwa"
+        "root": "/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools"
       },
       {
         "name": "Programming",
         "title": "编程",
-        "desc": "编程相关的学习记录与资料汇总",
+        "desc": "R、Python、Linux 与 Bash 编程的详细教程",
         "tags": [
-          "Markdown",
-          "LaTeX",
-          "KaTeX",
-          "数学公式",
-          "生物信息学",
+          "Bash",
           "Shell",
-          "命令行",
           "脚本编程",
-          "自动化",
+          "教程",
+          "Linux",
+          "命令行",
+          "Python",
+          "进阶",
+          "入门",
+          "NumPy",
+          "Pandas",
+          "数据处理",
           "R语言",
           "ggplot2",
           "数据可视化",
-          "数据处理",
-          "统计分析",
-          "Python",
-          "Pandas",
-          "数据分析",
-          "数据清洗",
-          "FASTQ",
-          "入门",
-          "Biopython",
-          "序列分析",
-          "基因组学"
+          "tidyverse",
+          "dplyr"
         ],
         "stats": {
-          "postsCount": 7,
-          "totalWords": 849,
-          "latestDate": "2026-07-06"
+          "postsCount": 8,
+          "totalWords": 2903,
+          "latestDate": "2026-08-04"
         },
         "categories": [
           {
@@ -138,55 +104,42 @@
             "title": "Python",
             "articles": [
               {
-                "title": "Markdown 与 LaTeX 公式渲染示例",
-                "articleUrl": "/article/notes/Programming/python/markdown-demo/markdown-demo",
+                "title": "Python 进阶：函数、类与模块",
+                "articleUrl": "/article/notes/Programming/python/python-advanced/python-advanced",
+                "wordCount": 376,
                 "tags": [
-                  "Markdown",
-                  "LaTeX",
-                  "KaTeX",
-                  "数学公式",
-                  "生物信息学"
+                  "Python",
+                  "进阶",
+                  "教程"
                 ]
               },
               {
-                "title": "Python Pandas 数据处理实战",
-                "articleUrl": "/article/notes/Programming/python/pandas/pandas",
+                "title": "Python 编程入门：环境、语法与数据类型",
+                "articleUrl": "/article/notes/Programming/python/python-basics/python-basics",
+                "wordCount": 495,
                 "tags": [
                   "Python",
+                  "入门",
+                  "教程"
+                ]
+              },
+              {
+                "title": "Python 数据处理实战：文件 IO、正则与 NumPy/Pandas",
+                "articleUrl": "/article/notes/Programming/python/python-data/python-data",
+                "wordCount": 473,
+                "tags": [
+                  "Python",
+                  "NumPy",
                   "Pandas",
                   "数据处理",
-                  "数据分析",
-                  "数据清洗"
-                ]
-              },
-              {
-                "title": "用 Pandas 处理 FASTQ 质量统计",
-                "articleUrl": "/article/notes/Programming/python/fastq/fastq",
-                "tags": [
-                  "Python",
-                  "Pandas",
-                  "FASTQ",
-                  "数据清洗",
-                  "生物信息学",
-                  "入门"
-                ]
-              },
-              {
-                "title": "Biopython 生物信息学应用",
-                "articleUrl": "/article/notes/Programming/python/biopython/biopython",
-                "tags": [
-                  "Python",
-                  "Biopython",
-                  "生物信息学",
-                  "序列分析",
-                  "基因组学"
+                  "教程"
                 ]
               }
             ],
             "stats": {
-              "postsCount": 4,
-              "totalWords": 568,
-              "latestDate": "2026-07-10"
+              "postsCount": 3,
+              "totalWords": 1344,
+              "latestDate": "2026-08-04"
             }
           },
           {
@@ -194,56 +147,194 @@
             "title": "R",
             "articles": [
               {
-                "title": "R语言 ggplot2 数据可视化",
-                "articleUrl": "/article/notes/Programming/r/ggplot2/ggplot2",
+                "title": "R 语言入门：数据结构、向量化与函数",
+                "articleUrl": "/article/notes/Programming/r/r-basics/r-basics",
+                "wordCount": 403,
+                "tags": [
+                  "R语言",
+                  "入门",
+                  "教程"
+                ]
+              },
+              {
+                "title": "R ggplot2 数据可视化：图层语法与常用图表",
+                "articleUrl": "/article/notes/Programming/r/r-ggplot2/r-ggplot2",
+                "wordCount": 245,
                 "tags": [
                   "R语言",
                   "ggplot2",
                   "数据可视化",
-                  "生物信息学"
+                  "教程"
                 ]
               },
               {
-                "title": "R语言数据处理示例",
-                "articleUrl": "/article/notes/Programming/r/demo/demo",
+                "title": "R tidyverse 数据操作：dplyr 管道与数据清洗",
+                "articleUrl": "/article/notes/Programming/r/r-tidyverse/r-tidyverse",
+                "wordCount": 324,
                 "tags": [
                   "R语言",
-                  "数据处理",
-                  "统计分析",
-                  "数据可视化",
-                  "生物信息学"
+                  "tidyverse",
+                  "dplyr",
+                  "教程"
                 ]
               }
             ],
             "stats": {
-              "postsCount": 2,
-              "totalWords": 182,
-              "latestDate": "2026-07-05"
+              "postsCount": 3,
+              "totalWords": 972,
+              "latestDate": "2026-08-04"
             }
           },
           {
-            "key": "shell",
-            "title": "Shell",
+            "key": "linux",
+            "title": "Linux",
             "articles": [
               {
-                "title": "Bash Shell 脚本编程",
-                "articleUrl": "/article/notes/Programming/shell/bash/bash",
+                "title": "Linux 命令行基础：文件系统、权限与文本处理",
+                "articleUrl": "/article/notes/Programming/linux/linux-basics/linux-basics",
+                "wordCount": 328,
                 "tags": [
-                  "Shell",
+                  "Linux",
                   "命令行",
-                  "脚本编程",
-                  "自动化"
+                  "教程"
                 ]
               }
             ],
             "stats": {
               "postsCount": 1,
-              "totalWords": 99,
-              "latestDate": "2026-07-06"
+              "totalWords": 328,
+              "latestDate": "2026-08-04"
+            }
+          },
+          {
+            "key": "bash",
+            "title": "Bash",
+            "articles": [
+              {
+                "title": "Bash 编程：变量、条件、循环与实用脚本",
+                "articleUrl": "/article/notes/Programming/bash/bash-scripting/bash-scripting",
+                "wordCount": 259,
+                "tags": [
+                  "Bash",
+                  "Shell",
+                  "脚本编程",
+                  "教程"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 259,
+              "latestDate": "2026-08-04"
             }
           }
         ],
-        "root": "/article/notes/Programming/python/markdown-demo/markdown-demo"
+        "root": "/article/notes/Programming/python/python-advanced/python-advanced"
+      },
+      {
+        "name": "StructuralBiology",
+        "title": "结构生物学",
+        "desc": "冷冻电镜数据处理、生物大分子结构可视化与原子建模",
+        "tags": [
+          "冷冻电镜",
+          "cryo-EM",
+          "综述",
+          "数据处理",
+          "RELION",
+          "原子建模",
+          "Coot",
+          "phenix",
+          "结构精修",
+          "教程",
+          "结构可视化",
+          "PyMOL",
+          "ChimeraX"
+        ],
+        "stats": {
+          "postsCount": 4,
+          "totalWords": 3960,
+          "latestDate": "2026-08-04"
+        },
+        "categories": [
+          {
+            "key": "cryoem",
+            "title": "冷冻电镜",
+            "articles": [
+              {
+                "title": "冷冻电镜技术综述",
+                "articleUrl": "/article/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview",
+                "wordCount": 1485,
+                "tags": [
+                  "冷冻电镜",
+                  "cryo-EM",
+                  "综述"
+                ]
+              },
+              {
+                "title": "冷冻电镜单颗粒分析：数据处理全流程",
+                "articleUrl": "/article/notes/StructuralBiology/cryoem/cryoem-workflow/cryoem-workflow",
+                "wordCount": 1111,
+                "tags": [
+                  "冷冻电镜",
+                  "cryo-EM",
+                  "数据处理",
+                  "RELION"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 2,
+              "totalWords": 2596,
+              "latestDate": "2026-08-04"
+            }
+          },
+          {
+            "key": "visualization",
+            "title": "结构可视化",
+            "articles": [
+              {
+                "title": "生物大分子结构可视化：PyMOL 与 ChimeraX 实战",
+                "articleUrl": "/article/notes/StructuralBiology/visualization/structure-visualization/structure-visualization",
+                "wordCount": 529,
+                "tags": [
+                  "结构可视化",
+                  "PyMOL",
+                  "ChimeraX",
+                  "教程"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 529,
+              "latestDate": "2026-08-04"
+            }
+          },
+          {
+            "key": "modeling",
+            "title": "原子建模",
+            "articles": [
+              {
+                "title": "原子建模与精修",
+                "articleUrl": "/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling",
+                "wordCount": 835,
+                "tags": [
+                  "原子建模",
+                  "Coot",
+                  "phenix",
+                  "结构精修",
+                  "教程"
+                ]
+              }
+            ],
+            "stats": {
+              "postsCount": 1,
+              "totalWords": 835,
+              "latestDate": "2026-08-04"
+            }
+          }
+        ],
+        "root": "/article/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview"
       }
     ]
   },
@@ -251,49 +342,54 @@
     "title": "项目",
     "items": [
       {
-        "name": "Biocrawler",
-        "title": "BioCrawler",
-        "desc": "面向生物数据抓取与处理的工具集",
+        "name": "Plotit",
+        "title": "plotit",
+        "desc": "R 声明式绘图包——基于 ggplot2 的动词前缀 API，早期开发阶段",
         "tags": [
-          "爬虫",
-          "API",
-          "生物信息学"
+          "R",
+          "ggplot2",
+          "数据可视化",
+          "声明式API"
         ],
         "stats": {
           "postsCount": 0,
           "totalWords": 0,
-          "latestDate": "2026-05-16"
+          "latestDate": "2025-12-30"
         },
-        "categories": [
-          {
-            "key": "api",
-            "title": "接口",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "installation",
-            "title": "安装",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          }
-        ],
+        "categories": [],
         "root": "",
-        "github": "https://github.com/example/biocrawler",
+        "github": "https://github.com/zorrooz/plotit",
         "status": "active",
-        "language": "Python",
-        "stars": 128,
+        "language": "R",
+        "stars": 0,
         "license": "MIT",
-        "version": "0.4.2",
-        "url": "https://github.com/example/biocrawler"
+        "version": "",
+        "url": "https://zorrooz.github.io/plotit"
+      },
+      {
+        "name": "ZorroozBlog",
+        "title": "zorrooz.github.io",
+        "desc": "个人博客系统——基于 Vue 3 + Vite 构建，支持中英双语、主题切换与 Markdown 文章管理",
+        "tags": [
+          "Vue",
+          "Vite",
+          "博客",
+          "Markdown"
+        ],
+        "stats": {
+          "postsCount": 0,
+          "totalWords": 0,
+          "latestDate": "2025-08-29"
+        },
+        "categories": [],
+        "root": "",
+        "github": "https://github.com/zorrooz/zorrooz.github.io",
+        "status": "active",
+        "language": "Vue",
+        "stars": 0,
+        "license": "MIT",
+        "version": "",
+        "url": "https://zorrooz.github.io/"
       }
     ]
   },
@@ -303,7 +399,7 @@
       {
         "name": "StructureOfProteinDemo",
         "title": "蛋白质结构解析演示课题",
-        "desc": "蛋白质结构解析方法与结果演示",
+        "desc": "蛋白质结构占位demo",
         "tags": [
           "Protein",
           "Structure",
@@ -314,28 +410,7 @@
           "totalWords": 0,
           "latestDate": "2026-04-12"
         },
-        "categories": [
-          {
-            "key": "methods",
-            "title": "方法",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          },
-          {
-            "key": "results",
-            "title": "结果",
-            "articles": [],
-            "stats": {
-              "postsCount": 0,
-              "totalWords": 0,
-              "latestDate": ""
-            }
-          }
-        ],
+        "categories": [],
         "root": "",
         "doi": "10.1234/demo-structure.2026",
         "status": "completed",
