@@ -83,7 +83,7 @@ import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
-import { loadCategories, loadHtmlContent } from '@/utils/contentLoader'
+import { loadCategories, loadHtmlContent, loadMarkdownSource } from '@/utils/contentLoader'
 import { toLocalePath } from '@/utils/localePath'
 import { readingTimeMinutes } from '@/utils/readingTime'
 
@@ -213,14 +213,27 @@ function onTagClick(tag: string) {
 }
 
 async function copyArticle() {
-  const body = document.querySelector('.markdown-body')
-  if (!body || !currentPost.value) return
-  const clone = body.cloneNode(true) as HTMLElement
-  clone
-    .querySelectorAll('.heading-anchor, .code-block-header, .copy-button, .table-copy-btn')
-    .forEach(el => el.remove())
-  const bodyText = (clone.innerText || '').trim()
-  const text = `${currentPost.value.title}\n\n${bodyText}`
+  if (!currentPost.value) return
+  // 优先复制完整 markdown 源（含 frontmatter，粘贴即得 .md 文件）；加载失败回退纯文本
+  let text = ''
+  try {
+    const md = await loadMarkdownSource(currentPost.value.path)
+    if (md) {
+      text = md.trim()
+    }
+  } catch {
+    // fall through to text extraction
+  }
+  if (!text) {
+    const body = document.querySelector('.markdown-body')
+    if (!body) return
+    const clone = body.cloneNode(true) as HTMLElement
+    clone
+      .querySelectorAll('.heading-anchor, .code-block-header, .copy-button, .table-copy-btn')
+      .forEach(el => el.remove())
+    const bodyText = (clone.innerText || '').trim()
+    text = `${currentPost.value.title}\n\n${bodyText}`
+  }
   try {
     await navigator.clipboard.writeText(text)
   } catch (err) {

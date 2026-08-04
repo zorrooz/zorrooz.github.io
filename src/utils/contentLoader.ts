@@ -24,6 +24,11 @@ const htmlModules = import.meta.glob('../content/html/**/*.html', {
   import: 'default',
   eager: true,
 })
+// 惰性加载 markdown 源（复制文章用，按需拆包；含 zh/en 全部源文件）
+const markdownModules = import.meta.glob('../content-src/**/*.md', {
+  query: '?raw',
+  import: 'default',
+})
 
 interface JsonModule {
   default?: unknown
@@ -91,3 +96,22 @@ export const loadNotes = () => loadJsonContent('notes')
 export const loadTags = () => loadJsonContent('tags')
 export const loadAbout = () => loadJsonContent('about')
 export const loadResources = () => loadJsonContent('resources')
+
+/**
+ * 加载文章的完整 markdown 源（含 frontmatter）。
+ * `articlePath` 为 md 风格路径（如 `notes/Programming/python/python-basics/python-basics`），
+ * 自动按当前 locale 匹配 `-en` 变体。找不到时返回 null。
+ */
+export const loadMarkdownSource = async (articlePath: string): Promise<string | null> => {
+  const suffix = getCurrentLocale() === 'en-US' ? '-en' : ''
+  // articlePath 可能已带 .md（如 notes/.../python-basics.md），统一去后缀后拼接
+  const target = `${articlePath.replace(/\.md$/, '')}${suffix}.md`
+  const key = Object.keys(markdownModules).find((k) => k.endsWith(`/${target}`) || k.endsWith(target))
+  if (!key) return null
+  try {
+    return (await markdownModules[key]()) as string
+  } catch (err) {
+    console.error(`Failed to load markdown source: ${target}`, err)
+    return null
+  }
+}
