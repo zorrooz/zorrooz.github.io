@@ -112,6 +112,12 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // vue-i18n v12 alpha 的 browser 条件会解析到 runtime-only 版（无 message compiler），
+      // 导致生产构建中 t() 不编译插值占位符（页面显示 {count}/{minutes}）。
+      // 强制使用完整版（带运行时编译器），与 dev/SSG 行为一致。
+      'vue-i18n': fileURLToPath(
+        new URL('./node_modules/vue-i18n/dist/vue-i18n.esm-browser.js', import.meta.url),
+      ),
     },
   },
 }
