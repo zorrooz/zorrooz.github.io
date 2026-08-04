@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/zh/article/notes/Programming/python/python-data/python-data">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/zh/article/notes/Programming/python/python-data/python-data"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/Programming/python/python-data/python-data"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/Programming/python/python-data/python-data-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/Programming/python/python-data/python-data"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/zh/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="搜索" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="主题" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="语言" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="菜单" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/zh/category" class="nav-link app-nav__link" data-v-b2e68a7c="">分类</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/zh/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">资源</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/zh/about" class="nav-link app-nav__link" data-v-b2e68a7c="">关于</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="搜索" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="主题" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="语言" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">Python 数据处理实战：文件 IO、正则与 NumPy/Pandas</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>更新于 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>阅读约 2 分钟</span><button type="button" class="article-copy-btn" aria-label="复制文章" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">复制文章</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # Python</span><span class="article-tag" data-v-bed67739=""> # NumPy</span><span class="article-tag" data-v-bed67739=""> # Pandas</span><span class="article-tag" data-v-bed67739=""> # 数据处理</span><span class="article-tag" data-v-bed67739=""> # 教程</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>Python 数据处理实战：文件 IO、正则与 NumPy/Pandas</h1>
+<p>数据处理是 Python 最核心的应用场景。本文讲解文件读写、正则表达式，以及科学计算的两大支柱 NumPy 与 Pandas，示例贴合生物信息学常见任务。</p>
+<h2>1. 文件读写</h2>
+<h3>1.1 文本文件</h3>
+<p>推荐使用 <code>with</code> 语句，自动管理文件关闭：</p>
+<pre><code class="hljs language-python"><span class="hljs-comment"># 写入</span>
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"output.txt"</span>, <span class="hljs-string">"w"</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+    f.write(<span class="hljs-string">"第一行\n"</span>)
+    f.write(<span class="hljs-string">"第二行\n"</span>)
+
+<span class="hljs-comment"># 读取全部</span>
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"output.txt"</span>, <span class="hljs-string">"r"</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+    content = f.read()
+<span class="hljs-built_in">print</span>(content)
+
+<span class="hljs-comment"># 逐行读取（大文件推荐）</span>
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"output.txt"</span>, <span class="hljs-string">"r"</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+    <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f:
+        <span class="hljs-built_in">print</span>(line.strip())   <span class="hljs-comment"># strip 去掉换行符</span>
+</code></pre>
+<p>模式说明：<code>r</code> 读、<code>w</code> 写（覆盖）、<code>a</code> 追加、<code>rb</code>/<code>wb</code> 二进制。</p>
+<h3>1.2 解析 FASTA 文件</h3>
+<pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">read_fasta</span>(<span class="hljs-params">path</span>):
+    <span class="hljs-string">"""读取 FASTA 文件，返回 {id: 序列} 字典。"""</span>
+    sequences = {}
+    current_id = <span class="hljs-literal">None</span>
+    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(path, <span class="hljs-string">"r"</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+        <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f:
+            line = line.strip()
+            <span class="hljs-keyword">if</span> line.startswith(<span class="hljs-string">"&gt;"</span>):
+                current_id = line[<span class="hljs-number">1</span>:].split()[<span class="hljs-number">0</span>]   <span class="hljs-comment"># 取第一个字段作为 id</span>
+                sequences[current_id] = <span class="hljs-string">""</span>
+            <span class="hljs-keyword">elif</span> current_id <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+                sequences[current_id] += line
+    <span class="hljs-keyword">return</span> sequences
+
+seqs = read_fasta(<span class="hljs-string">"example.fasta"</span>)
+<span class="hljs-keyword">for</span> seq_id, seq <span class="hljs-keyword">in</span> seqs.items():
+    <span class="hljs-built_in">print</span>(seq_id, <span class="hljs-built_in">len</span>(seq))
+</code></pre>
+<h3>1.3 CSV 文件</h3>
+<p>标准库 <code>csv</code> 模块：</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">import</span> csv
+
+<span class="hljs-comment"># 读取</span>
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"data.csv"</span>, <span class="hljs-string">"r"</span>, newline=<span class="hljs-string">""</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+    reader = csv.DictReader(f)          <span class="hljs-comment"># 按表头读取为字典</span>
+    rows = <span class="hljs-built_in">list</span>(reader)
+    <span class="hljs-built_in">print</span>(rows[<span class="hljs-number">0</span>][<span class="hljs-string">"gene"</span>], rows[<span class="hljs-number">0</span>][<span class="hljs-string">"expression"</span>])
+
+<span class="hljs-comment"># 写入</span>
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"out.csv"</span>, <span class="hljs-string">"w"</span>, newline=<span class="hljs-string">""</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+    writer = csv.writer(f)
+    writer.writerow([<span class="hljs-string">"gene"</span>, <span class="hljs-string">"value"</span>])
+    writer.writerows([[<span class="hljs-string">"TP53"</span>, <span class="hljs-number">12.3</span>], [<span class="hljs-string">"BRCA1"</span>, <span class="hljs-number">8.9</span>]])
+</code></pre>
+<blockquote>
+<p>大数据场景推荐 Pandas 的 <code>read_csv</code>（见第 4 节）。</p>
+</blockquote>
+<h2>2. 正则表达式</h2>
+<p>正则用于文本模式匹配。<code>re</code> 模块常用函数：</p>
+<pre><code class="hljs language-python"><span class="hljs-keyword">import</span> re
+
+text = <span class="hljs-string">"The protein P12345 has 500 amino acids, code: A1B2C3"</span>
+
+<span class="hljs-comment"># match：从开头匹配</span>
+m = re.<span class="hljs-keyword">match</span>(<span class="hljs-string">r"The"</span>, text)
+<span class="hljs-built_in">print</span>(m.group())          <span class="hljs-comment"># The</span>
+
+<span class="hljs-comment"># search：搜索第一个匹配</span>
+m = re.search(<span class="hljs-string">r"\d+"</span>, text)
+<span class="hljs-built_in">print</span>(m.group())          <span class="hljs-comment"># 12345（第一个数字串）</span>
+
+<span class="hljs-comment"># findall：返回所有匹配</span>
+<span class="hljs-built_in">print</span>(re.findall(<span class="hljs-string">r"[A-Z]\d"</span>, text))   <span class="hljs-comment"># ['P1', 'A1', 'B2', 'C3']</span>
+
+<span class="hljs-comment"># sub：替换</span>
+<span class="hljs-built_in">print</span>(re.sub(<span class="hljs-string">r"\d+"</span>, <span class="hljs-string">"#"</span>, text))
+</code></pre>
+<h3>2.1 常用元字符</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.</code></td>
+<td>任意字符（除换行）</td>
+<td><code>a.c</code> 匹配 <code>abc</code></td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>前一个字符 0 次或多次</td>
+<td><code>ab*c</code> 匹配 <code>ac</code>、<code>abc</code></td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>前一个字符 1 次或多次</td>
+<td><code>ab+c</code> 匹配 <code>abc</code></td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>前一个字符 0 次或 1 次</td>
+<td><code>colou?r</code> 匹配 color/colour</td>
+</tr>
+<tr>
+<td><code>^</code> / <code>$</code></td>
+<td>行首 / 行尾</td>
+<td><code>^ATG</code> 以 ATG 开头</td>
+</tr>
+<tr>
+<td><code>[abc]</code></td>
+<td>字符集</td>
+<td><code>[ATGC]</code> 任意碱基</td>
+</tr>
+<tr>
+<td><code>\d</code> / <code>\w</code> / <code>\s</code></td>
+<td>数字 / 单词字符 / 空白</td>
+<td></td>
+</tr>
+<tr>
+<td><code>{n,m}</code></td>
+<td>重复 n 到 m 次</td>
+<td><code>\d{3}</code> 三个数字</td>
+</tr>
+<tr>
+<td><code>(…)</code></td>
+<td>分组捕获</td>
+<td><code>(ATG){2}</code></td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 提取信息实战</h3>
+<p>从基因注释文本提取坐标与名称：</p>
+<pre><code class="hljs language-python">line = <span class="hljs-string">'gene=TP53;gene_id=ENSG00000141510;chromosome=17;start=7668402;end=7687550'</span>
+
+m = re.search(<span class="hljs-string">r"gene=(\w+);.*?start=(\d+);end=(\d+)"</span>, line)
+<span class="hljs-keyword">if</span> m:
+    gene, start, end = m.groups()
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{gene}</span>: <span class="hljs-subst">{start}</span>-<span class="hljs-subst">{end}</span> (<span class="hljs-subst">{<span class="hljs-built_in">int</span>(end) - <span class="hljs-built_in">int</span>(start)}</span> bp)"</span>)
+<span class="hljs-comment"># TP53: 7668402-7687550 (19148 bp)</span>
+</code></pre>
+<h3>2.3 编译正则提升性能</h3>
+<pre><code class="hljs language-python">motif = re.<span class="hljs-built_in">compile</span>(<span class="hljs-string">r"^ATG.*(TAA|TAG|TGA)$"</span>)   <span class="hljs-comment"># 完整 ORF 粗略匹配</span>
+<span class="hljs-keyword">for</span> seq <span class="hljs-keyword">in</span> [<span class="hljs-string">"ATGCCCTAA"</span>, <span class="hljs-string">"ATGGGG"</span>]:
+    <span class="hljs-built_in">print</span>(seq, <span class="hljs-built_in">bool</span>(motif.<span class="hljs-keyword">match</span>(seq)))
+</code></pre>
+<h2>3. NumPy：数值计算基础</h2>
+<h3>3.1 数组创建</h3>
+<pre><code class="hljs language-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+a = np.array([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>])
+b = np.zeros((<span class="hljs-number">2</span>, <span class="hljs-number">3</span>))          <span class="hljs-comment"># 2x3 全零矩阵</span>
+c = np.ones(<span class="hljs-number">5</span>)
+d = np.arange(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0.2</span>)      <span class="hljs-comment"># [0.  0.2 0.4 0.6 0.8]</span>
+e = np.linspace(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>)      <span class="hljs-comment"># 0 到 1 等分 5 份</span>
+f = np.random.rand(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)      <span class="hljs-comment"># 均匀分布随机数</span>
+</code></pre>
+<h3>3.2 向量化运算（核心优势）</h3>
+<pre><code class="hljs language-python">x = np.array([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>])
+y = np.array([<span class="hljs-number">4.0</span>, <span class="hljs-number">5.0</span>, <span class="hljs-number">6.0</span>])
+
+<span class="hljs-built_in">print</span>(x + y)          <span class="hljs-comment"># [5. 7. 9.]，无需循环</span>
+<span class="hljs-built_in">print</span>(x * y)          <span class="hljs-comment"># [4. 10. 18.]</span>
+<span class="hljs-built_in">print</span>(np.sqrt(x))     <span class="hljs-comment"># 逐元素开方</span>
+<span class="hljs-built_in">print</span>(x.mean(), x.std())   <span class="hljs-comment"># 2.0 0.816...</span>
+
+<span class="hljs-comment"># 广播：不同形状自动扩展</span>
+matrix = np.array([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>]])
+<span class="hljs-built_in">print</span>(matrix * <span class="hljs-number">10</span>)            <span class="hljs-comment"># 每个元素乘 10</span>
+<span class="hljs-built_in">print</span>(matrix + np.array([<span class="hljs-number">100</span>, <span class="hljs-number">200</span>]))  <span class="hljs-comment"># 行广播</span>
+</code></pre>
+<h3>3.3 索引与切片</h3>
+<pre><code class="hljs language-python">arr = np.arange(<span class="hljs-number">10</span>)
+<span class="hljs-built_in">print</span>(arr[<span class="hljs-number">2</span>:<span class="hljs-number">8</span>:<span class="hljs-number">2</span>])        <span class="hljs-comment"># [2 4 6]，起始:结束:步长</span>
+<span class="hljs-built_in">print</span>(arr[arr &gt; <span class="hljs-number">5</span>])      <span class="hljs-comment"># 布尔掩码 [6 7 8 9]</span>
+
+m = np.random.rand(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>)
+<span class="hljs-built_in">print</span>(m[<span class="hljs-number">0</span>, :])           <span class="hljs-comment"># 第一行</span>
+<span class="hljs-built_in">print</span>(m[:, <span class="hljs-number">1</span>])           <span class="hljs-comment"># 第二列</span>
+<span class="hljs-built_in">print</span>(m[<span class="hljs-number">1</span>:<span class="hljs-number">3</span>, <span class="hljs-number">1</span>:<span class="hljs-number">3</span>])       <span class="hljs-comment"># 子矩阵</span>
+</code></pre>
+<h3>3.4 生物信息学示例：归一化表达矩阵</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># 模拟基因表达矩阵：4 基因 × 5 样本</span>
+expr = np.array([
+    [<span class="hljs-number">12.3</span>, <span class="hljs-number">15.1</span>, <span class="hljs-number">9.8</span>, <span class="hljs-number">20.4</span>, <span class="hljs-number">11.2</span>],
+    [<span class="hljs-number">3.2</span>, <span class="hljs-number">4.1</span>, <span class="hljs-number">2.9</span>, <span class="hljs-number">5.0</span>, <span class="hljs-number">3.6</span>],
+    [<span class="hljs-number">80.5</span>, <span class="hljs-number">92.3</span>, <span class="hljs-number">75.1</span>, <span class="hljs-number">100.2</span>, <span class="hljs-number">88.7</span>],
+    [<span class="hljs-number">45.6</span>, <span class="hljs-number">41.2</span>, <span class="hljs-number">48.9</span>, <span class="hljs-number">39.8</span>, <span class="hljs-number">50.1</span>],
+])
+
+<span class="hljs-comment"># 按行（基因）做 Z-score 标准化：(x - mean) / std</span>
+means = expr.mean(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)
+stds = expr.std(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)
+z = (expr - means) / stds
+
+<span class="hljs-built_in">print</span>(np.<span class="hljs-built_in">round</span>(z, <span class="hljs-number">2</span>))
+</code></pre>
+<h2>4. Pandas：表格数据处理</h2>
+<h3>4.1 Series 与 DataFrame</h3>
+<pre><code class="hljs language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+
+<span class="hljs-comment"># Series：一维带标签数组</span>
+s = pd.Series([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], index=[<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"c"</span>])
+
+<span class="hljs-comment"># DataFrame：二维表格</span>
+df = pd.DataFrame({
+    <span class="hljs-string">"gene"</span>: [<span class="hljs-string">"TP53"</span>, <span class="hljs-string">"BRCA1"</span>, <span class="hljs-string">"EGFR"</span>, <span class="hljs-string">"MYC"</span>],
+    <span class="hljs-string">"expression"</span>: [<span class="hljs-number">12.3</span>, <span class="hljs-number">8.9</span>, <span class="hljs-number">45.1</span>, <span class="hljs-number">33.2</span>],
+    <span class="hljs-string">"chromosome"</span>: [<span class="hljs-number">17</span>, <span class="hljs-number">17</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>],
+})
+<span class="hljs-built_in">print</span>(df)
+</code></pre>
+<h3>4.2 读取与写入</h3>
+<pre><code class="hljs language-python">df = pd.read_csv(<span class="hljs-string">"expression.csv"</span>)
+df = pd.read_csv(<span class="hljs-string">"data.tsv"</span>, sep=<span class="hljs-string">"\t"</span>)
+df = pd.read_excel(<span class="hljs-string">"data.xlsx"</span>, sheet_name=<span class="hljs-string">"Sheet1"</span>)
+df = pd.read_json(<span class="hljs-string">"data.json"</span>)
+
+df.to_csv(<span class="hljs-string">"out.csv"</span>, index=<span class="hljs-literal">False</span>)
+</code></pre>
+<h3>4.3 查看与筛选</h3>
+<pre><code class="hljs language-python"><span class="hljs-built_in">print</span>(df.head())          <span class="hljs-comment"># 前 5 行</span>
+<span class="hljs-built_in">print</span>(df.info())          <span class="hljs-comment"># 列类型与缺失值</span>
+<span class="hljs-built_in">print</span>(df.describe())      <span class="hljs-comment"># 数值列统计摘要</span>
+
+<span class="hljs-comment"># 列选择</span>
+<span class="hljs-built_in">print</span>(df[<span class="hljs-string">"gene"</span>])
+<span class="hljs-built_in">print</span>(df[[<span class="hljs-string">"gene"</span>, <span class="hljs-string">"expression"</span>]])
+
+<span class="hljs-comment"># 行筛选（布尔索引）</span>
+high = df[df[<span class="hljs-string">"expression"</span>] &gt; <span class="hljs-number">10</span>]
+<span class="hljs-built_in">print</span>(high)
+
+<span class="hljs-comment"># 多条件</span>
+sel = df[(df[<span class="hljs-string">"expression"</span>] &gt; <span class="hljs-number">10</span>) &amp; (df[<span class="hljs-string">"chromosome"</span>] == <span class="hljs-number">17</span>)]
+<span class="hljs-built_in">print</span>(sel)
+
+<span class="hljs-comment"># isin 筛选</span>
+sel = df[df[<span class="hljs-string">"gene"</span>].isin([<span class="hljs-string">"TP53"</span>, <span class="hljs-string">"MYC"</span>])]
+</code></pre>
+<h3>4.4 分组与聚合</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># 按染色体分组，统计表达均值与数量</span>
+grouped = df.groupby(<span class="hljs-string">"chromosome"</span>)[<span class="hljs-string">"expression"</span>].agg([<span class="hljs-string">"mean"</span>, <span class="hljs-string">"count"</span>, <span class="hljs-string">"max"</span>])
+<span class="hljs-built_in">print</span>(grouped)
+
+<span class="hljs-comment"># 按分组转换（如组内标准化）</span>
+df[<span class="hljs-string">"zscore"</span>] = df.groupby(<span class="hljs-string">"chromosome"</span>)[<span class="hljs-string">"expression"</span>].transform(
+    <span class="hljs-keyword">lambda</span> x: (x - x.mean()) / x.std()
+)
+</code></pre>
+<h3>4.5 缺失值处理</h3>
+<pre><code class="hljs language-python">df = pd.DataFrame({<span class="hljs-string">"a"</span>: [<span class="hljs-number">1</span>, <span class="hljs-literal">None</span>, <span class="hljs-number">3</span>], <span class="hljs-string">"b"</span>: [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-literal">None</span>]})
+
+<span class="hljs-built_in">print</span>(df.isna().<span class="hljs-built_in">sum</span>())        <span class="hljs-comment"># 每列缺失数量</span>
+<span class="hljs-built_in">print</span>(df.dropna())            <span class="hljs-comment"># 删除含缺失的行</span>
+<span class="hljs-built_in">print</span>(df.fillna(<span class="hljs-number">0</span>))           <span class="hljs-comment"># 填充为 0</span>
+<span class="hljs-built_in">print</span>(df.fillna(df.mean()))   <span class="hljs-comment"># 用均值填充</span>
+</code></pre>
+<h3>4.6 实战：差异表达基因筛选</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># 模拟：基因 + 处理组/对照组表达 + p 值</span>
+results = pd.DataFrame({
+    <span class="hljs-string">"gene"</span>: [<span class="hljs-string">f"GENE<span class="hljs-subst">{i}</span>"</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>)],
+    <span class="hljs-string">"log2fc"</span>: np.random.normal(<span class="hljs-number">0</span>, <span class="hljs-number">1.5</span>, <span class="hljs-number">100</span>),
+    <span class="hljs-string">"pvalue"</span>: np.random.rand(<span class="hljs-number">100</span>),
+})
+
+<span class="hljs-comment"># 筛选显著差异基因：|log2FC| &gt; 1 且 p &lt; 0.05</span>
+sig = results[(results[<span class="hljs-string">"log2fc"</span>].<span class="hljs-built_in">abs</span>() &gt; <span class="hljs-number">1</span>) &amp; (results[<span class="hljs-string">"pvalue"</span>] &lt; <span class="hljs-number">0.05</span>)]
+
+<span class="hljs-comment"># 按 log2FC 排序</span>
+sig = sig.sort_values(<span class="hljs-string">"log2fc"</span>, ascending=<span class="hljs-literal">False</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"显著基因数: <span class="hljs-subst">{<span class="hljs-built_in">len</span>(sig)}</span>"</span>)
+<span class="hljs-built_in">print</span>(sig.head())
+</code></pre>
+<h2>5. 小结</h2>
+<ul>
+<li>文件：<code>with open</code> + 逐行读取处理大文件；CSV 用 <code>csv</code> 模块或 Pandas</li>
+<li>正则：<code>re.search</code> / <code>findall</code> / <code>sub</code>，先写小模式再组合</li>
+<li>NumPy：向量化运算 + 广播，避免 Python 循环</li>
+<li>Pandas：<code>read_csv</code> → 筛选/分组/缺失值处理 → 导出，是表格数据的标准工作流</li>
+</ul>
+<p>至此 Python 教程三部曲完成：入门 → 进阶 → 数据处理。</p></div><nav class="article-navigation" data-v-bed67739=""><!----><a href="/zh/article/notes/Programming/python/python-basics/python-basics" class="article-nav-item prev" data-v-bed67739=""><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-left" data-v-bed67739=""></i></div><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">上一页</div><div class="nav-title" data-v-bed67739="">Python 编程入门：环境、语法与数据类型</div></div></a><a href="/zh/article/notes/Programming/r/r-basics/r-basics" class="article-nav-item next" data-v-bed67739=""><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">下一页</div><div class="nav-title" data-v-bed67739="">R 语言入门：数据结构、向量化与函数</div></div><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-right" data-v-bed67739=""></i></div></a></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">本页目录</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="打开目录" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">由<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong>设计</p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="回到顶部" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"zh-CN\"}}}"</script>
+  
+
+</body></html>

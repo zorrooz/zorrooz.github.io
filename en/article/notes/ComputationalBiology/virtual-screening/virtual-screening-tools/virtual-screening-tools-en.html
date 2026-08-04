@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/en/category" class="nav-link app-nav__link" data-v-b2e68a7c="">Categories</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">Resources</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/about" class="nav-link app-nav__link" data-v-b2e68a7c="">About</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">Mainstream Tools for Virtual Screening</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>Reading about 2 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">Copy article</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # Virtual Screening</span><span class="article-tag" data-v-bed67739=""> # Molecular Docking</span><span class="article-tag" data-v-bed67739=""> # AutoDock Vina</span><span class="article-tag" data-v-bed67739=""> # Computational Biology</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>Mainstream Tools for Virtual Screening</h1>
+<p>Virtual screening (VS) uses computation to search for potential active molecules in million-scale compound libraries and is a core approach in the early stage of drug discovery. This article introduces mainstream docking software, the complete workflow, and important considerations.</p>
+<h2>1. Basic Logic of Virtual Screening</h2>
+<pre><code>Receptor structure (protein/nucleic acid)
+   ↓
+① Receptor preparation (add hydrogens, protonation, grid)
+   ↓
+② Compound library (ZINC / Enamine / self-built library)
+   ↓
+③ Ligand preparation (3D conformation, protonation, force field parameters)
+   ↓
+④ Molecular docking (conformational sampling + scoring)
+   ↓
+⑤ Ranking and selection (Top 100-1000)
+   ↓
+⑥ Experimental validation (IC50 / activity assay)
+</code></pre>
+<h2>2. Mainstream Docking Software</h2>
+<h3>2.1 AutoDock Vina (Top Open-Source Choice)</h3>
+<p>The most popular open-source docking software, offering a good balance between speed and accuracy:</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 1. Receptor and ligand preparation (using MGLTools or scripts)</span>
+<span class="hljs-comment">#    Receptor: pdb → pdbqt (add hydrogens, merge nonpolar hydrogens)</span>
+<span class="hljs-comment">#    Ligand: sdf/mol2 → pdbqt</span>
+
+<span class="hljs-comment"># 2. Configuration file (conf.txt)</span>
+receptor = receptor.pdbqt
+ligand = ligand.pdbqt
+center_x = 10.5
+center_y = 20.3
+center_z = -5.8
+size_x = 22
+size_y = 22
+size_z = 22
+exhaustiveness = 16
+num_modes = 9
+
+<span class="hljs-comment"># 3. Run</span>
+vina --config conf.txt --out results.pdbqt --<span class="hljs-built_in">log</span> log.txt
+
+<span class="hljs-comment"># 4. Interpretation: the lower the affinity (kcal/mol), the better</span>
+<span class="hljs-comment">#  mode |   affinity | dist from best mode</span>
+<span class="hljs-comment"># -----+------------+----------------------</span>
+<span class="hljs-comment">#    1 |   -9.2     | 0.000</span>
+<span class="hljs-comment">#    2 |   -8.7     | 2.315</span>
+</code></pre>
+<h3>2.2 Glide (Schrödinger, Commercial)</h3>
+<p>The standard in the pharmaceutical industry:</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Prepare workflow (Maestro GUI or command line)</span>
+glide -overwrite -adjust \
+  -receptor receptor.maegz \
+  -ligand ligands.maegz \
+  -p glide_docking.inp \
+  -NJOBS 16
+
+<span class="hljs-comment"># Three precision modes</span>
+<span class="hljs-comment"># HTVS (high-throughput, fast) → SP (standard precision) → XP (high precision, slow)</span>
+</code></pre>
+<p><strong>Advantages</strong>: Accurate flexible ligand handling, well-calibrated scoring, and support from the large pharma ecosystem.</p>
+<h3>2.3 DOCK 6 (Open Source)</h3>
+<p>Classic geometric matching algorithm:</p>
+<pre><code class="hljs language-bash">dock6 -i dock.in -o dock.out
+<span class="hljs-comment"># Sphere generation → orientation search → scoring</span>
+<span class="hljs-comment"># Strengths: binding pocket shape matching, initial screening of large libraries</span>
+</code></pre>
+<h3>2.4 Other Commonly Used Software</h3>
+<table>
+<thead>
+<tr>
+<th>Software</th>
+<th>Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AutoDock4</strong></td>
+<td>Classic genetic algorithm, high accuracy but slow</td>
+</tr>
+<tr>
+<td><strong>rDock</strong></td>
+<td>Open source, suitable for large libraries, easy to script</td>
+</tr>
+<tr>
+<td><strong>GOLD</strong></td>
+<td>Genetic algorithm, developed by CCDC</td>
+</tr>
+<tr>
+<td><strong>LeDock</strong></td>
+<td>Fast and easy to use (free for academia)</td>
+</tr>
+<tr>
+<td><strong>Plants</strong></td>
+<td>Based on Ant Colony Optimization</td>
+</tr>
+<tr>
+<td><strong>smina</strong></td>
+<td>Enhanced version of Vina (supports custom scoring)</td>
+</tr>
+</tbody>
+</table>
+<h2>3. Receptor Preparation (Critical First Step)</h2>
+<h3>3.1 Structure Sources</h3>
+<ul>
+<li>Crystal/cryo-EM structures (PDB)</li>
+<li>AlphaFold-predicted structures (when no experimental structure is available)</li>
+<li>Note: handle flexibility (side chains) near the binding pocket</li>
+</ul>
+<h3>3.2 Key Preparation Points</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Common tools</span>
+<span class="hljs-comment"># Schrödinger Protein Prep Wizard (commercial)</span>
+<span class="hljs-comment"># ADFRsuite / MGLTools prepare_receptor4.py (free)</span>
+
+python prepare_receptor4.py -r receptor.pdb -o receptor.pdbqt
+
+<span class="hljs-comment"># Key steps</span>
+<span class="hljs-comment"># 1. Remove water molecules (except conserved waters)</span>
+<span class="hljs-comment"># 2. Add hydrogens, determine protonation states (around pH 7.4)</span>
+<span class="hljs-comment"># 3. Assign bond orders and charges (Amber/CHARMM force fields)</span>
+<span class="hljs-comment"># 4. Define the binding pocket (known active site or cavity detection: fpocket / DoGSiteScorer)</span>
+</code></pre>
+<h2>4. Ligand Libraries and Preparation</h2>
+<h3>4.1 Compound Library Sources</h3>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Scale</th>
+<th>Features</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZINC20</td>
+<td>Billions</td>
+<td>Free, downloadable, with 3D conformations</td>
+</tr>
+<tr>
+<td>Enamine REAL</td>
+<td>&gt; 40 billion</td>
+<td>Highly synthesizable, commercially available</td>
+</tr>
+<tr>
+<td>ChEMBL</td>
+<td>Bioactivity data</td>
+<td>Known active compounds</td>
+</tr>
+<tr>
+<td>Self-built library</td>
+<td>Custom</td>
+<td>Derivative design</td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 Ligand Preparation</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 3D conformation generation</span>
+obabel ligand.smi -O ligand.sdf --gen3d -p 7.4
+
+<span class="hljs-comment"># Multiple conformations (flexibility is important, especially for ring systems)</span>
+obabel ligand.sdf -O conf.sdf --conformer --nconf 50
+
+<span class="hljs-comment"># Protonation and charges</span>
+<span class="hljs-comment"># Schrödinger LigPrep / Open Babel / RDKit</span>
+
+<span class="hljs-comment"># RDKit preparation (Python)</span>
+from rdkit import Chem
+from rdkit.Chem import AllChem, rdMolDescriptors
+
+mol = Chem.MolFromSmiles(<span class="hljs-string">"CC(=O)Oc1ccccc1C(=O)O"</span>)
+mol = Chem.AddHs(mol)
+AllChem.EmbedMolecule(mol, AllChem.ETKDG())
+</code></pre>
+<h2>5. Scoring Functions</h2>
+<h3>5.1 Three Types of Scoring Functions</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Representatives</th>
+<th>Principle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Force-field-based</td>
+<td>DOCK, AutoDock4</td>
+<td>van der Waals + electrostatics + internal energy</td>
+</tr>
+<tr>
+<td>Empirical</td>
+<td>Glide, Vina</td>
+<td>Statistical fitting to experimental data</td>
+</tr>
+<tr>
+<td>Knowledge-based</td>
+<td>GOLD/ASP</td>
+<td>Statistics of atom-pair distance distributions</td>
+</tr>
+</tbody>
+</table>
+<h3>5.2 Limitations of Scoring Functions (Must-Know)</h3>
+<ul>
+<li><strong>Not precise</strong>: correlation coefficients are typically 0.3–0.6; they can only rank, not provide absolute affinities</li>
+<li>Entropy effects, solvent effects, and induced fit are difficult to describe accurately</li>
+<li><strong>Recommendation</strong>: docking scores + cross-validation with multiple tools + refined calculations using molecular dynamics (MM/PBSA, FEP)</li>
+</ul>
+<h2>6. Complete High-Throughput Screening Workflow (Hands-On HTS)</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 1. Library preparation: split SDF + convert to pdbqt</span>
+<span class="hljs-built_in">mkdir</span> -p ligands_pdbqt
+obabel library.sdf -O ligands_pdbqt/lig_.pdbqt -m -p 7.4
+
+<span class="hljs-comment"># 2. Batch docking (smina/Vina multi-file mode)</span>
+smina -r receptor.pdbqt -l library.sdf \
+  --center_x 10.5 --center_y 20.3 --center_z -5.8 \
+  --size_x 22 --size_y 22 --size_z 22 \
+  --num_modes 1 --cpu 32 \
+  -o docked.sdf --<span class="hljs-built_in">log</span> scores.txt
+
+<span class="hljs-comment"># 3. Ranking (by affinity)</span>
+<span class="hljs-built_in">sort</span> -k2 -n scores.txt | <span class="hljs-built_in">head</span> -100
+</code></pre>
+<h3>6.1 Multi-Stage Funnel Strategy</h3>
+<pre><code>Coarse screening (HTVS / Vina, million-scale) → top 5-10%
+  ↓
+Standard precision (SP / multiple conformations) → top 10-20%
+  ↓
+High precision (XP / induced fit) → Top 100-1000
+  ↓
+Consensus scoring (cross-validation with multiple software tools) → Top 50-200
+  ↓
+Visual inspection (reasonableness of binding modes) → Top 10-50
+  ↓
+Experimental testing
+</code></pre>
+<h3>6.2 Consensus Scoring</h3>
+<p>Scoring functions from different software tools complement each other; taking intersections/ranking averages can significantly improve enrichment rates:</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Example: take the intersection of Top 100 from Vina + Glide + LeDock</span>
+<span class="hljs-comment"># Or average after normalizing ranks</span>
+</code></pre>
+<h2>7. Validation and Advanced Methods</h2>
+<h3>7.1 Benchmarking</h3>
+<ul>
+<li><strong>DUD-E</strong>: a standard dataset (containing actives and decoys) used to evaluate a software's ability to discriminate</li>
+<li>Metrics: AUC, enrichment factors (EF1%, EF5%)</li>
+</ul>
+<h3>7.2 Molecular Dynamics Post-Processing</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Docking results → MD simulation (GROMACS/AMBER) → MM/PBSA binding free energy</span>
+gmx mdrun -deffnm complex
+gmx_MMPBSA -O -i mmpbsa.in -cs complex.tpr -ct traj.xtc ...
+</code></pre>
+<h3>7.3 Combining Structure-Based and Ligand-Based Approaches</h3>
+<ul>
+<li><strong>Structure-based</strong> (SBDD): docking + MD + FEP</li>
+<li><strong>Ligand-based</strong> (LBDD): pharmacophore, QSAR, similarity search</li>
+<li>Combination strategies are the mainstream of modern virtual screening</li>
+</ul>
+<h2>8. Common Pitfalls</h2>
+<table>
+<thead>
+<tr>
+<th>Pitfall</th>
+<th>Consequence</th>
+<th>Avoidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incorrect pocket definition</td>
+<td>Entire library misaligned</td>
+<td>Use a known active site or experimental information</td>
+</tr>
+<tr>
+<td>Rigid receptor</td>
+<td>Misses induced fit</td>
+<td>Flexible side chains / ensemble docking</td>
+</tr>
+<tr>
+<td>Incorrect protonation states</td>
+<td>Distorted electrostatic scoring</td>
+<td>pH-dependent preparation (pH 7.4)</td>
+</tr>
+<tr>
+<td>Overconfidence in scoring functions</td>
+<td>High false-positive rate</td>
+<td>Consensus scoring + visual inspection</td>
+</tr>
+<tr>
+<td>Ignoring synthesizability</td>
+<td>Hits cannot be synthesized</td>
+<td>Filter PAINS and drug-likeness rules (Lipinski/Veber)</td>
+</tr>
+</tbody>
+</table>
+<h2>9. Summary</h2>
+<ul>
+<li>Three tiers: <strong>Vina</strong> (open source, fast) → <strong>Glide</strong> (commercial standard) → <strong>DOCK/rDock</strong> (large libraries)</li>
+<li>Workflow: receptor preparation → ligand library → docking → multi-stage funnel → experimental validation</li>
+<li>Scoring functions can only rank; consensus scoring + MD refinement improve reliability</li>
+<li>The end point of virtual screening is always experimentation</li>
+</ul>
+<p>This completes the computational biology direction: protein design tools + virtual screening tools, with two main threads forming a closed loop of "design-screen" computational drug discovery.</p></div><nav class="article-navigation" data-v-bed67739=""><!----><a href="/en/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en" class="article-nav-item prev" data-v-bed67739=""><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-left" data-v-bed67739=""></i></div><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Previous</div><div class="nav-title" data-v-bed67739="">Mainstream Tools for Protein Design</div></div></a><!----></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">Table of Contents</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">Designed by<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong></p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"en-US\"}}}"</script>
+  
+
+</body></html>

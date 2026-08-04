@@ -1,0 +1,255 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling-en">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/en/category" class="nav-link app-nav__link" data-v-b2e68a7c="">Categories</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">Resources</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/about" class="nav-link app-nav__link" data-v-b2e68a7c="">About</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">Atomic Modeling and Refinement</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>Reading about 2 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">Copy article</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # Atomic Modeling</span><span class="article-tag" data-v-bed67739=""> # Coot</span><span class="article-tag" data-v-bed67739=""> # phenix</span><span class="article-tag" data-v-bed67739=""> # Structure Refinement</span><span class="article-tag" data-v-bed67739=""> # Tutorial</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>Atomic Modeling and Refinement</h1>
+<p>After obtaining a high-quality density map, the next step is to build and refine an atomic model, ultimately yielding publishable, analyzable coordinate files. This article covers the complete workflow from automatic modeling to quality assessment.</p>
+<h2>1. Workflow Overview</h2>
+<pre><code>Density map (.mrc)
+   ↓
+① Initial model (automatic modeling / homologous model / AF prediction)
+   ↓
+② Model placement into density (docking / rigid body)
+   ↓
+③ Iterative refinement: Coot manual correction ↔ phenix automatic refinement
+   ↓
+④ Quality assessment (MolProbity / EMRinger / Q-score)
+   ↓
+⑤ Validation and publication (PDB deposition)
+</code></pre>
+<h2>2. Initial Model Sources</h2>
+<h3>2.1 Automatic Modeling (Mainstream in the Deep Learning Era)</h3>
+<ul>
+<li><strong>ModelAngelo</strong>: Automatic modeling based on the AlphaFold architecture, building models directly from density maps</li>
+<li><strong>DeepTracer</strong>: Fast fully automatic modeling (GPU)</li>
+<li><strong>phenix.map_to_model</strong>: Classic automatic backbone/side-chain building</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># ModelAngelo usage example</span>
+model_angelo --halfmaps half1.mrc half2.mrc \
+  --output-dir model_angelo_out \
+  --num-workers 8
+
+<span class="hljs-comment"># phenix.map_to_model</span>
+phenix.map_to_model map.mrc resolution=3.0 \
+  output_model=auto_model.pdb
+</code></pre>
+<h3>2.2 Homology Modeling and Molecular Replacement</h3>
+<ul>
+<li>If a homologous structure exists: use <strong>phenix.dock_in_map</strong> to place it into the density</li>
+<li>AlphaFold-predicted models: directly used as initial models (commonly used in cryo-EM)</li>
+<li>At low resolution (&gt; 5 Å), place rigid bodies first, then gradually refine</li>
+</ul>
+<h2>3. Coot: Manual Modeling and Correction</h2>
+<p>Coot is the industry standard for manual model correction (GUI tool).</p>
+<h3>3.1 Common Operations</h3>
+<pre><code>File &gt; Open Coordinates...   # Load model
+File &gt; Open Map...           # Load density map (FSC correlation calculated automatically)
+
+# Basic corrections
+1. Backbone adjustment: drag Cα (Real Space Refine Zone)
+2. Side-chain orientation: Rotamers
+3. Missing residues: Add Terminal Residue / Build
+4. Delete extra: Delete Residue Range
+5. Mutate residues: Mutate &amp; Autofit
+6. Ligand building: Ligand Builder / restraints
+</code></pre>
+<h3>3.2 Key Concept: Real Space Refine</h3>
+<pre><code>Calculate &gt; Real Space Refine Zone
+</code></pre>
+<ul>
+<li>Select a density region, and Coot optimizes the geometry and density fit of that region</li>
+<li>Repeat: fix → refine → check → fix again</li>
+<li>After each refinement round, return to Coot to check problematic regions (Ramachandran outliers, clashes)</li>
+</ul>
+<h3>3.3 Ligand Modeling</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Generate ligand restraints</span>
+phenix.elbow ligand.smiles    <span class="hljs-comment"># Generate chemical restraints from SMILES</span>
+<span class="hljs-comment"># Or</span>
+phenix.ligand_idealization ligand.cif
+</code></pre>
+<p>Use <code>Ligand &gt; Ligand Builder</code> in Coot for manual building, then Real Space Refine.</p>
+<h2>4. phenix Automatic Refinement</h2>
+<h3>4.1 Basic Refinement</h3>
+<pre><code class="hljs language-bash">phenix.real_space_refine model.pdb \
+  map.mrc \
+  resolution=3.0 \
+  output.prefix=refined \
+  <span class="hljs-built_in">nproc</span>=8
+</code></pre>
+<h3>4.2 Refinement Strategies</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Multiple rounds of iteration: global first, then local</span>
+phenix.real_space_refine model.pdb map.mrc \
+  resolution=3.0 \
+  strategy=individual_sites+individual_adp \
+  restraints=ligand.cif \
+  <span class="hljs-built_in">nproc</span>=8
+</code></pre>
+<p>Commonly used strategy combinations:</p>
+<ul>
+<li><code>rigid_body</code>: rigid-body refinement first at low resolution</li>
+<li><code>individual_sites</code>: per-atom coordinate refinement (high resolution)</li>
+<li><code>individual_adp</code>: B-factor refinement</li>
+<li><code>torsion</code>: torsion-angle refinement (commonly used for proteins)</li>
+<li><code>local_grid</code>: local grid search (flexible regions)</li>
+</ul>
+<h3>4.3 Automatic Correction Loop (NCS and Water Molecules)</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Find water molecules (at high resolution)</span>
+phenix.find_peaks_holes map.mrc map.mrc resolution=3.0
+
+<span class="hljs-comment"># NCS restraints (significantly improves quality when symmetric subunits are present)</span>
+phenix.real_space_refine ... strategy=individual_sites+individual_adp ncs_search.enabled=True
+</code></pre>
+<h2>5. Model Quality Assessment</h2>
+<h3>5.1 Geometric Quality: MolProbity</h3>
+<pre><code class="hljs language-bash">phenix.molprobity refined.pdb
+</code></pre>
+<p>Core metrics:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Good standard (3 Å)</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ramachandran favored</td>
+<td>&gt; 95%</td>
+<td>Backbone dihedral angle validity</td>
+</tr>
+<tr>
+<td>Ramachandran outliers</td>
+<td>&lt; 0.5%</td>
+<td>Outlier backbone</td>
+</tr>
+<tr>
+<td>Rotamer outliers</td>
+<td>&lt; 1%</td>
+<td>Abnormal side-chain conformations</td>
+</tr>
+<tr>
+<td>Clashscore</td>
+<td>&lt; 5</td>
+<td>Atomic collisions</td>
+</tr>
+<tr>
+<td>MolProbity score</td>
+<td>&lt; 2</td>
+<td>Composite geometry score</td>
+</tr>
+</tbody>
+</table>
+<h3>5.2 Density Fit Quality</h3>
+<ul>
+<li><strong>EMRinger</strong>: assesses side-chain-to-density fit (&gt; 2 indicates good)</li>
+<li><strong>Q-score</strong>: assesses local density quality (1.0 = perfect, 0.5 = acceptable)</li>
+<li><strong>CC_mask</strong>: model-density correlation coefficient (&gt; 0.8 good)</li>
+<li><strong>map-model FSC</strong>: FSC comparison between the model and the two half-maps</li>
+</ul>
+<pre><code class="hljs language-bash">phenix.map_model_cc refined.pdb map.mrc
+phenix.em_ringer refined.pdb map.mrc
+</code></pre>
+<h3>5.3 Overfitting Detection</h3>
+<p><strong>Free component (CC-free)</strong>: correlation computed independently from the half-map used in refinement. Must be monitored during refinement:</p>
+<pre><code>Before refinement: CC_work ≈ CC_free
+After refinement: CC_work significantly &gt; CC_free → sign of overfitting
+</code></pre>
+<p><strong>Standard practice</strong>: use only one half-map for refinement (or full map + independent half-map validation), and use the other half-map to compute CC_free.</p>
+<h2>6. Complete Refinement Workflow Example</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 1. Automatic modeling</span>
+model_angelo --halfmaps half1.mrc half2.mrc --output-dir auto
+
+<span class="hljs-comment"># 2. Initial refinement</span>
+phenix.real_space_refine auto/model.pdb map.mrc \
+  resolution=3.1 strategy=rigid_body+individual_sites \
+  output.prefix=round1
+
+<span class="hljs-comment"># 3. Coot manual correction (interactive)</span>
+coot round1_refined.pdb map.mrc
+
+<span class="hljs-comment"># 4. Second refinement round (add B-factors)</span>
+phenix.real_space_refine coot_out.pdb map.mrc \
+  resolution=3.1 strategy=individual_sites+individual_adp \
+  output.prefix=round2
+
+<span class="hljs-comment"># 5. Quality assessment</span>
+phenix.molprobity round2_refined.pdb
+phenix.map_model_cc round2_refined.pdb map.mrc
+phenix.em_ringer round2_refined.pdb map.mrc
+
+<span class="hljs-comment"># 6. Iterate until all metrics pass</span>
+</code></pre>
+<h2>7. PDB Deposition</h2>
+<p>Before publication, prepare:</p>
+<ol>
+<li>Coordinate file (.pdb / .cif)</li>
+<li>Density maps (half-maps + full map, .mrc)</li>
+<li>Validation reports (MolProbity, EMRinger, etc.)</li>
+<li>FSC curves and mask information</li>
+</ol>
+<p>Submit via <a href="https://deposit.wwpdb.org/">wwPDB deposition</a> to obtain PDB ID and EMDB ID.</p>
+<h2>8. Common Problems</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blurred side-chain density</td>
+<td>Insufficient resolution / incorrect B-factors</td>
+<td>Increase resolution, check orientation distribution</td>
+</tr>
+<tr>
+<td>Many Ramachandran outliers</td>
+<td>Incorrect backbone building</td>
+<td>Rebuild the region in Coot based on density</td>
+</tr>
+<tr>
+<td>Overfitting</td>
+<td>Excessive refinement</td>
+<td>Monitor with CC_free, reduce iterations</td>
+</tr>
+<tr>
+<td>Poor ligand fit</td>
+<td>Incomplete restraints</td>
+<td>Regenerate with phenix.elbow</td>
+</tr>
+<tr>
+<td>Poor local region quality</td>
+<td>Flexibility/conformational heterogeneity</td>
+<td>Separate conformations with 3D classification, local refinement</td>
+</tr>
+</tbody>
+</table>
+<h2>9. Summary</h2>
+<ul>
+<li>Three sources for model building: automatic modeling (ModelAngelo/DeepTracer), homology/AF prediction, de novo building</li>
+<li>Alternating iterations of Coot manual correction and phenix automatic refinement is the standard workflow</li>
+<li>Triple quality check: geometry (MolProbity) + fit (EMRinger/Q-score) + overfitting (CC_free)</li>
+<li>Sub-3 Å maps should aim for side-chain-level confidence; ligands and modifications require separate validation</li>
+</ul>
+<p>This completes the structural biology pipeline: data processing → technical review → visualization → atomic modeling, forming a complete loop from experiment to model.</p></div><nav class="article-navigation" data-v-bed67739=""><!----><a href="/en/article/notes/StructuralBiology/visualization/structure-visualization/structure-visualization-en" class="article-nav-item prev" data-v-bed67739=""><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-left" data-v-bed67739=""></i></div><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Previous</div><div class="nav-title" data-v-bed67739="">Biomacromolecular Structure Visualization: PyMOL and ChimeraX in Practice</div></div></a><!----></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">Table of Contents</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">Designed by<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong></p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"en-US\"}}}"</script>
+  
+
+</body></html>

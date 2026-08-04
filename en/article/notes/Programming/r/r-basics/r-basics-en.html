@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/Programming/r/r-basics/r-basics-en">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/Programming/r/r-basics/r-basics-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/Programming/r/r-basics/r-basics"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/Programming/r/r-basics/r-basics-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/Programming/r/r-basics/r-basics"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/en/category" class="nav-link app-nav__link" data-v-b2e68a7c="">Categories</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">Resources</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/about" class="nav-link app-nav__link" data-v-b2e68a7c="">About</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">R Language Primer: Data Structures, Vectorization, and Functions</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>Reading about 1 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">Copy article</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # R Language</span><span class="article-tag" data-v-bed67739=""> # Getting Started</span><span class="article-tag" data-v-bed67739=""> # Tutorial</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>R Language Primer: Data Structures, Vectorization, and Functions</h1>
+<p>R is the go-to language for statistical computing and data visualization. This article explains the core of R: five data structures, vectorized operations, control flow, and functions, laying the groundwork for subsequent tidyverse and ggplot2.</p>
+<h2>1. Environment Setup</h2>
+<h3>1.1 Installation and IDE</h3>
+<ul>
+<li>Install <a href="https://cran.r-project.org/">R</a></li>
+<li>Recommended IDE: <a href="https://posit.co/download/rstudio-desktop/">RStudio</a> (free), or VS Code + R extension</li>
+</ul>
+<h3>1.2 Basic Operations</h3>
+<pre><code class="hljs language-r"><span class="hljs-comment"># Assignment: &lt;- is the classic R assignment operator (= also works)</span>
+x <span class="hljs-operator">&lt;-</span> 10
+x
+
+<span class="hljs-comment"># View help</span>
+<span class="hljs-operator">?</span>mean
+help<span class="hljs-punctuation">(</span><span class="hljs-string">"lm"</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2>2. Basic Data Structures</h2>
+<p>R's core data structures can be classified by dimension and homogeneity:</p>
+<table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>Dimension</th>
+<th>Element Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vector</td>
+<td>1</td>
+<td>Homogeneous</td>
+</tr>
+<tr>
+<td>factor</td>
+<td>1</td>
+<td>Categorical</td>
+</tr>
+<tr>
+<td>matrix</td>
+<td>2</td>
+<td>Homogeneous</td>
+</tr>
+<tr>
+<td>data.frame</td>
+<td>2</td>
+<td>Heterogeneous allowed</td>
+</tr>
+<tr>
+<td>list</td>
+<td>N</td>
+<td>Heterogeneous allowed</td>
+</tr>
+</tbody>
+</table>
+<h3>2.1 Vectors</h3>
+<pre><code class="hljs language-r"><span class="hljs-comment"># Create vectors</span>
+a <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span>            <span class="hljs-comment"># combine</span>
+b <span class="hljs-operator">&lt;-</span> 1<span class="hljs-operator">:</span><span class="hljs-number">10</span>                        <span class="hljs-comment"># sequence</span>
+<span class="hljs-built_in">c</span> <span class="hljs-operator">&lt;-</span> seq<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span> by <span class="hljs-operator">=</span> <span class="hljs-number">0.2</span><span class="hljs-punctuation">)</span>         <span class="hljs-comment"># step sequence</span>
+d <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">rep</span><span class="hljs-punctuation">(</span><span class="hljs-string">"A"</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">)</span>                 <span class="hljs-comment"># repeat</span>
+e <span class="hljs-operator">&lt;-</span> sample<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">100</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">)</span>           <span class="hljs-comment"># random sample</span>
+
+<span class="hljs-comment"># Types</span>
+typeof<span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">)</span>      <span class="hljs-comment"># "double"</span>
+<span class="hljs-built_in">is.numeric</span><span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">)</span>  <span class="hljs-comment"># TRUE</span>
+
+<span class="hljs-comment"># Indexing (R starts at 1!)</span>
+a<span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">]</span>           <span class="hljs-comment"># 1</span>
+a<span class="hljs-punctuation">[</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">]</span>     <span class="hljs-comment"># elements 1 and 3</span>
+a<span class="hljs-punctuation">[</span><span class="hljs-operator">-</span><span class="hljs-number">2</span><span class="hljs-punctuation">]</span>          <span class="hljs-comment"># remove element 2</span>
+a<span class="hljs-punctuation">[</span>a <span class="hljs-operator">&gt;</span> <span class="hljs-number">3</span><span class="hljs-punctuation">]</span>       <span class="hljs-comment"># conditional filtering</span>
+<span class="hljs-built_in">names</span><span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">)</span> <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"x1"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"x2"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"x3"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"x4"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"x5"</span><span class="hljs-punctuation">)</span>
+a<span class="hljs-punctuation">[</span><span class="hljs-string">"x1"</span><span class="hljs-punctuation">]</span>        <span class="hljs-comment"># access by name</span>
+</code></pre>
+<blockquote>
+<p><strong>R indexes from 1</strong>, which is the biggest habit difference from Python.</p>
+</blockquote>
+<h3>2.2 Factors</h3>
+<pre><code class="hljs language-r">treatment <span class="hljs-operator">&lt;-</span> factor<span class="hljs-punctuation">(</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"control"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"drug"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"control"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"drug"</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>
+                    levels <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"control"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"drug"</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+levels<span class="hljs-punctuation">(</span>treatment<span class="hljs-punctuation">)</span>          <span class="hljs-comment"># "control" "drug"</span>
+table<span class="hljs-punctuation">(</span>treatment<span class="hljs-punctuation">)</span>           <span class="hljs-comment"># frequency counts</span>
+</code></pre>
+<h3>2.3 Matrices</h3>
+<pre><code class="hljs language-r">m <span class="hljs-operator">&lt;-</span> matrix<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">12</span><span class="hljs-punctuation">,</span> nrow <span class="hljs-operator">=</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> ncol <span class="hljs-operator">=</span> <span class="hljs-number">4</span><span class="hljs-punctuation">)</span>
+<span class="hljs-comment">#      [,1] [,2] [,3] [,4]</span>
+<span class="hljs-comment"># [1,]    1    4    7   10</span>
+<span class="hljs-comment"># [2,]    2    5    8   11</span>
+<span class="hljs-comment"># [3,]    3    6    9   12</span>
+
+m<span class="hljs-punctuation">[</span><span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">]</span>        <span class="hljs-comment"># row 2, column 3: 8</span>
+m<span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">]</span>         <span class="hljs-comment"># row 1</span>
+m<span class="hljs-punctuation">[</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">]</span>         <span class="hljs-comment"># column 2</span>
+t<span class="hljs-punctuation">(</span>m<span class="hljs-punctuation">)</span>           <span class="hljs-comment"># transpose</span>
+m <span class="hljs-operator">%*%</span> t<span class="hljs-punctuation">(</span>m<span class="hljs-punctuation">)</span>     <span class="hljs-comment"># matrix multiplication</span>
+</code></pre>
+<h3>2.4 Data Frames</h3>
+<p>Data frames are the core structure for tabular data:</p>
+<pre><code class="hljs language-r">df <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span>
+  gene <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"TP53"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"BRCA1"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"EGFR"</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-built_in">expression</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">12.3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8.9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">45.1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>
+  chromosome <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">17</span><span class="hljs-punctuation">,</span> <span class="hljs-number">17</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># View structure</span>
+str<span class="hljs-punctuation">(</span>df<span class="hljs-punctuation">)</span>
+summary<span class="hljs-punctuation">(</span>df<span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># Extract columns</span>
+df<span class="hljs-operator">$</span><span class="hljs-built_in">expression</span>          <span class="hljs-comment"># $ operator</span>
+df<span class="hljs-punctuation">[[</span><span class="hljs-string">"expression"</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">]</span>
+df<span class="hljs-punctuation">[</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"expression"</span><span class="hljs-punctuation">]</span>
+
+<span class="hljs-comment"># Extract rows</span>
+df<span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">]</span>                <span class="hljs-comment"># first row</span>
+df<span class="hljs-punctuation">[</span>df<span class="hljs-operator">$</span><span class="hljs-built_in">expression</span> <span class="hljs-operator">&gt;</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">]</span>
+
+<span class="hljs-comment"># Add column</span>
+df<span class="hljs-operator">$</span>log2fc <span class="hljs-operator">&lt;-</span> log2<span class="hljs-punctuation">(</span>df<span class="hljs-operator">$</span><span class="hljs-built_in">expression</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h3>2.5 Lists</h3>
+<p>Lists can hold elements of any type:</p>
+<pre><code class="hljs language-r">result <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">list</span><span class="hljs-punctuation">(</span>
+  name <span class="hljs-operator">=</span> <span class="hljs-string">"Analysis Result"</span><span class="hljs-punctuation">,</span>
+  pvalue <span class="hljs-operator">=</span> <span class="hljs-number">0.003</span><span class="hljs-punctuation">,</span>
+  coef <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1.2</span><span class="hljs-punctuation">,</span> <span class="hljs-operator">-</span><span class="hljs-number">0.5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3.1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>
+  model <span class="hljs-operator">=</span> lm<span class="hljs-punctuation">(</span><span class="hljs-built_in">expression</span> <span class="hljs-operator">~</span> chromosome<span class="hljs-punctuation">,</span> data <span class="hljs-operator">=</span> df<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">)</span>
+
+result<span class="hljs-operator">$</span>pvalue
+result<span class="hljs-punctuation">[[</span><span class="hljs-number">3</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">]</span>            <span class="hljs-comment"># numeric vector</span>
+</code></pre>
+<h2>3. Vectorized Operations</h2>
+<p><strong>R's core idea: operate on entire vectors, not element-by-element loops.</strong></p>
+<pre><code class="hljs language-r">x <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span>
+
+x <span class="hljs-operator">*</span> <span class="hljs-number">2</span>              <span class="hljs-comment"># element-wise multiplication</span>
+x <span class="hljs-operator">+</span> <span class="hljs-number">10</span>
+<span class="hljs-built_in">sqrt</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+log2<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># vector with vector</span>
+y <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">1</span><span class="hljs-punctuation">)</span>
+x <span class="hljs-operator">+</span> y              <span class="hljs-comment"># add corresponding positions</span>
+
+<span class="hljs-comment"># comparison operations return logical vectors</span>
+x <span class="hljs-operator">&gt;</span> <span class="hljs-number">3</span>              <span class="hljs-comment"># FALSE FALSE FALSE  TRUE  TRUE</span>
+
+<span class="hljs-comment"># statistical functions</span>
+<span class="hljs-built_in">sum</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>; mean<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>; median<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>; sd<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>; <span class="hljs-built_in">range</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+</code></pre>
+<h2>4. Control Flow</h2>
+<h3>4.1 Conditionals</h3>
+<pre><code class="hljs language-r">score <span class="hljs-operator">&lt;-</span> 85
+
+<span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">90</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  grade <span class="hljs-operator">&lt;-</span> <span class="hljs-string">"A"</span>
+<span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>score <span class="hljs-operator">&gt;=</span> <span class="hljs-number">80</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  grade <span class="hljs-operator">&lt;-</span> <span class="hljs-string">"B"</span>
+<span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-punctuation">{</span>
+  grade <span class="hljs-operator">&lt;-</span> <span class="hljs-string">"C"</span>
+<span class="hljs-punctuation">}</span>
+print<span class="hljs-punctuation">(</span>grade<span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># vectorized conditional: ifelse</span>
+values <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">60</span><span class="hljs-punctuation">,</span> <span class="hljs-number">90</span><span class="hljs-punctuation">,</span> <span class="hljs-number">45</span><span class="hljs-punctuation">,</span> <span class="hljs-number">75</span><span class="hljs-punctuation">)</span>
+result <span class="hljs-operator">&lt;-</span> ifelse<span class="hljs-punctuation">(</span>values <span class="hljs-operator">&gt;=</span> <span class="hljs-number">60</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"pass"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"fail"</span><span class="hljs-punctuation">)</span>
+print<span class="hljs-punctuation">(</span>result<span class="hljs-punctuation">)</span>   <span class="hljs-comment"># "pass" "pass" "fail" "pass"</span>
+</code></pre>
+<h3>4.2 Loops</h3>
+<pre><code class="hljs language-r"><span class="hljs-comment"># for loop</span>
+<span class="hljs-keyword">for</span> <span class="hljs-punctuation">(</span>i <span class="hljs-keyword">in</span> <span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">5</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  print<span class="hljs-punctuation">(</span>i <span class="hljs-operator">^</span> <span class="hljs-number">2</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># iterate over vector elements</span>
+genes <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"TP53"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"BRCA1"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"EGFR"</span><span class="hljs-punctuation">)</span>
+<span class="hljs-keyword">for</span> <span class="hljs-punctuation">(</span>g <span class="hljs-keyword">in</span> genes<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  print<span class="hljs-punctuation">(</span>paste<span class="hljs-punctuation">(</span><span class="hljs-string">"Analyzing"</span><span class="hljs-punctuation">,</span> g<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># while loop</span>
+n <span class="hljs-operator">&lt;-</span> 0
+<span class="hljs-keyword">while</span> <span class="hljs-punctuation">(</span>n <span class="hljs-operator">&lt;</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  n <span class="hljs-operator">&lt;-</span> n <span class="hljs-operator">+</span> <span class="hljs-number">1</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3>4.3 Avoid Loops When Possible: The apply Family</h3>
+<p>R commonly uses the <code>apply</code> family instead of explicit loops:</p>
+<pre><code class="hljs language-r">m <span class="hljs-operator">&lt;-</span> matrix<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">12</span><span class="hljs-punctuation">,</span> nrow <span class="hljs-operator">=</span> <span class="hljs-number">3</span><span class="hljs-punctuation">)</span>
+
+apply<span class="hljs-punctuation">(</span>m<span class="hljs-punctuation">,</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span> mean<span class="hljs-punctuation">)</span>      <span class="hljs-comment"># row-wise means</span>
+apply<span class="hljs-punctuation">(</span>m<span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-built_in">sum</span><span class="hljs-punctuation">)</span>       <span class="hljs-comment"># column-wise sums</span>
+
+lapply<span class="hljs-punctuation">(</span><span class="hljs-built_in">list</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-operator">:</span><span class="hljs-number">6</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> mean<span class="hljs-punctuation">)</span>   <span class="hljs-comment"># apply function to each element of a list, returns a list</span>
+sapply<span class="hljs-punctuation">(</span><span class="hljs-built_in">list</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-operator">:</span><span class="hljs-number">6</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> mean<span class="hljs-punctuation">)</span>   <span class="hljs-comment"># simplified version, returns a vector</span>
+</code></pre>
+<h2>5. Functions</h2>
+<h3>5.1 Defining Functions</h3>
+<pre><code class="hljs language-r">gc_content <span class="hljs-operator">&lt;-</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>seq<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  seq <span class="hljs-operator">&lt;-</span> toupper<span class="hljs-punctuation">(</span>seq<span class="hljs-punctuation">)</span>
+  gc <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">sum</span><span class="hljs-punctuation">(</span>strsplit<span class="hljs-punctuation">(</span>seq<span class="hljs-punctuation">,</span> <span class="hljs-string">""</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">[[</span><span class="hljs-number">1</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">]</span> <span class="hljs-operator">%in%</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"G"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"C"</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+  gc <span class="hljs-operator">/</span> nchar<span class="hljs-punctuation">(</span>seq<span class="hljs-punctuation">)</span> <span class="hljs-operator">*</span> <span class="hljs-number">100</span>
+<span class="hljs-punctuation">}</span>
+
+gc_content<span class="hljs-punctuation">(</span><span class="hljs-string">"ATGCCGA"</span><span class="hljs-punctuation">)</span>
+<span class="hljs-comment"># [1] 57.14286</span>
+</code></pre>
+<h3>5.2 Default Arguments and Return Values</h3>
+<pre><code class="hljs language-r">normalize <span class="hljs-operator">&lt;-</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">,</span> method <span class="hljs-operator">=</span> <span class="hljs-string">"zscore"</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>method <span class="hljs-operator">==</span> <span class="hljs-string">"zscore"</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-punctuation">(</span>x <span class="hljs-operator">-</span> mean<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">/</span> sd<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+  <span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>method <span class="hljs-operator">==</span> <span class="hljs-string">"minmax"</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-punctuation">(</span>x <span class="hljs-operator">-</span> <span class="hljs-built_in">min</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">/</span> <span class="hljs-punctuation">(</span><span class="hljs-built_in">max</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span> <span class="hljs-operator">-</span> <span class="hljs-built_in">min</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+  <span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-punctuation">{</span>
+    stop<span class="hljs-punctuation">(</span><span class="hljs-string">"Unknown method: "</span><span class="hljs-punctuation">,</span> method<span class="hljs-punctuation">)</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+
+normalize<span class="hljs-punctuation">(</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+normalize<span class="hljs-punctuation">(</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> method <span class="hljs-operator">=</span> <span class="hljs-string">"minmax"</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h3>5.3 Anonymous Functions and Functional Programming</h3>
+<pre><code class="hljs language-r"><span class="hljs-comment"># anonymous functions</span>
+sapply<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>i<span class="hljs-punctuation">)</span> i <span class="hljs-operator">^</span> <span class="hljs-number">2</span><span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># purrr-style map (requires tidyverse, detailed in the next article)</span>
+<span class="hljs-comment"># purrr::map_dbl(1:5, ~ .x ^ 2)</span>
+</code></pre>
+<h2>6. Practical Tips</h2>
+<pre><code class="hljs language-r"><span class="hljs-comment"># pipe (native pipe |&gt;/ in R 4.1+ or magrittr %&gt;%)</span>
+x <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span>
+x <span class="hljs-operator">|&gt;</span> mean<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">|&gt;</span> <span class="hljs-built_in">round</span><span class="hljs-punctuation">(</span><span class="hljs-number">2</span><span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># handle missing values</span>
+x <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-literal">NA</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-literal">NA</span><span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">is.na</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">sum</span><span class="hljs-punctuation">(</span><span class="hljs-built_in">is.na</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+x<span class="hljs-punctuation">[</span><span class="hljs-operator">!</span><span class="hljs-built_in">is.na</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span><span class="hljs-punctuation">]</span>
+na.omit<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment"># merging data frames</span>
+df1 <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span>id <span class="hljs-operator">=</span> <span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">3</span><span class="hljs-punctuation">,</span> value <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">"a"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"b"</span><span class="hljs-punctuation">,</span> <span class="hljs-string">"c"</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+df2 <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span>id <span class="hljs-operator">=</span> <span class="hljs-number">2</span><span class="hljs-operator">:</span><span class="hljs-number">4</span><span class="hljs-punctuation">,</span> score <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">90</span><span class="hljs-punctuation">,</span> <span class="hljs-number">85</span><span class="hljs-punctuation">,</span> <span class="hljs-number">88</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+merged <span class="hljs-operator">&lt;-</span> merge<span class="hljs-punctuation">(</span>df1<span class="hljs-punctuation">,</span> df2<span class="hljs-punctuation">,</span> by <span class="hljs-operator">=</span> <span class="hljs-string">"id"</span><span class="hljs-punctuation">)</span>   <span class="hljs-comment"># similar to SQL join</span>
+</code></pre>
+<h2>7. Summary</h2>
+<ul>
+<li>Five core structures: vectors / factors / matrices / data frames / lists</li>
+<li><strong>R indexing starts at 1</strong>; <code>$</code> for columns; <code>[ ]</code> for rows</li>
+<li>Vectorized operations + <code>ifelse</code> + the <code>apply</code> family replace explicit loops</li>
+<li>Functions: default arguments, <code>stop()</code> for errors, anonymous functions</li>
+</ul>
+<p>The next article will introduce tidyverse: using <code>dplyr</code> for elegant data manipulation.</p></div><nav class="article-navigation" data-v-bed67739=""><!----><a href="/en/article/notes/Programming/python/python-data/python-data-en" class="article-nav-item prev" data-v-bed67739=""><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-left" data-v-bed67739=""></i></div><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Previous</div><div class="nav-title" data-v-bed67739="">Python Data Processing in Practice: File IO, Regex, and NumPy/Pandas</div></div></a><a href="/en/article/notes/Programming/r/r-ggplot2/r-ggplot2-en" class="article-nav-item next" data-v-bed67739=""><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Next</div><div class="nav-title" data-v-bed67739="">R ggplot2 Data Visualization: Grammar of Graphics and Common Charts</div></div><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-right" data-v-bed67739=""></i></div></a></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">Table of Contents</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">Designed by<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong></p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"en-US\"}}}"</script>
+  
+
+</body></html>

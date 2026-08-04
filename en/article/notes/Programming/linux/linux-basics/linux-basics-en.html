@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/Programming/linux/linux-basics/linux-basics-en">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/Programming/linux/linux-basics/linux-basics-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/Programming/linux/linux-basics/linux-basics"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/Programming/linux/linux-basics/linux-basics-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/Programming/linux/linux-basics/linux-basics"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/en/category" class="nav-link app-nav__link" data-v-b2e68a7c="">Categories</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">Resources</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/about" class="nav-link app-nav__link" data-v-b2e68a7c="">About</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">Linux Command Line Basics: File System, Permissions, and Text Processing</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>Reading about 1 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">Copy article</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # Linux</span><span class="article-tag" data-v-bed67739=""> # Command Line</span><span class="article-tag" data-v-bed67739=""> # Tutorial</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>Linux Command Line Basics: File System, Permissions, and Text Processing</h1>
+<p>The Linux command line (Shell) is a fundamental skill for bioinformatics and scientific computing: server operations, workflow construction, and batch processing all depend on it. This article covers the most commonly used commands, and it is recommended to practice while learning using WSL or a remote server.</p>
+<h2>1. Terminal and Shell</h2>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$SHELL</span>        <span class="hljs-comment"># View the current shell, usually /bin/bash</span>
+<span class="hljs-built_in">whoami</span>             <span class="hljs-comment"># Current user</span>
+<span class="hljs-built_in">pwd</span>                <span class="hljs-comment"># Current directory (print working directory)</span>
+</code></pre>
+<h2>2. File System Navigation</h2>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">ls</span>                  <span class="hljs-comment"># List files</span>
+<span class="hljs-built_in">ls</span> -l               <span class="hljs-comment"># Detailed information (permissions, size, time)</span>
+<span class="hljs-built_in">ls</span> -a               <span class="hljs-comment"># Include hidden files (starting with .)</span>
+<span class="hljs-built_in">ls</span> -lh              <span class="hljs-comment"># Human-readable sizes</span>
+
+<span class="hljs-built_in">cd</span> /home/user       <span class="hljs-comment"># Enter directory</span>
+<span class="hljs-built_in">cd</span> ..               <span class="hljs-comment"># Parent directory</span>
+<span class="hljs-built_in">cd</span> ~                <span class="hljs-comment"># User home directory</span>
+<span class="hljs-built_in">cd</span> -                <span class="hljs-comment"># Previous directory</span>
+
+<span class="hljs-built_in">pwd</span>                 <span class="hljs-comment"># Display current location</span>
+</code></pre>
+<p><strong>Path rules</strong>: <code>/</code> is the root directory; <code>.</code> is the current directory; <code>..</code> is the parent directory; <code>~</code> is the home directory.</p>
+<h2>3. File and Directory Operations</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Create</span>
+<span class="hljs-built_in">touch</span> file.txt      <span class="hljs-comment"># Create an empty file</span>
+<span class="hljs-built_in">mkdir</span> data          <span class="hljs-comment"># Create a directory</span>
+<span class="hljs-built_in">mkdir</span> -p a/b/c      <span class="hljs-comment"># Recursively create multi-level directories</span>
+
+<span class="hljs-comment"># Copy / Move / Delete</span>
+<span class="hljs-built_in">cp</span> file.txt copy.txt
+<span class="hljs-built_in">cp</span> -r data/ data_backup/    <span class="hljs-comment"># Copy directory</span>
+<span class="hljs-built_in">mv</span> file.txt newname.txt     <span class="hljs-comment"># Rename/move</span>
+<span class="hljs-built_in">rm</span> file.txt                 <span class="hljs-comment"># Delete file</span>
+<span class="hljs-built_in">rm</span> -r data/                 <span class="hljs-comment"># Delete directory (dangerous!)</span>
+<span class="hljs-built_in">rm</span> -rf data/                <span class="hljs-comment"># Force recursive delete (use with caution)</span>
+
+<span class="hljs-comment"># View contents</span>
+<span class="hljs-built_in">cat</span> file.txt        <span class="hljs-comment"># Output all contents</span>
+less file.txt       <span class="hljs-comment"># Page through (q to quit, / to search)</span>
+<span class="hljs-built_in">head</span> -n 5 file.txt  <span class="hljs-comment"># First 5 lines</span>
+<span class="hljs-built_in">tail</span> -n 5 file.txt  <span class="hljs-comment"># Last 5 lines</span>
+<span class="hljs-built_in">tail</span> -f log.txt     <span class="hljs-comment"># Follow in real time (commonly used for viewing logs)</span>
+</code></pre>
+<blockquote>
+<p><strong><code>rm -rf</code> is a dangerous command</strong>: confirm the path before executing, or first <code>ls</code> to verify.</p>
+</blockquote>
+<h2>4. Wildcards and Redirection</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Wildcards</span>
+<span class="hljs-built_in">ls</span> *.fasta          <span class="hljs-comment"># All .fasta files</span>
+<span class="hljs-built_in">ls</span> data_??.txt      <span class="hljs-comment"># ? matches a single character</span>
+<span class="hljs-built_in">ls</span> [abc]*           <span class="hljs-comment"># Starts with a/b/c</span>
+
+<span class="hljs-comment"># Redirection</span>
+<span class="hljs-built_in">ls</span> &gt; list.txt       <span class="hljs-comment"># Overwrite</span>
+<span class="hljs-built_in">ls</span> &gt;&gt; list.txt      <span class="hljs-comment"># Append</span>
+<span class="hljs-built_in">ls</span> 2&gt; error.log     <span class="hljs-comment"># Redirect error output</span>
+<span class="hljs-built_in">ls</span> 2&gt;/dev/null      <span class="hljs-comment"># Discard error output</span>
+
+<span class="hljs-comment"># Pipe: output of the previous command becomes input of the next</span>
+<span class="hljs-built_in">ls</span> -l | <span class="hljs-built_in">wc</span> -l                   <span class="hljs-comment"># Count number of files</span>
+<span class="hljs-built_in">history</span> | grep python           <span class="hljs-comment"># Search history commands</span>
+</code></pre>
+<h2>5. Permission Management</h2>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">ls</span> -l
+<span class="hljs-comment"># -rw-r--r-- 1 user group 1234 Aug 4 10:00 file.txt</span>
+<span class="hljs-comment"># ^permissions       ^owner ^group</span>
+
+<span class="hljs-built_in">chmod</span> 755 script.sh    <span class="hljs-comment"># rwxr-xr-x: owner read/write/execute, others read/execute only</span>
+<span class="hljs-built_in">chmod</span> +x script.sh     <span class="hljs-comment"># Add execute permission (required to run scripts)</span>
+<span class="hljs-built_in">chmod</span> -w file.txt      <span class="hljs-comment"># Remove write permission</span>
+
+<span class="hljs-built_in">chown</span> user:group file  <span class="hljs-comment"># Change owner and group (requires root)</span>
+</code></pre>
+<p>Permission numbers: <code>r=4</code>, <code>w=2</code>, <code>x=1</code>, and the three digits represent owner/group/others respectively.</p>
+<h2>6. The Three Musketeers of Text Processing</h2>
+<h3>6.1 grep: Search</h3>
+<pre><code class="hljs language-bash">grep <span class="hljs-string">"TP53"</span> genes.txt          <span class="hljs-comment"># Find lines containing TP53</span>
+grep -i <span class="hljs-string">"tp53"</span> genes.txt       <span class="hljs-comment"># Ignore case</span>
+grep -v <span class="hljs-string">"comment"</span> file.txt     <span class="hljs-comment"># Reverse match (exclude)</span>
+grep -c <span class="hljs-string">"gene"</span> file.txt        <span class="hljs-comment"># Count</span>
+grep -n <span class="hljs-string">"pattern"</span> file.txt     <span class="hljs-comment"># Show line numbers</span>
+grep -r <span class="hljs-string">"TODO"</span> src/            <span class="hljs-comment"># Recursively search directory</span>
+
+<span class="hljs-comment"># Pipe combinations</span>
+ps aux | grep python           <span class="hljs-comment"># Find python processes</span>
+<span class="hljs-built_in">cat</span> reads.fastq | grep -c <span class="hljs-string">"^@"</span> <span class="hljs-comment"># Count number of sequences in FASTQ</span>
+</code></pre>
+<h3>6.2 sed: Stream Editing</h3>
+<pre><code class="hljs language-bash">sed -n <span class="hljs-string">'5,10p'</span> file.txt        <span class="hljs-comment"># Print lines 5-10</span>
+sed <span class="hljs-string">'s/old/new/'</span> file.txt      <span class="hljs-comment"># Replace first match in each line</span>
+sed <span class="hljs-string">'s/old/new/g'</span> file.txt     <span class="hljs-comment"># Global replace</span>
+sed -i <span class="hljs-string">'s/old/new/g'</span> file.txt  <span class="hljs-comment"># Modify file in place (-i in-place)</span>
+sed <span class="hljs-string">'/^#/d'</span> config.conf        <span class="hljs-comment"># Delete comment lines</span>
+</code></pre>
+<h3>6.3 awk: Column-Based Processing</h3>
+<pre><code class="hljs language-bash">awk <span class="hljs-string">'{print $1}'</span> file.txt      <span class="hljs-comment"># Print first column</span>
+awk -F<span class="hljs-string">','</span> <span class="hljs-string">'{print $1, $3}'</span> data.csv   <span class="hljs-comment"># Separate by comma</span>
+awk <span class="hljs-string">'$3 &gt; 50 {print $1}'</span> data.txt     <span class="hljs-comment"># Conditional filter</span>
+awk <span class="hljs-string">'{sum += $2} END {print sum}'</span> data.txt   <span class="hljs-comment"># Sum second column</span>
+awk <span class="hljs-string">'NR &gt; 1 {print}'</span> file.txt  <span class="hljs-comment"># Skip header line</span>
+</code></pre>
+<blockquote>
+<p>awk field separator defaults to whitespace; <code>-F','</code> specifies comma.</p>
+</blockquote>
+<h2>7. Process Management</h2>
+<pre><code class="hljs language-bash">ps aux                <span class="hljs-comment"># View all processes</span>
+ps aux | grep python  <span class="hljs-comment"># Find specific processes</span>
+top                   <span class="hljs-comment"># Real-time monitoring (q to quit)</span>
+htop                  <span class="hljs-comment"># Enhanced monitoring (more intuitive)</span>
+
+<span class="hljs-built_in">kill</span> PID              <span class="hljs-comment"># Terminate process</span>
+<span class="hljs-built_in">kill</span> -9 PID           <span class="hljs-comment"># Force kill</span>
+pkill python          <span class="hljs-comment"># Terminate by name</span>
+
+<span class="hljs-comment"># Background execution</span>
+python script.py &amp;    <span class="hljs-comment"># Run in background</span>
+<span class="hljs-built_in">nohup</span> python script.py &gt; log.txt 2&gt;&amp;1 &amp;   <span class="hljs-comment"># Run detached from terminal (common on servers)</span>
+<span class="hljs-built_in">jobs</span>                  <span class="hljs-comment"># View background jobs</span>
+<span class="hljs-built_in">fg</span>                    <span class="hljs-comment"># Bring to foreground</span>
+</code></pre>
+<blockquote>
+<p>For long-running tasks on remote servers, use <code>nohup ... &amp;</code> or <code>tmux</code> / <code>screen</code> to avoid task interruption due to terminal disconnection.</p>
+</blockquote>
+<h2>8. Practical Combinations</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Count files and sizes</span>
+<span class="hljs-built_in">ls</span> -lh | awk <span class="hljs-string">'{print $5, $9}'</span>
+<span class="hljs-built_in">du</span> -sh data/          <span class="hljs-comment"># Total size of directory</span>
+<span class="hljs-built_in">df</span> -h                 <span class="hljs-comment"># Disk space</span>
+
+<span class="hljs-comment"># Compression and decompression</span>
+tar -czf archive.tar.gz <span class="hljs-built_in">dir</span>/    <span class="hljs-comment"># Pack and compress</span>
+tar -xzf archive.tar.gz         <span class="hljs-comment"># Decompress</span>
+zip -r archive.zip <span class="hljs-built_in">dir</span>/
+unzip archive.zip
+
+<span class="hljs-comment"># Find files</span>
+find . -name <span class="hljs-string">"*.log"</span>            <span class="hljs-comment"># Find by name</span>
+find . -size +100M              <span class="hljs-comment"># Find by size</span>
+<span class="hljs-built_in">which</span> python                    <span class="hljs-comment"># Path of the command</span>
+</code></pre>
+<h2>9. WSL and Development Environment</h2>
+<p>Under Windows, WSL (Windows Subsystem for Linux) is recommended:</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Install (in administrator PowerShell)</span>
+wsl --install
+
+<span class="hljs-comment"># Enter the Ubuntu subsystem</span>
+wsl
+
+<span class="hljs-comment"># Configure the development environment in WSL</span>
+<span class="hljs-built_in">sudo</span> apt update
+<span class="hljs-built_in">sudo</span> apt install build-essential git python3 python3-pip
+</code></pre>
+<p>VS Code connects to WSL: after installing the Remote - WSL extension, <code>code .</code> opens directly.</p>
+<h2>10. Summary</h2>
+<ul>
+<li>Navigation: <code>cd</code> / <code>ls</code> / <code>pwd</code>; operations: <code>cp</code> / <code>mv</code> / <code>rm</code> / <code>mkdir</code></li>
+<li>The three musketeers: <code>grep</code> for searching, <code>sed</code> for replacing, <code>awk</code> for column-based processing</li>
+<li>The pipe <code>|</code> and redirection <code>&gt;</code> are the core of combining commands</li>
+<li>Permissions: <code>chmod 755</code> / <code>chmod +x</code>; processes: <code>ps</code> / <code>kill</code> / <code>nohup</code></li>
+</ul>
+<p>The next article will introduce Bash programming: organizing commands into reusable scripts.</p></div><nav class="article-navigation" data-v-bed67739=""><!----><a href="/en/article/notes/Programming/r/r-tidyverse/r-tidyverse-en" class="article-nav-item prev" data-v-bed67739=""><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-left" data-v-bed67739=""></i></div><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Previous</div><div class="nav-title" data-v-bed67739="">R tidyverse Data Manipulation: dplyr Pipelines and Data Cleaning</div></div></a><a href="/en/article/notes/Programming/bash/bash-scripting/bash-scripting-en" class="article-nav-item next" data-v-bed67739=""><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Next</div><div class="nav-title" data-v-bed67739="">Bash Programming: Variables, Conditionals, Loops, and Practical Scripts</div></div><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-right" data-v-bed67739=""></i></div></a></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">Table of Contents</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">Designed by<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong></p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"en-US\"}}}"</script>
+  
+
+</body></html>

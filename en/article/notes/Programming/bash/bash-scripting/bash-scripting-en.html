@@ -1,0 +1,274 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/Programming/bash/bash-scripting/bash-scripting-en">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/Programming/bash/bash-scripting/bash-scripting-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/Programming/bash/bash-scripting/bash-scripting"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/Programming/bash/bash-scripting/bash-scripting-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/Programming/bash/bash-scripting/bash-scripting"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/en/category" class="nav-link app-nav__link" data-v-b2e68a7c="">Categories</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">Resources</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/about" class="nav-link app-nav__link" data-v-b2e68a7c="">About</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">Bash Programming: Variables, Conditionals, Loops, and Practical Scripts</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>Reading about 1 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">Copy article</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # Bash</span><span class="article-tag" data-v-bed67739=""> # Shell</span><span class="article-tag" data-v-bed67739=""> # Scripting</span><span class="article-tag" data-v-bed67739=""> # Tutorial</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>Bash Programming: Variables, Conditionals, Loops, and Practical Scripts</h1>
+<p>Bash scripts organize command-line operations into reusable programs and are a core tool for automated batch processing. This article covers variables, conditionals, loops, functions, and common tasks, from script basics to practical applications.</p>
+<h2>1. Script Basics</h2>
+<h3>1.1 Script Structure</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># The first line shebang: specifies the interpreter</span>
+
+<span class="hljs-comment"># Give the script execute permission</span>
+<span class="hljs-built_in">chmod</span> +x myscript.sh
+<span class="hljs-comment"># Run</span>
+./myscript.sh
+<span class="hljs-comment"># Or run directly with bash (no execute permission needed)</span>
+bash myscript.sh
+</code></pre>
+<h3>1.2 Debugging</h3>
+<pre><code class="hljs language-bash">bash -x script.sh    <span class="hljs-comment"># Trace execution, display each command</span>
+<span class="hljs-comment"># Enable inside the script: set -x (trace) / set -e (exit on error) / set -u (error on undefined variable)</span>
+</code></pre>
+<p>For production scripts, it's recommended to add at the beginning:</p>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">set</span> -euo pipefail   <span class="hljs-comment"># Exit on error, error on undefined variables, pipe failure detection</span>
+</code></pre>
+<h2>2. Variables</h2>
+<h3>2.1 Definition and Reference</h3>
+<pre><code class="hljs language-bash">name=<span class="hljs-string">"zorrooz"</span>        <span class="hljs-comment"># Note: no spaces around =</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Hello, <span class="hljs-variable">$name</span>"</span>   <span class="hljs-comment"># Variable expansion inside double quotes</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">'Hello, $name'</span>   <span class="hljs-comment"># Literal output inside single quotes</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Length: <span class="hljs-variable">${#name}</span>"</span> <span class="hljs-comment"># String length</span>
+</code></pre>
+<h3>2.2 Command Substitution and Arithmetic</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Command substitution: $(...)</span>
+today=$(<span class="hljs-built_in">date</span> +%F)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Today is <span class="hljs-variable">$today</span>"</span>
+files=$(<span class="hljs-built_in">ls</span> | <span class="hljs-built_in">wc</span> -l)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Total: <span class="hljs-variable">$files</span> files"</span>
+
+<span class="hljs-comment"># Arithmetic: $((...))</span>
+a=10
+b=3
+<span class="hljs-built_in">echo</span> $((a + b))    <span class="hljs-comment"># 13</span>
+<span class="hljs-built_in">echo</span> $((a % b))    <span class="hljs-comment"># 1</span>
+</code></pre>
+<h3>2.3 Positional Parameters</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Script name: <span class="hljs-variable">$0</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"First argument: <span class="hljs-variable">$1</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Second argument: <span class="hljs-variable">$2</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"All arguments: <span class="hljs-variable">$@</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Argument count: <span class="hljs-variable">$#</span>"</span>
+
+<span class="hljs-comment"># Run: ./script.sh file1 file2</span>
+</code></pre>
+<h3>2.4 Special Variables</h3>
+<pre><code class="hljs language-bash">$?    <span class="hljs-comment"># Exit code of the last command (0 success, non-zero failure)</span>
+$$    <span class="hljs-comment"># PID of the current process</span>
+$!    <span class="hljs-comment"># PID of the background process</span>
+</code></pre>
+<h2>3. Conditional Statements</h2>
+<h3>3.1 if / elif / else</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+score=<span class="hljs-variable">$1</span>
+
+<span class="hljs-keyword">if</span> (( score &gt;= <span class="hljs-number">90</span> )); <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Excellent"</span>
+<span class="hljs-keyword">elif</span> (( score &gt;= <span class="hljs-number">60</span> )); <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Pass"</span>
+<span class="hljs-keyword">else</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Fail"</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<h3>3.2 test Expressions</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># File tests</span>
+[ -f file.txt ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Is a regular file"</span>
+[ -d <span class="hljs-built_in">dir</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Is a directory"</span>
+[ -e path ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Exists"</span>
+[ -s file ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Is a non-empty file"</span>
+
+<span class="hljs-comment"># String comparison</span>
+[ <span class="hljs-string">"<span class="hljs-variable">$name</span>"</span> = <span class="hljs-string">"zorrooz"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Match"</span>
+[ -z <span class="hljs-string">"<span class="hljs-variable">$var</span>"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Variable is empty"</span>     <span class="hljs-comment"># -n non-empty</span>
+
+<span class="hljs-comment"># Numeric comparison (inside [ ])</span>
+[ <span class="hljs-string">"<span class="hljs-variable">$a</span>"</span> -gt <span class="hljs-string">"<span class="hljs-variable">$b</span>"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"a &gt; b"</span>    <span class="hljs-comment"># -eq -ne -gt -ge -lt -le</span>
+
+<span class="hljs-comment"># Logical combination</span>
+[ -f <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] &amp;&amp; [ -s <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"Non-empty file"</span>
+[ -f <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] || <span class="hljs-built_in">echo</span> <span class="hljs-string">"File does not exist"</span>
+</code></pre>
+<h3>3.3 case Branches</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-keyword">case</span> <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> <span class="hljs-keyword">in</span>
+  start)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Start the service"</span>
+    ;;
+  stop|<span class="hljs-built_in">kill</span>)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Stop the service"</span>
+    ;;
+  *)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Usage: <span class="hljs-variable">$0</span> {start|stop}"</span>
+    <span class="hljs-built_in">exit</span> 1
+    ;;
+<span class="hljs-keyword">esac</span>
+</code></pre>
+<h2>4. Loops</h2>
+<h3>4.1 for Loops</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Iterate over a list</span>
+<span class="hljs-keyword">for</span> fruit <span class="hljs-keyword">in</span> apple banana cherry; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Processing <span class="hljs-variable">$fruit</span>"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-comment"># Iterate over a range</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..5}; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Iteration <span class="hljs-variable">$i</span>"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-comment"># Iterate over files (most common)</span>
+<span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> *.fasta; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Processing <span class="hljs-variable">$file</span>"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-comment"># C-style</span>
+<span class="hljs-keyword">for</span> ((i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++)); <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h3>4.2 while Loops</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Read a file line by line</span>
+<span class="hljs-keyword">while</span> IFS= <span class="hljs-built_in">read</span> -r line; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Read: <span class="hljs-variable">$line</span>"</span>
+<span class="hljs-keyword">done</span> &lt; input.txt
+
+<span class="hljs-comment"># Counting loop</span>
+count=0
+<span class="hljs-keyword">while</span> [ <span class="hljs-variable">$count</span> -lt 5 ]; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$count</span>
+    count=$((count + <span class="hljs-number">1</span>))
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h3>4.3 break / continue</h3>
+<pre><code class="hljs language-bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..10}; <span class="hljs-keyword">do</span>
+    [ <span class="hljs-variable">$i</span> -eq 3 ] &amp;&amp; <span class="hljs-built_in">continue</span>   <span class="hljs-comment"># Skip 3</span>
+    [ <span class="hljs-variable">$i</span> -eq 7 ] &amp;&amp; <span class="hljs-built_in">break</span>      <span class="hljs-comment"># Terminate at 7</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h2>5. Functions</h2>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+
+<span class="hljs-comment"># Define a function</span>
+<span class="hljs-function"><span class="hljs-title">greet</span></span>() {
+    <span class="hljs-built_in">local</span> name=<span class="hljs-variable">$1</span>           <span class="hljs-comment"># local: local variable</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Hello, <span class="hljs-variable">$name</span>!"</span>
+    <span class="hljs-built_in">return</span> 0                <span class="hljs-comment"># Return value (exit code)</span>
+}
+
+<span class="hljs-comment"># Call</span>
+greet <span class="hljs-string">"zorrooz"</span>
+
+<span class="hljs-comment"># Function returning a value (note: not return, but echo capture)</span>
+<span class="hljs-function"><span class="hljs-title">add</span></span>() {
+    <span class="hljs-built_in">echo</span> $(( <span class="hljs-variable">$1</span> + <span class="hljs-variable">$2</span> ))
+}
+result=$(add 3 4)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"3 + 4 = <span class="hljs-variable">$result</span>"</span>
+</code></pre>
+<h2>6. Arrays and Strings</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Arrays</span>
+genes=(<span class="hljs-string">"TP53"</span> <span class="hljs-string">"BRCA1"</span> <span class="hljs-string">"EGFR"</span>)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${genes[0]}</span>"</span>          <span class="hljs-comment"># TP53</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${genes[@]}</span>"</span>          <span class="hljs-comment"># All elements</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${#genes[@]}</span>"</span>         <span class="hljs-comment"># Length</span>
+genes+=(<span class="hljs-string">"MYC"</span>)              <span class="hljs-comment"># Append</span>
+
+<span class="hljs-comment"># String processing</span>
+<span class="hljs-built_in">seq</span>=<span class="hljs-string">"ATGCCGTAA"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq:0:3}</span>"</span>           <span class="hljs-comment"># Extract the first 3 characters: ATG</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq//T/U}</span>"</span>          <span class="hljs-comment"># Replace all T→U</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq/AT/XX}</span>"</span>         <span class="hljs-comment"># Replace the first AT</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq^^}</span>"</span>             <span class="hljs-comment"># Convert to uppercase (bash 4+)</span>
+</code></pre>
+<h2>7. Practical Scripts</h2>
+<h3>7.1 Batch Rename</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># Change all .txt extensions to .log</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+
+<span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> *.txt; <span class="hljs-keyword">do</span>
+    [ -e <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] || <span class="hljs-built_in">continue</span>          <span class="hljs-comment"># Skip when there is no match</span>
+    <span class="hljs-built_in">mv</span> <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> <span class="hljs-string">"<span class="hljs-variable">${file%.txt}</span>.log"</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Renamed: <span class="hljs-variable">$file</span> -&gt; <span class="hljs-variable">${file%.txt}</span>.log"</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h3>7.2 Bioinformatics Batch Processing: Running FASTQ Quality Control</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># Usage: ./qc_pipeline.sh data_dir output_dir</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+
+DATA_DIR=<span class="hljs-variable">${1:?"Please provide the data directory"}</span>
+OUT_DIR=<span class="hljs-variable">${2:?"Please provide the output directory"}</span>
+<span class="hljs-built_in">mkdir</span> -p <span class="hljs-string">"<span class="hljs-variable">$OUT_DIR</span>"</span>
+
+<span class="hljs-keyword">for</span> fq <span class="hljs-keyword">in</span> <span class="hljs-string">"<span class="hljs-variable">$DATA_DIR</span>"</span>/*_R1.fastq.gz; <span class="hljs-keyword">do</span>
+    base=$(<span class="hljs-built_in">basename</span> <span class="hljs-string">"<span class="hljs-variable">$fq</span>"</span> _R1.fastq.gz)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"=== Processing sample: <span class="hljs-variable">$base</span> ==="</span>
+
+    fastqc -o <span class="hljs-string">"<span class="hljs-variable">$OUT_DIR</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$fq</span>"</span>
+    fastqc -o <span class="hljs-string">"<span class="hljs-variable">$OUT_DIR</span>"</span> <span class="hljs-string">"<span class="hljs-variable">${DATA_DIR}</span>/<span class="hljs-variable">${base}</span>_R2.fastq.gz"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"All done, results are in <span class="hljs-variable">$OUT_DIR</span>"</span>
+</code></pre>
+<h3>7.3 Log Monitoring and Alerting</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># Monitor the number of ERRORs in the log, print an alert when exceeding the threshold</span>
+LOG_FILE=<span class="hljs-string">"app.log"</span>
+THRESHOLD=<span class="hljs-variable">${1:-10}</span>
+
+count=$(grep -c <span class="hljs-string">"ERROR"</span> <span class="hljs-string">"<span class="hljs-variable">$LOG_FILE</span>"</span> || <span class="hljs-literal">true</span>)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Current ERROR count: <span class="hljs-variable">$count</span>"</span>
+
+<span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$count</span>"</span> -gt <span class="hljs-string">"<span class="hljs-variable">$THRESHOLD</span>"</span> ]; <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"⚠️ Error count exceeds the threshold <span class="hljs-variable">$THRESHOLD</span>!"</span>
+    <span class="hljs-built_in">exit</span> 1
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<h2>8. Common Pitfalls to Watch Out For</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 1. No spaces around the = sign in variable assignment</span>
+name = <span class="hljs-string">"x"</span>    <span class="hljs-comment"># Wrong! Will be treated as a command</span>
+name=<span class="hljs-string">"x"</span>      <span class="hljs-comment"># Correct</span>
+
+<span class="hljs-comment"># 2. Quoting: paths containing spaces must be quoted</span>
+file=<span class="hljs-string">"my data.txt"</span>
+<span class="hljs-built_in">cat</span> <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span>   <span class="hljs-comment"># Correct</span>
+<span class="hljs-built_in">cat</span> <span class="hljs-variable">$file</span>     <span class="hljs-comment"># Wrong: splits into two arguments</span>
+
+<span class="hljs-comment"># 3. There must be spaces on both sides inside [ ]</span>
+[ <span class="hljs-string">"<span class="hljs-variable">$a</span>"</span> = <span class="hljs-string">"<span class="hljs-variable">$b</span>"</span> ]   <span class="hljs-comment"># Correct</span>
+[<span class="hljs-string">"<span class="hljs-variable">$a</span>"</span>=<span class="hljs-string">"<span class="hljs-variable">$b</span>"</span>]       <span class="hljs-comment"># Wrong</span>
+
+<span class="hljs-comment"># 4. The pitfall of set -e in pipelines: grep returns non-zero when no match is found, which will interrupt the script</span>
+grep <span class="hljs-string">"x"</span> file || <span class="hljs-literal">true</span>    <span class="hljs-comment"># Explicitly tolerate</span>
+</code></pre>
+<h2>9. Summary</h2>
+<ul>
+<li>Script header: <code>#!/bin/bash</code> + <code>set -euo pipefail</code></li>
+<li>Variables: <code>$name</code>, <code>${#name}</code>, <code>$(cmd)</code>, <code>$((...))</code></li>
+<li>Conditionals: <code>[ condition ]</code>, <code>(( arithmetic ))</code>, <code>case</code></li>
+<li>Loops: <code>for file in *.txt</code>, <code>while read line</code></li>
+<li>Functions: <code>local</code> variables, capturing return values with echo</li>
+</ul>
+<p>At this point, the programming track tutorials are complete: Python ×3, R ×3, Linux ×1, Bash ×1, from zero to hands-on practice.</p></div><nav class="article-navigation" data-v-bed67739=""><!----><a href="/en/article/notes/Programming/linux/linux-basics/linux-basics-en" class="article-nav-item prev" data-v-bed67739=""><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-left" data-v-bed67739=""></i></div><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Previous</div><div class="nav-title" data-v-bed67739="">Linux Command Line Basics: File System, Permissions, and Text Processing</div></div></a><!----></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">Table of Contents</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">Designed by<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong></p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"en-US\"}}}"</script>
+  
+
+</body></html>

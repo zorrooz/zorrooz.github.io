@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-xTu3Eu4o.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-B-dY4r-h.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-73d8966b=""><!--[--><header class="app-header" data-v-b2e68a7c=""><div class="container px-0" data-v-b2e68a7c=""><nav class="navbar navbar-expand-lg app-nav" data-v-b2e68a7c=""><div class="container-fluid d-flex app-nav__inner" data-v-b2e68a7c=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b2e68a7c=""><span class="app-nav__wordmark" data-v-b2e68a7c="">zorrooz<span class="app-nav__apos" data-v-b2e68a7c="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><line x1="3" y1="12" x2="21" y2="12" data-v-b2e68a7c=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-b2e68a7c=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-b2e68a7c=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b2e68a7c=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b2e68a7c=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b2e68a7c=""></li><!--[--><li class="nav-item" data-v-b2e68a7c=""><a href="/en/category" class="nav-link app-nav__link" data-v-b2e68a7c="">Categories</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b2e68a7c="">Resources</a></li><li class="nav-item" data-v-b2e68a7c=""><a href="/en/about" class="nav-link app-nav__link" data-v-b2e68a7c="">About</a></li><!--]--></ul></div><div class="d-none d-lg-flex ms-auto app-nav__actions" data-v-b2e68a7c=""><button class="icon-btn" aria-label="Search" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><circle cx="11" cy="11" r="8" data-v-b2e68a7c=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-b2e68a7c=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-b2e68a7c=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-b2e68a7c=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b2e68a7c=""><path d="m5 8 6 6" data-v-b2e68a7c=""></path><path d="m4 14 6-6 2-3" data-v-b2e68a7c=""></path><path d="M2 5h12" data-v-b2e68a7c=""></path><path d="M7 2h1" data-v-b2e68a7c=""></path><path d="m22 22-5-10-5 10" data-v-b2e68a7c=""></path><path d="M14 18h6" data-v-b2e68a7c=""></path></svg></button></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-73d8966b=""><div class="container view-container article-view" data-v-73d8966b="" data-v-bed67739=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-bed67739=""></div><div class="row py-4 px-0" data-v-bed67739=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="navigation-container mb-0" data-v-bed67739=""><div class="navigation-tree" data-v-bed67739="" data-v-7ae1de2a=""><!--[--><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-bed67739=""><div class="article-panel" data-v-bed67739=""><div class="article-panel__body" data-v-bed67739=""><div class="article-content" data-v-bed67739=""><div class="article-meta" data-v-bed67739=""><h1 class="article-title" data-v-bed67739="">Mainstream Tools for Protein Design</h1><div class="article-meta__row" data-v-bed67739=""><span class="meta-line" data-v-bed67739=""><i class="fas fa-calendar-alt" data-v-bed67739=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-bed67739=""><i class="fas fa-clock" data-v-bed67739=""></i>Reading about 2 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-bed67739=""><i class="fas fa-copy" data-v-bed67739=""></i><span data-v-bed67739="">Copy article</span></button></div><div class="article-meta__tags" data-v-bed67739=""><!--[--><span class="article-tag" data-v-bed67739=""> # Protein Design</span><span class="article-tag" data-v-bed67739=""> # Rosetta</span><span class="article-tag" data-v-bed67739=""> # AlphaFold</span><span class="article-tag" data-v-bed67739=""> # RFdiffusion</span><span class="article-tag" data-v-bed67739=""> # Computational Biology</span><!--]--></div></div><div class="markdown-body" data-v-bed67739=""><h1>Mainstream Tools for Protein Design</h1>
+<p>Protein design is an important direction in computational biology: given a target function, design an amino acid sequence that folds into a specific structure. This article reviews the mainstream tool spectrum from classical energy functions to generative AI.</p>
+<h2>1. Two Paradigms of Design Problems</h2>
+<h3>1.1 Sequence Design</h3>
+<p>Given a target structure (backbone), find the most stable amino acid sequence:</p>
+<pre><code>structure (backbone) → sequence design → amino acid sequence → experimental validation
+</code></pre>
+<h3>1.2 Structure Design (De Novo Design)</h3>
+<p>Design new structures/functions from scratch:</p>
+<pre><code>functional requirement → structure generation → sequence design → experimental validation
+</code></pre>
+<h2>2. Rosetta: The Energy Function Paradigm</h2>
+<p>Rosetta is the "veteran empire" in structure prediction and design, based on a hybrid energy function of physics and knowledge.</p>
+<h3>2.1 Core Energy Function</h3>
+<ul>
+<li><strong>REF2015</strong>: the classic all-atom energy function (van der Waals, hydrogen bonding, solvation, electrostatics, and dihedral angle preferences)</li>
+<li>Score = weighted sum of energy terms; lower is better</li>
+<li>Rosetta's "design" is essentially <strong>energy minimization</strong>: searching for low-energy states in sequence/structure space</li>
+</ul>
+<h3>2.2 Common Protocols</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Sequence design (FixBB: fixed backbone design)</span>
+rosetta_scripts.default.linuxgccrelease \
+  -s input.pdb \
+  -parser:protocol fixbb.xml \
+  -out:prefix designed_
+
+<span class="hljs-comment"># Core snippet of fixbb.xml</span>
+<span class="hljs-comment"># &lt;TaskOperations&gt;</span>
+<span class="hljs-comment">#   &lt;RestrictToRepacking name="repack"/&gt;</span>
+<span class="hljs-comment">#   &lt;OperateOnResidueSubset name="no_design_core" selector="..." /&gt;</span>
+<span class="hljs-comment"># &lt;/TaskOperations&gt;</span>
+<span class="hljs-comment"># &lt;RosettaScripts&gt;</span>
+<span class="hljs-comment">#   &lt;PackRotamersMover name="pack" task_operations="repack"/&gt;</span>
+<span class="hljs-comment"># &lt;/RosettaScripts&gt;</span>
+</code></pre>
+<h3>2.3 Classic Applications of Rosetta</h3>
+<ul>
+<li><strong>Enzyme design</strong>: design of scaffolds for catalytic active sites (e.g., Kemp eliminase)</li>
+<li><strong>Protein-protein interface design</strong>: engineering binding specificity</li>
+<li><strong>Binder design</strong>: high-affinity binding proteins</li>
+<li><strong>Thermostability engineering</strong>: computational mutations to increase Tm</li>
+</ul>
+<h3>2.4 Advantages and Limitations</h3>
+<table>
+<thead>
+<tr>
+<th>Advantages</th>
+<th>Limitations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physically interpretable, finely controllable</td>
+<td>Computationally intensive, requires empirical parameter tuning</td>
+</tr>
+<tr>
+<td>Supports arbitrary backbones and modifications</td>
+<td>Limited prediction for flexible regions</td>
+</tr>
+<tr>
+<td>Mature ecosystem (ample documentation, tutorials)</td>
+<td>Steep learning curve</td>
+</tr>
+</tbody>
+</table>
+<h2>3. AlphaFold: Prediction as a Design Aid</h2>
+<h3>3.1 AlphaFold2 (2021)</h3>
+<ul>
+<li>End-to-end deep learning: sequence → structure (MSA + attention mechanism)</li>
+<li>Accuracy: atomic-level accuracy at CASP14 (GDT &gt; 90)</li>
+<li>Value for design: <strong>rapidly verify the foldability of designed sequences</strong></li>
+</ul>
+<h3>3.2 AlphaFold3 (2024)</h3>
+<ul>
+<li>Unified framework for predicting protein, nucleic acid, small molecule, and ion complexes</li>
+<li>Introduces diffusion models and pairwise representations</li>
+<li>Significance: designed targets (binder–ligand complex structures) can be directly predicted</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># ColabFold: a lightweight implementation of AlphaFold2 (GPU-friendly)</span>
+colabfold_batch input.fasta out_dir \
+  --num-recycle 3 --model-type alphafold2_multimer_v3
+</code></pre>
+<h3>3.3 Key Usage: Validating Designs</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># Confidence indicators for designed sequences</span>
+<span class="hljs-comment"># pLDDT &gt; 90: high confidence</span>
+<span class="hljs-comment"># PAE &lt; 5: inter-domain relative positions trustworthy</span>
+<span class="hljs-comment"># Design validation pipeline: sequence → AF2 prediction → comparison with target structure (RMSD)</span>
+</code></pre>
+<h2>4. Generative Design: RFdiffusion and ProteinMPNN</h2>
+<h3>4.1 RFdiffusion (2023, Baker Lab)</h3>
+<p>Structure generator based on <strong>denoising diffusion models</strong>:</p>
+<ul>
+<li>Input: functional motifs, shape constraints, binding targets</li>
+<li>Output: novel protein backbones</li>
+<li>Applications: binder design, symmetric oligomers, enzyme active-site scaffolds</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># RFdiffusion example: designing a binding protein</span>
+run_inference.py \
+  scaffoldguided.scaffoldguided=True \
+  scaff_loader.contigs_map.json=contigs.json \
+  inference.output_prefix=outputs/design \
+  inference.num_designs=100 \
+  potentials.guidance_scale=3.0
+</code></pre>
+<h3>4.2 ProteinMPNN (2022)</h3>
+<p><strong>Sequence design neural network</strong>: given a backbone → sequence, forming a "generate-encode" loop with RFdiffusion:</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># ProteinMPNN sequence design</span>
+python protein_mpnn_run.py \
+  --pdbpath scaffold.pdb \
+  --out_folder mpnn_out \
+  --num_seq_per_target 8 \
+  --batch_size 4
+</code></pre>
+<p><strong>Standard workflow (Baker Lab paradigm)</strong>:</p>
+<pre><code>① RFdiffusion: generate a backbone
+   ↓
+② ProteinMPNN: backbone → multiple candidate sequences (sampling temperature 0.1-0.3)
+   ↓
+③ AF2 reverse validation: sequence → predicted structure → RMSD comparison with backbone
+   ↓
+④ Screen candidates with high pLDDT / low RMSD
+   ↓
+⑤ Experimental expression validation (yeast/phage display, ELISA)
+</code></pre>
+<h3>4.3 Other Generative Tools</h3>
+<ul>
+<li><strong>Chroma</strong>: another diffusion model (generation + sequence design in one)</li>
+<li><strong>Genie</strong>: a faster protein diffusion model</li>
+<li><strong>ESMFold</strong> (Meta, 2022): ultra-fast prediction without MSA (&lt;1 second per sequence), suitable for large-scale design screening</li>
+<li><strong>ESM3</strong>: multimodal generation (sequence + structure + function)</li>
+</ul>
+<h2>5. Special Topic: Binder Design</h2>
+<p>Binder (binding protein) design is currently the most active application scenario:</p>
+<h3>5.1 Classic Workflow (Combining Existing Tools)</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 1. Hotspot analysis on target surface (Rosetta)</span>
+<span class="hljs-comment"># 2. Hotspot-guided binder backbone generation (RFdiffusion / or hotspot constraints)</span>
+<span class="hljs-comment"># 3. ProteinMPNN sequence design</span>
+<span class="hljs-comment"># 4. AF2 complex prediction validation (binder + target docking)</span>
+<span class="hljs-comment"># 5. Experimental screening (yeast display, FACS sorting)</span>
+</code></pre>
+<h3>5.2 Key Considerations</h3>
+<ul>
+<li>Determination of binding hotspot residues: experimental mutation scanning (alanine scan) or computational (Rosetta ddG)</li>
+<li>Binding affinity prediction: <code>FoldX</code>, <code>Rosetta interface_ddg</code>, AF2 PAE</li>
+<li>Multiple "design-validate" iterations: experimental feedback returns to computation</li>
+</ul>
+<h2>6. Quick Reference Table for Tool Selection</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Primary Tool</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Structure prediction</td>
+<td>AlphaFold2/3 (ColabFold)</td>
+<td>ESMFold (speed)</td>
+</tr>
+<tr>
+<td>Backbone generation</td>
+<td>RFdiffusion</td>
+<td>Chroma</td>
+</tr>
+<tr>
+<td>Sequence design</td>
+<td>ProteinMPNN</td>
+<td>Rosetta FixBB</td>
+</tr>
+<tr>
+<td>Thermostability design</td>
+<td>Rosetta (ddg)</td>
+<td>FoldX</td>
+</tr>
+<tr>
+<td>Binding affinity assessment</td>
+<td>Rosetta interface_ddg</td>
+<td>FoldX / AF2 PAE</td>
+</tr>
+<tr>
+<td>Interface design</td>
+<td>Rosetta protocols</td>
+<td>RFdiffusion + MPNN</td>
+</tr>
+<tr>
+<td>Large-scale screening</td>
+<td>ESMFold + ProteinMPNN</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2>7. Experimental Validation Loop</h2>
+<p>Computational design must return to experiments:</p>
+<pre><code>Expression (E. coli / yeast) → Purification → Characterization
+  → SEC / DSC (stability)
+  → Surface plasmon resonance SPR / BLI (affinity)
+  → Structural validation (crystallography / cryo-EM / AlphaFold comparison)
+</code></pre>
+<p><strong>Design success rate reference</strong>: Literature reports that AF2-guided RFdiffusion binder design can achieve experimental positive rates of 10–20% (far exceeding traditional methods), but every successful case involves multiple rounds of iteration.</p>
+<h2>8. Summary</h2>
+<ul>
+<li><strong>Classic paradigm</strong>: Rosetta energy function (interpretable, adjustable)</li>
+<li><strong>Prediction paradigm</strong>: AlphaFold family (validation, complex prediction)</li>
+<li><strong>Generative paradigm</strong>: RFdiffusion + ProteinMPNN + AF2 validation loop (currently mainstream)</li>
+<li>The ultimate measure of design success is always <strong>experimental validation</strong></li>
+</ul>
+<p>The next article will introduce mainstream tools for virtual screening: a complete toolchain for docking small molecules to targets.</p></div><nav class="article-navigation" data-v-bed67739=""><span class="article-nav-spacer" aria-hidden="true" data-v-bed67739=""></span><!----><a href="/en/article/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en" class="article-nav-item next" data-v-bed67739=""><div class="nav-details" data-v-bed67739=""><div class="nav-label" data-v-bed67739="">Next</div><div class="nav-title" data-v-bed67739="">Mainstream Tools for Virtual Screening</div></div><div class="nav-arrow" data-v-bed67739=""><i class="fas fa-arrow-right" data-v-bed67739=""></i></div></a></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-bed67739=""><div class="sticky-sidebar" data-v-bed67739=""><div class="toc-container mt-0" data-v-bed67739=""><nav class="on-this-page" data-v-bed67739="" data-v-309aab29=""><div class="otp-header" data-v-309aab29=""><span class="otp-title" data-v-309aab29="">Table of Contents</span></div><ul class="otp-list" data-v-309aab29=""><!--[--><!--]--></ul></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-3f1455a9=""><i class="fas fa-bookmark" data-v-3f1455a9=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-73d8966b="" data-v-f017e1f3=""><div class="container" data-v-f017e1f3=""><div class="site-footer__inner" data-v-f017e1f3=""><p class="footer-copy" data-v-f017e1f3="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-f017e1f3=""><p class="footer-designed__text" data-v-f017e1f3="">Designed by<strong class="footer-designed__name" data-v-f017e1f3="">zorrooz</strong></p><div class="footer-designed__icons" data-v-f017e1f3=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-f017e1f3=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-f017e1f3=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-f017e1f3=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-f017e1f3=""></path><polyline points="22,6 12,13 2,6" data-v-f017e1f3=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-73d8966b="" data-v-7a6aaf37=""><i class="fas fa-arrow-up" data-v-7a6aaf37=""></i></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"app\":{\"theme\":\"auto\",\"locale\":\"en-US\"}}}"</script>
+  
+
+</body></html>
