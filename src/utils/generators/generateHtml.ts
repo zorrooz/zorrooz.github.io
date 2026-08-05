@@ -2,7 +2,7 @@
  * Generates static HTML for every article at build time.
  * Same file enumeration rules as generateNotes.ts:
  *   zh-CN: all .md files except `-en.md`
- *   en-US: only `-en.md` files
+ *   en-US: all .md files under cache/en (machine translation layer)
  * Output: content/html/<relative-path-without-ext>.html (dataDir/content)
  * (e.g. notes/Omics/genomics/bwa/bwa.html, .../bwa-en.html)
  *
@@ -13,7 +13,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { contentSrcDir, contentDir } from '../dataConfig.ts'
+import { contentDir, srcDirFor } from '../dataConfig.ts'
 import { renderMarkdown } from '../markdownProcessor.ts'
 import { ensureDirectoryExistence, walk } from './core/index.ts'
 
@@ -24,7 +24,7 @@ const deprecatedSections = ['projects', 'topics']
 
 function isTargetFile(p: string, locale: string): boolean {
   if (locale === 'zh-CN') return /\.md$/i.test(p) && !p.endsWith('-en.md')
-  return /-en\.md$/i.test(p)
+  return /\.md$/i.test(p)
 }
 
 /** 清理不再生成文章的旧目录残留（projects/topics 已纯元信息化） */
@@ -42,7 +42,7 @@ export async function generateHtml(locale = 'zh-CN') {
   let count = 0
   cleanDeprecatedHtml()
   for (const section of sections) {
-    const srcDir = path.join(contentSrcDir, section)
+    const srcDir = path.join(srcDirFor(locale), section)
     const mdFiles = walk(srcDir, (p) => isTargetFile(p, locale))
 
     for (const mdPath of mdFiles) {
@@ -50,7 +50,7 @@ export async function generateHtml(locale = 'zh-CN') {
       const html = await renderMarkdown(raw)
 
       const relNoExt = path
-        .relative(contentSrcDir, mdPath)
+        .relative(srcDirFor(locale), mdPath)
         .replace(/\.[^/.]+$/, '')
         .split(path.sep)
         .join('/')

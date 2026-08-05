@@ -1,5 +1,8 @@
 /**
- * Vite dev plugin: regenerate content when content-src changes.
+ * Vite dev plugin: regenerate content when the data source layers change.
+ * 监听两层源：content-src（zh 手写）与 cache/en（英文机器层）。
+ * translation 曾经的循环风险已消除：翻译输出不再回写 content-src，
+ * 而是写入 cache/en（重建不会反向写它，故不会形成「触发→翻译→触发」循环）。
  * New/removed files require a server restart (import.meta.glob is resolved
  * at module transform time and would otherwise miss them).
  */
@@ -7,7 +10,7 @@
 import { watch } from 'chokidar'
 import type { Plugin, ViteDevServer } from 'vite'
 
-import { contentSrcDir } from './dataConfig.ts'
+import { contentSrcDir, enSrcDir } from './dataConfig.ts'
 import { runAllGenerators } from './runAllGenerators.ts'
 
 export function contentDev(): Plugin {
@@ -28,12 +31,7 @@ export function contentDev(): Plugin {
 
       await run('startup')
 
-      // 忽略翻译器产物（*-en.md / *-en.yaml / 翻译状态文件）：
-      // 否则翻译写入会再次触发重建，形成「翻译→触发→翻译」循环
-      const watcher = watch(contentSrcDir, {
-        ignoreInitial: true,
-        ignored: /(?:^|[\\/])(?:[^\\/]*?-en\.(?:md|ya?ml)|\.translate-state\.json)$/i,
-      })
+      const watcher = watch([contentSrcDir, enSrcDir], { ignoreInitial: true })
       watcher.on('all', (event) => {
         if (timer) clearTimeout(timer)
         timer = setTimeout(() => {

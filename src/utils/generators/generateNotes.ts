@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { contentSrcDir, contentDir } from '../dataConfig.ts'
+import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import {
   ensureDirectoryExistence,
   walk,
@@ -12,8 +12,6 @@ import {
   countWordsSmart,
   toPosixRelativeNoExt,
 } from './core/index.ts'
-
-const notesSrcDir = path.join(contentSrcDir, 'notes')
 
 export interface NoteItem {
   title: string
@@ -27,13 +25,14 @@ export interface NoteItem {
 }
 
 function getFilePaths(locale = 'zh-CN') {
-  const suffix = locale === 'zh-CN' ? '' : '-en'
   return {
-    outputPath: path.join(contentDir, `notes${suffix}.json`),
+    // 源目录按 locale 分层：zh 扫手写源 content-src/notes，en 扫机器层 cache/en/notes
+    notesSrcDir: path.join(srcDirFor(locale), 'notes'),
+    outputPath: path.join(contentDir, `notes${localeSuffix(locale)}.json`),
   }
 }
 
-function buildNoteItem(mdPath: string): NoteItem {
+function buildNoteItem(mdPath: string, notesSrcDir: string): NoteItem {
   const raw = fs.readFileSync(mdPath, 'utf-8')
   const { frontmatter, body } = parseFrontMatterAndBody(raw)
 
@@ -63,20 +62,22 @@ function buildNoteItem(mdPath: string): NoteItem {
 
 function generateNotesJson(locale = 'zh-CN') {
   const paths = getFilePaths(locale)
+  const notesSrcDir = paths.notesSrcDir
 
   if (!fs.existsSync(notesSrcDir)) {
     console.warn(`Warn: notes source directory not found at ${notesSrcDir}`)
   }
 
+  // 目录即契约：content-src/notes 只含中文源（排除历史遗留 -en），cache/en/notes 全部是英文
   const mdFiles = walk(notesSrcDir, (p) => {
     if (locale === 'zh-CN') {
       return /\.md$/i.test(p) && !p.endsWith('-en.md')
     } else {
-      return /-en\.md$/i.test(p)
+      return /\.md$/i.test(p)
     }
   })
 
-  const items = mdFiles.map(buildNoteItem)
+  const items = mdFiles.map((p) => buildNoteItem(p, notesSrcDir))
 
   items.sort((a, b) => {
     const ad = Date.parse(a.date || '') || 0

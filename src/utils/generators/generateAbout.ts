@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
-import { contentSrcDir, contentDir } from '../dataConfig.ts'
+import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
 
 const isDirectRun =
@@ -66,11 +66,9 @@ function normalize(raw: Record<string, unknown> = {}): AboutData {
 }
 
 function generateAboutJson(locale = 'zh-CN') {
-  const yamlPath = path.join(contentSrcDir, locale === 'zh-CN' ? 'about.yaml' : 'about-en.yaml')
-  const outputPath = path.join(
-    contentDir,
-    locale === 'zh-CN' ? 'about.json' : 'about-en.json',
-  )
+  const suffix = localeSuffix(locale)
+  const yamlPath = path.join(srcDirFor(locale), `about${suffix}.yaml`)
+  const outputPath = path.join(contentDir, `about${suffix}.json`)
 
   let raw: Record<string, unknown> = {}
   if (fs.existsSync(yamlPath)) {

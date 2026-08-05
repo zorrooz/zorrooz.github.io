@@ -52,15 +52,18 @@ src/
 └── router/              # Routing configuration  
 
 # data branch (../blog-data)
-content-src/             # Hand-written source: YAML + Markdown (edit here only)  
+content-src/             # Layer 1 src: hand-written Chinese sources (edit here only)
 │   ├── notes/           # Note articles (only directory with markdown)  
 │   ├── projects/        # Project metadata (yaml only, no articles)  
 │   ├── topics/          # Topic metadata (yaml only, no articles)  
 │   ├── categories.yaml  # Category definitions  
 │   ├── about.yaml       # About page content  
 │   └── resources.yaml   # Resources page content  
-content/                 # Generated JSON + html (regenerable, not committed)
-cache/                   # Machine-maintained state: tag-mapping.json, .translate-state.json
+cache/                   # Layer 2 cache: machine-maintained persistent state (committed)
+│   ├── en/              #   English translation layer (mirrors content-src, -en identity)
+│   ├── tag-mapping.json #   zh→en tag mapping
+│   └── .translate-state.json # incremental translation state
+content/                 # Layer 3 final: generated JSON + html (regenerable, not committed)
 ```
 
 ## 🚀 Getting Started

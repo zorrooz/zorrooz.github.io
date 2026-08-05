@@ -25,8 +25,9 @@ const htmlModules = import.meta.glob('@data/content/html/**/*.html', {
   import: 'default',
   eager: true,
 })
-// 惰性加载 markdown 源（复制文章用，按需拆包；含 zh/en 全部源文件）
-const markdownModules = import.meta.glob('@data/content-src/**/*.md', {
+// 惰性加载 markdown 源（复制文章用，按需拆包）。
+// 覆盖两层源：content-src（zh 手写）与 cache/en（英文机器层），按路径后缀区分语言
+const markdownModules = import.meta.glob('@data/{content-src,cache/en}/**/*.md', {
   query: '?raw',
   import: 'default',
 })

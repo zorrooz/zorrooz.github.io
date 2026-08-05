@@ -33,12 +33,13 @@ export const TRANSLATION_CONFIG = {
   },
 }
 
-// 翻译目标配置（数据目录由 dataConfig 统一提供）
+// 翻译目标配置（数据目录由 dataConfig 统一提供）。
+// 输入一律是 content-src 的手写中文源，输出由 translator 镜像写入 cache/en（第二层）。
 export const TRANSLATION_TARGETS = {
   // 主要翻译目录（notes 文章 + yaml 配置文件）
   CONTENT_SRC: contentSrcDir,
 
-  // 配置文件
+  // 配置文件（手写中文源）
   CONFIG_FILES: {
     ABOUT: path.join(contentSrcDir, 'about.yaml'),
     CATEGORIES: path.join(contentSrcDir, 'categories.yaml'),

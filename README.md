@@ -52,15 +52,18 @@ src/
 └── router/              # 路由配置
 
 # 数据分支（../blog-data，data 分支）
-content-src/             # 手写源：YAML + Markdown（仅这里编辑）
+content-src/             # 第一层 src：纯手写中文源（仅这里编辑，严格无英文）
 │   ├── notes/           # 笔记文章（唯一含 markdown 的目录）  
 │   ├── projects/        # 项目元数据（纯 yaml，无文章）  
 │   ├── topics/          # 课题元数据（纯 yaml，无文章）  
 │   ├── categories.yaml  # 分类定义  
 │   ├── about.yaml       # 关于页面  
 │   └── resources.yaml   # 资源页面  
-content/                 # 生成 JSON + html（可再生，不入库）
-cache/                   # 机器维护持久中间态：tag-mapping.json、.translate-state.json
+cache/                   # 第二层 cache：机器维护的持久态（入库）
+│   ├── en/              #   英文翻译层（镜像 content-src，-en 后缀身份）
+│   ├── tag-mapping.json #   zh→en 标签映射
+│   └── .translate-state.json # 翻译增量状态
+content/                 # 第三层 final：生成 JSON + html（可再生，不入库）
 ```
 
 ### 🚀 快速开始

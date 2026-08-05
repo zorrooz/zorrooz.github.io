@@ -89,15 +89,24 @@ src/
 
 ### 数据分支（data）目录结构
 
-代码 `src/` 不包含任何 content。内容数据全部位于数据分支（`../blog-data`）：
+代码 `src/` 不包含任何 content。内容数据全部位于数据分支（`../blog-data`），按**三层模型**组织：
 
 ```
-content-src/                 # SOURCE: YAML + Markdown（手写，仅这里编辑）
+content-src/                 # 第一层 src — 纯手写中文源（严格无机器产物，仅这里编辑）
 │   ├── {categories,about,resources}.yaml
-│   └── notes/                # articles under category/subcategory/
-content/                      # 生成 JSON + html（可再生，gitignore，不入库）
-cache/                        # 机器维护的持久中间态（入库）：tag-mapping.json、.translate-state.json
+│   └── notes/<cat>/<sub>/<article>/<article>.md
+cache/                       # 第二层 cache — 机器维护的持久态（入库），全部由工具生成
+│   ├── en/                  #   英文翻译层：镜像 content-src 结构，文件名沿用 -en 身份后缀
+│   │   │                       （categories-en.yaml、notes/.../<article>-en.md）
+│   │   └── …                #   -en 后缀是「内容身份」（URL 的一部分），cache/en 目录表示机器层
+│   ├── tag-mapping.json     #   zh→en 标签映射 / 标签合并映射
+│   └── .translate-state.json#   翻译增量状态（源相对路径 → 内容 hash）
+content/                      # 第三层 final — 生成 JSON + html（可再生，gitignore，不入库）
 ```
+
+- **中文源**：只写 `content-src/`。**英文**：绝不手写，`npm run translate` 生成到 `cache/en/`（LLM 非确定 + 有成本，故入库存证，CI 靠 `GBLOG_NO_TRANSLATE=1` 跳过生成）。
+- 生成器按 locale 取源：`srcDirFor(locale)`（zh→content-src，en→cache/en），输出恒为 `content/*` 与 `content/*-en*`。
+- 中英实体按镜像相对路径配对：`cache/en/notes/.../<article>-en.md` ↔ `content-src/notes/.../<article>.md`。
 
 ## Framework
 
@@ -115,7 +124,7 @@ cache/                        # 机器维护的持久中间态（入库）：tag
 ## Content Pipeline (Critical Order)
 
 ```
-1. generateNotes     — reads content-src/notes/**/*.md → content/notes.json
+1. generateNotes     — reads srcDirFor(locale)/notes/**/*.md → content/notes.json
 2. generateProjects  — reads `projects` section of categories.yaml → content/projects.json
 3. generateTopics    — reads `topics` section of categories.yaml → content/topics.json
 4. generateCategories— YAML + notes/projects/topics → content/categories.json
@@ -123,15 +132,15 @@ cache/                        # 机器维护的持久中间态（入库）：tag
 6. generateTags      — posts.json → content/tags.json
 (1-6 for zh-CN, then repeat for en-US)
 
-4.5 incremental translate — 内容 hash 增量翻译（仅缺失/变化的 zh 源 → -en 文件；tag 经 zh→en 映射查表翻译；GBLOG_NO_TRANSLATE=1 关闭）
+4.5 incremental translate — 内容 hash 增量翻译（仅缺失/变化的 zh 源 → cache/en 镜像 -en 文件；tag 经 zh→en 映射查表翻译；GBLOG_NO_TRANSLATE=1 关闭）
 4.6 tagMerger mapping     — ensureTagTranslation 增量补齐 zh→en 标签映射（缓存于 cache/tag-mapping.json，命中 0 token）
-4.7 tag consistency fix   — 以 zh 文件为基准自动重写 -en 文件 tags（解决中英标签数量/名称不一致，失败仅告警）
+4.7 tag consistency fix   — 以 zh 文件为基准自动重写 cache/en 的 -en 文件 tags（解决中英标签数量/名称不一致，失败仅告警）
 8.5 tags-consistency check— 构建产物级中英标签一致性校验（输出 [OK]/[Warn]）
 
 generateAbout and generateResources run independently at import time in runAllGenerators.ts.
 ```
 
-> 所有路径基于数据分支（`../blog-data`，CI 中为 `$GBLOG_DATA_DIR`）；缓存与翻译状态存于 `cache/`（入库），`content/` 为可再生产物（不入库）。
+> 所有路径基于数据分支（`../blog-data`，CI 中为 `$GBLOG_DATA_DIR`）；第一层 content-src 纯手写，第二层 cache（含 en/ 翻译层）入库存证，第三层 content/ 可再生产物不入库。
 
 ## Content Source Organization
 
@@ -139,6 +148,7 @@ generateAbout and generateResources run independently at import time in runAllGe
 
 ```
 content-src/notes/<category>/<subcategory>/<article-dir>/<article-dir>.md
+cache/en/notes/<category>/<subcategory>/<article-dir>/<article-dir>-en.md   # 英文镜像
 ```
 
 - notes 目录名必须匹配 `categories.yaml` 中 `notes` 段的 `name` 字段。
@@ -156,9 +166,9 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 
 **Layer 1 — App:** `src/stores/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
 
-**Layer 2 — Content:** `-en` suffix pattern:
-- Chinese: `article.md`, `categories.json`
-- English: `article-en.md`, `categories-en.json`
+**Layer 2 — Content:** locale 源目录分层（`srcDirFor(locale)`）+ `-en` 后缀身份：
+- Chinese: `content-src/article.md` → 输出 `content/categories.json`
+- English: `cache/en/article-en.md` → 输出 `content/categories-en.json`
 - Auto-fallback in `contentLoader.ts`: if English file missing, loads Chinese.
 
 ## Key Conventions

@@ -19,16 +19,16 @@ import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
 import zhCN from '../../stores/locales/zh-CN.ts'
 import enUS from '../../stores/locales/en-US.ts'
-import { contentSrcDir, contentDir } from '../dataConfig.ts'
+import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
 
 function getFilePaths(locale = 'zh-CN') {
-  const suffix = locale === 'zh-CN' ? '' : '-en'
+  const suffix = localeSuffix(locale)
   return {
     notesJsonPath: path.join(contentDir, `notes${suffix}.json`),
     projectsJsonPath: path.join(contentDir, `projects${suffix}.json`),
     topicsJsonPath: path.join(contentDir, `topics${suffix}.json`),
-    categoriesYamlPath: path.join(contentSrcDir, `categories${suffix}.yaml`),
+    categoriesYamlPath: path.join(srcDirFor(locale), `categories${suffix}.yaml`),
     categoriesJsonPath: path.join(contentDir, `categories${suffix}.json`),
   }
 }

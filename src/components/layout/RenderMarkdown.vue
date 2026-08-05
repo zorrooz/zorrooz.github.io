@@ -9,8 +9,8 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-// @data 别名指向数据分支 content-src；文章图片均从数据目录解析
-const assetModules = import.meta.glob('@data/content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
+// @data 别名指向数据分支；文章图片均从数据目录解析（zh 在 content-src，镜像层 cache/en）
+const assetModules = import.meta.glob('@data/{content-src,cache/en}/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
 
 const COPY_ICON_SVG = `
   <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">

@@ -4,7 +4,7 @@ import fsSync from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import { pathToFileURL } from 'url'
-import { cacheDir, contentSrcDir } from '../dataConfig.ts'
+import { cacheDir, contentSrcDir, enSrcDir } from '../dataConfig.ts'
 
 let clientCache: OpenAI | null = null
 
@@ -93,24 +93,27 @@ interface TranslationState {
   [sourcePath: string]: string
 }
 
-function stateFilePath(_dir: string): string {
-  // 翻译状态统一收敛到 cache/（数据分支），不再散落在各源目录
+/**
+ * 翻译状态统一收敛到 cache/（数据分支第二层），不再散落在各源目录。
+ * 状态键是相对 content-src 的路径（见 toStateKey），与输出位置无关。
+ */
+function stateFilePath(): string {
   return path.join(cacheDir, '.translate-state.json')
 }
 
-function loadState(dir: string): TranslationState {
+function loadState(): TranslationState {
   try {
-    return JSON.parse(fsSync.readFileSync(stateFilePath(dir), 'utf-8')) as TranslationState
+    return JSON.parse(fsSync.readFileSync(stateFilePath(), 'utf-8')) as TranslationState
   } catch {
     return {}
   }
 }
 
-function saveState(dir: string, state: TranslationState): void {
+function saveState(state: TranslationState): void {
   // 防御：空状态不写，避免覆盖已建立的翻译状态（否则下次会全量重翻）
   if (!state || Object.keys(state).length === 0) return
   try {
-    fsSync.writeFileSync(stateFilePath(dir), JSON.stringify(state, null, 2), 'utf-8')
+    fsSync.writeFileSync(stateFilePath(), JSON.stringify(state, null, 2), 'utf-8')
   } catch (e) {
     console.warn(
       `[Warn] 翻译状态写入失败（不影响本次翻译，但下次会重复翻译）: ${
@@ -213,8 +216,7 @@ async function translateFile(
   } = options
 
   // 独立调用时加载状态；目录批量调用由 translateDirectory 统一管理
-  const dir = path.dirname(inputFilePath)
-  const localState = state ?? loadState(dir)
+  const localState = state ?? loadState()
   const saveLocal = !state
 
   try {
@@ -225,9 +227,14 @@ async function translateFile(
       return null
     }
 
-    // 生成输出路径
+    // 输出路径：镜像 content-src 的相对结构写入 cache/en（第二层机器区）。
+    // -en 后缀是内容身份（URL/相对路径的一部分），文件名保留；
+    // cache/en 目录则表示「机器拥有的英文层」。源在 content-src 之外时回退旧行为。
     const basename = path.basename(inputFilePath, ext)
-    const outputPath = path.join(path.dirname(inputFilePath), `${basename}${outputSuffix}${ext}`)
+    const rel = path.relative(contentSrcDir, inputFilePath)
+    const outputPath = !rel.startsWith('..') && !path.isAbsolute(rel)
+      ? path.join(enSrcDir, path.dirname(rel), `${basename}${outputSuffix}${ext}`)
+      : path.join(path.dirname(inputFilePath), `${basename}${outputSuffix}${ext}`)
 
     // 检查是否需要翻译（内容哈希增量判定）
     if (skipExisting && !force) {
@@ -253,11 +260,12 @@ async function translateFile(
     }
 
     // 写入翻译后文件
+    await fs.mkdir(path.dirname(outputPath), { recursive: true })
     await fs.writeFile(outputPath, translated, 'utf-8')
     console.log(`[INFO] 翻译完成: ${outputPath}`)
     // 记录源内容哈希，下次跳过
     localState[toStateKey(inputFilePath)] = contentHash(content)
-    if (saveLocal) saveState(dir, localState)
+    if (saveLocal) saveState(localState)
 
     return outputPath
   } catch (error) {
@@ -326,7 +334,7 @@ async function translateDirectory(
     console.log(`[INFO] 找到 ${files.length} 个需要翻译的文件`)
 
     // 统一加载翻译状态（内容哈希增量，杜绝 mtime 误判导致的重复翻译）
-    const state = loadState(directoryPath)
+    const state = loadState()
 
     // 并发翻译：LLM 调用是 IO 密集，默认 4 路并发显著提速
     const concurrency = Math.max(1, Math.min(8, options.concurrency ?? 4))
@@ -346,7 +354,7 @@ async function translateDirectory(
     await Promise.all(workers)
 
     // 保存翻译状态（下次仅翻译内容变化的源文件）
-    saveState(directoryPath, state)
+    saveState(state)
 
     console.log(`[INFO] 批量翻译完成，成功翻译 ${results.length} 个文件（并发 ${concurrency}）`)
     return results

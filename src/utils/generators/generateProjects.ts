@@ -3,7 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
 
-import { contentSrcDir, contentDir } from '../dataConfig.ts'
+import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
 
 /**
@@ -26,9 +26,10 @@ export interface ProjectItem {
 }
 
 function getFilePaths(locale = 'zh-CN') {
-  const suffix = locale === 'zh-CN' ? '' : '-en'
+  const suffix = localeSuffix(locale)
   return {
-    yamlPath: path.join(contentSrcDir, `categories${suffix}.yaml`),
+    // 源按 locale 分层：zh 读手写源，en 读机器翻译层
+    yamlPath: path.join(srcDirFor(locale), `categories${suffix}.yaml`),
     outputPath: path.join(contentDir, `projects${suffix}.json`),
   }
 }

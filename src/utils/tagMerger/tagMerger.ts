@@ -11,7 +11,7 @@ import { pathToFileURL } from 'url'
 import yaml from 'js-yaml'
 import OpenAI from 'openai'
 
-import { contentSrcDir, cacheDir } from '../dataConfig.ts'
+import { contentSrcDir, cacheDir, enSrcDir, localeSuffix } from '../dataConfig.ts'
 import { walk, parseFrontMatterAndBody, normalizeTags } from '../generators/core/index.ts'
 
 export const defaultMappingPath = path.join(cacheDir, 'tag-mapping.json')
@@ -31,22 +31,20 @@ export interface TagStat {
 /** 收集指定 locale 下全部标签（md frontmatter + categories yaml），返回 标签 → 出现次数 */
 export function collectTags(locale: 'zh-CN' | 'en-US'): Map<string, number> {
   const map = new Map<string, number>()
-  const suffix = locale === 'en-US' ? '-en' : ''
 
   const addTags = (tags: unknown) => {
     for (const t of normalizeTags(tags)) map.set(t, (map.get(t) || 0) + 1)
   }
 
-  const mdFiles = walk(contentSrcDir, (p) => {
-    if (!/\.md$/i.test(p)) return false
-    return locale === 'en-US' ? p.endsWith('-en.md') : !p.endsWith('-en.md')
-  })
+  // 目录即契约：zh 扫手写源，en 扫机器翻译层（各自目录内全部 .md）
+  const srcDir = locale === 'en-US' ? enSrcDir : contentSrcDir
+  const mdFiles = walk(srcDir, (p) => /\.md$/i.test(p))
   for (const mdPath of mdFiles) {
     const raw = fs.readFileSync(mdPath, 'utf-8')
     addTags(parseFrontMatterAndBody(raw).frontmatter.tags)
   }
 
-  const yamlPath = path.join(contentSrcDir, `categories${suffix}.yaml`)
+  const yamlPath = path.join(srcDir, `categories${localeSuffix(locale)}.yaml`)
   if (fs.existsSync(yamlPath)) {
     try {
       const obj = yaml.load(fs.readFileSync(yamlPath, 'utf-8')) as Record<string, unknown>
@@ -186,8 +184,9 @@ export async function ensureTagTranslation(
 
 /**
  * 自动解决中英标签不一致（构建时调用）：
- * 以 zh 文件 frontmatter/yaml 的 tags 为唯一基准，经 zh→en 映射翻译后重写 -en 文件。
+ * 以 zh 文件 frontmatter/yaml 的 tags 为唯一基准，经 zh→en 映射翻译后重写 cache/en 的 -en 文件。
  * 覆盖：notes 的 -en.md 与 categories-en.yaml（projects/topics 的 tags）。
+ * 中英文件按相对结构配对：cache/en 镜像 content-src（-en.md ↔ .md）。
  * 缺映射的标签保持中文并告警（ensureTagTranslation 会增量补齐映射）。
  */
 export function fixTagConsistency(): { fixed: number; missing: number } {
@@ -208,9 +207,10 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
       return en
     })
 
-  // 1. notes 的 -en.md：以对应 zh.md 为基准
-  for (const enPath of walk(contentSrcDir, (p) => /\.md$/i.test(p) && p.endsWith('-en.md'))) {
-    const zhPath = enPath.replace(/-en\.md$/, '.md')
+  // 1. cache/en 的 -en.md：以镜像位置对应的 content-src zh.md 为基准
+  for (const enPath of walk(enSrcDir, (p) => /\.md$/i.test(p))) {
+    const rel = path.relative(enSrcDir, enPath)
+    const zhPath = path.join(contentSrcDir, rel.replace(/-en\.md$/, '.md'))
     if (!fs.existsSync(zhPath)) continue
     const zh = parseFrontMatterAndBody(fs.readFileSync(zhPath, 'utf-8'))
     if (!Array.isArray(zh.frontmatter.tags)) continue
@@ -224,7 +224,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
     if (updated !== raw) {
       fs.writeFileSync(enPath, updated, 'utf-8')
       fixed++
-      console.log(`[FIX] 重写 tags: ${path.relative(contentSrcDir, enPath)} -> ${enTags.join(', ')}`)
+      console.log(`[FIX] 重写 tags: ${rel} -> ${enTags.join(', ')}`)
     }
   }
 
@@ -232,7 +232,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
   //    按行序配对（zh/en yaml 结构由翻译器同步维护，顺序一致）——不能用「缩进+tags:」做
   //    Map key，同一缩进的多个 tags 行会互相覆盖。
   const zhYamlPath = path.join(contentSrcDir, 'categories.yaml')
-  const enYamlPath = path.join(contentSrcDir, 'categories-en.yaml')
+  const enYamlPath = path.join(enSrcDir, 'categories-en.yaml')
   if (fs.existsSync(zhYamlPath) && fs.existsSync(enYamlPath)) {
     const zhYaml = fs.readFileSync(zhYamlPath, 'utf-8')
     const enYaml = fs.readFileSync(enYamlPath, 'utf-8')
@@ -352,10 +352,8 @@ export function applyMappingToMarkdown(
   locale: 'zh-CN' | 'en-US' = 'zh-CN',
 ): number {
   let changed = 0
-  const mdFiles = walk(contentSrcDir, (p) => {
-    if (!/\.md$/i.test(p)) return false
-    return locale === 'en-US' ? p.endsWith('-en.md') : !p.endsWith('-en.md')
-  })
+  const srcDir = locale === 'en-US' ? enSrcDir : contentSrcDir
+  const mdFiles = walk(srcDir, (p) => /\.md$/i.test(p))
   for (const mdPath of mdFiles) {
     const raw = fs.readFileSync(mdPath, 'utf-8')
     const { frontmatter } = parseFrontMatterAndBody(raw)
@@ -406,7 +404,10 @@ export function applyMappingToCategoriesYaml(
   mapping: Record<string, string>,
   locale: 'zh-CN' | 'en-US' = 'zh-CN',
 ): number {
-  const yamlPath = path.join(contentSrcDir, locale === 'en-US' ? 'categories-en.yaml' : 'categories.yaml')
+  const yamlPath = path.join(
+    locale === 'en-US' ? enSrcDir : contentSrcDir,
+    `categories${localeSuffix(locale)}.yaml`,
+  )
   if (!fs.existsSync(yamlPath)) return 0
 
   const raw = fs.readFileSync(yamlPath, 'utf-8')
