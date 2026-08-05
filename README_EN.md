@@ -41,21 +41,26 @@ gblog is a fully-featured static blog system designed for personal knowledge man
 
 ### 📁 Project Structure
 
+Content lives on the `data` branch (local worktree at `../blog-data`); `main` branch holds code only:
+
 ```
 src/  
-├── content-src/         # Source content files  
+├── views/               # Page components  
+├── components/          # Reusable components  
+├── stores/              # Pinia state management  
+├── utils/               # Utility functions and generators  
+└── router/              # Routing configuration  
+
+# data branch (../blog-data)
+content-src/             # Hand-written source: YAML + Markdown (edit here only)  
 │   ├── notes/           # Note articles (only directory with markdown)  
 │   ├── projects/        # Project metadata (yaml only, no articles)  
 │   ├── topics/          # Topic metadata (yaml only, no articles)  
 │   ├── categories.yaml  # Category definitions  
 │   ├── about.yaml       # About page content  
 │   └── resources.yaml   # Resources page content  
-├── content/             # Generated JSON files  
-├── views/               # Page components  
-├── components/          # Reusable components  
-├── stores/              # Pinia state management  
-├── utils/               # Utility functions and generators  
-└── router/              # Routing configuration  
+content/                 # Generated JSON + html (regenerable, not committed)
+cache/                   # Machine-maintained state: tag-mapping.json, .translate-state.json
 ```
 
 ## 🚀 Getting Started
@@ -66,11 +71,12 @@ src/
 
 ### 💻 Installation
 
-1. Clone the repository
+1. Clone the repository and attach the data worktree (sibling dir `../blog-data`)
 
    ```
    git clone https://github.com/zorrooz/zorrooz.github.io.git  
    cd zorrooz.github.io
+   git worktree add ../blog-data data
    ```
 
 2. Install dependencies
@@ -99,9 +105,9 @@ src/
    npm run preview
    ```
 
-6. Deploy to GitHub Pages
-   
-   Modify the URL in the `deploy` command in `package.json` to your own GitHub Pages address, then run:
+6. Publish (after editing `../blog-data/content-src/**`)
+
+   Commit and push the data branch; GitHub Actions rebuilds and deploys automatically:
 
    ```
    npm run deploy
@@ -113,13 +119,14 @@ gblog uses a pure Markdown + YAML metadata approach for content management. The 
 
 **Workflow:**
 
-1. **Writing Phase**: Create Markdown files and YAML configurations in the `src/content-src/` directory
-2. **Build Phase**: The `prebuild` script automatically runs generators to convert content to JSON
+1. **Writing Phase**: Create Markdown files and YAML configurations in `content-src/` on the data branch (`../blog-data/content-src/`)
+2. **Build Phase**: The `prebuild` script automatically runs generators to convert content to JSON (`../blog-data/content/`)
 3. **Runtime Phase**: Vue components load JSON files and render page content
+4. **Publish Phase**: `npm run deploy` commits and pushes the data branch; CI rebuilds and deploys
 
 #### Category Content Management
 
-The project supports three content types, defined in `src/content-src/categories.yaml`:
+The project supports three content types, defined in `content-src/categories.yaml`:
 
 1. **Notes (notes)**
 
@@ -170,12 +177,12 @@ The project supports three content types, defined in `src/content-src/categories
 
 #### Writing Markdown Files
 
-This project uses pure Markdown with standard Markdown syntax support. Please edit metadata in `src/content-src/categories.yaml`.
+This project uses pure Markdown with standard Markdown syntax support. Please edit metadata in `content-src/categories.yaml`.
 
 File organization structure:
 
 ```
-src/content-src/  
+content-src/  
 ├── categories.yaml          # Category definitions  
 ├── notes/                   # Notes directory (only directory with markdown)  
 │   ├── category_identifier/  
@@ -192,13 +199,13 @@ src/content-src/
 
 Workflow:
 
-1. Create or edit Markdown files in the `src/content-src` directory
+1. Create or edit Markdown files in `content-src` on the data branch (`../blog-data/content-src/`)
 2. Write article content
 3. Run `npm run dev` to view the results
 
 #### Resources Page Configuration
 
-The resources page uses a three-level hierarchy: Category → Subcategory → Resource Item, defined in `src/content-src/resources.yaml`:
+The resources page uses a three-level hierarchy: Category → Subcategory → Resource Item, defined in `content-src/resources.yaml`:
 
 ```
 # Top-level category  
@@ -215,7 +222,7 @@ The resources page uses a three-level hierarchy: Category → Subcategory → Re
 
 #### About Page Configuration
 
-The about page uses a three-section structure: Personal Introduction + Content Blocks + Contact Information, defined in `src/content-src/about.yaml`:
+The about page uses a three-section structure: Personal Introduction + Content Blocks + Contact Information, defined in `content-src/about.yaml`:
 
 ```
 # Personal introduction (required)  
@@ -276,7 +283,7 @@ After configuration is complete, you can use the following commands for translat
 - Check translation status
 
   ```
-  npm run translate -- status src/content-src
+  npm run translate
   ```
 
 - More usage

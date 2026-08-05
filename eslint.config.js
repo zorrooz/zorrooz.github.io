@@ -19,6 +19,7 @@ export default defineConfig([
     '**/.opencode/**',
     '**/.qoder/**',
     '**/.reasonix/**',
+    '**/.vite/**',
   ]),
 
   {

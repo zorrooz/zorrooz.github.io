@@ -1,6 +1,6 @@
 /**
  * Generates sitemap.xml + robots.txt from the zh-CN categories output.
- * Reads src/content/categories.json (all article URLs + dates), adds the
+ * Reads content/categories.json (all article URLs + dates), adds the
  * four static routes, and writes to public/ (copied as-is by Vite).
  */
 

@@ -41,24 +41,29 @@ gblog 是一个功能完善的静态博客系统，专为个人知识管理和�
 
 ### 📁 项目结构
 
+内容数据独立在 `data` 分支（本地 worktree 挂到 `../blog-data`），`main` 分支只含代码：
+
 ```
 src/  
-├── content-src/         # 源内容文件  
+├── views/               # 页面组件
+├── components/          # 可复用组件
+├── stores/              # Pinia 状态管理
+├── utils/               # 工具函数和生成器
+└── router/              # 路由配置
+
+# 数据分支（../blog-data，data 分支）
+content-src/             # 手写源：YAML + Markdown（仅这里编辑）
 │   ├── notes/           # 笔记文章（唯一含 markdown 的目录）  
 │   ├── projects/        # 项目元数据（纯 yaml，无文章）  
 │   ├── topics/          # 课题元数据（纯 yaml，无文章）  
 │   ├── categories.yaml  # 分类定义  
 │   ├── about.yaml       # 关于页面  
 │   └── resources.yaml   # 资源页面  
-├── content/             # 生成的 JSON 文件  
-├── views/               # 页面组件  
-├── components/          # 可复用组件  
-├── stores/              # Pinia 状态管理  
-├── utils/               # 工具函数和生成器  
-└── router/              # 路由配置  
+content/                 # 生成 JSON + html（可再生，不入库）
+cache/                   # 机器维护持久中间态：tag-mapping.json、.translate-state.json
 ```
 
-## 🚀 快速开始
+### 🚀 快速开始
 
 ### 🌍 环境
 
@@ -66,11 +71,12 @@ src/
 
 ### 💻 安装
 
-1. 克隆仓库
+1. 克隆仓库并挂数据 worktree（与仓库同级目录 `../blog-data`）
 
    ```
    git clone https://github.com/zorrooz/zorrooz.github.io.git  
    cd zorrooz.github.io
+   git worktree add ../blog-data data
    ```
 
 2. 安装依赖
@@ -98,9 +104,9 @@ src/
    npm run preview
    ```
 
-6. 部署到github pages
-   
-   修改`package.json`中的`deploy`命令中的 URL 为自己的 GitHub Pages 地址，然后运行：
+6. 发布（编辑 `../blog-data/content-src/**` 后）
+
+   提交并推送数据分支，GitHub Actions 自动重新构建并部署到 GitHub Pages：
 
    ```
    npm run deploy
@@ -112,13 +118,14 @@ gblog 采用纯 Markdown + YAML 元数据的内容管理方式。系统通过构
 
 **工作流程：**
 
-1. 编写阶段：在`src/content-src/`目录创建 Markdown 文件和 YAML 配置
-2. 构建阶段：`prebuild`脚本自动运行生成器，将内容转换为 JSON
+1. 编写阶段：在数据分支的 `content-src/` 目录（`../blog-data/content-src/`）创建 Markdown 文件和 YAML 配置
+2. 构建阶段：`prebuild`脚本自动运行生成器，将内容转换为 JSON（生成到 `../blog-data/content/`）
 3. 运行阶段：Vue 组件加载 JSON 文件，渲染页面内容
+4. 发布阶段：`npm run deploy` 提交并推送数据分支，CI 自动重新构建部署
 
 #### 分类内容管理
 
-项目支持三种内容类型，在`src/content-src/categories.yaml`中定义：
+项目支持三种内容类型，在`content-src/categories.yaml`中定义：
 
 1. 笔记 (notes)
 
@@ -169,12 +176,12 @@ gblog 采用纯 Markdown + YAML 元数据的内容管理方式。系统通过构
 
 #### Markdown 文件编写
 
-本项目采用纯 Markdown，支持标准的 Markdown 语法，请在`src/content-src/categories.yaml`中编辑元信息。
+本项目采用纯 Markdown，支持标准的 Markdown 语法，请在`content-src/categories.yaml`中编辑元信息。
 
 文件组织结构：
 
 ```
-src/content-src/  
+content-src/  
 ├── categories.yaml          # 分类定义文件  
 ├── notes/                   # 笔记目录（唯一含 markdown 的目录）  
 │   ├── 分类标识符/  
@@ -191,13 +198,14 @@ src/content-src/
 
 工作流程：
 
-1. 在`src/content-src` 目录下创建或编辑 Markdown 文件
+1. 在数据分支的 `content-src`（`../blog-data/content-src/`）目录下创建或编辑 Markdown 文件
 2. 编写文章内容
-3. 运行`npm run dev`查看效果
+3. 运行`npm run dev`查看效果（dev 服务器自动重新生成内容并热刷新）
+4. 发布：`npm run deploy`
 
 #### 资源页面配置
 
-资源页面采用三级层次结构：分类 → 子分类 → 资源项，在`src/content-src/resources.yaml`中定义：
+资源页面采用三级层次结构：分类 → 子分类 → 资源项，在`content-src/resources.yaml`中定义：
 
 ```
 # 顶级分类  
@@ -214,7 +222,7 @@ src/content-src/
 
 #### 关于页面配置
 
-关于页面采用三段式结构：个人介绍 + 内容区块 + 联系方式，在`src/content-src/about.yaml`中定义：
+关于页面采用三段式结构：个人介绍 + 内容区块 + 联系方式，在`content-src/about.yaml`中定义：
 
 ```
 # 个人简介（必填）  
@@ -274,7 +282,7 @@ export default {
 - 检查翻译状态
 
   ```
-  npm run translate -- status src/content-src
+  npm run translate -- status
   ```
 
 - 更多用法

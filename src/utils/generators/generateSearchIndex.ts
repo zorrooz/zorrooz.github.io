@@ -1,8 +1,8 @@
 /**
  * Generates the client-side full-text search index.
  * Reads categories.json (article metadata) + pre-rendered article HTML
- * (src/content/html/**), strips tags to plain text, and writes
- * src/content/search-index.json (per locale, -en suffix pattern).
+ * (content/html/**), strips tags to plain text, and writes
+ * content/search-index.json (per locale, -en suffix pattern).
  * Runs after generateHtml, mirrors loadJsonContent lookup semantics.
  */
 

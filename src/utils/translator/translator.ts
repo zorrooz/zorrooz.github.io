@@ -67,7 +67,7 @@ interface TranslationState {
   [sourcePath: string]: string
 }
 
-function stateFilePath(dir: string): string {
+function stateFilePath(_dir: string): string {
   // 翻译状态统一收敛到 cache/（数据分支），不再散落在各源目录
   return path.join(cacheDir, '.translate-state.json')
 }

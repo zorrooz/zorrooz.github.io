@@ -2,7 +2,14 @@
 
 A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown + YAML source files are processed at build-time into JSON metadata, loaded by a Vue SPA at runtime. Bilingual (zh-CN / en-US), GitHub Pages deployment.
 
+**仓库分成三分支**：
+- `main` — 纯代码（不含任何 content）
+- `data` — 纯数据（content-src + cache），本地经 git worktree 挂到同级目录 `../blog-data`
+- `gh-pages` — 构建产物（GitHub Actions 自动生成，勿手动提交）
+
 ## Quick Start
+
+> **前置**：首次克隆后需挂数据 worktree —— `git worktree add ../blog-data data`（与仓库同级目录）。
 
 | Command | Description |
 |---------|-------------|
@@ -13,9 +20,11 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 | `npm run lint` | ESLint with auto-fix |
 | `npm run format` | Prettier on `src/` |
 | `npm run translate` | AI translation CLI (incremental) |
-| `npm run deploy` | Build + gh-pages deploy |
+| `npm run data:publish` | 仅推送数据分支（`git -C ../blog-data push origin data`，触发 CI） |
+| `npm run deploy` | 提交数据分支变更并推送（add -A → commit → push origin data，触发 CI） |
 
 **Always lint and build after changes.**
+**发布流程**：编辑 `../blog-data/content-src/**` → `npm run prebuild` 本地验证 → `npm run deploy`（自动提交 data 分支）→ GitHub Actions 重新构建并部署到 gh-pages。
 
 ## Documents (约定文档索引)
 
@@ -62,16 +71,13 @@ src/
 ├── components/
 │   ├── layout/               # AppHeader, AppFooter, PostList, TagCloud, RenderMarkdown, etc.
 │   └── widgets/              # BackToTop, SearchModal, TocDrawer
-├── content/                  # GENERATED JSON (do not edit)
-├── content-src/              # SOURCE: YAML + Markdown (edit here)
-│   ├── {categories,about,resources}.yaml
-│   ├── notes/                # articles under category/subcategory/
 ├── utils/
-│   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD
+│   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD（@data 别名）
 │   ├── markdownProcessor.ts  # unified pipeline: remark → rehype
 │   ├── reveal.ts             # IntersectionObserver 滚动显现
+│   ├── dataConfig.ts         # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR）
 │   ├── runAllGenerators.ts   # Build orchestration
-│   ├── generators/           # 8 build-time Node.js scripts (.ts, run via Node type stripping)
+│   ├── generators/           # build-time Node.js scripts (.ts, run via Node type stripping)
 │   └── translator/           # AI translation via DeepSeek API
 ├── config/
 │   └── llmConfig.ts           # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
@@ -79,6 +85,18 @@ src/
     ├── fonts/                # 完整字体 OTF（思源宋体×2、思源黑体、Agave）
     ├── styles/               # global.scss
     └── avatar.*              # 关于页头像（任意格式，存在即自动使用）
+```
+
+### 数据分支（data）目录结构
+
+代码 `src/` 不包含任何 content。内容数据全部位于数据分支（`../blog-data`）：
+
+```
+content-src/                 # SOURCE: YAML + Markdown（手写，仅这里编辑）
+│   ├── {categories,about,resources}.yaml
+│   └── notes/                # articles under category/subcategory/
+content/                      # 生成 JSON + html（可再生，gitignore，不入库）
+cache/                        # 机器维护的持久中间态（入库）：tag-mapping.json、.translate-state.json
 ```
 
 ## Framework
@@ -97,21 +115,23 @@ src/
 ## Content Pipeline (Critical Order)
 
 ```
-1. generateNotes     — reads content-src/notes/**/*.md → notes.json
-2. generateProjects  — reads `projects` section of categories.yaml → projects.json
-3. generateTopics    — reads `topics` section of categories.yaml → topics.json
-4. generateCategories— YAML + notes/projects/topics → categories.json
-5. generatePosts     — notes.json + categories.json → posts.json
-6. generateTags      — posts.json → tags.json
+1. generateNotes     — reads content-src/notes/**/*.md → content/notes.json
+2. generateProjects  — reads `projects` section of categories.yaml → content/projects.json
+3. generateTopics    — reads `topics` section of categories.yaml → content/topics.json
+4. generateCategories— YAML + notes/projects/topics → content/categories.json
+5. generatePosts     — notes.json + categories.json → content/posts.json
+6. generateTags      — posts.json → content/tags.json
 (1-6 for zh-CN, then repeat for en-US)
 
 4.5 incremental translate — 内容 hash 增量翻译（仅缺失/变化的 zh 源 → -en 文件；tag 经 zh→en 映射查表翻译；GBLOG_NO_TRANSLATE=1 关闭）
-4.6 tagMerger mapping     — ensureTagTranslation 增量补齐 zh→en 标签映射（缓存于 tag-mapping.json，命中 0 token）
+4.6 tagMerger mapping     — ensureTagTranslation 增量补齐 zh→en 标签映射（缓存于 cache/tag-mapping.json，命中 0 token）
 4.7 tag consistency fix   — 以 zh 文件为基准自动重写 -en 文件 tags（解决中英标签数量/名称不一致，失败仅告警）
 8.5 tags-consistency check— 构建产物级中英标签一致性校验（输出 [OK]/[Warn]）
 
 generateAbout and generateResources run independently at import time in runAllGenerators.ts.
 ```
+
+> 所有路径基于数据分支（`../blog-data`，CI 中为 `$GBLOG_DATA_DIR`）；缓存与翻译状态存于 `cache/`（入库），`content/` 为可再生产物（不入库）。
 
 ## Content Source Organization
 
@@ -159,11 +179,12 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 - **Topics** (课题): research case studies, DOI-linked
 
 ### Adding Content
-1. Create directory under `content-src/notes/`
-2. Create `.md` file
-3. Add category in `categories.yaml`
-4. Run `npm run prebuild`
-5. English: `article-en.md` or `npm run translate`
+1. 在数据分支创建目录（`../blog-data/content-src/notes/`，即 data 分支）
+2. 创建 `.md` 文件（含 YAML frontmatter）
+3. 在 `categories.yaml` 添加分类
+4. 运行 `npm run prebuild` 本地验证
+5. 英文：`article-en.md` 或 `npm run translate`
+6. 发布：`npm run deploy`（提交并推送 data 分支 → CI 自动构建部署）
 
 ### Utilities
 - `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`

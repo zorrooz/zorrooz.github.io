@@ -3,7 +3,7 @@
  * Same file enumeration rules as generateNotes.ts:
  *   zh-CN: all .md files except `-en.md`
  *   en-US: only `-en.md` files
- * Output: src/content/html/<relative-path-without-ext>.html
+ * Output: content/html/<relative-path-without-ext>.html (dataDir/content)
  * (e.g. notes/Omics/genomics/bwa/bwa.html, .../bwa-en.html)
  *
  * Only `notes` are rendered: projects/topics are metadata-only
