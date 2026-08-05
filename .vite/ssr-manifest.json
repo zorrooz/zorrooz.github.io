@@ -209,86 +209,113 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "data-branch/content-src/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en.md?raw": [
+  "data-branch/cache/en/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en.md?raw": [
     "/assets/protein-design-tools-en-kwRRVDCZ.js"
+  ],
+  "data-branch/cache/en/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en.md?raw": [
+    "/assets/virtual-screening-tools-en-Ds1a_3n3.js"
+  ],
+  "data-branch/cache/en/notes/Programming/bash/bash-scripting/bash-scripting-en.md?raw": [
+    "/assets/bash-scripting-en-DWq6sXnJ.js"
+  ],
+  "data-branch/cache/en/notes/Programming/linux/linux-basics/linux-basics-en.md?raw": [
+    "/assets/linux-basics-en-DSb4s4PH.js"
+  ],
+  "data-branch/cache/en/notes/Programming/python/python-advanced/python-advanced-en.md?raw": [
+    "/assets/python-advanced-en-BQKRq7MH.js"
+  ],
+  "data-branch/cache/en/notes/Programming/python/python-basics/python-basics-en.md?raw": [
+    "/assets/python-basics-en-BvTX6dVV.js"
+  ],
+  "data-branch/cache/en/notes/Programming/python/python-data/python-data-en.md?raw": [
+    "/assets/python-data-en-DTE7E1vm.js"
+  ],
+  "data-branch/cache/en/notes/Programming/r/r-basics/r-basics-en.md?raw": [
+    "/assets/r-basics-en-Dzr6Fzbi.js"
+  ],
+  "data-branch/cache/en/notes/Programming/r/r-ggplot2/r-ggplot2-en.md?raw": [
+    "/assets/r-ggplot2-en-CvP2vjkk.js"
+  ],
+  "data-branch/cache/en/notes/Programming/r/r-tidyverse/r-tidyverse-en.md?raw": [
+    "/assets/r-tidyverse-en-CuLVIm9c.js"
+  ],
+  "data-branch/cache/en/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview-en.md?raw": [
+    "/assets/cryoem-overview-en-DsP4yYlt.js"
+  ],
+  "data-branch/cache/en/notes/StructuralBiology/cryoem/cryoem-workflow/cryoem-workflow-en.md?raw": [
+    "/assets/cryoem-workflow-en-BpFgioRH.js"
+  ],
+  "data-branch/cache/en/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling-en.md?raw": [
+    "/assets/atomic-modeling-en-BX1y6yZD.js"
+  ],
+  "data-branch/cache/en/notes/StructuralBiology/visualization/structure-visualization/structure-visualization-en.md?raw": [
+    "/assets/structure-visualization-en-CHXUkj4Z.js"
+  ],
+  "data-branch/content-src/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools-en.md?raw": [
+    "/assets/protein-design-tools-en-BdlMbrNY.js"
   ],
   "data-branch/content-src/notes/ComputationalBiology/protein-design/protein-design-tools/protein-design-tools.md?raw": [
     "/assets/protein-design-tools-Jzs48-a0.js"
   ],
   "data-branch/content-src/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools-en.md?raw": [
-    "/assets/virtual-screening-tools-en-Ds1a_3n3.js"
+    "/assets/virtual-screening-tools-en-BEtVbCe5.js"
   ],
   "data-branch/content-src/notes/ComputationalBiology/virtual-screening/virtual-screening-tools/virtual-screening-tools.md?raw": [
     "/assets/virtual-screening-tools-BdHWOXdu.js"
   ],
   "data-branch/content-src/notes/Programming/bash/bash-scripting/bash-scripting-en.md?raw": [
-    "/assets/bash-scripting-en-DWq6sXnJ.js"
+    "/assets/bash-scripting-en-CYovvjQL.js"
   ],
   "data-branch/content-src/notes/Programming/bash/bash-scripting/bash-scripting.md?raw": [
     "/assets/bash-scripting-DEkzGDwa.js"
   ],
   "data-branch/content-src/notes/Programming/linux/linux-basics/linux-basics-en.md?raw": [
-    "/assets/linux-basics-en-DSb4s4PH.js"
+    "/assets/linux-basics-en-BDL0HlS2.js"
   ],
   "data-branch/content-src/notes/Programming/linux/linux-basics/linux-basics.md?raw": [
     "/assets/linux-basics-UyN4mB_u.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-advanced/python-advanced-en.md?raw": [
-    "/assets/python-advanced-en-BQKRq7MH.js"
+    "/assets/python-advanced-en-D3xdyM1A.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-advanced/python-advanced.md?raw": [
     "/assets/python-advanced-iN1UORRl.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-basics/python-basics-en.md?raw": [
-    "/assets/python-basics-en-BvTX6dVV.js"
+    "/assets/python-basics-en-DOB3GCxE.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-basics/python-basics.md?raw": [
     "/assets/python-basics-uh9Cz9FQ.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-data/python-data-en.md?raw": [
-    "/assets/python-data-en-DTE7E1vm.js"
+    "/assets/python-data-en-BH1w0rP8.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-data/python-data.md?raw": [
     "/assets/python-data-CmFq1YcA.js"
   ],
   "data-branch/content-src/notes/Programming/r/r-basics/r-basics-en.md?raw": [
-    "/assets/r-basics-en-Dzr6Fzbi.js"
+    "/assets/r-basics-en-CPaztwoM.js"
   ],
   "data-branch/content-src/notes/Programming/r/r-basics/r-basics.md?raw": [
     "/assets/r-basics-CqBb8X8p.js"
-  ],
-  "data-branch/content-src/notes/Programming/r/r-ggplot2/r-ggplot2-en.md?raw": [
-    "/assets/r-ggplot2-en-CvP2vjkk.js"
   ],
   "data-branch/content-src/notes/Programming/r/r-ggplot2/r-ggplot2.md?raw": [
     "/assets/r-ggplot2-CK3q5J49.js"
   ],
   "data-branch/content-src/notes/Programming/r/r-tidyverse/r-tidyverse-en.md?raw": [
-    "/assets/r-tidyverse-en-CuLVIm9c.js"
+    "/assets/r-tidyverse-en-C13YYJSL.js"
   ],
   "data-branch/content-src/notes/Programming/r/r-tidyverse/r-tidyverse.md?raw": [
     "/assets/r-tidyverse-v7eXFCz-.js"
   ],
-  "data-branch/content-src/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview-en.md?raw": [
-    "/assets/cryoem-overview-en-DsP4yYlt.js"
-  ],
   "data-branch/content-src/notes/StructuralBiology/cryoem/cryoem-overview/cryoem-overview.md?raw": [
     "/assets/cryoem-overview-DT2Crx5Y.js"
-  ],
-  "data-branch/content-src/notes/StructuralBiology/cryoem/cryoem-workflow/cryoem-workflow-en.md?raw": [
-    "/assets/cryoem-workflow-en-BpFgioRH.js"
   ],
   "data-branch/content-src/notes/StructuralBiology/cryoem/cryoem-workflow/cryoem-workflow.md?raw": [
     "/assets/cryoem-workflow-C2zs9nW6.js"
   ],
-  "data-branch/content-src/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling-en.md?raw": [
-    "/assets/atomic-modeling-en-BX1y6yZD.js"
-  ],
   "data-branch/content-src/notes/StructuralBiology/modeling/atomic-modeling/atomic-modeling.md?raw": [
     "/assets/atomic-modeling-BGRUqNS4.js"
-  ],
-  "data-branch/content-src/notes/StructuralBiology/visualization/structure-visualization/structure-visualization-en.md?raw": [
-    "/assets/structure-visualization-en-CHXUkj4Z.js"
   ],
   "data-branch/content-src/notes/StructuralBiology/visualization/structure-visualization/structure-visualization.md?raw": [
     "/assets/structure-visualization-B3-STJgI.js"
@@ -4458,7 +4485,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/minisearch/dist/es/index.js": [
-    "/assets/SearchModal-DfPjUjVH.js",
+    "/assets/SearchModal-CPATOImV.js",
     "/assets/SearchModal-DvrNkWgZ.css"
   ],
   "node_modules/pinia/dist/pinia.mjs": [
@@ -7122,15 +7149,15 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/SearchModal.vue": [
-    "/assets/SearchModal-DfPjUjVH.js",
+    "/assets/SearchModal-CPATOImV.js",
     "/assets/SearchModal-DvrNkWgZ.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-DfPjUjVH.js",
+    "/assets/SearchModal-CPATOImV.js",
     "/assets/SearchModal-DvrNkWgZ.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=db95d581&lang.css": [
-    "/assets/SearchModal-DfPjUjVH.js",
+    "/assets/SearchModal-CPATOImV.js",
     "/assets/SearchModal-DvrNkWgZ.css"
   ],
   "src/components/widgets/TocDrawer.vue": [
