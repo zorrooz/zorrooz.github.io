@@ -1,10 +1,15 @@
-<!-- About.vue -->
 <template>
   <div class="page-section about-view">
     <header class="about-head">
       <div class="about-head__identity">
         <div class="about-head__avatar">
-          <img v-if="avatarSrc" :src="avatarSrc" alt="avatar" class="about-head__avatar-img" draggable="false" />
+          <img
+            v-if="avatarSrc"
+            :src="avatarSrc"
+            alt="avatar"
+            class="about-head__avatar-img"
+            draggable="false"
+          />
           <span v-else class="about-head__initial">{{ siteAuthorInitial }}</span>
         </div>
         <div class="about-head__names">
@@ -43,8 +48,14 @@
 
     <footer class="about-foot">
       <div class="about-foot__contacts">
-        <a v-for="contact in data.contacts" :key="contact.label" :href="contact.link" target="_blank"
-          rel="noopener noreferrer" class="about-foot__contact">
+        <a
+          v-for="contact in data.contacts"
+          :key="contact.label"
+          :href="contact.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="about-foot__contact"
+        >
           <i :class="contact.icon"></i>
           <span>{{ contact.value }}</span>
         </a>
@@ -56,45 +67,30 @@
 
 <script setup lang="ts">
 defineOptions({ name: 'AboutView' })
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { loadAbout } from '@/utils/contentLoader'
-import { SITE } from '@/config/site.ts'
+import { useLocalizedContent } from '@/composables/useLocalizedContent'
+import { EMPTY_ABOUT, loadAbout } from '@/utils/contentLoader'
+import { SITE } from '@/config/site'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
-const data = ref<any>({})
+const { data } = useLocalizedContent(() => loadAbout(), EMPTY_ABOUT)
 
-const avatarModules = import.meta.glob('/src/assets/avatar.*', { as: 'url', eager: true })
-const avatarSrc = computed(() => Object.values(avatarModules)[0] || '')
+const avatarModules = import.meta.glob('/src/assets/avatar.*', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+})
+const avatarSrc = computed(() => (Object.values(avatarModules)[0] as string | undefined) || '')
 
 const footerText = computed(() => t('thanks'))
 const siteAuthor = SITE.author
 const siteAuthorInitial = siteAuthor.trim().charAt(0).toUpperCase()
 
-const introduction = computed(() => data.value?.introduction || '')
-const experience = computed<any[]>(() => data.value?.experience || [])
-const sections = computed<any[]>(() => data.value?.section || [])
-
-function loadAboutData() {
-  try {
-    data.value = loadAbout() || {}
-  } catch (error) {
-    console.error('Failed to load about data:', error)
-    data.value = {
-      introduction: '',
-      experience: [],
-      section: [],
-      contacts: []
-    }
-  }
-}
-
-loadAboutData()
-
-watch(locale, () => {
-  loadAboutData()
-})
+const introduction = computed(() => data.value.introduction)
+const experience = computed(() => data.value.experience)
+const sections = computed(() => data.value.section)
 </script>
 
 <style scoped>
@@ -281,7 +277,9 @@ watch(locale, () => {
   height: 7px;
   border-radius: 50%;
   background: var(--primary);
-  transition: transform 0.14s ease, box-shadow 0.14s ease;
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
 }
 
 .tl-item:hover {
@@ -337,7 +335,9 @@ watch(locale, () => {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--sp-8);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .about-cell:hover {

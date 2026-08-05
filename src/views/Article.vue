@@ -1,7 +1,10 @@
-<!-- Article.vue -->
 <template>
   <div class="container view-container article-view">
-    <div class="reading-progress" :style="{ width: progressPercent + '%' }" aria-hidden="true"></div>
+    <div
+      class="reading-progress"
+      :style="{ width: progressPercent + '%' }"
+      aria-hidden="true"
+    ></div>
 
     <div class="row py-4 px-0">
       <div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col">
@@ -19,29 +22,57 @@
               <div v-if="currentPost" class="article-meta">
                 <h1 class="article-title">{{ currentPost.title }}</h1>
                 <div class="article-meta__row">
-                  <span v-if="isNote && currentPost.date" class="meta-line"><i class="fas fa-calendar-alt"></i>{{ updatedAtText }} {{ currentPost.date }}</span>
-                  <span v-if="readingMinutes > 0" class="meta-line"><i class="fas fa-clock"></i>{{ getReadingTimeText(readingMinutes) }}</span>
-                  <button type="button" class="article-copy-btn"
-                    :class="{ 'article-copy-btn--copied': copyFeedback }" @click="copyArticle"
-                    :aria-label="t('copyArticle')" aria-live="polite">
+                  <span v-if="isNote && currentPost.date" class="meta-line"
+                    ><i class="fas fa-calendar-alt"></i>{{ updatedAtText }}
+                    {{ currentPost.date }}</span
+                  >
+                  <span v-if="readingMinutes > 0" class="meta-line"
+                    ><i class="fas fa-clock"></i>{{ getReadingTimeText(readingMinutes) }}</span
+                  >
+                  <button
+                    type="button"
+                    class="article-copy-btn"
+                    :class="{ 'article-copy-btn--copied': copyFeedback }"
+                    @click="copyArticle"
+                    :aria-label="t('copyArticle')"
+                    aria-live="polite"
+                  >
                     <i :class="copyFeedback ? 'fas fa-check' : 'fas fa-copy'"></i>
                     <span>{{ copyFeedback ? t('copied') : t('copyArticle') }}</span>
                   </button>
                 </div>
                 <div v-if="currentPost.tags?.length" class="article-meta__tags">
-                  <span v-for="(tag, idx) in currentPost.tags" :key="idx" class="article-tag" @click="onTagClick(tag)">
+                  <span
+                    v-for="(tag, idx) in currentPost.tags"
+                    :key="idx"
+                    class="article-tag"
+                    @click="onTagClick(tag)"
+                  >
                     # {{ tag }}
                   </span>
                 </div>
               </div>
 
-              <RenderMarkdown v-if="rawMarkdown" :rawMarkdown="rawMarkdown" :articlePath="currentPost?.path || ''"
-                :articleTitle="currentPost?.title || ''" @markdown-rendered="handleMarkdownRendered" />
+              <RenderMarkdown
+                v-if="rawMarkdown"
+                :rawMarkdown="rawMarkdown"
+                :articlePath="currentPost?.path || ''"
+                :articleTitle="currentPost?.title || ''"
+                @markdown-rendered="handleMarkdownRendered"
+              />
 
               <nav class="article-navigation" v-if="rawMarkdown">
-                <span v-if="!prevPost && nextPost" class="article-nav-spacer" aria-hidden="true"></span>
+                <span
+                  v-if="!prevPost && nextPost"
+                  class="article-nav-spacer"
+                  aria-hidden="true"
+                ></span>
 
-                <router-link v-if="prevPost" :to="toArticle(prevPost.path)" class="article-nav-item prev">
+                <router-link
+                  v-if="prevPost"
+                  :to="toArticle(prevPost.path)"
+                  class="article-nav-item prev"
+                >
                   <div class="nav-arrow"><i class="fas fa-arrow-left"></i></div>
                   <div class="nav-details">
                     <div class="nav-label">{{ prevPageText }}</div>
@@ -49,7 +80,11 @@
                   </div>
                 </router-link>
 
-                <router-link v-if="nextPost" :to="toArticle(nextPost.path)" class="article-nav-item next">
+                <router-link
+                  v-if="nextPost"
+                  :to="toArticle(nextPost.path)"
+                  class="article-nav-item next"
+                >
                   <div class="nav-details">
                     <div class="nav-label">{{ nextPageText }}</div>
                     <div class="nav-title">{{ nextPost.title }}</div>
@@ -65,7 +100,12 @@
       <div class="col-12 col-lg-2 order-3 docs-toc-col">
         <div class="sticky-sidebar" ref="rightSidebarContent">
           <div v-if="isDesktop" class="toc-container mt-0">
-            <OnThisPage ref="onThisPageRef" containerSelector=".markdown-body" :levels="[2, 3]" :offset="88" />
+            <OnThisPage
+              ref="onThisPageRef"
+              containerSelector=".markdown-body"
+              :levels="[2, 3]"
+              :offset="88"
+            />
           </div>
         </div>
       </div>
@@ -76,17 +116,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
-import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
-import OnThisPage from '@/components/layout/OnThisPage.vue'
-import TocDrawer from '@/components/widgets/TocDrawer.vue'
-import NavigationTree from '@/components/layout/NavigationTree.vue'
-import { loadCategories, loadHtmlContent, loadMarkdownSource } from '@/utils/contentLoader'
-import { toLocalePath } from '@/utils/localePath'
-import { readingTimeMinutes } from '@/utils/readingTime'
-
 defineOptions({
   name: 'ArticleView',
   head() {
@@ -96,20 +125,49 @@ defineOptions({
         ? [{ name: 'description', content: this.currentPost.description }]
         : [],
     }
-  }
+  },
 })
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
+import OnThisPage from '@/components/layout/OnThisPage.vue'
+import TocDrawer from '@/components/widgets/TocDrawer.vue'
+import NavigationTree from '@/components/layout/NavigationTree.vue'
+import { loadCategories, loadHtmlContent, loadMarkdownSource } from '@/utils/contentLoader'
+import { toLocalePath } from '@/utils/localePath'
+import { articlePathFromUrl, joinRoutePathParam, toArticleRoutePath } from '@/utils/articleUrl'
+import { readingTimeMinutes } from '@/utils/readingTime'
+import { goToTag } from '@/utils/tagQuery'
+import { scrollToTop } from '@/utils/scroll'
+import { copyText } from '@/utils/clipboard'
+import { toSupportedLocale } from '@/config/site'
+import type { CategoryArticle, CategoryData } from '@/types/content'
+
+/** 由 categories.json 展开的运行时文章元数据 */
+interface ArticleMeta {
+  title: string
+  path: string
+  date: string
+  tags: string[]
+  wordCount: number
+  description?: string
+}
+
+interface LinearArticle {
+  title: string
+  path: string
+}
 
 const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-defineProps({ path: { type: [String, Array], default: '' } })
-
 const rawMarkdown = ref('')
 const currentPath = ref('')
-const allArticles = ref<any[]>([])
-const categoryList = ref<any[]>([])
-const viewportWidth = ref((typeof window !== 'undefined' ? window.innerWidth : 1024))
+const allArticles = ref<ArticleMeta[]>([])
+const categoryList = ref<CategoryData>([])
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024)
 const progressPercent = ref(0)
 const copyFeedback = ref(false)
 let copyFeedbackTimer: number | null = null
@@ -120,66 +178,60 @@ const leftSidebarContent = useTemplateRef<HTMLElement>('leftSidebarContent')
 const rightSidebarContent = useTemplateRef<HTMLElement>('rightSidebarContent')
 
 const isDesktop = computed(() => viewportWidth.value >= 992)
-const isNote = computed(() => !!(currentPost.value?.path && currentPost.value.path.startsWith('notes/')))
+const isNote = computed(() => !!currentPost.value?.path.startsWith('notes/'))
 const updatedAtText = computed(() => t('updatedAt'))
 const prevPageText = computed(() => t('prevPage'))
 const nextPageText = computed(() => t('nextPage'))
 
+const stripMd = (path: string) => path.replace(/\.md$/, '')
+
+/** 文章路径匹配（容忍 -en 语言后缀差异） */
+const pathsMatch = (articlePath: string, current: string) => {
+  const a = stripMd(articlePath)
+  const c = stripMd(current)
+  if (a === c) return true
+  if (c.endsWith('-en') && a === c.replace(/-en$/, '')) return true
+  if (!c.endsWith('-en') && a === c + '-en') return true
+  return false
+}
+
+const findArticle = (path: string) =>
+  allArticles.value.find((article) => pathsMatch(article.path, path)) || null
+
 const currentPost = computed(() => {
   if (!currentPath.value) return null
-
-  return allArticles.value.find(article => {
-    const articlePath = article.path.replace(/\.md$/, '')
-    const cp = currentPath.value.replace(/\.md$/, '')
-
-    if (articlePath === cp) return true
-    if (cp.endsWith('-en') && articlePath === cp.replace(/-en$/, '')) return true
-    if (!cp.endsWith('-en') && articlePath === cp + '-en') return true
-
-    return false
-  })
+  return findArticle(currentPath.value)
 })
 
 const groupLinearArticles = computed(() => {
   if (!currentPost.value) return []
-  const [type, group] = currentPost.value.path.replace(/\.md$/, '').split('/')
-  const linear: { title: string; path: string }[] = []
+  const [type, group] = stripMd(currentPost.value.path).split('/')
+  const linear: LinearArticle[] = []
 
   const pushFromUrl = (title: string, articleUrl: string) => {
-    if (!articleUrl) return
-    const parts = String(articleUrl).replace(/^\/+/, '').split('/')
-    const i0 = parts[0] === 'article' ? 1 : 0
-    const t = parts[i0], g = parts[i0 + 1]
+    if (!articleUrl.trim()) return
+    const path = stripMd(articlePathFromUrl(articleUrl))
+    const [t, g] = path.split('/')
     if (t !== type || g !== group) return
-    const rest = parts.slice(i0 + 2)
-    const pathNoExt = `${t}/${g}/${rest.join('/')}`
-    linear.push({ title, path: `${pathNoExt}.md` })
+    linear.push({ title, path: `${path}.md` })
   }
 
-  if (Array.isArray(categoryList.value)) {
-    for (const section of categoryList.value) {
-      if (!Array.isArray(section.items)) continue
-      for (const item of section.items) {
-        if (item?.name !== group) continue
-        if (Array.isArray(item.articles)) {
-          item.articles.forEach((a: any) => pushFromUrl(a.title, a.articleUrl))
-        }
-        if (Array.isArray(item.categories)) {
-          item.categories.forEach((cat: any) => {
-            if (Array.isArray(cat.articles)) {
-              cat.articles.forEach((a: any) => pushFromUrl(a.title, a.articleUrl))
-            }
-          })
-        }
-      }
+  for (const section of categoryList.value) {
+    for (const item of section.items) {
+      if (item.name !== group) continue
+      item.articles?.forEach((a) => pushFromUrl(a.title, a.articleUrl))
+      item.categories.forEach((cat) =>
+        cat.articles.forEach((a) => pushFromUrl(a.title, a.articleUrl)),
+      )
     }
   }
   return linear
 })
 
 const currentLinearIndex = computed(() => {
-  if (!currentPost.value) return -1
-  return groupLinearArticles.value.findIndex(a => a.path.replace(/\.md$/, '') === currentPost.value.path.replace(/\.md$/, ''))
+  const post = currentPost.value
+  if (!post) return -1
+  return groupLinearArticles.value.findIndex((a) => stripMd(a.path) === stripMd(post.path))
 })
 
 const prevPost = computed(() => {
@@ -193,23 +245,22 @@ const nextPost = computed(() => {
   return idx >= 0 && idx < last ? groupLinearArticles.value[idx + 1] : null
 })
 
-const readingMinutes = computed(() => {
-  const wc = currentPost.value?.wordCount
-  return typeof wc === 'number' ? readingTimeMinutes(wc) : 0
-})
+const readingMinutes = computed(() => readingTimeMinutes(currentPost.value?.wordCount ?? 0))
 
 function getReadingTimeText(minutes: number) {
   return t('articleReadingTime', { minutes })
 }
 
-function toArticle(p: string) {
-  return toLocalePath(`/article/${p.replace(/\.md$/, '')}`)
+function toArticle(path: string) {
+  return toLocalePath(toArticleRoutePath(path))
 }
 
 function onTagClick(tag: string) {
-  if (!tag) return
-  const prefix = locale.value === 'en-US' ? '/en' : '/zh'
-  router.push({ path: `${prefix}/`, query: { tag, from: route.fullPath } })
+  goToTag(router, tag, {
+    locale: toSupportedLocale(locale.value),
+    query: { from: route.fullPath },
+    scroll: false,
+  })
 }
 
 async function copyArticle() {
@@ -230,20 +281,14 @@ async function copyArticle() {
     const clone = body.cloneNode(true) as HTMLElement
     clone
       .querySelectorAll('.heading-anchor, .code-block-header, .copy-button, .table-copy-btn')
-      .forEach(el => el.remove())
+      .forEach((el) => el.remove())
     const bodyText = (clone.innerText || '').trim()
     text = `${currentPost.value.title}\n\n${bodyText}`
   }
   try {
-    await navigator.clipboard.writeText(text)
+    await copyText(text)
   } catch (err) {
     console.error(t('copyFailed'), err)
-    const textArea = document.createElement('textarea')
-    textArea.value = text
-    document.body.appendChild(textArea)
-    textArea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textArea)
   } finally {
     copyFeedback.value = true
     if (copyFeedbackTimer) clearTimeout(copyFeedbackTimer)
@@ -253,48 +298,33 @@ async function copyArticle() {
   }
 }
 
+const pushArticle = (all: ArticleMeta[], article: CategoryArticle, dateStr: string) => {
+  const path = articlePathFromUrl(article.articleUrl)
+  all.push({
+    title: article.title,
+    path,
+    date: dateStr,
+    tags: article.tags,
+    wordCount: article.wordCount,
+  })
+}
+
 function buildFromCategories() {
-  const all: any[] = []
-
-  const pushArticle = (artTitle: string, articleUrl: string, tags: any[] = [], dateStr: string = '', wordCount = 0) => {
-    if (typeof articleUrl !== 'string' || !articleUrl.trim()) return
-    const parts = articleUrl.replace(/^\/+/, '').split('/')
-    const idxArticle = parts[0] === 'article' ? 1 : 0
-    const t = parts[idxArticle], g = parts[idxArticle + 1]
-    const restParts = parts.slice(idxArticle + 2)
-    const subKey = restParts[0] || '__root__'
-    const rest = restParts.join('/')
-    const pathNoExt = `${t}/${g}/${rest}`
-
-    const art = { title: artTitle, path: `${pathNoExt}.md`, date: dateStr || '', tags: Array.isArray(tags) ? tags : [], preview: '', category: `${t}/${g}/${subKey}`, wordCount: typeof wordCount === 'number' ? wordCount : 0 }
-    all.push(art)
-  }
-
+  const all: ArticleMeta[] = []
   try {
     const categoryData = loadCategories()
-
-    if (Array.isArray(categoryData)) {
-      categoryData.forEach((section: any) => {
-        if (!Array.isArray(section.items)) return
-        section.items.forEach((item: any) => {
-          const itemLatest = item?.stats?.latestDate || ''
-          if (Array.isArray(item.articles)) {
-            item.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], itemLatest, a?.wordCount))
-          }
-          if (Array.isArray(item.categories)) {
-            item.categories.forEach((cat: any) => {
-              const catLatest = cat?.stats?.latestDate || itemLatest || ''
-              if (Array.isArray(cat.articles)) {
-                cat.articles.forEach((a: any) => pushArticle(a.title, a.articleUrl, a?.tags || [], catLatest, a?.wordCount))
-              }
-            })
-          }
+    categoryList.value = categoryData
+    categoryData.forEach((section) => {
+      section.items.forEach((item) => {
+        const itemLatest = item.stats.latestDate || ''
+        item.articles?.forEach((a) => pushArticle(all, a, itemLatest))
+        item.categories.forEach((cat) => {
+          const catLatest = cat.stats.latestDate || itemLatest
+          cat.articles.forEach((a) => pushArticle(all, a, catLatest))
         })
       })
-    }
-
+    })
     allArticles.value = all
-    categoryList.value = categoryData
   } catch {
     allArticles.value = []
     categoryList.value = []
@@ -317,54 +347,27 @@ function onScroll() {
   })
 }
 
-function normalizeRoutePathParam(p: string | string[]) {
-  return Array.isArray(p) ? p.join('/') : (typeof p === 'string' && p.length ? p : '')
-}
-
 function loadArticleContent() {
   rawMarkdown.value = ''
   try {
-    const currentPathClean = normalizeRoutePathParam(route.params.path)
-
-    const isEnglish = locale.value === 'en-US'
-
-    let matchedPost = allArticles.value.find(article => {
-      const articlePath = article.path.replace(/\.md$/, '')
-
-      if (isEnglish) {
-        return articlePath === currentPathClean ||
-          articlePath === currentPathClean.replace(/-en$/, '') + '-en'
-      } else {
-        return articlePath === currentPathClean ||
-          articlePath === currentPathClean.replace(/-en$/, '')
-      }
-    })
-
-    if (!matchedPost) {
-      matchedPost = allArticles.value.find(article => {
-        const articlePath = article.path.replace(/\.md$/, '')
-        const cleanCurrentPath = currentPathClean.replace(/-en$/, '')
-        return articlePath === cleanCurrentPath ||
-          articlePath === cleanCurrentPath + '-en'
-      })
-    }
-
-    if (!matchedPost) throw new Error(`Article not found: ${currentPathClean}`)
+    const matchedPost = findArticle(joinRoutePathParam(route.params.path))
+    if (!matchedPost) throw new Error(`Article not found: ${route.params.path}`)
     currentPath.value = matchedPost.path
 
     rawMarkdown.value = loadHtmlContent(currentPath.value)
 
     nextTick(() => {
       if (typeof window === 'undefined') return
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      scrollToTop()
       updateSidebarDimensions()
       onThisPageRef.value?.refreshToc()
     })
   } catch {
-    rawMarkdown.value = '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.'
+    rawMarkdown.value =
+      '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.'
     nextTick(() => {
       if (typeof window === 'undefined') return
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      scrollToTop()
       onThisPageRef.value?.refreshToc()
     })
   }
@@ -377,7 +380,7 @@ function updateSidebarDimensions() {
   const viewportH = window.innerHeight
   const availableH = Math.max(200, viewportH - headerH - 24 - 24)
   const sidebarEls = [leftSidebarContent.value, rightSidebarContent.value]
-  sidebarEls.forEach(el => {
+  sidebarEls.forEach((el) => {
     if (!el) return
     el.style.maxHeight = `${availableH}px`
     el.style.overflowY = 'auto'
@@ -399,14 +402,17 @@ watch(locale, (newLocale, oldLocale) => {
   }
 })
 
-watch(() => route.params.path, (newPathParam, oldPathParam) => {
-  const oldPath = normalizeRoutePathParam(oldPathParam)
-  const newPath = normalizeRoutePathParam(newPathParam)
-  if (oldPath !== newPath) {
-    onThisPageRef.value?.resetToc()
-    loadArticleContent()
-  }
-})
+watch(
+  () => route.params.path,
+  (newPathParam, oldPathParam) => {
+    const oldPath = joinRoutePathParam(oldPathParam)
+    const newPath = joinRoutePathParam(newPathParam)
+    if (oldPath !== newPath) {
+      onThisPageRef.value?.resetToc()
+      loadArticleContent()
+    }
+  },
+)
 
 watch(rawMarkdown, () => {
   nextTick(() => updateSidebarDimensions())
@@ -516,7 +522,9 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-btn);
   padding: 4px 10px;
   cursor: pointer;
-  transition: color 0.14s ease, background-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease;
 }
 
 .article-copy-btn:hover {
@@ -535,7 +543,9 @@ onBeforeUnmount(() => {
   background: var(--surface-2);
   padding: 4px 13px;
   border-radius: var(--radius-pill);
-  transition: color 0.14s ease, background-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease;
   cursor: pointer;
 }
 
@@ -638,7 +648,10 @@ onBeforeUnmount(() => {
   padding: var(--sp-5) var(--sp-6);
   text-decoration: none;
   color: var(--fg);
-  transition: color 0.14s ease, background-color 0.14s ease, border-color 0.14s ease,
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease,
+    border-color 0.14s ease,
     box-shadow 0.18s ease;
   min-width: 0;
   border: 1px solid var(--line);

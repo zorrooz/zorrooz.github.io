@@ -54,37 +54,60 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 ## Architecture
 
 ```
-src/
+src/                        # 浏览器应用（含 SSR；不包含任何 Node 构建脚本）
 ├── main.ts                    # Entry: createApp → Pinia → Router → i18n
 ├── App.vue                   # <AppHeader> + <router-view> + <AppFooter>
 ├── router/index.ts           # 5 hash-mode routes
-├── stores/
-│   ├── app.ts                # Pinia: app state
-│   ├── i18n.ts               # vue-i18n (zh-CN / en-US)
-│   ├── locales/{zh-CN,en-US}.ts
+├── i18n/
+│   ├── index.ts              # vue-i18n 实例（createI18n，zh-CN/en-US）
+│   └── locales/{zh-CN,en-US}.ts
+├── stores/                   # Pinia only
+│   ├── theme.ts              # useThemeStore（theme 状态 + toggleTheme/initTheme）
+│   └── locale.ts             # useLocaleStore（locale 状态）
+├── config/
+│   └── site.ts               # SITE、locale 映射（LOCALE_MAP/SEGMENT_OF/HTML_LANG）、THEME_MODES
 ├── views/
-│   ├── Home.vue              # hero（greeting + name + stats）+ TagCloud + PostList
+│   ├── Home.vue              # hero（greeting + name + stats）+ 标签云（模板内）+ PostList
 │   ├── Category.vue          # Notes/Projects/Topics cards with stats
 │   ├── Resource.vue          # Hierarchical resource catalog（侧栏 + 卡片）
 │   ├── About.vue             # 头部（左介绍 + 右名片） + stats + 时间线 + sections
 │   └── Article.vue           # NavigationTree + RenderMarkdown + OnThisPage
 ├── components/
-│   ├── layout/               # AppHeader, AppFooter, PostList, TagCloud, RenderMarkdown, etc.
+│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList, RenderMarkdown, NavigationTree, OnThisPage
 │   └── widgets/              # BackToTop, SearchModal, TocDrawer
-├── utils/
-│   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD（@data 别名）
-│   ├── markdownProcessor.ts  # unified pipeline: remark → rehype
-│   ├── reveal.ts             # IntersectionObserver 滚动显现
-│   ├── dataConfig.ts         # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR）
-│   ├── runAllGenerators.ts   # Build orchestration
-│   ├── generators/           # build-time Node.js scripts (.ts, run via Node type stripping)
-│   └── translator/           # AI translation via DeepSeek API
-├── config/
-│   └── llmConfig.ts           # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
+├── composables/
+│   ├── useFloatingButton.ts  # 浮动按钮（BackToTop/TocDrawer）拖拽 + 底沿广播协议（'floating-buttons-base-top'）
+│   └── useLocalizedContent.ts# 内容页统一加载模式（首次加载 + locale 重载 + 异常回退）
+├── utils/                    # 浏览器运行时工具（不 import 任何 scripts/ 代码）
+│   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD（@data 别名），强类型 load*
+│   ├── localePath.ts         # toLocalePath + switchLocale（语言切换）
+│   ├── tagQuery.ts           # goToTag（tag 查询跳转唯一实现）
+│   ├── articleUrl.ts         # articleUrl↔md 路径↔路由路径唯一转换（Article/NavigationTree 共用）
+│   ├── scroll.ts             # scrollToTop（SSR 安全）
+│   ├── scrollLock.ts         # 滚动锁定（overflow / position 钉住两种语义）
+│   ├── clipboard.ts          # copyText（Clipboard API + execCommand 回退）
+│   ├── readingTime.ts        # 阅读时长估算
+│   └── reveal.ts             # v-reveal 滚动入场指令
+├── types/
+│   └── content.ts            # 领域类型：与 content/*.json 产物一一对应（Post/Note/Tag/Category*/Resource/About）
 └── assets/
     ├── fonts/                # 完整字体 OTF（思源宋体×2、思源黑体、Agave）
-    ├── styles/               # global.scss
+    ├── styles/               # global.scss + highlight/
     └── avatar.*              # 关于页头像（任意格式，存在即自动使用）
+```
+
+```
+scripts/                    # Node 内容工具链（不被浏览器打包；Node 原生 type stripping 直跑 .ts）
+├── dataConfig.ts           # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR）
+├── markdownProcessor.ts    # unified pipeline: remark → rehype
+├── runAllGenerators.ts     # Build orchestration
+├── llmConfig.ts            # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
+├── generators/             # core/（shared IO helpers）+ 11 个生成器
+├── translator/             # AI translation via DeepSeek API（CLI）
+└── tagMerger/              # zh→en 标签映射增量工具（CLI）
+
+vite/
+└── contentDevPlugin.ts     # Vite dev 插件：监听数据目录变更→runAllGenerators→full-reload
 ```
 
 ### 数据分支（data）目录结构
@@ -154,7 +177,7 @@ cache/en/notes/<category>/<subcategory>/<article-dir>/<article-dir>-en.md   # �
 - notes 目录名必须匹配 `categories.yaml` 中 `notes` 段的 `name` 字段。
 - 每篇文章 md 自带 **YAML frontmatter**：`title` / `date` / `author` / `tags` / `draft` / `description`（zh/en 各自文件分别定义）
 - `categories.yaml` 定义分类层级（`name`/`title`/`desc`/`categories` 子分类映射）；projects/topics 的全部元数据（`github`/`doi`/`url`/`status`/`language`/`license`/`journal`/`year`/`authors` 等）也在此定义
-- **中英 frontmatter `tags` 必须一一对应**（同一篇文章 zh/en 标签数量与语义对称），否则 TagCloud 双语标签数不一致（如 zh `Shell` / en 误写 `Shell`+`Bash`）
+- **中英 frontmatter `tags` 必须一一对应**（同一篇文章 zh/en 标签数量与语义对称），否则首页标签云双语标签数不一致（如 zh `Shell` / en 误写 `Shell`+`Bash`）
 
 ### URL Mapping
 
@@ -164,7 +187,7 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 
 ## Internationalization (Dual Layer)
 
-**Layer 1 — App:** `src/stores/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
+**Layer 1 — App:** `src/i18n/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
 
 **Layer 2 — Content:** locale 源目录分层（`srcDirFor(locale)`）+ `-en` 后缀身份：
 - Chinese: `content-src/article.md` → 输出 `content/categories.json`
@@ -199,7 +222,8 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 ### Utilities
 - `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`
 - `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string
-- `appStore`: `toggleTheme()`, `toggleLanguage()`, `initTheme()`, `initLocale()`
+- `useThemeStore`: `theme`, `toggleTheme()`, `initTheme()`；`useLocaleStore`: `locale`, `setLocale()`, `initLocale()`
+- `tagQuery.ts`：`goToTag()`（tag 查询跳转唯一实现）；`scrollLock.ts`：`lock/unlockScrollOverflow` + `lock/unlockScrollPosition`；`clipboard.ts`：`copyText()`
 
 ## Layout & Shape Conventions（布局与形状规则）
 
@@ -321,5 +345,5 @@ gblog 仅用 **3 色族**：蓝色（主色）、灰色（中性色）、黑/白
 ## ESLint / Prettier
 - Flat config (`eslint.config.js`) with Vue + Prettier
 - TS parsing: `@typescript-eslint/parser` for `**/*.ts` + vue files with `lang="ts"`
-- `browser` globals for `*.{js,vue}`, `node` globals for `src/utils/**/*.{js,ts}`
+- `browser` globals for `*.{js,vue}`, `node` globals for `scripts/**/*.{js,ts}` + `vite/**/*.ts`
 - Ignored: `dist/`, `dist-ssr/`, `coverage/`

@@ -1,6 +1,8 @@
+import type { AboutData, CategoryData, Note, Post, ResourceNode, Tag } from '@/types/content'
+
 const getCurrentLocale = (): string => {
   // SSR prerender: locale injected by main.ts from the /zh|/en route prefix
-  const injected = (globalThis as { __GBLOG_LOCALE__?: string }).__GBLOG_LOCALE__
+  const injected = globalThis.__GBLOG_LOCALE__
   if (injected) return injected
   return (typeof window !== 'undefined' ? localStorage.getItem('locale') : null) || 'zh-CN'
 }
@@ -36,13 +38,13 @@ interface JsonModule {
   default?: unknown
 }
 
-const loadJsonContent = (fileName: string): any => {
+const loadJsonContent = <T>(fileName: string, fallback: T): T => {
   const localizedFileName = getLocalizedFileName(fileName, '.json')
 
   const matchedKey = Object.keys(jsonModules).find((key) => key.includes(localizedFileName))
 
   if (matchedKey) {
-    return (jsonModules[matchedKey] as JsonModule).default || {}
+    return (jsonModules[matchedKey] as JsonModule).default as T
   }
 
   console.error(`Failed to load JSON content: ${localizedFileName}`)
@@ -51,11 +53,11 @@ const loadJsonContent = (fileName: string): any => {
     const fallbackKey = Object.keys(jsonModules).find((key) => key.includes(`${fileName}.json`))
 
     if (fallbackKey) {
-      return (jsonModules[fallbackKey] as JsonModule).default || {}
+      return (jsonModules[fallbackKey] as JsonModule).default as T
     }
   }
 
-  return {}
+  return fallback
 }
 
 /**
@@ -92,12 +94,20 @@ export const loadHtmlContent = (filePath: string): string => {
   return '<h1>Content Not Available</h1>\n<p>The requested content could not be loaded.</p>'
 }
 
-export const loadCategories = () => loadJsonContent('categories')
-export const loadPosts = () => loadJsonContent('posts')
-export const loadNotes = () => loadJsonContent('notes')
-export const loadTags = () => loadJsonContent('tags')
-export const loadAbout = () => loadJsonContent('about')
-export const loadResources = () => loadJsonContent('resources')
+export const loadCategories = (): CategoryData => loadJsonContent('categories', [])
+export const loadPosts = (): Post[] => loadJsonContent('posts', [])
+export const loadNotes = (): Note[] => loadJsonContent('notes', [])
+export const loadTags = (): Tag[] => loadJsonContent('tags', [])
+export const loadResources = (): ResourceNode[] => loadJsonContent('resources', [])
+
+export const EMPTY_ABOUT: AboutData = {
+  introduction: '',
+  experience: [],
+  section: [],
+  contacts: [],
+}
+
+export const loadAbout = (): AboutData => loadJsonContent('about', EMPTY_ABOUT)
 
 /**
  * 加载文章的完整 markdown 源（含 frontmatter）。
@@ -108,7 +118,9 @@ export const loadMarkdownSource = async (articlePath: string): Promise<string | 
   const suffix = getCurrentLocale() === 'en-US' ? '-en' : ''
   // articlePath 可能已带 .md（如 notes/.../python-basics.md），统一去后缀后拼接
   const target = `${articlePath.replace(/\.md$/, '')}${suffix}.md`
-  const key = Object.keys(markdownModules).find((k) => k.endsWith(`/${target}`) || k.endsWith(target))
+  const key = Object.keys(markdownModules).find(
+    (k) => k.endsWith(`/${target}`) || k.endsWith(target),
+  )
   if (!key) return null
   try {
     return (await markdownModules[key]()) as string

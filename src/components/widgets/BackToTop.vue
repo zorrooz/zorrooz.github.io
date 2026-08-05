@@ -1,9 +1,15 @@
 <!-- BackToTop.vue -->
 <template>
-  <button v-show="showBackToTop" class="back-to-top d-flex align-items-center justify-content-center"
-    @click="handleClick" :aria-label="t('backToTop')" @touchstart.prevent.stop="handleTouchStart"
-    @touchmove.prevent.stop="handleTouchMove" @touchend.prevent.stop="handleTouchEnd"
-    :style="{ top: buttonTop + 'px' }">
+  <button
+    v-show="showBackToTop"
+    class="back-to-top d-flex align-items-center justify-content-center"
+    @click="handleClick"
+    :aria-label="t('backToTop')"
+    @touchstart.prevent.stop="handleTouchStart"
+    @touchmove.prevent.stop="handleTouchMove"
+    @touchend.prevent.stop="handleTouchEnd"
+    :style="{ top: buttonTop + 'px' }"
+  >
     <i class="fas fa-arrow-up"></i>
   </button>
 </template>
@@ -11,51 +17,43 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useFloatingButton } from '@/composables/useFloatingButton'
 
 const { t } = useI18n()
 
-const sourceId = 'btt'
-const rafPending = ref(false)
-const rafLastBaseTop = ref<number | null>(null)
-
 const showBackToTop = ref(false)
-const isDragging = ref(false)
-const startY = ref(0)
-const initialTop = ref(0)
-const buttonTop = ref((typeof window !== 'undefined' ? window.innerHeight : 1024) - 100)
-const touchMoved = ref(false)
 const scrollObserver = ref<IntersectionObserver | null>(null)
 const scrollSentinel = ref<HTMLDivElement | null>(null)
 
-function getBounds() {
-  const BUTTON_HEIGHT = 40
-  const GAP = 48
-  const MARGIN = 20
-  return { gap: GAP, minTop: MARGIN + GAP, maxTop: window.innerHeight - BUTTON_HEIGHT - MARGIN }
+function backToTop() {
+  const reduceMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
 }
 
-function clampTop(top: number) {
-  const { minTop, maxTop } = getBounds()
-  return Math.max(minTop, Math.min(maxTop, top))
-}
+const {
+  isDragging,
+  buttonTop,
+  dispatchBaseTop,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
+  subscribe,
+  unsubscribe,
+} = useFloatingButton({
+  sourceId: 'btt',
+  defaultTop: (typeof window !== 'undefined' ? window.innerHeight : 1024) - 100,
+  mode: 'match',
+  onRelease: backToTop,
+})
 
-function rafDispatchBaseTop(baseTop: number) {
-  rafLastBaseTop.value = baseTop
-  if (rafPending.value) return
-  rafPending.value = true
-  requestAnimationFrame(() => {
-    window.dispatchEvent(new CustomEvent('floating-buttons-base-top', { detail: { baseTop: rafLastBaseTop.value, source: sourceId } }))
-    rafPending.value = false
-  })
+const handleClick = () => {
+  if (!isDragging.value) backToTop()
 }
-
-function syncBaseTop(e: Event) {
-  const detail = (e as CustomEvent).detail
-  const base = detail?.baseTop
-  const source = detail?.source
-  if (source === sourceId) return
-  if (typeof base === 'number') buttonTop.value = clampTop(base)
-}
+const handleTouchStart = onTouchStart
+const handleTouchMove = onTouchMove
+const handleTouchEnd = onTouchEnd
 
 function setupScrollObserver() {
   if (scrollObserver.value) return
@@ -68,44 +66,30 @@ function setupScrollObserver() {
   scrollObserver.value = new IntersectionObserver(
     ([entry]) => {
       showBackToTop.value = !entry.isIntersecting
-      if (showBackToTop.value) rafDispatchBaseTop(buttonTop.value)
+      if (showBackToTop.value) dispatchBaseTop()
     },
-    { threshold: 0 }
+    { threshold: 0 },
   )
   scrollObserver.value.observe(sentinel)
 }
 
-function backToTop() {
-  const reduceMotion =
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
-}
-function handleClick() { if (!isDragging.value) backToTop() }
-function handleTouchStart(e: TouchEvent) {
-  e.preventDefault(); isDragging.value = true; touchMoved.value = false; startY.value = e.touches[0].clientY; initialTop.value = buttonTop.value
-}
-function handleTouchMove(e: TouchEvent) {
-  touchMoved.value = true
-  const currentY = e.touches[0].clientY
-  const diffY = currentY - startY.value
-  buttonTop.value = clampTop(initialTop.value + diffY)
-  rafDispatchBaseTop(buttonTop.value)
-  e.preventDefault()
-}
-function handleTouchEnd(e: TouchEvent) { e.preventDefault(); isDragging.value = false; if (!touchMoved.value) backToTop() }
-
 onMounted(() => {
   setupScrollObserver()
-  window.addEventListener('floating-buttons-base-top', syncBaseTop)
+  subscribe()
   buttonTop.value = window.innerHeight - 100
-  rafDispatchBaseTop(buttonTop.value)
+  dispatchBaseTop()
 })
 
 onBeforeUnmount(() => {
-  if (scrollObserver.value) { scrollObserver.value.disconnect(); scrollObserver.value = null }
-  if (scrollSentinel.value) { scrollSentinel.value.remove(); scrollSentinel.value = null }
-  window.removeEventListener('floating-buttons-base-top', syncBaseTop)
+  if (scrollObserver.value) {
+    scrollObserver.value.disconnect()
+    scrollObserver.value = null
+  }
+  if (scrollSentinel.value) {
+    scrollSentinel.value.remove()
+    scrollSentinel.value = null
+  }
+  unsubscribe()
 })
 </script>
 
@@ -126,8 +110,12 @@ onBeforeUnmount(() => {
   outline: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
-  transition: background-color 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease,
-    color 0.14s ease, border-color 0.14s ease;
+  transition:
+    background-color 0.14s ease,
+    box-shadow 0.14s ease,
+    transform 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease;
 }
 
 .back-to-top:hover {

@@ -7,15 +7,15 @@
     "node": ">=23.6.0"
   },
   "scripts": {
-    "prebuild": "node ./src/utils/runAllGenerators.ts",
+    "prebuild": "node ./scripts/runAllGenerators.ts",
     "dev": "vite",
     "build": "vite-ssg build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
-    "format": "prettier --write src/",
-    "translate": "node ./src/utils/translator/translatorCli.ts",
-    "tagmerge": "node ./src/utils/tagMerger/tagMergerCli.ts",
+    "format": "prettier --write src/ scripts/ vite/",
+    "translate": "node ./scripts/translator/translatorCli.ts",
+    "tagmerge": "node ./scripts/tagMerger/tagMergerCli.ts",
     "data:publish": "git -C ../blog-data push origin data",
     "deploy": "git -C ../blog-data add -A && git -C ../blog-data commit -m \"chore: update content\" && git -C ../blog-data push origin data"
   },

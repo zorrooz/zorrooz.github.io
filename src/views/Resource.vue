@@ -1,9 +1,10 @@
-<!-- Resource.vue -->
 <template>
   <div class="page-section resource-view">
     <header class="resource-head">
       <h1 class="article-title">{{ pageTitle }}</h1>
-      <p class="resource-subtitle"><i class="fas fa-circle-info resource-head__icon"></i>{{ pageSubtitle }}</p>
+      <p class="resource-subtitle">
+        <i class="fas fa-circle-info resource-head__icon"></i>{{ pageSubtitle }}
+      </p>
     </header>
 
     <div class="res-layout">
@@ -14,8 +15,13 @@
             <span class="res-group__count num">{{ category.children?.length || 0 }}</span>
           </div>
           <div class="res-group__items">
-            <button v-for="sub in category.children" :key="sub.title" class="res-item"
-              :class="{ 'res-item--active': isActiveSub(sub) }" @click="selectSub(sub)">
+            <button
+              v-for="sub in category.children"
+              :key="sub.title"
+              class="res-item"
+              :class="{ 'res-item--active': isActiveSub(sub) }"
+              @click="selectSub(sub)"
+            >
               {{ sub.title }}
             </button>
           </div>
@@ -29,12 +35,20 @@
           <section v-for="group in groups" :key="group.title" class="res-group-block">
             <h3 class="res-group-block__title">{{ group.title }}</h3>
             <div class="res-grid">
-              <a v-for="item in group.items" :key="item.name" :href="item.url" target="_blank" rel="noopener noreferrer"
-                class="res-card">
+              <a
+                v-for="item in group.items"
+                :key="item.name"
+                :href="item.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="res-card"
+              >
                 <div class="res-card__head">
                   <span class="res-card__name">{{ item.name }}</span>
                   <span class="res-card__ext-links">
-                    <span v-if="isDoi(item.url)" class="res-card__ext-link" aria-label="DOI"><i class="fas fa-link"></i></span>
+                    <span v-if="isDoi(item.url)" class="res-card__ext-link" aria-label="DOI"
+                      ><i class="fas fa-link"></i
+                    ></span>
                   </span>
                 </div>
                 <p class="res-card__desc">{{ item.desc }}</p>
@@ -55,29 +69,32 @@
 defineOptions({ name: 'ResourceView' })
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadResources } from '@/utils/contentLoader'
+import type { ResourceNode } from '@/types/content'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
-const resources = ref<any[]>([])
-const activeSub = ref<any>(null)
+const { data: resources } = useLocalizedContent(() => loadResources(), [])
+const activeSub = ref<ResourceNode | null>(null)
 
 const pageTitle = computed(() => t('resources'))
 const pageSubtitle = computed(() => t('resourceSubtitle'))
 
-const groups = computed(() => {
-  if (!activeSub.value) return []
-  if (Array.isArray(activeSub.value.children) && activeSub.value.children.length) {
-    return activeSub.value.children.filter((g: any) => Array.isArray(g.items) && g.items.length)
+const groups = computed<ResourceNode[]>(() => {
+  const sub = activeSub.value
+  if (!sub) return []
+  if (sub.children?.length) {
+    return sub.children.filter((g) => g.items?.length)
   }
-  return Array.isArray(activeSub.value.items) ? [{ title: activeSub.value.title, items: activeSub.value.items }] : []
+  return sub.items?.length ? [{ title: sub.title, items: sub.items }] : []
 })
 
-function selectSub(sub: any) {
+function selectSub(sub: ResourceNode) {
   activeSub.value = sub
 }
 
-function isActiveSub(sub: any) {
+function isActiveSub(sub: ResourceNode) {
   return activeSub.value === sub
 }
 
@@ -90,22 +107,13 @@ function isDoi(url: string) {
   return !!url && (url.includes('doi.org') || /^10\.\d{4,9}\//.test(url))
 }
 
-function loadResourcesData() {
-  try {
-    resources.value = loadResources() || []
-    activeSub.value = resources.value[0]?.children?.[0] || null
-  } catch (error) {
-    console.error('Failed to load resources data:', error)
-    resources.value = []
-    activeSub.value = null
-  }
-}
-
-loadResourcesData()
-
-watch(locale, () => {
-  loadResourcesData()
-})
+watch(
+  resources,
+  (list) => {
+    activeSub.value = list[0]?.children?.[0] || null
+  },
+  { immediate: true },
+)
 </script>
 
 <style scoped>
@@ -184,7 +192,9 @@ watch(locale, () => {
   padding: 8px 12px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+  transition:
+    color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease;
   width: 100%;
   text-align: left;
   border: none;
@@ -261,7 +271,9 @@ watch(locale, () => {
   background: var(--surface);
   text-decoration: none;
   color: var(--fg);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .res-card:hover {
@@ -304,7 +316,9 @@ watch(locale, () => {
   border-radius: 50%;
   color: var(--primary-muted);
   font-size: 14px;
-  transition: color 0.14s ease, background-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease;
 }
 
 .res-card__ext-link:hover {
@@ -348,7 +362,10 @@ watch(locale, () => {
   padding: 4px;
   opacity: 0;
   transform: translateX(-4px);
-  transition: opacity var(--dur-base) ease, transform var(--dur-base) ease, color var(--dur-fast) ease;
+  transition:
+    opacity var(--dur-base) ease,
+    transform var(--dur-base) ease,
+    color var(--dur-fast) ease;
 }
 
 .res-card:hover .res-card__arrow {

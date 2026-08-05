@@ -6,34 +6,27 @@ import ArticleView from '@/views/Article.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 
-import { LOCALE_PREFIXES, SUPPORTED_LOCALES } from '@/config/site.ts'
+import { LOCALE_SEGMENTS, preferredLocaleSegment, type LocaleSegment } from '@/config/site'
 
-/** Resolve the preferred locale prefix (client-side only; SSR defaults to /zh). */
-const localePrefix = (): string => {
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('locale')
-    if (saved === SUPPORTED_LOCALES[1]) return LOCALE_PREFIXES[1]
-    if (saved === SUPPORTED_LOCALES[0]) return LOCALE_PREFIXES[0]
-    if (navigator.language && navigator.language.toLowerCase().startsWith('en')) return LOCALE_PREFIXES[1]
-  }
-  return LOCALE_PREFIXES[0]
-}
-
-const prefixedRoutes = (prefix: (typeof LOCALE_PREFIXES)[number]): RouteRecordRaw[] => [
-  { path: `${prefix}/`, name: `${prefix}-Home`, component: HomeView },
-  { path: `${prefix}/category`, name: `${prefix}-Category`, component: CategoryView },
-  { path: `${prefix}/resource`, name: `${prefix}-Resource`, component: ResourceView },
-  { path: `${prefix}/about`, name: `${prefix}-About`, component: AboutView },
-  { path: `${prefix}/article/:path*`, name: `${prefix}-Article`, component: ArticleView, props: true },
+const prefixedRoutes = (prefix: LocaleSegment): RouteRecordRaw[] => [
+  { path: `/${prefix}/`, name: `${prefix}-Home`, component: HomeView },
+  { path: `/${prefix}/category`, name: `${prefix}-Category`, component: CategoryView },
+  { path: `/${prefix}/resource`, name: `${prefix}-Resource`, component: ResourceView },
+  { path: `/${prefix}/about`, name: `${prefix}-About`, component: AboutView },
+  {
+    path: `/${prefix}/article/:path*`,
+    name: `${prefix}-Article`,
+    component: ArticleView,
+    props: true,
+  },
 ]
 
 export const routes: RouteRecordRaw[] = [
   // Legacy unprefixed URLs redirect to the locale-prefixed equivalent
-  { path: '/', redirect: () => localePrefix() },
-  { path: '/category', redirect: (to) => `${localePrefix()}${to.path}` },
-  { path: '/resource', redirect: (to) => `${localePrefix()}${to.path}` },
-  { path: '/about', redirect: (to) => `${localePrefix()}${to.path}` },
-  { path: '/article/:path*', redirect: (to) => `${localePrefix()}${to.path}` },
-  ...prefixedRoutes(LOCALE_PREFIXES[0]),
-  ...prefixedRoutes(LOCALE_PREFIXES[1]),
+  { path: '/', redirect: () => `/${preferredLocaleSegment()}/` },
+  { path: '/category', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },
+  { path: '/resource', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },
+  { path: '/about', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },
+  { path: '/article/:path*', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },
+  ...LOCALE_SEGMENTS.map(prefixedRoutes).flat(),
 ]

@@ -1,4 +1,3 @@
-<!-- Category.vue -->
 <template>
   <div class="page-section category-view">
     <div class="category-head">
@@ -8,43 +7,86 @@
     <div v-for="(category, index) in categoryList" :key="index" class="cat-section">
       <div class="cat-section__header">
         <h2 class="cat-section__title">
-          <i :class="['fas', sectionIcon(category.title)]" class="cat-section__icon" aria-hidden="true"></i>
+          <i
+            :class="['fas', sectionIcon(category.title)]"
+            class="cat-section__icon"
+            aria-hidden="true"
+          ></i>
           {{ category.title }}
         </h2>
         <span class="cat-section__count">{{ sectionCount(category) }}</span>
       </div>
 
       <div class="cat-grid">
-        <div v-for="(item, idx) in category.items" :key="idx" class="cat-card" v-reveal
-          :style="{ '--reveal-delay': Math.min(Number(idx), 5) * 40 + 'ms' }">
+        <div
+          v-for="(item, idx) in category.items"
+          :key="idx"
+          class="cat-card"
+          v-reveal
+          :style="{ '--reveal-delay': Math.min(Number(idx), 5) * 40 + 'ms' }"
+        >
           <div class="cat-card__head">
             <div class="cat-card__name">{{ item.title }}</div>
             <div class="cat-card__ext-links">
-              <a v-if="item.github" :href="normalizeUrl(item.github)" target="_blank" rel="noopener noreferrer"
-                class="cat-card__ext-link" :aria-label="'GitHub'"><i class="fab fa-github"></i></a>
-              <a v-if="item.doi" :href="normalizeDoi(item.doi)" target="_blank" rel="noopener noreferrer"
-                class="cat-card__ext-link" :aria-label="'DOI'"><i class="fas fa-link"></i></a>
+              <a
+                v-if="item.github"
+                :href="normalizeUrl(item.github)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cat-card__ext-link"
+                :aria-label="'GitHub'"
+                ><i class="fab fa-github"></i
+              ></a>
+              <a
+                v-if="item.doi"
+                :href="normalizeDoi(item.doi)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cat-card__ext-link"
+                :aria-label="'DOI'"
+                ><i class="fas fa-link"></i
+              ></a>
             </div>
           </div>
           <p class="cat-card__desc">{{ item.desc }}</p>
           <div v-if="category.title === notesTitle" class="cat-card__stats">
-            <span v-if="item.stats?.postsCount" class="cat-stat"><i class="fas fa-file-lines"></i>{{ t('countPosts', { count: item.stats.postsCount }) }}</span>
-            <span v-if="item.stats?.totalWords" class="cat-stat"><i class="fas fa-font"></i>{{ t('countWords', { count: item.stats.totalWords }) }}</span>
-            <span v-if="getLatestDate(item)" class="cat-stat"><i class="fas fa-clock"></i>{{ getLatestDate(item) }}</span>
+            <span v-if="item.stats?.postsCount" class="cat-stat"
+              ><i class="fas fa-file-lines"></i
+              >{{ t('countPosts', { count: item.stats.postsCount }) }}</span
+            >
+            <span v-if="item.stats?.totalWords" class="cat-stat"
+              ><i class="fas fa-font"></i
+              >{{ t('countWords', { count: item.stats.totalWords }) }}</span
+            >
+            <span v-if="getLatestDate(item)" class="cat-stat"
+              ><i class="fas fa-clock"></i>{{ getLatestDate(item) }}</span
+            >
           </div>
           <div v-else class="cat-card__stats">
-            <span v-if="item.language" class="cat-stat"><i class="fas fa-code"></i>{{ item.language }}</span>
-            <span v-if="item.year" class="cat-stat"><i class="fas fa-calendar"></i>{{ item.year }}</span>
-            <span v-if="item.license" class="cat-stat"><i class="fas fa-scale-balanced"></i>{{ item.license }}</span>
+            <span v-if="item.language" class="cat-stat"
+              ><i class="fas fa-code"></i>{{ item.language }}</span
+            >
+            <span v-if="item.year" class="cat-stat"
+              ><i class="fas fa-calendar"></i>{{ item.year }}</span
+            >
+            <span v-if="item.license" class="cat-stat"
+              ><i class="fas fa-scale-balanced"></i>{{ item.license }}</span
+            >
           </div>
 
           <div v-if="Array.isArray(item.tags) && item.tags.length" class="cat-card__tags">
-            <span v-for="(tag, tIdx) in item.tags" :key="tIdx" class="cat-card__tag">{{ tag }}</span>
+            <span v-for="(tag, tIdx) in item.tags" :key="tIdx" class="cat-card__tag">{{
+              tag
+            }}</span>
           </div>
 
           <div class="cat-card__links">
-            <a v-if="hasExternalLink(item) || item.root" class="cat-card__link" @click.prevent="handleSeeMore(item)">{{ seeMoreText }}<i
-                class="fas fa-arrow-right"></i></a>
+            <a
+              v-if="hasExternalLink(item) || item.root"
+              class="cat-card__link"
+              @click.prevent="handleSeeMore(item)"
+              >{{ seeMoreText }}<i class="fas fa-arrow-right"></i
+            ></a>
           </div>
         </div>
       </div>
@@ -54,35 +96,27 @@
 
 <script setup lang="ts">
 defineOptions({ name: 'CategoryView' })
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
+import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { toLocalePath } from '@/utils/localePath'
 import { loadCategories } from '@/utils/contentLoader'
+import type { CategoryItem, CategorySection } from '@/types/content'
 
 useHead({ title: 'zorrooz’s blog - Categories' })
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const router = useRouter()
 
-const categoryList = ref<any[]>([])
+const { data: categoryList } = useLocalizedContent(() => loadCategories(), [])
 
 const pageTitle = computed(() => t('categories'))
 const notesTitle = computed(() => t('notes'))
 const projectsTitle = computed(() => t('projects'))
 const topicsTitle = computed(() => t('topics'))
 const seeMoreText = computed(() => t('seeMore'))
-
-function loadCategoryData() {
-  try {
-    const categoryData = loadCategories()
-    categoryList.value = Array.isArray(categoryData) ? categoryData : (categoryData?.categoryList || [])
-  } catch (error) {
-    console.error('Failed to load category data:', error)
-    categoryList.value = []
-  }
-}
 
 function sectionIcon(title: string) {
   if (title === notesTitle.value) return 'fa-book-open'
@@ -91,41 +125,40 @@ function sectionIcon(title: string) {
   return 'fa-folder'
 }
 
-function sectionCount(category: any) {
-  const items = category?.items || []
+function sectionCount(category: CategorySection) {
+  const items = category.items
   if (category.title === notesTitle.value) {
-    const posts = items.reduce((s: number, it: any) => s + (it.stats?.postsCount || 0), 0)
+    const posts = items.reduce((s, it) => s + it.stats.postsCount, 0)
     return t('countPosts', { count: posts })
   }
   if (category.title === projectsTitle.value) return t('countProjects', { count: items.length })
   return t('countTopics', { count: items.length })
 }
 
-function getLatestDate(item: any) {
-  return (item && item.stats && item.stats.latestDate) || ''
+function getLatestDate(item: CategoryItem) {
+  return item.stats.latestDate || ''
 }
 
-function normalizeUrl(u: any) {
-  if (typeof u !== 'string' || !u.trim()) return ''
-  if (/^https?:\/\//i.test(u)) return u
-  return 'https://' + u.replace(/^\/+/, '')
+function normalizeUrl(value: string | undefined) {
+  if (!value || !value.trim()) return ''
+  if (/^https?:\/\//i.test(value)) return value
+  return 'https://' + value.replace(/^\/+/, '')
 }
 
-function normalizeDoi(doi: any) {
-  if (typeof doi !== 'string' || !doi.trim()) return ''
-  if (/^https?:\/\//i.test(doi)) return doi
-  if (/^10\.\d{4,9}\//.test(doi)) return 'https://doi.org/' + doi
-  return 'https://' + doi.replace(/^\/+/, '')
+function normalizeDoi(value: string | undefined) {
+  if (!value || !value.trim()) return ''
+  if (/^https?:\/\//i.test(value)) return value
+  if (/^10\.\d{4,9}\//.test(value)) return 'https://doi.org/' + value
+  return 'https://' + value.replace(/^\/+/, '')
 }
 
-function hasExternalLink(item: any) {
-  return !!(item?.url || item?.github || item?.doi)
+function hasExternalLink(item: CategoryItem) {
+  return !!(item.url || item.github || item.doi)
 }
 
-function handleSeeMore(item: any) {
-  const root = item?.root
-  if (root) {
-    router.push(toLocalePath(root)).catch(err => {
+function handleSeeMore(item: CategoryItem) {
+  if (item.root) {
+    router.push(toLocalePath(item.root)).catch((err) => {
       if (err.name !== 'NavigationDuplicated' && !err.toString().includes('Navigation cancelled')) {
         console.error('Navigation error:', err)
       }
@@ -133,29 +166,17 @@ function handleSeeMore(item: any) {
     return
   }
 
-  const url = normalizeUrl(item?.url)
-  if (url) {
-    window.open(url, '_blank', 'noopener,noreferrer')
-    return
-  }
-
-  const github = normalizeUrl(item?.github)
-  if (github) {
-    window.open(github, '_blank', 'noopener,noreferrer')
-    return
-  }
-
-  const doi = normalizeDoi(item?.doi)
-  if (doi) {
-    window.open(doi, '_blank', 'noopener,noreferrer')
+  const fields: Array<'url' | 'github' | 'doi'> = ['url', 'github', 'doi']
+  for (const field of fields) {
+    const raw = item[field]
+    if (!raw) continue
+    const url = field === 'doi' ? normalizeDoi(raw) : normalizeUrl(raw)
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer')
+      return
+    }
   }
 }
-
-loadCategoryData()
-
-watch(locale, () => {
-  loadCategoryData()
-})
 </script>
 
 <style scoped>
@@ -219,7 +240,9 @@ watch(locale, () => {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .cat-card:hover {
@@ -265,7 +288,9 @@ watch(locale, () => {
   color: var(--fg-3);
   font-size: 14px;
   text-decoration: none;
-  transition: color 0.14s ease, background-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease;
 }
 
 .cat-card__ext-link:hover {
@@ -339,7 +364,9 @@ watch(locale, () => {
   border: none;
   padding: 0;
   font-size: var(--text-sm);
-  transition: color 0.14s ease, gap 0.14s ease;
+  transition:
+    color 0.14s ease,
+    gap 0.14s ease;
 }
 
 .cat-card__link i {

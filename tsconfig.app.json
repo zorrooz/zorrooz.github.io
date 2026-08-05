@@ -22,12 +22,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.vue"],
-  "exclude": [
-    "src/utils/generators",
-    "src/utils/translator",
-    "src/utils/runAllGenerators.ts",
-    "src/utils/contentDevPlugin.ts",
-    "src/utils/markdownProcessor.ts"
-  ]
+  "include": ["src/**/*.js", "src/**/*.ts", "src/**/*.vue"]
 }

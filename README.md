@@ -252,7 +252,7 @@ contacts:
 
 在开始翻译前，请先完成API Key配置：
 
-请在`src/config`目录下新建`llmConfig.ts`文件，并填入以下内容：
+请在`scripts`目录下新建`llmConfig.ts`文件（该文件被 gitignore，不会入库），并填入以下内容：
 
 ```
 export default {

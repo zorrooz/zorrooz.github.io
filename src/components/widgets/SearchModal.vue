@@ -5,8 +5,14 @@
       <div class="search-panel" role="dialog" aria-modal="true" :aria-label="t('search')">
         <div class="search-input-row d-flex align-items-center">
           <i class="fas fa-magnifying-glass search-icon"></i>
-          <input ref="searchInput" v-model="keyword" class="search-input" type="text" inputmode="search"
-            :placeholder="t('searchPlaceholder')" />
+          <input
+            ref="searchInput"
+            v-model="keyword"
+            class="search-input"
+            type="text"
+            inputmode="search"
+            :placeholder="t('searchPlaceholder')"
+          />
           <button class="search-close icon-btn" :aria-label="t('close')" @click="close">
             <i class="fas fa-times"></i>
           </button>
@@ -14,7 +20,9 @@
 
         <div v-if="keyword && results.length" class="search-statusbar">
           <span class="search-count">{{ results.length }} {{ t('searchResultsLabel') }}</span>
-          <span class="search-esc-hint"><kbd class="search-kbd">Esc</kbd>{{ t('searchEscHint') }}</span>
+          <span class="search-esc-hint"
+            ><kbd class="search-kbd">Esc</kbd>{{ t('searchEscHint') }}</span
+          >
         </div>
 
         <div v-if="errorMsg" class="search-status">{{ errorMsg }}</div>
@@ -73,7 +81,10 @@ const searchInput = ref<HTMLInputElement | null>(null)
 let engine: MiniSearch<SearchDoc> | null = null
 
 const cjkTokenize = (text: string) => {
-  const words = text.toLowerCase().split(/[^a-z0-9\u4e00-\u9fa5]+/).filter(Boolean)
+  const words = text
+    .toLowerCase()
+    .split(/[^a-z0-9\u4e00-\u9fa5]+/)
+    .filter(Boolean)
   const tokens: string[] = []
   for (const word of words) {
     if (word.length > 2 && /[\u4e00-\u9fa5]/.test(word)) {
@@ -321,7 +332,10 @@ nextTick(() => {
   color: var(--fg-3);
   opacity: 0;
   transform: translateX(-4px);
-  transition: opacity 0.14s ease, transform 0.14s ease, color 0.14s ease;
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease,
+    color 0.14s ease;
   flex-shrink: 0;
 }
 

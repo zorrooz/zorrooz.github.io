@@ -6,11 +6,15 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { copyText } from '@/utils/clipboard'
 
 const { t } = useI18n()
 
 // @data 别名指向数据分支；文章图片均从数据目录解析（zh 在 content-src，镜像层 cache/en）
-const assetModules = import.meta.glob('@data/{content-src,cache/en}/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
+const assetModules = import.meta.glob(
+  '@data/{content-src,cache/en}/**/*.{png,jpg,jpeg,gif,svg,webp}',
+  { query: '?url', import: 'default', eager: true },
+)
 
 const COPY_ICON_SVG = `
   <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">
@@ -34,8 +38,8 @@ const props = withDefaults(
   {
     rawMarkdown: '',
     articlePath: '',
-    articleTitle: ''
-  }
+    articleTitle: '',
+  },
 )
 
 const emit = defineEmits(['markdown-rendered'])
@@ -55,28 +59,33 @@ async function initRender(htmlContent: string) {
 
 function rewriteImageLinks(html: string, articlePath: string) {
   try {
-    const articleDir = articlePath.replace(/^[./]*/, '').replace(/\.md$/, '').split('/').slice(0, -1).join('/')
+    const articleDir = articlePath
+      .replace(/^[./]*/, '')
+      .replace(/\.md$/, '')
+      .split('/')
+      .slice(0, -1)
+      .join('/')
 
     const toAssetUrl = (relPath: string) => {
       if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath
-      const parts = (articleDir + '/' + relPath).split('/').filter(p => p && p !== '.')
+      const parts = (articleDir + '/' + relPath).split('/').filter((p) => p && p !== '.')
       const stack: string[] = []
-      parts.forEach(p => p === '..' ? stack.pop() : stack.push(p))
+      parts.forEach((p) => (p === '..' ? stack.pop() : stack.push(p)))
       const normalized = stack.join('/')
-      const candidateKeys = [
-        `@data/content-src/${normalized}`,
-        `${normalized}`
-      ]
+      const candidateKeys = [`@data/content-src/${normalized}`, `${normalized}`]
       for (const key of candidateKeys) {
-        const matched = Object.keys(assetModules).find((k) => k.endsWith(`/${normalized}`) || k === key)
+        const matched = Object.keys(assetModules).find(
+          (k) => k.endsWith(`/${normalized}`) || k === key,
+        )
         if (matched) return assetModules[matched]
       }
       return relPath
     }
 
-    return html
-      .replace(/<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi, (_m, pre, src, post) =>
-        `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`)
+    return html.replace(
+      /<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi,
+      (_m, pre, src, post) => `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`,
+    )
   } catch (e) {
     console.warn('rewriteImageLinks failed', e)
     return html
@@ -93,13 +102,16 @@ function enhanceHeadings() {
 function cleanDuplicateH1(container: HTMLElement) {
   if (!props.articleTitle) return
   const pageTitle = props.articleTitle.trim().toLowerCase()
-  container.querySelectorAll('h1').forEach(h1 => {
+  container.querySelectorAll('h1').forEach((h1) => {
     const h1Text = h1.textContent.trim().toLowerCase()
     if (h1Text === pageTitle) h1.remove()
-    else h1.replaceWith(Object.assign(document.createElement('h2'), {
-      ...Object.fromEntries(Array.from(h1.attributes).map(attr => [attr.name, attr.value])),
-      innerHTML: h1.innerHTML
-    }))
+    else
+      h1.replaceWith(
+        Object.assign(document.createElement('h2'), {
+          ...Object.fromEntries(Array.from(h1.attributes).map((attr) => [attr.name, attr.value])),
+          innerHTML: h1.innerHTML,
+        }),
+      )
   })
 }
 
@@ -110,7 +122,7 @@ function addAnchorLinks(container: HTMLElement) {
     setTimeout(() => anchorBtn.blur(), 300)
   }
 
-  container.querySelectorAll('h2, h3, h4, h5, h6').forEach(heading => {
+  container.querySelectorAll('h2, h3, h4, h5, h6').forEach((heading) => {
     heading.querySelector('.heading-anchor')?.remove()
     const anchorBtn = Object.assign(document.createElement('button'), {
       type: 'button',
@@ -118,7 +130,7 @@ function addAnchorLinks(container: HTMLElement) {
       textContent: '#',
       ariaLabel: t('anchorHeading'),
       tabIndex: 0,
-      ariaHidden: 'false'
+      ariaHidden: 'false',
     })
 
     anchorBtn.addEventListener('click', (e) => {
@@ -140,7 +152,7 @@ function enhanceCodeBlocks() {
   const container = markdownContainer.value
   if (!container) return
 
-  container.querySelectorAll('pre').forEach(pre => {
+  container.querySelectorAll('pre').forEach((pre) => {
     if (pre.querySelector('.code-block-header')) return
     const code = pre.querySelector('code')
     if (!code) return
@@ -172,7 +184,7 @@ function enhanceTables() {
   const container = markdownContainer.value
   if (!container) return
 
-  container.querySelectorAll('table').forEach(table => {
+  container.querySelectorAll('table').forEach((table) => {
     if (table.closest('.table-copyable')) return
 
     const wrapper = document.createElement('div')
@@ -193,25 +205,19 @@ function enhanceTables() {
 
 function copyTableToClipboard(table: HTMLTableElement, button: HTMLButtonElement) {
   const rows = Array.from(table.querySelectorAll('tr'))
-  const lines = rows.map(tr =>
+  const lines = rows.map((tr) =>
     Array.from(tr.querySelectorAll('th, td'))
-      .map(cell => (cell.textContent || '').trim().replace(/\s+/g, ' '))
-      .join('\t')
+      .map((cell) => (cell.textContent || '').trim().replace(/\s+/g, ' '))
+      .join('\t'),
   )
   copyToClipboard(lines.join('\n'), button)
 }
 
 async function copyToClipboard(text: string, button: HTMLButtonElement) {
   try {
-    await navigator.clipboard.writeText(text)
+    await copyText(text)
   } catch (err) {
     console.error(t('copyFailed'), err)
-    const textArea = document.createElement('textarea')
-    textArea.value = text
-    document.body.appendChild(textArea)
-    textArea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textArea)
   } finally {
     showCopyFeedback(button)
   }
@@ -227,24 +233,38 @@ function showCopyFeedback(button: HTMLButtonElement) {
   }, 1200)
 }
 
-watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate: true })
+watch(
+  () => props.rawMarkdown,
+  (value: string) => initRender(value),
+  { immediate: true },
+)
 </script>
 
 <style>
 @font-face {
   font-family: 'CodeFont';
-  src: local('Agave Regular'), local('Agave-Regular'), url('@/assets/fonts/Agave-Regular.ttf') format('truetype');
+  src:
+    local('Agave Regular'),
+    local('Agave-Regular'),
+    url('@/assets/fonts/Agave-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212,
+    U+2215;
 }
 
 @font-face {
   font-family: 'CodeFont';
-  src: local('Source Han Sans SC Regular'), local('SourceHanSansSC-Regular'), url('@/assets/fonts/SourceHanSansSC-Regular.otf') format('opentype');
+  src:
+    local('Source Han Sans SC Regular'),
+    local('SourceHanSansSC-Regular'),
+    url('@/assets/fonts/SourceHanSansSC-Regular.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
-  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+F900-FAFF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+2CEB0-2EBEF, U+30000-3134F;
+  unicode-range:
+    U+4E00-9FFF, U+3400-4DBF, U+F900-FAFF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F,
+    U+2B820-2CEAF, U+2CEB0-2EBEF, U+30000-3134F;
 }
 
 .markdown-body {
@@ -290,13 +310,13 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   text-decoration: underline;
 }
 
-.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]) {
+.markdown-body a[href^='http']:not([href*='localhost']):not([href*='127.0.0.1']) {
   color: var(--app-markdown-external-link-color);
   font-weight: 600;
   text-decoration: none;
 }
 
-.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"])::after {
+.markdown-body a[href^='http']:not([href*='localhost']):not([href*='127.0.0.1'])::after {
   content: '\f08e';
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
@@ -306,11 +326,11 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   transition: opacity 0.14s ease;
 }
 
-.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]):hover::after {
+.markdown-body a[href^='http']:not([href*='localhost']):not([href*='127.0.0.1']):hover::after {
   opacity: 1;
 }
 
-.markdown-body a[href^="http"]:not([href*="localhost"]):not([href*="127.0.0.1"]):hover {
+.markdown-body a[href^='http']:not([href*='localhost']):not([href*='127.0.0.1']):hover {
   text-decoration: underline;
 }
 
@@ -399,7 +419,10 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   color: var(--fg-3);
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.14s ease, color 0.14s ease, background-color 0.14s ease;
+  transition:
+    opacity 0.14s ease,
+    color 0.14s ease,
+    background-color 0.14s ease;
 }
 
 @media (hover: hover) {
@@ -549,7 +572,9 @@ watch(() => props.rawMarkdown, (value: string) => initRender(value), { immediate
   font-size: 0.85em;
   font-weight: 400;
   opacity: 0.4;
-  transition: opacity 0.14s ease, color 0.14s ease;
+  transition:
+    opacity 0.14s ease,
+    color 0.14s ease;
   cursor: pointer;
   background: none;
   border: none;

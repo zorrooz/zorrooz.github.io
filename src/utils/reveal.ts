@@ -18,7 +18,7 @@ export const reveal: Directive<RevealElement> = {
           io.disconnect()
         }
       },
-      { threshold: 0.12 }
+      { threshold: 0.12 },
     )
     io.observe(el)
     el.__revealIo = io

@@ -8,8 +8,8 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { VitePWA } from 'vite-plugin-pwa'
 import type { ViteSSGOptions } from 'vite-ssg'
 
-import { contentDev } from './src/utils/contentDevPlugin.ts'
-import { dataDir, contentDir } from './src/utils/dataConfig.ts'
+import { contentDev } from './vite/contentDevPlugin.ts'
+import { dataDir, contentDir } from './scripts/dataConfig.ts'
 
 interface ArticleEntry {
   articleUrl?: unknown

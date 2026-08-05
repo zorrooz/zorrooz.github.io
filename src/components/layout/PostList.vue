@@ -1,9 +1,15 @@
-<!-- PostList.vue -->
 <template>
   <div>
-    <article v-for="(post, index) in displayedPosts" :key="post.id" class="post-item" v-reveal
-      :style="{ '--reveal-delay': Math.min(index, 5) * 40 + 'ms' }">
-      <span class="post-item__index num" aria-hidden="true">{{ String((currentPage - 1) * props.perPage + index + 1).padStart(2, '0') }}</span>
+    <article
+      v-for="(post, index) in displayedPosts"
+      :key="post.id"
+      class="post-item"
+      v-reveal
+      :style="{ '--reveal-delay': Math.min(index, 5) * 40 + 'ms' }"
+    >
+      <span class="post-item__index num" aria-hidden="true">{{
+        String((currentPage - 1) * props.perPage + index + 1).padStart(2, '0')
+      }}</span>
 
       <router-link :to="getArticlePath(post)" class="post-item__main">
         <div class="post-item__meta">
@@ -11,16 +17,22 @@
           <span class="divider-v"></span>
           <span class="post-item__date"><i class="fas fa-calendar-alt"></i>{{ post.date }}</span>
           <span class="divider-v"></span>
-          <span class="post-item__words"><i class="fas fa-file-lines"></i>{{ post.wordCount }} {{ t('wordUnit') }}</span>
+          <span class="post-item__words"
+            ><i class="fas fa-file-lines"></i>{{ post.wordCount }} {{ t('wordUnit') }}</span
+          >
           <span class="divider-v"></span>
-          <span class="post-item__reading"><i class="fas fa-clock"></i>{{ readingTime(post.wordCount) }}</span>
+          <span class="post-item__reading"
+            ><i class="fas fa-clock"></i>{{ readingTime(post.wordCount) }}</span
+          >
         </div>
         <h3 class="post-item__title">{{ post.title }}</h3>
         <p class="post-item__preview">{{ post.preview }}</p>
       </router-link>
 
       <div class="post-item__tags">
-        <span v-for="tag in post.tags" :key="tag" class="post-item__tag" @click="goTag(tag)">{{ tag }}</span>
+        <span v-for="tag in post.tags" :key="tag" class="post-item__tag" @click="goTag(tag)">{{
+          tag
+        }}</span>
       </div>
 
       <router-link :to="getArticlePath(post)" class="post-item__arrow" :aria-label="post.title">
@@ -30,32 +42,55 @@
 
     <nav class="pagination" v-if="totalPages > 1" :aria-label="paginationLabel">
       <div class="pagination__side">
-        <button v-if="currentPage > 1" class="page-btn page-btn--nav" @click="prevPage"
-          :aria-label="t('prevPage')">
+        <button
+          v-if="currentPage > 1"
+          class="page-btn page-btn--nav"
+          @click="prevPage"
+          :aria-label="t('prevPage')"
+        >
           <i class="fas fa-chevron-left"></i>
         </button>
       </div>
 
       <div class="pagination__pages">
-        <button v-if="showFirstPage" class="page-btn" :class="{ 'page-btn--active': currentPage === 1 }"
-          @click="goToPage(1)">1</button>
+        <button
+          v-if="showFirstPage"
+          class="page-btn"
+          :class="{ 'page-btn--active': currentPage === 1 }"
+          @click="goToPage(1)"
+        >
+          1
+        </button>
         <span class="page-ellipsis" v-if="showFirstEllipsis">...</span>
 
-        <button v-for="page in middlePages" :key="page" class="page-btn"
-          :class="{ 'page-btn--active': currentPage === page }" @click="goToPage(page)">
+        <button
+          v-for="page in middlePages"
+          :key="page"
+          class="page-btn"
+          :class="{ 'page-btn--active': currentPage === page }"
+          @click="goToPage(page)"
+        >
           {{ page }}
         </button>
 
         <span class="page-ellipsis" v-if="showLastEllipsis">...</span>
-        <button v-if="showLastPage && totalPages > 1" class="page-btn"
-          :class="{ 'page-btn--active': currentPage === totalPages }" @click="goToPage(totalPages)">
+        <button
+          v-if="showLastPage && totalPages > 1"
+          class="page-btn"
+          :class="{ 'page-btn--active': currentPage === totalPages }"
+          @click="goToPage(totalPages)"
+        >
           {{ totalPages }}
         </button>
       </div>
 
       <div class="pagination__side pagination__side--right">
-        <button v-if="currentPage < totalPages" class="page-btn page-btn--nav" @click="nextPage"
-          :aria-label="t('nextPage')">
+        <button
+          v-if="currentPage < totalPages"
+          class="page-btn page-btn--nav"
+          @click="nextPage"
+          :aria-label="t('nextPage')"
+        >
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
@@ -64,14 +99,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadNotes, loadCategories } from '@/utils/contentLoader'
 import { toLocalePath } from '@/utils/localePath'
 import { readingTimeMinutes } from '@/utils/readingTime'
+import { goToTag } from '@/utils/tagQuery'
+import { scrollToTop } from '@/utils/scroll'
+import { toSupportedLocale } from '@/config/site'
+import type { Post } from '@/types/content'
 
-const props = withDefaults(defineProps<{ docs: any[]; perPage?: number }>(), { perPage: 6 })
+const props = withDefaults(defineProps<{ docs: Post[]; perPage?: number }>(), { perPage: 6 })
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -79,8 +119,8 @@ const router = useRouter()
 
 const currentPage = ref(1)
 const maxVisiblePages = ref(5)
-const notesFlat = ref<any[]>([])
-const categoriesData = ref<any[]>([])
+const { data: notesFlat } = useLocalizedContent(() => loadNotes(), [])
+const { data: categoriesData } = useLocalizedContent(() => loadCategories(), [])
 
 const paginationLabel = computed(() => t('pagination'))
 
@@ -135,112 +175,86 @@ const allVisiblePages = computed(() => {
 })
 
 const middlePages = computed(() =>
-  allVisiblePages.value.filter(page => page !== 1 && page !== totalPages.value)
+  allVisiblePages.value.filter((page) => page !== 1 && page !== totalPages.value),
 )
 
 const showFirstPage = computed(() => allVisiblePages.value.includes(1))
 const showLastPage = computed(() => allVisiblePages.value.includes(totalPages.value))
-const showFirstEllipsis = computed(() =>
-  totalPages.value > maxVisiblePages.value && allVisiblePages.value[1] > 2
+const showFirstEllipsis = computed(
+  () => totalPages.value > maxVisiblePages.value && allVisiblePages.value[1] > 2,
 )
-const showLastEllipsis = computed(() =>
-  totalPages.value > maxVisiblePages.value &&
-  allVisiblePages.value[allVisiblePages.value.length - 2] < totalPages.value - 1
+const showLastEllipsis = computed(
+  () =>
+    totalPages.value > maxVisiblePages.value &&
+    allVisiblePages.value[allVisiblePages.value.length - 2] < totalPages.value - 1,
 )
 
 const categoryTitleMap = computed(() => {
   const map: Record<string, string> = {}
-  try {
-    (categoriesData.value || []).forEach((section: any) => {
-      (section.items || []).forEach((item: any) => {
-        (item.categories || []).forEach((cat: any) => {
-          if (cat && cat.key && cat.title) map[cat.key] = cat.title
-        })
-      })
-    })
-  } catch (e) {
-    console.error(e)
-  }
+  categoriesData.value.forEach((section) =>
+    section.items.forEach((item) =>
+      item.categories.forEach((cat) => {
+        if (cat.key && cat.title) map[cat.key] = cat.title
+      }),
+    ),
+  )
   return map
 })
 
-function loadData() {
-  try {
-    notesFlat.value = loadNotes() || []
-    categoriesData.value = loadCategories() || []
-  } catch (error) {
-    console.error('Failed to load data:', error)
-    notesFlat.value = []
-    categoriesData.value = []
-  }
-}
-
-function getArticlePath(post: any) {
-  let articlePath = ''
-
-  const found = Array.isArray(notesFlat.value) ? notesFlat.value.find(item => item.title === post.title) : null
+function getArticlePath(post: Post) {
+  const found = notesFlat.value.find((item) => item.title === post.title)
+  let articlePath: string
   if (found && found.relativePath) {
     articlePath = `notes/${found.relativePath}.md`
   } else {
-    const isEnglish = locale.value === 'en-US'
-
-    const basePath = post.category?.[1] || 'notes'
+    const basePath = post.category[1] || 'notes'
     const fileName = post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')
     articlePath = `${basePath}/${fileName}.md`
-
-    if (isEnglish) {
+    if (locale.value === 'en-US') {
       articlePath = articlePath.replace('.md', '-en.md')
     }
   }
-
   return toLocalePath(`/article/${articlePath.replace(/\.md$/, '')}`)
+}
+
+function pushPage(page: number) {
+  currentPage.value = page
+  const q = { ...route.query, page: String(page) }
+  router.push({ path: route.path, query: q }).catch(() => {})
+  scrollToTop()
 }
 
 function goToPage(page: number) {
   if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page
-    const q = { ...route.query, page: String(page) }
-    router.push({ path: route.path, query: q }).catch(() => { })
-    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+    pushPage(page)
   }
 }
 
 function prevPage() {
   if (currentPage.value > 1) {
-    const page = currentPage.value - 1
-    currentPage.value = page
-    const q = { ...route.query, page: String(page) }
-    router.push({ path: route.path, query: q }).catch(() => { })
-    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+    pushPage(currentPage.value - 1)
   }
 }
 
 function nextPage() {
   if (currentPage.value < totalPages.value) {
-    const page = currentPage.value + 1
-    currentPage.value = page
-    const q = { ...route.query, page: String(page) }
-    router.push({ path: route.path, query: q }).catch(() => { })
-    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+    pushPage(currentPage.value + 1)
   }
 }
 
 function goTag(tag: string) {
-  if (!tag) return
-  const q = { ...route.query, tag: tag, page: '1' }
-  const prefix = locale.value === 'en-US' ? '/en' : '/zh'
-  router.push({ path: `${prefix}/`, query: q }).catch(() => { })
-  nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+  goToTag(router, tag, {
+    locale: toSupportedLocale(locale.value),
+    query: { ...route.query, page: '1' },
+  })
 }
 
 function handleResize() {
   maxVisiblePages.value = window.innerWidth < 480 ? 3 : 5
 }
 
-function formatCategory(catArr: any) {
-  if (!Array.isArray(catArr) || catArr.length === 0) return ''
-  const top = catArr[0] || ''
-  const subKey = catArr[1]
+function formatCategory(cat: Post['category']) {
+  const [top, subKey] = cat
   if (!subKey) return top
   const subTitle = categoryTitleMap.value[subKey] || subKey
   return `${top} / ${subTitle}`
@@ -250,20 +264,24 @@ function readingTime(wordCount: number) {
   return t('postReadingTime', { minutes: readingTimeMinutes(wordCount) })
 }
 
-loadData()
+watch(
+  () => props.docs,
+  () => {
+    currentPage.value = 1
+  },
+)
 
-watch(() => props.docs, () => { currentPage.value = 1 })
-
-watch(() => route.query.page, (newVal) => {
-  const p = parseInt(String(newVal))
-  const page = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
-  if (page !== currentPage.value) {
-    currentPage.value = page
-    nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
-  }
-})
-
-watch(locale, () => loadData())
+watch(
+  () => route.query.page,
+  (newVal) => {
+    const p = parseInt(String(newVal))
+    const page = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
+    if (page !== currentPage.value) {
+      currentPage.value = page
+      scrollToTop()
+    }
+  },
+)
 
 onMounted(() => {
   const p = parseInt(String(route.query.page))
@@ -395,7 +413,9 @@ onBeforeUnmount(() => {
   background: var(--surface-2);
   color: var(--fg-2);
   cursor: pointer;
-  transition: color 0.14s ease, background-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease;
 }
 
 .post-item__tag:hover {
@@ -414,7 +434,9 @@ onBeforeUnmount(() => {
   text-decoration: none;
   padding: 6px;
   opacity: 0;
-  transition: opacity var(--dur-base) ease, color var(--dur-fast) ease;
+  transition:
+    opacity var(--dur-base) ease,
+    color var(--dur-fast) ease;
 }
 
 .post-item:hover .post-item__arrow {

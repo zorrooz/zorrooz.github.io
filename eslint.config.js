@@ -60,8 +60,8 @@ export default defineConfig([
   },
 
   {
-    name: 'app/node-scripts',
-    files: ['src/utils/**/*.{js,ts}'],
+    name: 'app/build-scripts',
+    files: ['scripts/**/*.{js,ts}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -71,7 +71,7 @@ export default defineConfig([
 
   {
     name: 'app/node-configs',
-    files: ['vite.config.ts', 'eslint.config.js'],
+    files: ['vite.config.ts', 'vite/**/*.ts', 'eslint.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,

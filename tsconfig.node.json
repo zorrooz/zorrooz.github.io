@@ -20,13 +20,9 @@
   },
   "include": [
     "vite.config.ts",
+    "vite/**/*.ts",
     "eslint.config.js",
-    "src/config/**/*.ts",
-    "src/utils/generators/**/*.ts",
-    "src/utils/translator/**/*.ts",
-    "src/utils/tagMerger/**/*.ts",
-    "src/utils/runAllGenerators.ts",
-    "src/utils/contentDevPlugin.ts",
-    "src/utils/markdownProcessor.ts"
+    "scripts/**/*.ts",
+    "src/config/site.ts"
   ]
 }

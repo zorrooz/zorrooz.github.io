@@ -1,10 +1,11 @@
-<!-- Home.vue -->
 <template>
   <div class="page-section home-section">
-
     <header class="hero">
       <div class="hero__main">
-        <span class="hero__greeting"><span class="hero__greeting-mark">{{ t('greetingPrefix') }}</span>{{ t('greeting') }}</span>
+        <span class="hero__greeting"
+          ><span class="hero__greeting-mark">{{ t('greetingPrefix') }}</span
+          >{{ t('greeting') }}</span
+        >
         <h1 class="hero__name">{{ siteAuthor }}</h1>
         <p class="hero__bio">{{ t('developer') }}</p>
       </div>
@@ -26,8 +27,14 @@
     </header>
 
     <div class="tags-row" v-if="!currentTag" v-reveal>
-      <span v-for="tag in tagList" :key="tag.name" class="tag" :class="`tag--${tag.level}`"
-        @click="goTag(tag.name)">{{ tag.name }}</span>
+      <span
+        v-for="tag in tagList"
+        :key="tag.name"
+        class="tag"
+        :class="`tag--${tag.level}`"
+        @click="goTag(tag.name)"
+        >{{ tag.name }}</span
+      >
     </div>
 
     <div class="posts-header" v-reveal>
@@ -38,7 +45,12 @@
         <template v-else>{{ t('recentPosts') }}</template>
       </h2>
       <div class="posts-header__actions">
-        <button v-if="fromPath" class="chip-close" @click="goBackFromTag" :aria-label="t('backToArticle')">
+        <button
+          v-if="fromPath"
+          class="chip-close"
+          @click="goBackFromTag"
+          :aria-label="t('backToArticle')"
+        >
           <i class="fas fa-arrow-left"></i>{{ t('backToArticle') }}
         </button>
         <button v-if="currentTag" class="chip-close" @click="clearTag" :aria-label="t('close')">
@@ -53,13 +65,16 @@
 
 <script setup lang="ts">
 defineOptions({ name: 'HomeView' })
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
 import PostList from '@/components/layout/PostList.vue'
+import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
-import { SITE } from '@/config/site.ts'
+import { goToTag } from '@/utils/tagQuery'
+import { scrollToTop } from '@/utils/scroll'
+import { SITE, toSupportedLocale } from '@/config/site'
 
 useHead({ title: 'zorrooz’s blog - Home' })
 
@@ -67,17 +82,18 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const postData = ref<any[]>([])
-const tagsData = ref<any[]>([])
+const { data: postData } = useLocalizedContent(() => loadPosts(), [])
+const { data: tagsData } = useLocalizedContent(() => loadTags(), [])
 
 const siteAuthor = SITE.author
-const currentTag = computed(() => route.query.tag || '')
+const currentTag = computed(() => (typeof route.query.tag === 'string' ? route.query.tag : ''))
 const fromPath = computed(() => (typeof route.query.from === 'string' ? route.query.from : ''))
 const filteredDocs = computed(() => {
   const tag = currentTag.value
   if (!tag) return postData.value
-  return postData.value.filter(p => Array.isArray(p.tags) && p.tags.includes(tag))
+  return postData.value.filter((p) => p.tags.includes(tag))
 })
+
 interface TagItem {
   name: string
   count: number
@@ -86,29 +102,23 @@ interface TagItem {
 
 const tagList = computed<TagItem[]>(() => {
   const map = new Map<string, number>()
-  postData.value.forEach(p => (p.tags || []).forEach((t: any) => map.set(t, (map.get(t) || 0) + 1)))
+  postData.value.forEach((p) => p.tags.forEach((t) => map.set(t, (map.get(t) || 0) + 1)))
   const list = Array.from(map.entries())
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => a.name.localeCompare(b.name))
   const total = list.length
   const third = Math.ceil(total / 3)
   const rank = new Map(
-    [...list].sort((a, b) => b.count - a.count).map((item, idx) => [item.name, idx])
+    [...list].sort((a, b) => b.count - a.count).map((item, idx) => [item.name, idx]),
   )
-  return list.map(item => {
+  return list.map((item) => {
     const idx = rank.get(item.name) ?? 0
     return { ...item, level: idx < third ? 'lg' : idx < third * 2 ? 'md' : 'sm' }
   })
 })
-const postCount = computed(() => (Array.isArray(postData.value) ? postData.value.length : 0))
-const tagCount = computed(() => (Array.isArray(tagsData.value) ? tagsData.value.length : 0))
-const totalWords = computed(() => {
-  if (!Array.isArray(postData.value)) return 0
-  return postData.value.reduce((sum, p) => {
-    const n = typeof p?.wordCount === 'number' ? p.wordCount : 0
-    return sum + (Number.isFinite(n) ? n : 0)
-  }, 0)
-})
+const postCount = computed(() => postData.value.length)
+const tagCount = computed(() => tagsData.value.length)
+const totalWords = computed(() => postData.value.reduce((sum, p) => sum + p.wordCount, 0))
 const totalWordsDisplay = computed(() => {
   const n = totalWords.value
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 ? 1 : 0) + 'M'
@@ -116,57 +126,32 @@ const totalWordsDisplay = computed(() => {
   return String(n)
 })
 
-function loadPostData() {
-  try {
-    postData.value = loadPosts() || []
-    tagsData.value = loadTags() || []
-  } catch (error) {
-    console.error('Failed to load post data:', error)
-    postData.value = []
-    tagsData.value = []
-  }
-}
-
 function clearTag() {
   const q = { ...route.query }
   delete q.tag
   delete q.from
   q.page = '1'
-  router.push({ path: route.path, query: q }).catch(() => { })
-  nextTick(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    loadPostData()
-  })
+  router.push({ path: route.path, query: q }).catch(() => {})
+  scrollToTop()
 }
 
 function goBackFromTag() {
   if (fromPath.value) {
-    router.push(fromPath.value).catch(() => { })
+    router.push(fromPath.value).catch(() => {})
   }
 }
 
 function goTag(tag: string) {
-  if (!tag) return
-  const q = { ...route.query, tag: tag, page: '1' }
-  const prefix = locale.value === 'en-US' ? '/en' : '/zh'
-  router.push({ path: `${prefix}/`, query: q }).catch(() => { })
-  nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
+  goToTag(router, tag, {
+    locale: toSupportedLocale(locale.value),
+    query: { ...route.query, page: '1' },
+  })
 }
 
-loadPostData()
-
 watch(locale, (newLocale, oldLocale) => {
-  if (newLocale !== oldLocale) {
-    if (currentTag.value) {
-      clearTag()
-    } else {
-      loadPostData()
-    }
+  if (newLocale !== oldLocale && currentTag.value) {
+    clearTag()
   }
-})
-
-onMounted(() => {
-  loadPostData()
 })
 </script>
 
@@ -321,7 +306,9 @@ onMounted(() => {
   padding: 6px 12px;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: color 0.14s ease, background-color 0.14s ease;
+  transition:
+    color 0.14s ease,
+    background-color 0.14s ease;
 }
 
 .chip-close:hover {
