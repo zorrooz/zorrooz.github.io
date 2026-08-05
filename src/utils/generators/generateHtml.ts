@@ -12,16 +12,12 @@
 
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
 
+import { contentSrcDir, contentDir } from '../dataConfig.ts'
 import { renderMarkdown } from '../markdownProcessor.ts'
 import { ensureDirectoryExistence, walk } from './core/index.ts'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const contentSrcDir = path.join(__dirname, '../../content-src')
-const htmlOutputDir = path.join(__dirname, '../../content/html')
+const htmlOutputDir = path.join(contentDir, 'html')
 
 const sections = ['notes']
 const deprecatedSections = ['projects', 'topics']

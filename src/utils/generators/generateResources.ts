@@ -2,16 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
+import { contentSrcDir, contentDir } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const isDirectRun =
   process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-
-const contentSrcDir = path.join(__dirname, '../../content-src')
-const contentOutputDir = path.join(__dirname, '../../content')
 
 interface ResourceItem {
   name: string
@@ -61,7 +56,7 @@ function generateResourcesJson(locale = 'zh-CN') {
     locale === 'zh-CN' ? 'resources.yaml' : 'resources-en.yaml',
   )
   const outputPath = path.join(
-    contentOutputDir,
+    contentDir,
     locale === 'zh-CN' ? 'resources.json' : 'resources-en.json',
   )
 

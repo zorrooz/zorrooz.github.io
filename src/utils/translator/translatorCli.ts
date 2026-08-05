@@ -16,7 +16,7 @@ program
 // 翻译命令
 program
   .command('translate [target]')
-  .description('翻译文件或目录（默认：src/content-src）')
+  .description('翻译文件或目录（默认：数据分支的 content-src）')
   .option('-f, --force', '重新翻译所有文件（忽略增量检测）')
   .option('-n, --new', '仅翻译新文件（跳过所有已翻译文件）')
   .option('-s, --suffix <suffix>', '翻译文件后缀（默认：-en）')
@@ -137,8 +137,9 @@ program
   npm run translate                                     # 增量翻译默认目录
   npm run translate -- translate                        # 同上
   npm run translate -- translate --force                # 强制重新翻译
-  npm run translate -- translate src/content-src --new  # 仅翻译新文件
-  npm run translate -- status src/content-src           # 检查状态
+  npm run translate -- translate --force                # 强制重新翻译
+  npm run translate -- translate <content-src 路径> --new  # 仅翻译新文件
+  npm run translate -- status <content-src 路径>        # 检查状态
     `)
   })
 
@@ -152,7 +153,7 @@ program.on('command:*', () => {
 // 默认命令 - 当没有提供子命令时执行
 program
   .command('default', { isDefault: true })
-  .description('默认翻译 src/content-src 目录')
+  .description('默认翻译数据分支的 content-src 目录')
   .action(async () => {
     console.log(`[INFO] 使用默认目录: ${TRANSLATION_TARGETS.CONTENT_SRC}`)
     const manager = new TranslationManager()

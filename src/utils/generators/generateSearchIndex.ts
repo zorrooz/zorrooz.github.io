@@ -8,11 +8,8 @@
 
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const contentDir = path.join(__dirname, '../../content')
+import { contentDir } from '../dataConfig.ts'
 
 function stripHtmlToText(html: string): string {
   return html

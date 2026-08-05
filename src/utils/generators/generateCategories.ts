@@ -19,13 +19,8 @@ import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
 import zhCN from '../../stores/locales/zh-CN.ts'
 import enUS from '../../stores/locales/en-US.ts'
+import { contentSrcDir, contentDir } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const contentDir = path.join(__dirname, '../../content')
-const contentSrcDir = path.join(__dirname, '../../content-src')
 
 function getFilePaths(locale = 'zh-CN') {
   const suffix = locale === 'zh-CN' ? '' : '-en'

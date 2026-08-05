@@ -4,8 +4,7 @@
 
 import path from 'path'
 
-// 项目根目录：translatorConfig.ts 位于 src/utils/translator/
-const projectRoot = path.resolve(import.meta.dirname, '../../..')
+import { contentSrcDir } from '../dataConfig.ts'
 
 // 支持的翻译配置
 export const TRANSLATION_CONFIG = {
@@ -34,16 +33,16 @@ export const TRANSLATION_CONFIG = {
   },
 }
 
-// 翻译目标配置（基于项目根的绝对路径，不依赖 cwd）
+// 翻译目标配置（数据目录由 dataConfig 统一提供）
 export const TRANSLATION_TARGETS = {
   // 主要翻译目录（notes 文章 + yaml 配置文件）
-  CONTENT_SRC: path.join(projectRoot, 'src/content-src'),
+  CONTENT_SRC: contentSrcDir,
 
   // 配置文件
   CONFIG_FILES: {
-    ABOUT: path.join(projectRoot, 'src/content-src/about.yaml'),
-    CATEGORIES: path.join(projectRoot, 'src/content-src/categories.yaml'),
-    RESOURCES: path.join(projectRoot, 'src/content-src/resources.yaml'),
+    ABOUT: path.join(contentSrcDir, 'about.yaml'),
+    CATEGORIES: path.join(contentSrcDir, 'categories.yaml'),
+    RESOURCES: path.join(contentSrcDir, 'resources.yaml'),
   },
 }
 

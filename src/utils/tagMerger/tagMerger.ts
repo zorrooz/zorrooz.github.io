@@ -7,17 +7,14 @@
 
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath, pathToFileURL } from 'url'
+import { pathToFileURL } from 'url'
 import yaml from 'js-yaml'
 import OpenAI from 'openai'
 
+import { contentSrcDir, cacheDir } from '../dataConfig.ts'
 import { walk, parseFrontMatterAndBody, normalizeTags } from '../generators/core/index.ts'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-export const contentSrcDir = path.join(__dirname, '../../content-src')
-export const defaultMappingPath = path.join(contentSrcDir, 'tag-mapping.json')
+export const defaultMappingPath = path.join(cacheDir, 'tag-mapping.json')
 
 export interface TagMapping {
   locale: string

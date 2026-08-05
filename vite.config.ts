@@ -9,6 +9,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import type { ViteSSGOptions } from 'vite-ssg'
 
 import { contentDev } from './src/utils/contentDevPlugin.ts'
+import { dataDir, contentDir } from './src/utils/dataConfig.ts'
 
 interface ArticleEntry {
   articleUrl?: unknown
@@ -25,7 +26,7 @@ interface CategorySection {
 
 function getArticleRoutes(): string[] {
   const collect = (file: string): string[] => {
-    const categoriesPath = path.resolve(import.meta.dirname, file)
+    const categoriesPath = path.resolve(contentDir, file)
     if (!fs.existsSync(categoriesPath)) return []
     const data = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8')) as CategorySection[]
     const routes: string[] = []
@@ -42,8 +43,8 @@ function getArticleRoutes(): string[] {
     return routes.filter(Boolean)
   }
   return [
-    ...collect('src/content/categories.json').map((r) => `/zh${r}`),
-    ...collect('src/content/categories-en.json').map((r) => `/en${r}`),
+    ...collect('categories.json').map((r) => `/zh${r}`),
+    ...collect('categories-en.json').map((r) => `/en${r}`),
   ]
 }
 
@@ -83,7 +84,13 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
   ].filter(Boolean),
   server: {
     watch: {
-      ignored: ['**/src/content/**'],
+      // 数据目录在仓库外（git worktree ../blog-data），由 contentDevPlugin 负责监听重生成，
+      // 这里忽略避免与 Vite 自身 watcher 双重重载冲突
+      ignored: [`${dataDir}/**`],
+    },
+    fs: {
+      // 允许 dev server 读取仓库外数据目录（@data 别名指向它）
+      allow: [dataDir, fileURLToPath(new URL('.', import.meta.url))],
     },
   },
   ssgOptions: {
@@ -112,6 +119,8 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // 数据分支目录：所有 content*/contentHtml 通过 @data 引用（见 contentLoader）
+      '@data': dataDir,
       // vue-i18n v12 alpha 的 browser 条件会解析到 runtime-only 版（无 message compiler），
       // 导致生产构建中 t() 不编译插值占位符（页面显示 {count}/{minutes}）。
       // 强制使用完整版（带运行时编译器），与 dev/SSG 行为一致。

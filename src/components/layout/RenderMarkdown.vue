@@ -9,7 +9,8 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const assetModules = import.meta.glob('../../content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
+// @data 别名指向数据分支 content-src；文章图片均从数据目录解析
+const assetModules = import.meta.glob('@data/content-src/**/*.{png,jpg,jpeg,gif,svg,webp}', { as: 'url', eager: true })
 
 const COPY_ICON_SVG = `
   <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">
@@ -63,12 +64,12 @@ function rewriteImageLinks(html: string, articlePath: string) {
       parts.forEach(p => p === '..' ? stack.pop() : stack.push(p))
       const normalized = stack.join('/')
       const candidateKeys = [
-        `../../content-src/${normalized}`,
-        `../content-src/${normalized}`,
-        `content-src/${normalized}`
+        `@data/content-src/${normalized}`,
+        `${normalized}`
       ]
       for (const key of candidateKeys) {
-        if (assetModules[key]) return assetModules[key]
+        const matched = Object.keys(assetModules).find((k) => k.endsWith(`/${normalized}`) || k === key)
+        if (matched) return assetModules[matched]
       }
       return relPath
     }

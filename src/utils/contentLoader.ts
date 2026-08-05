@@ -18,14 +18,15 @@ const getLocalizedFileName = (baseName: string, extension = '.json'): string => 
 
 // eager for the core JSON set (about/categories/notes/posts/projects/resources/tags/topics,
 // incl. -en variants); search-index* is excluded (lazy chunk in SearchModal)
-const jsonModules = import.meta.glob('../content/[abcnprt]*.json', { eager: true })
-const htmlModules = import.meta.glob('../content/html/**/*.html', {
+// @data 别名由 vite.config.ts 指向数据分支目录（GBLOG_DATA_DIR）
+const jsonModules = import.meta.glob('@data/content/[abcnprt]*.json', { eager: true })
+const htmlModules = import.meta.glob('@data/content/html/**/*.html', {
   query: '?raw',
   import: 'default',
   eager: true,
 })
 // 惰性加载 markdown 源（复制文章用，按需拆包；含 zh/en 全部源文件）
-const markdownModules = import.meta.glob('../content-src/**/*.md', {
+const markdownModules = import.meta.glob('@data/content-src/**/*.md', {
   query: '?raw',
   import: 'default',
 })

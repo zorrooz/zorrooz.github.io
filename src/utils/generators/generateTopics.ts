@@ -3,13 +3,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
 
+import { contentSrcDir, contentDir } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const contentSrcDir = path.join(__dirname, '../../content-src')
-const contentOutputDir = path.join(__dirname, '../../content')
 
 /**
  * 课题已改为纯元信息模式：不再从 md 扫描文章，
@@ -33,7 +28,7 @@ function getFilePaths(locale = 'zh-CN') {
   const suffix = locale === 'zh-CN' ? '' : '-en'
   return {
     yamlPath: path.join(contentSrcDir, `categories${suffix}.yaml`),
-    outputPath: path.join(contentOutputDir, `topics${suffix}.json`),
+    outputPath: path.join(contentDir, `topics${suffix}.json`),
   }
 }
 

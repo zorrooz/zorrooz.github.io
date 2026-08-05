@@ -8,13 +8,13 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { contentDir } from '../dataConfig.ts'
 import { LOCALE_PREFIXES, SITE } from '../../config/site.ts'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const SITE_URL = SITE.url
-const contentDir = path.join(__dirname, '../../content')
 const publicDir = path.join(__dirname, '../../../public')
 
 const STATIC_ROUTES = ['/', '/about', '/resource', '/category']

@@ -5,12 +5,10 @@
  */
 
 import { watch } from 'chokidar'
-import path from 'path'
 import type { Plugin, ViteDevServer } from 'vite'
 
+import { contentSrcDir } from './dataConfig.ts'
 import { runAllGenerators } from './runAllGenerators.ts'
-
-const contentSrcDir = path.resolve(import.meta.dirname, '../content-src')
 
 export function contentDev(): Plugin {
   let timer: ReturnType<typeof setTimeout> | null = null

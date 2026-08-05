@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { contentSrcDir, contentDir } from '../dataConfig.ts'
 import {
   ensureDirectoryExistence,
   walk,
@@ -12,12 +13,7 @@ import {
   toPosixRelativeNoExt,
 } from './core/index.ts'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const contentSrcDir = path.join(__dirname, '../../content-src')
 const notesSrcDir = path.join(contentSrcDir, 'notes')
-const contentOutputDir = path.join(__dirname, '../../content')
 
 export interface NoteItem {
   title: string
@@ -33,7 +29,7 @@ export interface NoteItem {
 function getFilePaths(locale = 'zh-CN') {
   const suffix = locale === 'zh-CN' ? '' : '-en'
   return {
-    outputPath: path.join(contentOutputDir, `notes${suffix}.json`),
+    outputPath: path.join(contentDir, `notes${suffix}.json`),
   }
 }
 

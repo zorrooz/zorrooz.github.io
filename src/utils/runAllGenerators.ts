@@ -15,6 +15,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { contentSrcDir, contentDir } from './dataConfig.ts'
 import { generateAboutJson } from './generators/generateAbout.ts'
 import { generateResourcesJson } from './generators/generateResources.ts'
 import { generateNotesJson } from './generators/generateNotes.ts'
@@ -29,8 +30,6 @@ import { generateSearchIndex } from './generators/generateSearchIndex.ts'
 
 const isDirectRun =
   process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-
-const contentSrcDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../content-src')
 
 async function runStep(name: string, fn: () => Promise<void> | void) {
   try {
@@ -123,7 +122,6 @@ export async function runAllGenerators() {
 
   // 8.5 中英标签一致性校验（数量与名称必须一致）
   await runStep('tags-consistency', () => {
-    const contentDir = path.join(contentSrcDir, '../content')
     checkTagsConsistency(contentDir)
   })
 

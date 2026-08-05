@@ -4,6 +4,7 @@ import fsSync from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import llmConfig from '../../config/llmConfig.ts'
+import { cacheDir, contentSrcDir } from '../dataConfig.ts'
 
 const openai = new OpenAI({
   baseURL: llmConfig.url,
@@ -54,12 +55,21 @@ function contentHash(content: string): string {
   return crypto.createHash('md5').update(content, 'utf-8').digest('hex')
 }
 
+/**
+ * 状态键：相对 content-src 的路径（不依赖机器绝对路径），
+ * 使 cache/.translate-state.json 可跨机器/跨分支复用。
+ */
+function toStateKey(sourcePath: string): string {
+  return path.relative(contentSrcDir, sourcePath).split(path.sep).join('/')
+}
+
 interface TranslationState {
   [sourcePath: string]: string
 }
 
 function stateFilePath(dir: string): string {
-  return path.join(dir, '.translate-state.json')
+  // 翻译状态统一收敛到 cache/（数据分支），不再散落在各源目录
+  return path.join(cacheDir, '.translate-state.json')
 }
 
 function loadState(dir: string): TranslationState {
@@ -101,7 +111,7 @@ async function needsTranslation(
     await fs.access(targetPath)
     // 内容哈希比对：只有源内容真正变化才重新翻译
     const source = await fs.readFile(sourcePath, 'utf-8')
-    return state[path.resolve(sourcePath)] !== contentHash(source)
+    return state[toStateKey(sourcePath)] !== contentHash(source)
   } catch {
     return true
   }
@@ -124,8 +134,7 @@ function loadTranslationMapping(): Record<string, string> {
   if (translationCache) return translationCache
   translationCache = {}
   try {
-    // ESM 无 __dirname，用 import.meta.dirname（Node 20.11+）
-    const mappingPath = path.join(import.meta.dirname, '../content-src/tag-mapping.json')
+    const mappingPath = path.join(cacheDir, 'tag-mapping.json')
     const raw = fsSync.readFileSync(mappingPath, 'utf-8')
     const parsed = JSON.parse(raw) as { translation?: Record<string, string> }
     if (parsed?.translation && typeof parsed.translation === 'object') {
@@ -221,7 +230,7 @@ async function translateFile(
     await fs.writeFile(outputPath, translated, 'utf-8')
     console.log(`[INFO] 翻译完成: ${outputPath}`)
     // 记录源内容哈希，下次跳过
-    localState[path.resolve(inputFilePath)] = contentHash(content)
+    localState[toStateKey(inputFilePath)] = contentHash(content)
     if (saveLocal) saveState(dir, localState)
 
     return outputPath

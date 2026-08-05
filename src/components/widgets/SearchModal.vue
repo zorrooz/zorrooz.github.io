@@ -87,8 +87,11 @@ const cjkTokenize = (text: string) => {
 
 async function ensureEngine() {
   if (engine) return
-  const mods = import.meta.glob('/src/content/search-index*.json')
-  const key = locale.value === 'en-US' ? '/src/content/search-index-en.json' : '/src/content/search-index.json'
+  const mods = import.meta.glob('@data/content/search-index*.json')
+  const key = Object.keys(mods).find((k) =>
+    k.includes(locale.value === 'en-US' ? 'search-index-en.json' : 'search-index.json'),
+  )
+  if (!key) return
   const loader = mods[key]
   if (!loader) return
   const mod = await loader()

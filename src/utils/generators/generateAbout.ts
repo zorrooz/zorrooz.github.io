@@ -2,16 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import yaml from 'js-yaml'
+import { contentSrcDir, contentDir } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 const isDirectRun =
   process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-
-const contentSrcDir = path.join(__dirname, '../../content-src')
-const contentOutputDir = path.join(__dirname, '../../content')
 
 interface ExperienceItem {
   year: string
@@ -73,7 +68,7 @@ function normalize(raw: Record<string, unknown> = {}): AboutData {
 function generateAboutJson(locale = 'zh-CN') {
   const yamlPath = path.join(contentSrcDir, locale === 'zh-CN' ? 'about.yaml' : 'about-en.yaml')
   const outputPath = path.join(
-    contentOutputDir,
+    contentDir,
     locale === 'zh-CN' ? 'about.json' : 'about-en.json',
   )
 

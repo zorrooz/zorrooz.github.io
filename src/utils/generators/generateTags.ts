@@ -1,12 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { contentDir } from '../dataConfig.ts'
 import { ensureDirectoryExistence } from './core/index.ts'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const contentDir = path.join(__dirname, '../../content')
 
 function getFilePaths(locale = 'zh-CN') {
   const suffix = locale === 'zh-CN' ? '' : '-en'
