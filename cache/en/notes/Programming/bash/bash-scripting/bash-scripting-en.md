@@ -1,15 +1,15 @@
 ---
-title: "Bash Programming: Variables, Conditions, Loops, and Practical Scripts"
+title: "Bash Programming: Variables, Conditionals, Loops, and Practical Scripts"
 date: "2026-08-04"
 author: "zorrooz"
 tags: ["Bash","Shell","Scripting","Tutorial"]
 draft: false
-description: "Complete Bash scripting tutorial: variables and parameters, conditional statements, loops, functions, arrays and string processing, with practical batch processing and bioinformatics scripts"
+description: "A complete Bash scripting tutorial: variables and parameters, conditional statements, loops, functions, arrays, and string processing, with practical scripts for batch processing and bioinformatics"
 ---
 
-# Bash Programming: Variables, Conditions, Loops, and Practical Scripts
+# Bash Programming: Variables, Conditionals, Loops, and Practical Scripts
 
-Bash scripts organize command-line operations into reusable programs and are the core tool for automated batch processing. This article covers everything from script basics to practical applications, including variables, conditions, loops, functions, and common tasks.
+Bash scripts organize command-line operations into reusable programs and are a core tool for automated batch processing. This article covers variables, conditionals, loops, functions, and common tasks, from script basics to practical applications.
 
 ## 1. Script Basics
 
@@ -30,15 +30,15 @@ bash myscript.sh
 ### 1.2 Debugging
 
 ```bash
-bash -x script.sh    # Trace execution, showing each command
-# Enable inside script: set -x (tracing) / set -e (exit on error) / set -u (error on undefined variable)
+bash -x script.sh    # Trace execution, display each command
+# Enable inside the script: set -x (trace) / set -e (exit on error) / set -u (error on undefined variable)
 ```
 
-It is recommended to add the following at the beginning of production scripts:
+For production scripts, it's recommended to add at the beginning:
 
 ```bash
 #!/bin/bash
-set -euo pipefail   # Exit on error, error on undefined variable, detect pipeline failures
+set -euo pipefail   # Exit on error, error on undefined variables, pipe failure detection
 ```
 
 ## 2. Variables
@@ -59,7 +59,7 @@ echo "Length: ${#name}" # String length
 today=$(date +%F)
 echo "Today is $today"
 files=$(ls | wc -l)
-echo "Total $files files"
+echo "Total: $files files"
 
 # Arithmetic: $((...))
 a=10
@@ -76,7 +76,7 @@ echo "Script name: $0"
 echo "First argument: $1"
 echo "Second argument: $2"
 echo "All arguments: $@"
-echo "Number of arguments: $#"
+echo "Argument count: $#"
 
 # Run: ./script.sh file1 file2
 ```
@@ -85,8 +85,8 @@ echo "Number of arguments: $#"
 
 ```bash
 $?    # Exit code of the last command (0 success, non-zero failure)
-$$    # Current process PID
-$!    # Background process PID
+$$    # PID of the current process
+$!    # PID of the background process
 ```
 
 ## 3. Conditional Statements
@@ -109,20 +109,20 @@ fi
 ### 3.2 test Expressions
 
 ```bash
-# File checks
+# File tests
 [ -f file.txt ] && echo "Is a regular file"
 [ -d dir ] && echo "Is a directory"
 [ -e path ] && echo "Exists"
-[ -s file ] && echo "Non-empty file"
+[ -s file ] && echo "Is a non-empty file"
 
 # String comparison
 [ "$name" = "zorrooz" ] && echo "Match"
-[ -z "$var" ] && echo "Variable is empty"     # -n is non-empty
+[ -z "$var" ] && echo "Variable is empty"     # -n non-empty
 
 # Numeric comparison (inside [ ])
 [ "$a" -gt "$b" ] && echo "a > b"    # -eq -ne -gt -ge -lt -le
 
-# Logical combinations
+# Logical combination
 [ -f "$file" ] && [ -s "$file" ] && echo "Non-empty file"
 [ -f "$file" ] || echo "File does not exist"
 ```
@@ -133,10 +133,10 @@ fi
 #!/bin/bash
 case "$1" in
   start)
-    echo "Starting service"
+    echo "Start the service"
     ;;
   stop|kill)
-    echo "Stopping service"
+    echo "Stop the service"
     ;;
   *)
     echo "Usage: $0 {start|stop}"
@@ -232,9 +232,9 @@ genes+=("MYC")              # Append
 
 # String processing
 seq="ATGCCGTAA"
-echo "${seq:0:3}"           # Extract first 3 characters: ATG
+echo "${seq:0:3}"           # Extract the first 3 characters: ATG
 echo "${seq//T/U}"          # Replace all T→U
-echo "${seq/AT/XX}"         # Replace first AT
+echo "${seq/AT/XX}"         # Replace the first AT
 echo "${seq^^}"             # Convert to uppercase (bash 4+)
 ```
 
@@ -248,21 +248,21 @@ echo "${seq^^}"             # Convert to uppercase (bash 4+)
 set -euo pipefail
 
 for file in *.txt; do
-    [ -e "$file" ] || continue          # Skip if no match
+    [ -e "$file" ] || continue          # Skip when there is no match
     mv "$file" "${file%.txt}.log"
     echo "Renamed: $file -> ${file%.txt}.log"
 done
 ```
 
-### 7.2 Bioinformatics Batch Processing: FASTQ Quality Control
+### 7.2 Bioinformatics Batch Processing: Running FASTQ Quality Control
 
 ```bash
 #!/bin/bash
 # Usage: ./qc_pipeline.sh data_dir output_dir
 set -euo pipefail
 
-DATA_DIR=${1:?"Please provide a data directory"}
-OUT_DIR=${2:?"Please provide an output directory"}
+DATA_DIR=${1:?"Please provide the data directory"}
+OUT_DIR=${2:?"Please provide the output directory"}
 mkdir -p "$OUT_DIR"
 
 for fq in "$DATA_DIR"/*_R1.fastq.gz; do
@@ -280,7 +280,7 @@ echo "All done, results are in $OUT_DIR"
 
 ```bash
 #!/bin/bash
-# Monitor the number of ERRORs in the log, print an alert if it exceeds the threshold
+# Monitor the number of ERRORs in the log, print an alert when exceeding the threshold
 LOG_FILE="app.log"
 THRESHOLD=${1:-10}
 
@@ -288,28 +288,28 @@ count=$(grep -c "ERROR" "$LOG_FILE" || true)
 echo "Current ERROR count: $count"
 
 if [ "$count" -gt "$THRESHOLD" ]; then
-    echo "⚠️ Error count exceeds threshold $THRESHOLD!"
+    echo "⚠️ Error count exceeds the threshold $THRESHOLD!"
     exit 1
 fi
 ```
 
-## 8. Common Pitfall Reminders
+## 8. Common Pitfalls to Watch Out For
 
 ```bash
-# 1. No spaces around = in variable assignment
+# 1. No spaces around the = sign in variable assignment
 name = "x"    # Wrong! Will be treated as a command
 name="x"      # Correct
 
 # 2. Quoting: paths containing spaces must be quoted
 file="my data.txt"
 cat "$file"   # Correct
-cat $file     # Wrong: split into two arguments
+cat $file     # Wrong: splits into two arguments
 
-# 3. Spaces are required inside [ ]
+# 3. There must be spaces on both sides inside [ ]
 [ "$a" = "$b" ]   # Correct
 ["$a"="$b"]       # Wrong
 
-# 4. The pitfall of set -e in pipelines: grep with no match returns non-zero and will abort
+# 4. The pitfall of set -e in pipelines: grep returns non-zero when no match is found, which will interrupt the script
 grep "x" file || true    # Explicitly tolerate
 ```
 
@@ -319,6 +319,6 @@ grep "x" file || true    # Explicitly tolerate
 - Variables: `$name`, `${#name}`, `$(cmd)`, `$((...))`
 - Conditionals: `[ condition ]`, `(( arithmetic ))`, `case`
 - Loops: `for file in *.txt`, `while read line`
-- Functions: `local` variables, echo capture for return values
+- Functions: `local` variables, capturing return values with echo
 
-This completes the programming direction tutorials: Python ×3, R ×3, Linux ×1, Bash ×1, from zero to practical application.
+At this point, the programming track tutorials are complete: Python ×3, R ×3, Linux ×1, Bash ×1, from zero to hands-on practice.

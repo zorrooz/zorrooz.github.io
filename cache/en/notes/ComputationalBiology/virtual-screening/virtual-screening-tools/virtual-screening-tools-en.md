@@ -1,5 +1,5 @@
 ---
-title: "Mainstream Virtual Screening Tools"
+title: "Mainstream Tools for Virtual Screening"
 date: "2026-08-04"
 author: "zorrooz"
 tags: ["Virtual Screening","Molecular Docking","AutoDock Vina","Computational Biology"]
@@ -7,24 +7,24 @@ draft: false
 description: "A comprehensive overview of virtual screening tools: docking software such as AutoDock Vina, Glide, and DOCK, receptor/ligand preparation, scoring functions, high-throughput screening workflows, and validation strategies"
 ---
 
-# Mainstream Virtual Screening Tools
+# Mainstream Tools for Virtual Screening
 
-Virtual Screening (VS) uses computational methods to search for potential active molecules within million-scale compound libraries, serving as a core approach in the early stages of drug discovery. This article introduces mainstream docking software, complete workflows, and key considerations.
+Virtual screening (VS) uses computation to search for potential active molecules in million-scale compound libraries and is a core approach in the early stage of drug discovery. This article introduces mainstream docking software, the complete workflow, and important considerations.
 
 ## 1. Basic Logic of Virtual Screening
 
 ```
 Receptor structure (protein/nucleic acid)
    ↓
-① Receptor preparation (hydrogen addition, protonation, grid)
+① Receptor preparation (add hydrogens, protonation, grid)
    ↓
-② Compound library (ZINC / Enamine / custom library)
+② Compound library (ZINC / Enamine / self-built library)
    ↓
 ③ Ligand preparation (3D conformation, protonation, force field parameters)
    ↓
 ④ Molecular docking (conformational sampling + scoring)
    ↓
-⑤ Ranking and filtering (Top 100-1000)
+⑤ Ranking and selection (Top 100-1000)
    ↓
 ⑥ Experimental validation (IC50 / activity assay)
 ```
@@ -37,7 +37,7 @@ The most popular open-source docking software, offering a good balance between s
 
 ```bash
 # 1. Receptor and ligand preparation (using MGLTools or scripts)
-#    Receptor: pdb → pdbqt (add hydrogens, merge non-polar hydrogens)
+#    Receptor: pdb → pdbqt (add hydrogens, merge nonpolar hydrogens)
 #    Ligand: sdf/mol2 → pdbqt
 
 # 2. Configuration file (conf.txt)
@@ -55,7 +55,7 @@ num_modes = 9
 # 3. Run
 vina --config conf.txt --out results.pdbqt --log log.txt
 
-# 4. Interpretation: lower affinity (kcal/mol) is better
+# 4. Interpretation: the lower the affinity (kcal/mol), the better
 #  mode |   affinity | dist from best mode
 # -----+------------+----------------------
 #    1 |   -9.2     | 0.000
@@ -64,10 +64,10 @@ vina --config conf.txt --out results.pdbqt --log log.txt
 
 ### 2.2 Glide (Schrödinger, Commercial)
 
-The pharmaceutical industry standard:
+The standard in the pharmaceutical industry:
 
 ```bash
-# Preparation workflow (Maestro GUI or command line)
+# Prepare workflow (Maestro GUI or command line)
 glide -overwrite -adjust \
   -receptor receptor.maegz \
   -ligand ligands.maegz \
@@ -75,25 +75,25 @@ glide -overwrite -adjust \
   -NJOBS 16
 
 # Three precision modes
-# HTVS (high-throughput, fast) → SP (standard precision) → XP (extra precision, slow)
+# HTVS (high-throughput, fast) → SP (standard precision) → XP (high precision, slow)
 ```
 
-**Advantages**: Accurate ligand flexibility handling, well-calibrated scoring functions, and support from a large pharmaceutical ecosystem.
+**Advantages**: Accurate flexible ligand handling, well-calibrated scoring, and support from the large pharma ecosystem.
 
 ### 2.3 DOCK 6 (Open Source)
 
-Classic geometric matching algorithm (shape matching):
+Classic geometric matching algorithm:
 
 ```bash
 dock6 -i dock.in -o dock.out
 # Sphere generation → orientation search → scoring
-# Strengths: binding pocket shape matching, primary screening of large libraries
+# Strengths: binding pocket shape matching, initial screening of large libraries
 ```
 
 ### 2.4 Other Commonly Used Software
 
 | Software | Features |
-|----------|----------|
+|------|------|
 | **AutoDock4** | Classic genetic algorithm, high accuracy but slow |
 | **rDock** | Open source, suitable for large libraries, easy to script |
 | **GOLD** | Genetic algorithm, developed by CCDC |
@@ -105,11 +105,11 @@ dock6 -i dock.in -o dock.out
 
 ### 3.1 Structure Sources
 
-- Crystal/Cryo-EM structures (PDB)
-- AlphaFold predicted structures (when no experimental structure is available)
-- Note: Handle flexibility (side chains) near the binding pocket
+- Crystal/cryo-EM structures (PDB)
+- AlphaFold-predicted structures (when no experimental structure is available)
+- Note: handle flexibility (side chains) near the binding pocket
 
-### 3.2 Preparation Key Points
+### 3.2 Key Preparation Points
 
 ```bash
 # Common tools
@@ -120,21 +120,21 @@ python prepare_receptor4.py -r receptor.pdb -o receptor.pdbqt
 
 # Key steps
 # 1. Remove water molecules (except conserved waters)
-# 2. Add hydrogens, determine protonation states (near pH 7.4)
-# 3. Assign bond orders and charges (Amber/CHARMM force field)
-# 4. Define binding pocket (known active site or cavity detection: fpocket / DoGSiteScorer)
+# 2. Add hydrogens, determine protonation states (around pH 7.4)
+# 3. Assign bond orders and charges (Amber/CHARMM force fields)
+# 4. Define the binding pocket (known active site or cavity detection: fpocket / DoGSiteScorer)
 ```
 
 ## 4. Ligand Libraries and Preparation
 
 ### 4.1 Compound Library Sources
 
-| Library | Size | Features |
-|---------|------|----------|
-| ZINC20 | Billions | Free, downloadable, includes 3D conformations |
+| Library | Scale | Features |
+|----|------|------|
+| ZINC20 | Billions | Free, downloadable, with 3D conformations |
 | Enamine REAL | > 40 billion | Highly synthesizable, commercially available |
-| ChEMBL | Activity data | Known active compounds |
-| Custom library | Tailored | Derivative design |
+| ChEMBL | Bioactivity data | Known active compounds |
+| Self-built library | Custom | Derivative design |
 
 ### 4.2 Ligand Preparation
 
@@ -142,7 +142,7 @@ python prepare_receptor4.py -r receptor.pdb -o receptor.pdbqt
 # 3D conformation generation
 obabel ligand.smi -O ligand.sdf --gen3d -p 7.4
 
-# Multiple conformations (important for flexibility, especially ring systems)
+# Multiple conformations (flexibility is important, especially for ring systems)
 obabel ligand.sdf -O conf.sdf --conformer --nconf 50
 
 # Protonation and charges
@@ -161,19 +161,19 @@ AllChem.EmbedMolecule(mol, AllChem.ETKDG())
 
 ### 5.1 Three Types of Scoring Functions
 
-| Type | Representative | Principle |
-|------|----------------|-----------|
-| Force field-based | DOCK, AutoDock4 | van der Waals + electrostatics + internal energy |
+| Type | Representatives | Principle |
+|------|------|------|
+| Force-field-based | DOCK, AutoDock4 | van der Waals + electrostatics + internal energy |
 | Empirical | Glide, Vina | Statistical fitting to experimental data |
-| Knowledge-based | GOLD/ASP | Statistical analysis of atom pair distance distributions |
+| Knowledge-based | GOLD/ASP | Statistics of atom-pair distance distributions |
 
-### 5.2 Limitations of Scoring Functions (Must Know)
+### 5.2 Limitations of Scoring Functions (Must-Know)
 
-- **Imprecise**: Correlation coefficients are typically 0.3–0.6; they can only rank, not provide absolute affinities
-- Entropic effects, solvation effects, and induced fit are difficult to describe accurately
-- **Recommendation**: Docking scores + cross-validation with multiple tools + molecular dynamics refinement (MM/PBSA, FEP)
+- **Not precise**: correlation coefficients are typically 0.3–0.6; they can only rank, not provide absolute affinities
+- Entropy effects, solvent effects, and induced fit are difficult to describe accurately
+- **Recommendation**: docking scores + cross-validation with multiple tools + refined calculations using molecular dynamics (MM/PBSA, FEP)
 
-## 6. Complete High-Throughput Screening Workflow (HTS in Practice)
+## 6. Complete High-Throughput Screening Workflow (Hands-On HTS)
 
 ```bash
 # 1. Library preparation: split SDF + convert to pdbqt
@@ -194,33 +194,33 @@ sort -k2 -n scores.txt | head -100
 ### 6.1 Multi-Stage Funnel Strategy
 
 ```
-Coarse screening (HTVS / Vina, million-scale) → Top 5-10%
+Coarse screening (HTVS / Vina, million-scale) → top 5-10%
   ↓
-Standard precision (SP / multiple conformations) → Top 10-20%
+Standard precision (SP / multiple conformations) → top 10-20%
   ↓
 High precision (XP / induced fit) → Top 100-1000
   ↓
-Consensus scoring (cross-validation with multiple software) → Top 50-200
+Consensus scoring (cross-validation with multiple software tools) → Top 50-200
   ↓
-Visual inspection (binding mode plausibility) → Top 10-50
+Visual inspection (reasonableness of binding modes) → Top 10-50
   ↓
 Experimental testing
 ```
 
 ### 6.2 Consensus Scoring
 
-Scoring functions from different software are complementary; taking the intersection or averaging ranks can significantly improve enrichment rates:
+Scoring functions from different software tools complement each other; taking intersections/ranking averages can significantly improve enrichment rates:
 
 ```bash
-# Example: intersection of Top 100 from Vina + Glide + LeDock
-# Or average after rank normalization
+# Example: take the intersection of Top 100 from Vina + Glide + LeDock
+# Or average after normalizing ranks
 ```
 
 ## 7. Validation and Advanced Methods
 
-### 7.1 Benchmark Testing
+### 7.1 Benchmarking
 
-- **DUD-E**: Standard dataset (containing actives and decoys) to evaluate a software's discriminating ability
+- **DUD-E**: a standard dataset (containing actives and decoys) used to evaluate a software's ability to discriminate
 - Metrics: AUC, enrichment factors (EF1%, EF5%)
 
 ### 7.2 Molecular Dynamics Post-Processing
@@ -235,23 +235,23 @@ gmx_MMPBSA -O -i mmpbsa.in -cs complex.tpr -ct traj.xtc ...
 
 - **Structure-based** (SBDD): docking + MD + FEP
 - **Ligand-based** (LBDD): pharmacophore, QSAR, similarity search
-- Combined strategies represent the mainstream of modern virtual screening
+- Combination strategies are the mainstream of modern virtual screening
 
 ## 8. Common Pitfalls
 
 | Pitfall | Consequence | Avoidance |
-|---------|-------------|-----------|
-| Incorrect pocket definition | Entire library mispositioned | Use known active sites or experimental information |
-| Rigid receptor | Missed induced fit | Flexible side chains / ensemble docking |
+|------|------|------|
+| Incorrect pocket definition | Entire library misaligned | Use a known active site or experimental information |
+| Rigid receptor | Misses induced fit | Flexible side chains / ensemble docking |
 | Incorrect protonation states | Distorted electrostatic scoring | pH-dependent preparation (pH 7.4) |
-| Overconfidence in scoring functions | High false positive rate | Consensus scoring + visual inspection |
-| Ignoring synthesizability | Screened compounds cannot be synthesized | Filter PAINS, drug-likeness rules (Lipinski/Veber) |
+| Overconfidence in scoring functions | High false-positive rate | Consensus scoring + visual inspection |
+| Ignoring synthesizability | Hits cannot be synthesized | Filter PAINS and drug-likeness rules (Lipinski/Veber) |
 
 ## 9. Summary
 
-- Three tiers: **Vina** (open-source, fast) → **Glide** (commercial standard) → **DOCK/rDock** (large libraries)
+- Three tiers: **Vina** (open source, fast) → **Glide** (commercial standard) → **DOCK/rDock** (large libraries)
 - Workflow: receptor preparation → ligand library → docking → multi-stage funnel → experimental validation
-- Scoring functions can only rank; consensus scoring + MD refinement improves reliability
-- The endpoint of virtual screening is always experimentation
+- Scoring functions can only rank; consensus scoring + MD refinement improve reliability
+- The end point of virtual screening is always experimentation
 
-This completes the computational biology track: protein design tools + virtual screening tools, with the two main threads forming a closed-loop "design-screen" computational drug discovery pipeline.
+This completes the computational biology direction: protein design tools + virtual screening tools, with two main threads forming a closed loop of "design-screen" computational drug discovery.

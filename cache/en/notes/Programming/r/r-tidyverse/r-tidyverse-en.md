@@ -1,23 +1,23 @@
 ---
-title: "R tidyverse Data Manipulation: dplyr Pipes and Data Cleaning"
+title: "R tidyverse Data Manipulation: dplyr Pipelines and Data Cleaning"
 date: "2026-08-04"
 author: "zorrooz"
 tags: ["R Language","tidyverse","dplyr","Tutorial"]
 draft: false
-description: "Use the pipe operator to chain dplyr verbs (filter/select/mutate/group_by/summarise/join), along with tidyr to complete a full data cleaning workflow"
+description: "Chain dplyr verbs (filter/select/mutate/group_by/summarise/join) with pipes, and use tidyr to complete a full data cleaning workflow."
 ---
 
-# R tidyverse Data Manipulation: dplyr Pipes and Data Cleaning
+# R tidyverse Data Manipulation: dplyr Pipelines and Data Cleaning
 
-tidyverse is a set of R packages with a consistent design philosophy, where `dplyr` handles data manipulation and `tidyr` handles data reshaping. The core idea is **chaining verbs with pipes**, making each step of data processing clear and readable.
+tidyverse is a collection of R packages with a consistent design philosophy, where `dplyr` handles data manipulation and `tidyr` handles data reshaping. The core idea is **chaining verbs with pipes**, making every step of data processing clear and readable.
 
 ## 1. Installation and Loading
 
 ```r
-install.packages("tidyverse")   # Install the whole suite at once
+install.packages("tidyverse")   # install the whole suite at once
 
 library(tidyverse)
-# Automatically loads: ggplot2, dplyr, tidyr, readr, purrr, stringr, forcats, tibble
+# After loading, automatically includes: ggplot2, dplyr, tidyr, readr, purrr, stringr, forcats, tibble
 ```
 
 ## 2. The Pipe Operator %>%
@@ -28,12 +28,12 @@ The pipe passes the result on the left as the first argument of the function on 
 # Nested style (hard to read)
 round(mean(sqrt(c(1, 2, 3, 4))), 2)
 
-# Pipe style (read left to right)
+# Pipe style (read from left to right)
 c(1, 2, 3, 4) |> sqrt() |> mean() |> round(2)
 ```
 
-- Both `%>%` (from magrittr) and `|>` (native in R 4.1+) work; the tidyverse ecosystem commonly uses `%>%`
-- Shortcut: In RStudio, `Ctrl+Shift+M` inserts `%>%`
+- Both `%>%` (magrittr) and `|>` (native, R 4.1+) are available; the tidyverse ecosystem conventionally uses `%>%`
+- Shortcut: In RStudio, press `Ctrl+Shift+M` to insert `%>%`
 
 ## 3. Data Preparation
 
@@ -52,14 +52,14 @@ expr_data <- tibble(
 print(expr_data)
 ```
 
-`tibble` is tidyverse's enhanced data frame: prints more friendly and doesn't automatically convert strings to factors.
+`tibble` is tidyverse's enhanced data frame: prints more friendlily, and does not automatically convert strings to factors.
 
 ## 4. Core Verbs
 
 ### 4.1 filter: Select Rows
 
 ```r
-# Samples with expression > 20
+# Samples with expression greater than 20
 expr_data %>%
   filter(expression > 20)
 
@@ -67,12 +67,12 @@ expr_data %>%
 expr_data %>%
   filter(condition == "treatment" & expression > 12)
 
-# %in% matching a set
+# %in% for matching a set
 expr_data %>%
   filter(gene %in% c("TP53", "MYC"))
 ```
 
-### 4.2 select: Select Columns
+### 4.2 select: Choose Columns
 
 ```r
 expr_data %>%
@@ -84,7 +84,7 @@ expr_data %>%
 
 # Helper selectors
 expr_data %>%
-  select(starts_with("expr"))      # Column names starting with "expr"
+  select(starts_with("expr"))      # column names starting with "expr"
 ```
 
 ### 4.3 mutate: Add/Modify Columns
@@ -96,7 +96,7 @@ expr_data %>%
     group = paste(gene, condition, sep = "_")
   )
 
-# Conditional column with case_when
+# Conditional column generation: case_when
 expr_data %>%
   mutate(level = case_when(
     expression > 30 ~ "high",
@@ -118,7 +118,7 @@ expr_data %>%
   arrange(gene, desc(expression))  # multi-level sorting
 ```
 
-### 4.5 summarise: Aggregate
+### 4.5 summarise: Summary Statistics
 
 ```r
 expr_data %>%
@@ -129,7 +129,7 @@ expr_data %>%
   )
 ```
 
-### 4.6 group_by + summarise: Grouped Aggregation (Most Common Combination)
+### 4.6 group_by + summarise: Grouped Summaries (Most Common Combination)
 
 ```r
 expr_data %>%
@@ -142,7 +142,7 @@ expr_data %>%
   )
 ```
 
-### 4.7 Full Pipe Chain
+### 4.7 A Full Pipe Chain
 
 ```r
 # Average expression per gene under treatment, top 3 in descending order
@@ -166,15 +166,15 @@ gene_info <- tibble(
                     "receptor kinase", "transcription factor")
 )
 
-# Left join: keep all rows from left table
+# Left join: keeps all rows from the left table
 expr_data %>%
   left_join(gene_info, by = "gene")
 
-# Inner join: keep only rows present in both tables
+# Inner join: keeps only rows found in both tables
 expr_data %>%
   inner_join(gene_info, by = "gene")
 
-# Right join / full join
+# Right join / Full join
 expr_data %>% right_join(gene_info, by = "gene")
 expr_data %>% full_join(gene_info, by = "gene")
 ```
@@ -210,22 +210,22 @@ long %>%
 ```r
 df <- tibble(a = c(1, NA, 3), b = c(NA, 5, 6))
 
-df %>% drop_na()              # Drop rows with missing values
-df %>% replace_na(list(a = 0))  # Fill specific columns
-df %>% fill(a)                # Fill downward
+df %>% drop_na()              # remove rows with missing values
+df %>% replace_na(list(a = 0))  # fill specified columns
+df %>% fill(a)                # fill downward
 ```
 
-## 7. Practice: Complete Differential Analysis Workflow
+## 7. Practical Example: A Complete Differential Analysis Workflow
 
 ```r
 # 1. Read data
 # expr_data <- read_csv("expression.csv")
 
-# 2. Clean data
+# 2. Data cleaning
 cleaned <- expr_data %>%
-  filter(!is.na(expression)) %>%              # remove NAs
+  filter(!is.na(expression)) %>%              # remove missing values
   mutate(log2expr = log2(expression)) %>%     # transformation
-  left_join(gene_info, by = "gene")           # annotate
+  left_join(gene_info, by = "gene")           # annotation
 
 # 3. Summary statistics
 summary_table <- cleaned %>%
@@ -236,7 +236,7 @@ summary_table <- cleaned %>%
     .groups = "drop"
   )
 
-# 4. Compute treatment vs control differences
+# 4. Calculate differences between treatment and control
 diff_table <- summary_table %>%
   pivot_wider(names_from = condition, values_from = mean_log2) %>%
   mutate(log2fc = treatment - control) %>%
@@ -247,9 +247,9 @@ print(diff_table)
 
 ## 8. Summary
 
-- **Pipe**: `%>%` lets data flow from left to right, one verb at each step
-- **dplyr's six core verbs**: `filter` / `select` / `mutate` / `arrange` / `summarise` / `group_by`
-- **Join family**: `left_join` / `inner_join` etc. merge tables by keys
+- **Pipes**: `%>%` lets data flow from left to right, one verb per step
+- **The six key dplyr verbs**: `filter` / `select` / `mutate` / `arrange` / `summarise` / `group_by`
+- **Join family**: `left_join` / `inner_join`, etc., merge tables by keys
 - **tidyr**: `pivot_longer` / `pivot_wider` convert between wide and long tables
 
-The next article will introduce ggplot2: using the grammar of layers to create publication-quality charts.
+The next article will introduce ggplot2: creating publication-quality graphics using the grammar of layers.

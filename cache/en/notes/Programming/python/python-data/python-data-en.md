@@ -4,24 +4,24 @@ date: "2026-08-04"
 author: "zorrooz"
 tags: ["Python","NumPy","Pandas","Data Processing","Tutorial"]
 draft: false
-description: "A complete practical tutorial on file I/O, regular expressions, and the scientific computing duo (NumPy/Pandas), covering common bioinformatics data scenarios"
+description: "A complete practical tutorial on file I/O, regular expressions, and the scientific computing stack (NumPy/Pandas), covering common data scenarios in bioinformatics"
 ---
 
 # Python Data Processing in Practice: File IO, Regex, and NumPy/Pandas
 
-Data processing is one of the most core application scenarios of Python. This article explains file I/O, regular expressions, and the two pillars of scientific computing: NumPy and Pandas, with examples tailored to common bioinformatics tasks.
+Data processing is the most core application scenario of Python. This article explains file I/O, regular expressions, and the two pillars of scientific computing, NumPy and Pandas, with examples tailored to common tasks in bioinformatics.
 
 ## 1. File I/O
 
 ### 1.1 Text Files
 
-It is recommended to use the `with` statement, which automatically manages file closing:
+It is recommended to use the `with` statement to automatically manage file closure:
 
 ```python
-# Writing
+# Write
 with open("output.txt", "w", encoding="utf-8") as f:
-    f.write("first line\n")
-    f.write("second line\n")
+    f.write("First line\n")
+    f.write("Second line\n")
 
 # Read all
 with open("output.txt", "r", encoding="utf-8") as f:
@@ -40,14 +40,14 @@ Mode description: `r` read, `w` write (overwrite), `a` append, `rb`/`wb` binary.
 
 ```python
 def read_fasta(path):
-    """Read a FASTA file and return a dictionary {id: sequence}."""
+    """Read a FASTA file and return a {id: sequence} dictionary."""
     sequences = {}
     current_id = None
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line.startswith(">"):
-                current_id = line[1:].split()[0]   # take the first field as id
+                current_id = line[1:].split()[0]   # take the first field as the id
                 sequences[current_id] = ""
             elif current_id is not None:
                 sequences[current_id] += line
@@ -65,13 +65,13 @@ Standard library `csv` module:
 ```python
 import csv
 
-# Reading
+# Read
 with open("data.csv", "r", newline="", encoding="utf-8") as f:
-    reader = csv.DictReader(f)          # read as dict based on header
+    reader = csv.DictReader(f)          # read as dict by header
     rows = list(reader)
     print(rows[0]["gene"], rows[0]["expression"])
 
-# Writing
+# Write
 with open("out.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow(["gene", "value"])
@@ -95,12 +95,12 @@ print(m.group())          # The
 
 # search: search for the first match
 m = re.search(r"\d+", text)
-print(m.group())          # 12345 (first digit string)
+print(m.group())          # 12345 (the first digit string)
 
 # findall: return all matches
 print(re.findall(r"[A-Z]\d", text))   # ['P1', 'A1', 'B2', 'C3']
 
-# sub: replace
+# sub: substitute
 print(re.sub(r"\d+", "#", text))
 ```
 
@@ -112,7 +112,7 @@ print(re.sub(r"\d+", "#", text))
 | `*` | Previous character 0 or more times | `ab*c` matches `ac`, `abc` |
 | `+` | Previous character 1 or more times | `ab+c` matches `abc` |
 | `?` | Previous character 0 or 1 time | `colou?r` matches color/colour |
-| `^` / `$` | Start of line / End of line | `^ATG` begins with ATG |
+| `^` / `$` | Start / end of line | `^ATG` starts with ATG |
 | `[abc]` | Character set | `[ATGC]` any base |
 | `\d` / `\w` / `\s` | Digit / word character / whitespace | |
 | `{n,m}` | Repeat n to m times | `\d{3}` three digits |
@@ -135,12 +135,12 @@ if m:
 ### 2.3 Compiling Regular Expressions for Performance
 
 ```python
-motif = re.compile(r"^ATG.*(TAA|TAG|TGA)$")   # rough match for a complete ORF
+motif = re.compile(r"^ATG.*(TAA|TAG|TGA)$")   # rough match for complete ORF
 for seq in ["ATGCCCTAA", "ATGGGG"]:
     print(seq, bool(motif.match(seq)))
 ```
 
-## 3. NumPy: The Foundation of Numerical Computing
+## 3. NumPy: Basics of Numerical Computing
 
 ### 3.1 Array Creation
 
@@ -148,10 +148,10 @@ for seq in ["ATGCCCTAA", "ATGGGG"]:
 import numpy as np
 
 a = np.array([1, 2, 3, 4])
-b = np.zeros((2, 3))          # 2x3 zero matrix
+b = np.zeros((2, 3))          # 2x3 all-zero matrix
 c = np.ones(5)
 d = np.arange(0, 1, 0.2)      # [0.  0.2 0.4 0.6 0.8]
-e = np.linspace(0, 1, 5)      # 5 equally spaced points from 0 to 1
+e = np.linspace(0, 1, 5)      # split 0 to 1 into 5 equal parts
 f = np.random.rand(3, 3)      # uniformly distributed random numbers
 ```
 
@@ -161,12 +161,12 @@ f = np.random.rand(3, 3)      # uniformly distributed random numbers
 x = np.array([1.0, 2.0, 3.0])
 y = np.array([4.0, 5.0, 6.0])
 
-print(x + y)          # [5. 7. 9.], no loop needed
+print(x + y)          # [5. 7. 9.] without loops
 print(x * y)          # [4. 10. 18.]
 print(np.sqrt(x))     # element-wise square root
 print(x.mean(), x.std())   # 2.0 0.816...
 
-# Broadcasting: shapes automatically expand
+# Broadcasting: automatic expansion of different shapes
 matrix = np.array([[1, 2], [3, 4]])
 print(matrix * 10)            # multiply each element by 10
 print(matrix + np.array([100, 200]))  # row broadcast
@@ -176,7 +176,7 @@ print(matrix + np.array([100, 200]))  # row broadcast
 
 ```python
 arr = np.arange(10)
-print(arr[2:8:2])        # [2 4 6], start:end:step
+print(arr[2:8:2])        # [2 4 6], start:stop:step
 print(arr[arr > 5])      # boolean mask [6 7 8 9]
 
 m = np.random.rand(4, 4)
@@ -196,7 +196,7 @@ expr = np.array([
     [45.6, 41.2, 48.9, 39.8, 50.1],
 ])
 
-# Perform row-wise (per gene) Z-score normalization: (x - mean) / std
+# Perform Z-score normalization by row (gene): (x - mean) / std
 means = expr.mean(axis=1, keepdims=True)
 stds = expr.std(axis=1, keepdims=True)
 z = (expr - means) / stds
@@ -234,7 +234,7 @@ df = pd.read_json("data.json")
 df.to_csv("out.csv", index=False)
 ```
 
-### 4.3 Inspection and Filtering
+### 4.3 Viewing and Filtering
 
 ```python
 print(df.head())          # first 5 rows
@@ -260,11 +260,11 @@ sel = df[df["gene"].isin(["TP53", "MYC"])]
 ### 4.4 Grouping and Aggregation
 
 ```python
-# Group by chromosome and compute the mean, count, and max of expression
+# Group by chromosome and compute expression mean and count
 grouped = df.groupby("chromosome")["expression"].agg(["mean", "count", "max"])
 print(grouped)
 
-# Group-wise transformation (e.g., standardization within groups)
+# Transform by group (e.g., within-group standardization)
 df["zscore"] = df.groupby("chromosome")["expression"].transform(
     lambda x: (x - x.mean()) / x.std()
 )
@@ -275,36 +275,36 @@ df["zscore"] = df.groupby("chromosome")["expression"].transform(
 ```python
 df = pd.DataFrame({"a": [1, None, 3], "b": [4, 5, None]})
 
-print(df.isna().sum())        # number of missing values per column
+print(df.isna().sum())        # missing value count per column
 print(df.dropna())            # drop rows with missing values
 print(df.fillna(0))           # fill with 0
-print(df.fillna(df.mean()))   # fill with the mean
+print(df.fillna(df.mean()))   # fill with mean
 ```
 
-### 4.6 Practical Example: Differential Expression Gene Screening
+### 4.6 Practical Example: Filtering Differentially Expressed Genes
 
 ```python
-# Simulate: genes + treatment/control expression + p-value
+# Simulate: gene + treated/control expression + p-value
 results = pd.DataFrame({
     "gene": [f"GENE{i}" for i in range(100)],
     "log2fc": np.random.normal(0, 1.5, 100),
     "pvalue": np.random.rand(100),
 })
 
-# Filter significantly differentially expressed genes: |log2FC| > 1 and p < 0.05
+# Filter significant genes: |log2FC| > 1 and p < 0.05
 sig = results[(results["log2fc"].abs() > 1) & (results["pvalue"] < 0.05)]
 
 # Sort by log2FC
 sig = sig.sort_values("log2fc", ascending=False)
-print(f"Number of significant genes: {len(sig)}")
+print(f"Significant gene count: {len(sig)}")
 print(sig.head())
 ```
 
 ## 5. Summary
 
-- Files: `with open` + line-by-line reading for large files; use the `csv` module or Pandas for CSV
-- Regex: `re.search` / `findall` / `sub`; write small patterns first, then combine
-- NumPy: vectorized operations + broadcasting; avoid Python loops
-- Pandas: `read_csv` → filtering/grouping/missing-value handling → export; the standard workflow for tabular data
+- Files: `with open` + line-by-line reading for large files; use `csv` module or Pandas for CSV
+- Regex: `re.search` / `findall` / `sub`, start with small patterns and combine
+- NumPy: vectorized operations + broadcasting, avoid Python loops
+- Pandas: `read_csv` → filtering/grouping/missing value handling → export, the standard workflow for tabular data
 
-With this, the Python tutorial trilogy is complete: Beginner → Intermediate → Data Processing.
+At this point, the Python tutorial trilogy is complete: Beginner → Intermediate → Data Processing.

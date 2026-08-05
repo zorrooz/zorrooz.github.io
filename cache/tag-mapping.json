@@ -1,6 +1,6 @@
 {
   "locale": "zh-CN",
-  "generatedAt": "2026-08-04T15:21:46.502Z",
+  "generatedAt": "2026-08-05T12:26:47.269Z",
   "mapping": {
     "Bioinformatics": "Bioinformatics",
     "Python": "Python",
@@ -99,6 +99,18 @@
     "Structure": "Structure",
     "tidyverse": "tidyverse",
     "Vite": "Vite",
-    "Vue": "Vue"
+    "Vue": "Vue",
+    "Computational Biology": "Computational Biology",
+    "Protein Design": "Protein Design",
+    "脚本": "Scripting",
+    "Tutorial": "Tutorial",
+    "Getting Started": "Getting Started",
+    "Advanced": "Advanced",
+    "Command Line": "Command Line",
+    "Molecular Docking": "Molecular Docking",
+    "R Language": "R Language",
+    "Scripting": "Scripting",
+    "Virtual Screening": "Virtual Screening",
+    "Data Processing": "Data Processing"
   }
 }

@@ -1,5 +1,5 @@
 ---
-title: "Advanced Python: Functions, Classes, and Modules"
+title: "Python Advanced: Functions, Classes, and Modules"
 date: "2026-08-04"
 author: "zorrooz"
 tags: ["Python","Advanced","Tutorial"]
@@ -7,13 +7,13 @@ draft: false
 description: "Deep dive into Python functional and object-oriented programming: parameter passing, lambda, decorators, classes and inheritance, exception handling, modules and packages"
 ---
 
-# Advanced Python: Functions, Classes, and Modules
+# Python Advanced: Functions, Classes, and Modules
 
-After mastering basic syntax, this article delves into Python's functional and object-oriented programming to help you write well-structured, reusable code.
+After mastering the basics, this article dives into Python's functional and object-oriented programming, helping you write clean, reusable code.
 
 ## 1. Functions
 
-### 1.1 Definition and Invocation
+### 1.1 Definition and Call
 
 ```python
 def greet(name, greeting="Hello"):
@@ -30,7 +30,7 @@ print(greet("zorrooz", "Hi"))      # Hi, zorrooz!
 def show(a, b, *args, **kwargs):
     print(f"a={a}, b={b}")
     print(f"Positional args: {args}")      # tuple
-    print(f"Keyword args: {kwargs}")       # dict
+    print(f"Keyword args: {kwargs}")  # dict
 
 show(1, 2, 3, 4, x=5, y=6)
 # a=1, b=2
@@ -38,8 +38,8 @@ show(1, 2, 3, 4, x=5, y=6)
 # Keyword args: {'x': 5, 'y': 6}
 ```
 
-- `*args`: collects extra positional arguments as a tuple
-- `**kwargs`: collects extra keyword arguments as a dict
+- `*args`: collects extra positional arguments into a tuple
+- `**kwargs`: collects extra keyword arguments into a dictionary
 
 ### 1.3 Unpacking Arguments
 
@@ -54,13 +54,13 @@ data = {"a": 1, "b": 2, "c": 3}
 print(add(**data))           # 6, dict unpacking
 ```
 
-### 1.4 lambda Anonymous Functions
+### 1.4 Lambda Anonymous Functions
 
 ```python
 square = lambda x: x ** 2
 print(square(5))             # 25
 
-# Works with sorted / map / filter
+# Combined with sorted / map / filter
 words = ["banana", "apple", "cherry"]
 print(sorted(words, key=lambda w: len(w)))
 # ['apple', 'banana', 'cherry']
@@ -92,7 +92,7 @@ print(c())   # 2
 
 ## 2. Decorators
 
-A decorator is a higher-order function that "takes a function and returns a function", used to enhance behavior without modifying the original function:
+A decorator is a higher-order function that "takes a function and returns a function," used to enhance its behavior without modifying the original function:
 
 ```python
 import time
@@ -114,7 +114,7 @@ print(slow_sum(10_000_000))
 # slow_sum took 0.35xx s
 ```
 
-Decorators with parameters:
+Decorator with parameters:
 
 ```python
 def repeat(times):
@@ -133,7 +133,7 @@ hello()
 # Hi! Hi! Hi!
 ```
 
-## 3. Classes and Object Orientation
+## 3. Classes and Object-Oriented Programming
 
 ### 3.1 Basic Definition
 
@@ -172,10 +172,10 @@ class Protein(Sequence):
     alphabet = "ACDEFGHIKLMNPQRSTVWY"
 
     def __init__(self, seq_id, seq):
-        super().__init__(seq_id, seq)   # call parent constructor
+        super().__init__(seq_id, seq)   # Call the parent class constructor
 
     def molecular_weight(self):
-        # Simplified calculation: each amino acid ~110 Da
+        # Simplified calculation: each amino acid is approximately 110 Da
         return self.length() * 110
 
 p = Protein("prot1", "MKWVTFISLL")
@@ -209,7 +209,7 @@ print(v1 == Vector(1, 2))  # True
 
 ### 3.4 Properties (property)
 
-Use `@property` to turn methods into attribute access and add validation:
+Use @property to turn methods into attribute access, and add validation:
 
 ```python
 class Person:
@@ -244,7 +244,7 @@ except ZeroDivisionError:
 else:
     print(f"Result: {result}")
 finally:
-    print("This is always executed regardless of errors")
+    print("This always executes regardless of errors")
 ```
 
 Custom exceptions:
@@ -265,13 +265,13 @@ except InvalidSequenceError as e:
 
 ## 5. Modules and Packages
 
-### 5.1 Importing Modules
+### 5.1 Module Imports
 
 ```python
-import math                       # entire module
-from math import sqrt, pi         # import specific names
-import numpy as np                # alias
-from collections import Counter   # common: counting
+import math                       # Entire module
+from math import sqrt, pi         # Import specific names
+import numpy as np                # Alias
+from collections import Counter   # Common: counting
 
 # Counter example
 from collections import Counter
@@ -284,21 +284,21 @@ print(cnt.most_common(2))
 
 ```
 myproject/
-├── __init__.py        # marks as a package (can be omitted in Python 3.3+)
+├── __init__.py        # Marks it as a package (optional in Python 3.3+)
 ├── utils/
 │   ├── __init__.py
-│   └── fasta.py       # defines read_fasta()
+│   └── fasta.py       # Defines read_fasta()
 └── main.py
 ```
 
 ```python
 # main.py
-from utils.fasta import read_fasta   # import relative to package path
+from utils.fasta import read_fasta   # Relative package import
 ```
 
 ### 5.3 `if __name__ == "__main__"`
 
-Allows the script to be imported or run directly:
+Allows the script to be both imported and run directly:
 
 ```python
 def main():
@@ -316,7 +316,7 @@ Type hints improve readability and work with IDE static checks:
 from typing import List, Dict, Optional
 
 def count_bases(seq: str) -> Dict[str, int]:
-    """Return the count of each base."""
+    """Return the occurrence count of each base."""
     return {b: seq.count(b) for b in "ACGT"}
 
 def find_motif(seq: str, motif: str) -> Optional[int]:
@@ -330,8 +330,8 @@ print(count_bases("ATGCCGA"))
 
 - `*args` / `**kwargs`, lambda, closures, and decorators are core to functional programming
 - Classes: `__init__`, inheritance, magic methods, `@property`
-- Exceptions: `try/except/else/finally`, custom exceptions inherit from `Exception`
-- Modularity: package directory + `if __name__ == "__main__"` guard
+- Exceptions: `try/except/else/finally`, custom exceptions inherit `Exception`
+- Modularity: package directories + `if __name__ == "__main__"` guard
 - Type hints make code more maintainable
 
 The next article will cover Python data processing in practice: file I/O, regular expressions, and NumPy/Pandas.

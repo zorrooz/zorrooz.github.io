@@ -1,21 +1,21 @@
 ---
-title: "Python Programming Introduction: Environment, Syntax, and Data Types"
+title: "Introduction to Python Programming: Environment, Syntax, and Data Types"
 date: "2026-08-04"
 author: "zorrooz"
 tags: ["Python","Getting Started","Tutorial"]
 draft: false
-description: "Learn Python from scratch: environment setup, basic syntax, built-in data types, and control flow, with runnable example code"
+description: "Learn Python from scratch: environment setup, basic syntax, built-in data types, and control flow, with runnable example code."
 ---
 
-# Python Programming Introduction: Environment, Syntax, and Data Types
+# Introduction to Python Programming: Environment, Syntax, and Data Types
 
-Python is an interpreted language with concise syntax and a rich ecosystem, widely used in scientific computing, data processing, and script automation. This article starts from scratch, covering environment setup, basic syntax, built-in data types, and control flow. All examples can be run directly.
+Python is an interpreted language with clean syntax and a rich ecosystem, widely used in scientific computing, data processing, and script automation. This article starts from scratch, covering environment setup, basic syntax, built-in data types, and control flow. All examples are directly runnable.
 
 ## 1. Environment Setup
 
 ### 1.1 Installing Python
 
-Visit [python.org](https://www.python.org/) to download the installation package for your platform. During installation, be sure to check **Add Python to PATH**.
+Visit [python.org](https://www.python.org/) to download the installer for your platform. When installing, be sure to check **Add Python to PATH**.
 
 Verify the installation:
 
@@ -24,7 +24,7 @@ python --version
 # Python 3.12.x
 ```
 
-> On Linux / WSL, the `python3` command is typically used, while on Windows it is `python`.
+> On Linux / WSL, the `python3` command is typically used; on Windows, it is `python`.
 
 ### 1.2 Virtual Environment (Highly Recommended)
 
@@ -40,7 +40,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-After activation, `(.venv)` will appear before the prompt. Install dependencies:
+After activation, `(.venv)` appears before the prompt. Install dependencies:
 
 ```bash
 pip install numpy pandas
@@ -59,7 +59,7 @@ python            # Enter REPL interactive mode
 python script.py  # Run a script file
 ```
 
-In the REPL, you can directly enter expressions and get immediate results, which is ideal for quickly testing ideas.
+In the REPL, you can directly enter expressions and get immediate results, which is great for quickly validating ideas.
 
 ## 2. First Program
 
@@ -83,19 +83,19 @@ python hello.py
 
 """
 Multi-line comment (actually a multi-line string,
-but often used as documentation)
+often used as documentation)
 """
 ```
 
 ### 3.2 Variables and Assignment
 
-Python is a dynamically typed language, so variables do not need type declarations:
+Python is a dynamically typed language; variables do not require type declarations:
 
 ```python
-name = "zorrooz"     # String
-age = 25             # Integer
-height = 1.78        # Float
-is_student = True    # Boolean
+name = "zorrooz"     # string
+age = 25             # integer
+height = 1.78        # float
+is_student = True    # boolean
 
 # Assign multiple variables at once
 a, b, c = 1, 2, 3
@@ -109,14 +109,14 @@ Variable naming follows PEP 8: lowercase letters + underscores (`snake_case`).
 ### 3.3 Input and Output
 
 ```python
-name = input("Please enter your name: ")
-print("Hello, ", name)
+name = input("请输入你的名字：")
+print("你好，", name)
 
-# f-string formatting (Python 3.6+, most recommended)
-print(f"Hello, {name}, you are {age} years old")
+# f-string formatting (Python 3.6+, recommended)
+print(f"你好，{name}，今年 {age} 岁")
 
 # format method
-print("Hello, {}, you are {} years old".format(name, age))
+print("你好，{}，今年 {} 岁".format(name, age))
 ```
 
 ## 4. Built-in Data Types
@@ -129,10 +129,10 @@ y = 3.14        # float
 z = 2 + 3j      # complex
 
 # Common operations
-print(7 // 2)   # Integer division, yields 3
-print(7 % 2)    # Modulo, yields 1
-print(2 ** 10)  # Exponentiation, yields 1024
-print(round(3.14159, 2))  # Round to 2 decimal places
+print(7 // 2)   # integer division, result 3
+print(7 % 2)    # modulo, result 1
+print(2 ** 10)  # exponentiation, result 1024
+print(round(3.14159, 2))  # round to 2 decimal places
 ```
 
 ### 4.2 Strings
@@ -145,7 +145,7 @@ t = 'world'
 print(s + " " + t)   # hello world
 print(s * 3)         # hellohellohello
 
-# Indexing and slicing (left-closed, right-open)
+# Indexing and slicing (left-inclusive, right-exclusive)
 print(s[0])          # h
 print(s[-1])         # o
 print(s[1:3])        # el
@@ -164,14 +164,14 @@ Lists are ordered, mutable containers:
 ```python
 fruits = ["apple", "banana", "cherry"]
 
-fruits.append("orange")      # Append to the end
-fruits.insert(0, "grape")    # Insert at a specific position
-fruits.remove("apple")       # Delete by value
-popped = fruits.pop()        # Pop the last element
+fruits.append("orange")      # append at the end
+fruits.insert(0, "grape")    # insert at a specific position
+fruits.remove("apple")       # remove by value
+popped = fruits.pop()        # pop the last element
 
-print(fruits[0])             # Index
-print(fruits[-1])            # Last element
-print(fruits[1:3])           # Slicing
+print(fruits[0])             # indexing
+print(fruits[-1])            # last element
+print(fruits[1:3])           # slicing
 
 # List comprehension (very commonly used)
 squares = [x ** 2 for x in range(10)]
@@ -184,7 +184,7 @@ Tuples are immutable lists, often used for returning multiple values:
 
 ```python
 point = (3, 4)
-x, y = point          # Unpacking
+x, y = point          # unpacking
 print(x, y)           # 3 4
 
 def minmax(nums):
@@ -196,14 +196,14 @@ print(lo, hi)         # 1 5
 
 ### 4.5 Dictionaries (dict)
 
-Dictionaries are key-value containers with high lookup efficiency:
+Dictionaries are key-value containers with efficient lookup:
 
 ```python
 person = {"name": "zorrooz", "age": 25}
 
-print(person["name"])            # Get value
-print(person.get("city", "unknown"))  # Safe access with a default value
-person["city"] = "Lanzhou"       # Add / modify
+print(person["name"])            # access value
+print(person.get("city", "未知"))  # safe access with default value
+person["city"] = "Lanzhou"       # add/update
 
 for key, value in person.items():
     print(f"{key}: {value}")
@@ -222,9 +222,9 @@ a = {1, 2, 3, 3, 3}
 print(a)              # {1, 2, 3}, automatically deduplicated
 
 b = {2, 3, 4}
-print(a & b)          # Intersection {2, 3}
-print(a | b)          # Union {1, 2, 3, 4}
-print(a - b)          # Difference {1}
+print(a & b)          # intersection {2, 3}
+print(a | b)          # union {1, 2, 3, 4}
+print(a - b)          # difference {1}
 ```
 
 ## 5. Control Flow
@@ -243,7 +243,7 @@ elif score >= 70:
 else:
     grade = "D"
 
-print(f"Grade: {grade}")
+print(f"等级：{grade}")
 
 # Ternary expression
 status = "pass" if score >= 60 else "fail"
@@ -252,18 +252,18 @@ status = "pass" if score >= 60 else "fail"
 ### 5.2 for Loops
 
 ```python
-# Iterate over an iterable
+# Iterate over iterable objects
 for fruit in ["apple", "banana"]:
     print(fruit)
 
-# range generates a sequence of numbers
+# Generate number sequences with range
 for i in range(5):        # 0 to 4
     print(i)
 
 for i in range(1, 10, 2):  # 1, 3, 5, 7, 9
     print(i)
 
-# enumerate gets both index and value
+# Use enumerate to get index and value simultaneously
 for idx, fruit in enumerate(["a", "b"]):
     print(idx, fruit)
 ```
@@ -274,7 +274,7 @@ for idx, fruit in enumerate(["a", "b"]):
 n = 0
 while n < 5:
     print(n)
-    n += 1          # Note: forgetting to increment will cause an infinite loop
+    n += 1          # Note: forgetting to increment causes an infinite loop
 ```
 
 ### 5.4 break / continue / else
@@ -284,25 +284,25 @@ while n < 5:
 for i in range(10):
     if i == 3:
         break
-    print(i)        # Outputs 0 1 2
+    print(i)        # outputs 0 1 2
 
-# continue: skip this iteration
+# continue: skip the current iteration
 for i in range(5):
     if i == 2:
         continue
-    print(i)        # Outputs 0 1 3 4
+    print(i)        # outputs 0 1 3 4
 
-# for-else: executes when the loop completes normally (without break)
+# for-else: executes when the loop completes normally (not broken)
 for i in range(3):
     if i == 99:
         break
 else:
-    print("Loop completed normally")
+    print("循环正常结束")
 ```
 
 ## 6. Comprehensive Exercise
 
-Count the occurrences of each word in a piece of text:
+Count the occurrences of each word in a text:
 
 ```python
 text = "python is fun and python is powerful"
@@ -329,9 +329,9 @@ powerful: 1
 
 ## 7. Summary
 
-- Use `venv` to isolate project dependencies, and `pip freeze` to record dependencies
+- Use `venv` to isolate project dependencies, use `pip freeze` to record dependencies
 - Built-in types: `int` / `float` / `str` / `list` / `tuple` / `dict` / `set`
-- List and dictionary comprehensions, and f-strings are high-frequency everyday syntax
+- List and dictionary comprehensions and f-strings are high-frequency syntax in daily use
 - Control flow: `if/elif/else`, `for`, `while`, `break` / `continue`
 
-The next article will introduce functions, classes, and modules, moving into real engineering programming.
+The next article will introduce functions, classes, and modules, moving into real engineering-style programming.
