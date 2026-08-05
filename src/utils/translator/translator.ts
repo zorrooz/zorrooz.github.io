@@ -3,13 +3,38 @@ import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import llmConfig from '../../config/llmConfig.ts'
+import { pathToFileURL } from 'url'
 import { cacheDir, contentSrcDir } from '../dataConfig.ts'
 
-const openai = new OpenAI({
-  baseURL: llmConfig.url,
-  apiKey: llmConfig.apikey,
-})
+let clientCache: OpenAI | null = null
+
+/**
+ * 懒加载 DeepSeek 配置（llmConfig.ts 被 gitignore，CI 无此文件）。
+ * 与 tagMerger 相同的动态加载策略：模块可被 vite-ssg 打包（静态 import 会
+ * 在 esbuild 阶段因缺文件失败），翻译只在本地/有配置时进行。
+ */
+async function loadLlmConfig(): Promise<{ url: string; apikey: string; model: string } | null> {
+  const cfgPath = path.join(import.meta.dirname, '../../config/llmConfig.ts')
+  if (!fsSync.existsSync(cfgPath)) return null
+  try {
+    const mod = (await import(pathToFileURL(cfgPath).href)) as {
+      default?: { url?: string; apikey?: string; model?: string }
+    }
+    const cfg = mod.default || {}
+    if (!cfg.url || !cfg.apikey || !cfg.model) return null
+    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model }
+  } catch {
+    return null
+  }
+}
+
+async function getClient(): Promise<OpenAI> {
+  if (clientCache) return clientCache
+  const cfg = await loadLlmConfig()
+  if (!cfg) throw new Error('未找到 LLM 配置：请在 src/config/llmConfig.ts 配置 { url, apikey, model }')
+  clientCache = new OpenAI({ baseURL: cfg.url, apiKey: cfg.apikey })
+  return clientCache
+}
 
 /**
  * 翻译文本内容
@@ -19,17 +44,18 @@ const openai = new OpenAI({
  */
 async function translateText(text: string, fileType = 'md'): Promise<string> {
   try {
+    const [client, cfg] = await Promise.all([getClient(), loadLlmConfig()])
     const systemPrompt =
       fileType === 'yaml'
         ? '你是一个专业翻译器。请将以下YAML文件内容翻译为英文，要求：\n1. 严格保持YAML格式结构（键名不翻译，只翻译值）\n2. 保持缩进、标点等格式不变\n3. 不添加任何解释、注释或额外内容\n4. 只输出翻译结果'
         : '你是一个专业翻译器。请将以下Markdown内容翻译为英文，要求：\n1. 严格保持原始格式（包括Markdown语法、代码块、换行、缩进等）\n2. 不添加任何解释、注释或额外内容\n3. 只输出翻译结果'
 
-    const completion = await openai.chat.completions.create({
+    const completion = await client.chat.completions.create({
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: text },
       ],
-      model: llmConfig.model,
+      model: cfg?.model ?? '',
       temperature: 0.3,
     })
 
