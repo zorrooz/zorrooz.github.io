@@ -34,9 +34,8 @@ coverage
 # API Keys and sensitive configuration
 src/config/llmConfig.ts
 
-# Generated content JSON (tracked) + build-time HTML (not tracked)
-src/content/html/
-**/.translate-state.json
+# 内容数据在 data 分支（../blog-data worktree），main 不含 content*
+# 数据分支自己的 .gitignore 忽略 content/（可再生成）
 
 # Qoder generated repo wiki index
 .qoder/
