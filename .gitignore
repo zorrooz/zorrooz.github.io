@@ -1,0 +1,10 @@
+# Regenerable: generated from content-src + cache by npm run prebuild (code repo)
+content/
+
+# Build artifacts / local
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.log
+.DS_Store

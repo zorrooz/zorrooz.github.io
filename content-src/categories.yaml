@@ -1,0 +1,63 @@
+notes:
+  - name: "Programming"
+    title: "编程"
+    desc: "R、Python、Linux 与 Bash 编程的详细教程"
+    date: "2026-08-04"
+    categories:
+      python: "Python"
+      r: "R"
+      linux: "Linux"
+      bash: "Bash"
+
+  - name: "StructuralBiology"
+    title: "结构生物学"
+    desc: "冷冻电镜数据处理、生物大分子结构可视化与原子建模"
+    date: "2026-08-04"
+    categories:
+      cryoem: "冷冻电镜"
+      visualization: "结构可视化"
+      modeling: "原子建模"
+
+  - name: "ComputationalBiology"
+    title: "计算生物学"
+    desc: "蛋白质设计与虚拟筛选的主流工具"
+    date: "2026-08-04"
+    categories:
+      protein-design: "蛋白质设计"
+      virtual-screening: "虚拟筛选"
+
+projects:
+  - name: "Plotit"
+    title: "plotit"
+    desc: "R 声明式绘图包——基于 ggplot2 的动词前缀 API，早期开发阶段"
+    date: "2025-12-30"
+    github: "https://github.com/zorrooz/plotit"
+    url: "https://zorrooz.github.io/plotit"
+    status: "active"
+    language: "R"
+    license: "MIT"
+    tags: ["R", "ggplot2", "数据可视化", "声明式API"]
+
+  - name: "ZorroozBlog"
+    title: "zorrooz.github.io"
+    desc: "个人博客系统——基于 Vue 3 + Vite 构建，支持中英双语、主题切换与 Markdown 文章管理"
+    date: "2025-08-29"
+    github: "https://github.com/zorrooz/zorrooz.github.io"
+    url: "https://zorrooz.github.io/"
+    status: "active"
+    language: "Vue"
+    license: "MIT"
+    tags: ["Vue", "Vite", "博客", "Markdown"]
+
+topics:
+  - name: "StructureOfProteinDemo"
+    title: "蛋白质结构解析演示课题"
+    desc: "蛋白质结构占位demo"
+    date: "2026-04-12"
+    doi: "10.1234/demo-structure.2026"
+    url: "https://www.demo-structure.org"
+    status: "completed"
+    journal: "Journal of Demo Science"
+    year: 2026
+    authors: ["Demo Author A", "Demo Author B"]
+    tags: ["Protein", "Structure", "Cryo-EM"]

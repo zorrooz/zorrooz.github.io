@@ -1,0 +1,63 @@
+notes:
+  - name: "Programming"
+    title: "Programming"
+    desc: "Detailed tutorials on R, Python, Linux, and Bash programming"
+    date: "2026-08-04"
+    categories:
+      python: "Python"
+      r: "R"
+      linux: "Linux"
+      bash: "Bash"
+
+  - name: "StructuralBiology"
+    title: "Structural Biology"
+    desc: "Cryo-EM data processing, visualization of biomacromolecular structures, and atomic modeling"
+    date: "2026-08-04"
+    categories:
+      cryoem: "Cryo-EM"
+      visualization: "Structural Visualization"
+      modeling: "Atomic Modeling"
+
+  - name: "ComputationalBiology"
+    title: "Computational Biology"
+    desc: "Mainstream tools for protein design and virtual screening"
+    date: "2026-08-04"
+    categories:
+      protein-design: "Protein Design"
+      virtual-screening: "Virtual Screening"
+
+projects:
+  - name: "Plotit"
+    title: "plotit"
+    desc: "Declarative plotting package for R — a verb-prefix API based on ggplot2, in early development stage"
+    date: "2025-12-30"
+    github: "https://github.com/zorrooz/plotit"
+    url: "https://zorrooz.github.io/plotit"
+    status: "active"
+    language: "R"
+    license: "MIT"
+    tags: ["R","ggplot2","Data Visualization","Declarative API"]
+
+  - name: "ZorroozBlog"
+    title: "zorrooz.github.io"
+    desc: "Personal blog system — built with Vue 3 + Vite, supporting bilingual Chinese/English, theme switching, and Markdown article management"
+    date: "2025-08-29"
+    github: "https://github.com/zorrooz/zorrooz.github.io"
+    url: "https://zorrooz.github.io/"
+    status: "active"
+    language: "Vue"
+    license: "MIT"
+    tags: ["Vue","Vite","Blog","Markdown"]
+
+topics:
+  - name: "StructureOfProteinDemo"
+    title: "Protein Structure Determination Demo Project"
+    desc: "Protein structure placeholder demo"
+    date: "2026-04-12"
+    doi: "10.1234/demo-structure.2026"
+    url: "https://www.demo-structure.org"
+    status: "completed"
+    journal: "Journal of Demo Science"
+    year: 2026
+    authors: ["Demo Author A", "Demo Author B"]
+    tags: ["Protein","Structure","Cryo-EM"]
