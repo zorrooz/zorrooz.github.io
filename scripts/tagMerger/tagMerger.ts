@@ -23,11 +23,6 @@ export interface TagMapping {
   translation?: Record<string, string>
 }
 
-export interface TagStat {
-  tag: string
-  count: number
-}
-
 /** 收集指定 locale 下全部标签（md frontmatter + categories yaml），返回 标签 → 出现次数 */
 export function collectTags(locale: 'zh-CN' | 'en-US'): Map<string, number> {
   const map = new Map<string, number>()

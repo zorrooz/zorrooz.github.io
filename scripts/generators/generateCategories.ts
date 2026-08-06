@@ -64,7 +64,7 @@ function withoutDate(art: FormattedArticle): Record<string, unknown> {
   return rest
 }
 
-/** 最新一篇文章的日期；空列表返回 ''。注：原地 sort 与旧实现一致 */
+/** 最新一篇文章的日期；空列表返回 ''（此处原地排序） */
 function latestDateOf(articles: FormattedArticle[]): string {
   return articles.length
     ? articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date

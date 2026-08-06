@@ -141,7 +141,6 @@ watch(
   min-height: 420px;
 }
 
-/* ---------- Sidebar ---------- */
 .res-sidebar {
   padding: var(--sp-2) var(--sp-5) var(--sp-2) 0;
   position: sticky;
@@ -227,7 +226,6 @@ watch(
   align-self: stretch;
 }
 
-/* ---------- Main ---------- */
 .res-main {
   padding: var(--sp-2) 0 var(--sp-2) var(--sp-10);
   min-width: 0;
@@ -384,7 +382,6 @@ watch(
   color: var(--primary);
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 1023px) {
   .res-layout {
     grid-template-columns: 1fr;

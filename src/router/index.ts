@@ -22,7 +22,7 @@ const prefixedRoutes = (prefix: LocaleSegment): RouteRecordRaw[] => [
 ]
 
 export const routes: RouteRecordRaw[] = [
-  // Legacy unprefixed URLs redirect to the locale-prefixed equivalent
+  // 无前缀旧 URL 重定向到带 locale 前缀的等价路径
   { path: '/', redirect: () => `/${preferredLocaleSegment()}/` },
   { path: '/category', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },
   { path: '/resource', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },

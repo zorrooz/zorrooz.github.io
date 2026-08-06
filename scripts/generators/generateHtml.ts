@@ -1,13 +1,9 @@
 /**
- * Generates static HTML for every article at build time.
- * Same file enumeration rules as generateNotes.ts:
- *   zh-CN: all .md files except `-en.md`
- *   en-US: all .md files under cache/en (machine translation layer)
- * Output: content/html/<relative-path-without-ext>.html (dataDir/content)
- * (e.g. notes/Omics/genomics/bwa/bwa.html, .../bwa-en.html)
- *
- * Only `notes` are rendered: projects/topics are metadata-only
- * (their md sources are removed from content-src).
+ * 构建期把每篇文章渲染为静态 HTML。
+ * 文件枚举规则与 generateNotes.ts 一致：
+ *   zh-CN：除 `-en.md` 外的全部 .md；en-US：cache/en（机器翻译层）的全部 .md
+ * 输出：content/html/<相对路径去扩展名>.html（如 notes/Omics/genomics/bwa/bwa.html、bwa-en.html）
+ * 仅渲染 notes：projects/topics 为纯元数据（无 md 文章）。
  */
 
 import fs from 'fs'

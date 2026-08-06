@@ -1,4 +1,3 @@
-<!-- TocDrawer.vue -->
 <template>
   <button
     v-show="visible"

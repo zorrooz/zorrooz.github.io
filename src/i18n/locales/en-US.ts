@@ -14,12 +14,10 @@ export default {
   searchPlaceholder: 'Search articles by title or content...',
   searchNoResults: 'No matching articles found',
   searchUnavailable: 'Search index failed to load',
-  searchEnterHint: 'Enter to open',
   searchEscHint: 'Esc to close',
   searchResultsLabel: 'results',
 
   // 导航
-  home: 'Home',
   categories: 'Categories',
   resources: 'Resources',
   about: 'About',
@@ -27,7 +25,6 @@ export default {
   // 首页
   greeting: "Hello, I'm",
   greetingPrefix: '//',
-  avatar: 'Avatar',
   developer: 'Developer',
   wordUnit: 'words',
   recentPosts: 'Recent Posts',
@@ -60,12 +57,9 @@ export default {
 
   // 资源页面
   resourceSubtitle: 'Commonly used tools in bioinformatics and structural biology',
-  resourceItems: 'items',
 
   // 关于页面
   experience: 'Experience',
-  introduction: 'Introduction',
-  contact: 'Contact Me',
   thanks: 'Thank you for your attention!',
   designedByPrefix: 'Designed by',
   designedBySuffix: '',

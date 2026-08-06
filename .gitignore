@@ -9,6 +9,12 @@ lerna-debug.log*
 
 node_modules
 .DS_Store
+Thumbs.db
+
+# 环境变量（本项目未使用 .env，保留防御；CI 变量在 workflow 中注入）
+.env
+.env.*
+!.env.example
 
 # Build output
 dist/
@@ -16,6 +22,8 @@ dist-ssr
 coverage
 *.local
 .vite/
+# vite-plugin-pwa 开发模式输出
+dev-dist/
 # 构建时由 generateSitemap 生成（CI 自动重新生成）
 public/sitemap.xml
 public/robots.txt

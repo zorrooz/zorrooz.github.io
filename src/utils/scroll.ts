@@ -1,19 +1,15 @@
 /**
  * 页面滚动控制：回到页首 + 弹层/抽屉的滚动锁定。
- * 合并自原 scroll.ts + scrollLock.ts。
+ * 两种锁语义不同，不得互相替换：
+ * - lockScrollOverflow：隐藏 overflow（移动端 offcanvas 菜单用）
+ * - lockScrollPosition：body 钉住 + 记录/恢复滚动位置（右侧抽屉用）
  */
 
-/** 回到页首（SSR 环境安全）。Article/PostList/Home 共用的滚动逻辑。 */
+/** 回到页首（SSR 环境安全） */
 export const scrollToTop = (behavior: 'auto' | 'smooth' = 'smooth') => {
   if (typeof window === 'undefined') return
   window.scrollTo({ top: 0, behavior })
 }
-
-/**
- * 弹层/抽屉的页面滚动锁定（两种既有实现，语义不同，不得互相替换）：
- * - lockScrollOverflow：隐藏 overflow（滚动位置天然保持；移动端 offcanvas 菜单用）
- * - lockScrollPosition：body 钉住 + 记录/恢复滚动位置（TocDrawer 右侧抽屉用）
- */
 
 function setDocumentEl(overflow: string, overscrollBehavior: string) {
   const docEl = document.documentElement

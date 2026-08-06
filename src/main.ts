@@ -18,7 +18,7 @@ import '@fortawesome/fontawesome-free/css/solid.min.css'
 import '@fortawesome/fontawesome-free/css/brands.min.css'
 import 'katex/dist/katex.min.css'
 
-// bootstrap touches document at module scope; SSR build must not include it
+// bootstrap 在模块顶层触碰 document，SSR 构建不得引入
 if (!import.meta.env.SSR) import('bootstrap')
 
 // v-reveal 滚动入场指令（IntersectionObserver，一次触发）
@@ -70,17 +70,17 @@ export const createApp = ViteSSG(
     const themeStore = useThemeStore()
     const localeStore = useLocaleStore()
     themeStore.initTheme()
-    // SSR: prerender each page in its own locale (/zh or /en path prefix)
+    // SSR：按 /zh 或 /en 路径前缀逐页预渲染，注入当前 locale
     if (import.meta.env.SSR && typeof routePath === 'string') {
       const locale = localeFromPath(routePath)
       if (locale) {
         localeStore.setLocale(locale)
-        // contentLoader (no router context) reads this during prerender
+        // contentLoader（无 router 上下文）在预渲染期读取该全局值
         globalThis.__GBLOG_LOCALE__ = locale
       }
     }
     if (isClient) localeStore.initLocale()
-    // PWA: register the service worker on every page (index.html carries the manifest link)
+    // PWA：生产环境注册 service worker（index.html 已带 manifest 链接）
     if (isClient && import.meta.env.PROD && 'serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(() => {})

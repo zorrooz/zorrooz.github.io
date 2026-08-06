@@ -1,7 +1,7 @@
 /**
- * Generates sitemap.xml + robots.txt from the zh-CN categories output.
- * Reads content/categories.json (all article URLs + dates), adds the
- * four static routes, and writes to public/ (copied as-is by Vite).
+ * 由 zh-CN categories 产物生成 sitemap.xml + robots.txt：
+ * 读取 content/categories.json（全部文章 URL + 日期），并入四个静态路由，
+ * 写入 public/（Vite 原样复制）。
  */
 
 import fs from 'fs'

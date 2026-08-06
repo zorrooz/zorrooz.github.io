@@ -1,4 +1,4 @@
-<!-- NavActions.vue — 顶栏操作按钮组（搜索 / 主题 / 语言 / 移动端菜单），移动与桌面共享一份实现 -->
+<!-- 顶栏操作按钮组（搜索 / 主题 / 语言 / 移动端菜单），移动与桌面共享一份实现 -->
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

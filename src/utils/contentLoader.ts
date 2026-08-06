@@ -1,7 +1,7 @@
 import type { AboutData, CategoryData, Note, Post, ResourceNode, Tag } from '@/types'
 
 const getCurrentLocale = (): string => {
-  // SSR prerender: locale injected by main.ts from the /zh|/en route prefix
+  // SSR 预渲染：locale 由 main.ts 从 /zh|/en 路由前缀注入
   const injected = globalThis.__GBLOG_LOCALE__
   if (injected) return injected
   return (typeof window !== 'undefined' ? localStorage.getItem('locale') : null) || 'zh-CN'
@@ -18,17 +18,15 @@ const getLocalizedFileName = (baseName: string, extension = '.json'): string => 
   return isEnglish ? `${baseName}-en${extension}` : `${baseName}${extension}`
 }
 
-// eager for the core JSON set (about/categories/notes/posts/projects/resources/tags/topics,
-// incl. -en variants); search-index* is excluded (lazy chunk in SearchModal)
-// @data 别名由 vite.config.ts 指向数据分支目录（GBLOG_DATA_DIR）
+// 急切加载核心 JSON（about/categories/notes/posts/projects/resources/tags/topics 含 -en 变体）；
+// search-index* 除外（SearchModal 内懒加载）。@data 别名指向数据分支（GBLOG_DATA_DIR）
 const jsonModules = import.meta.glob('@data/content/[abcnprt]*.json', { eager: true })
 const htmlModules = import.meta.glob('@data/content/html/**/*.html', {
   query: '?raw',
   import: 'default',
   eager: true,
 })
-// 惰性加载 markdown 源（复制文章用，按需拆包）。
-// 覆盖两层源：content-src（zh 手写）与 cache/en（英文机器层），按路径后缀区分语言
+// 惰性加载 markdown 源（复制文章用，按需拆包）：content-src 为 zh 手写源，cache/en 为机器层
 const markdownModules = import.meta.glob('@data/{content-src,cache/en}/**/*.md', {
   query: '?raw',
   import: 'default',
@@ -61,12 +59,9 @@ const loadJsonContent = <T>(fileName: string, fallback: T): T => {
 }
 
 /**
- * Load pre-rendered article HTML.
- * `filePath` uses the markdown-style path (e.g. `notes/Omics/genomics/bwa/bwa.md`);
- * lookup prefers the localized file and falls back to Chinese, mirroring the
- * old `loadMarkdownContent` semantics:
- *   en-US: bwa-en.html -> bwa.html
- *   zh-CN: bwa.html (or bwa-en.html when the path itself carries -en)
+ * 加载预渲染的文章 HTML。
+ * `filePath` 为 md 路径（如 `notes/Omics/genomics/bwa/bwa.md`）；优先匹配本地化文件，
+ * 回退到中文（en-US: bwa-en.html → bwa.html；zh-CN: bwa.html 或路径自带 -en 时取 -en）。
  */
 export const loadHtmlContent = (filePath: string): string => {
   const locale = getCurrentLocale()

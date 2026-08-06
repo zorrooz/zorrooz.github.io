@@ -1,4 +1,3 @@
-<!-- BackToTop.vue -->
 <template>
   <button
     v-show="showBackToTop"

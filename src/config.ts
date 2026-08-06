@@ -16,7 +16,7 @@ export const THEME_MODES = ['auto', 'light', 'dark'] as const
 
 export const DEFAULT_LOCALE: SupportedLocale = 'zh-CN'
 
-/** URL 段（/zh、/en）→ 完整 locale 的唯一映射 */
+/** URL 段（/zh、/en）→ 完整 locale */
 export const LOCALE_MAP: Record<LocaleSegment, SupportedLocale> = {
   zh: 'zh-CN',
   en: 'en-US',
@@ -34,29 +34,24 @@ export const HTML_LANG: Record<SupportedLocale, string> = {
   'en-US': 'en',
 }
 
-/** Map a URL locale segment (`/zh`, `/en`) or undefined to a supported locale. */
-export const localeFromSegment = (segment: string | undefined): SupportedLocale =>
-  segment && segment in LOCALE_MAP ? LOCALE_MAP[segment as LocaleSegment] : DEFAULT_LOCALE
-
-/** URL segment for a locale (`/zh` or `/en`). */
+/** URL 段（`/zh`/`/en`）或 undefined → 支持的 locale */
 export const localeSegmentOf = (locale: SupportedLocale): LocaleSegment => SEGMENT_OF[locale]
 
-/** Extract the locale from a URL path prefix (`/zh/...`, `/en/...`); null when absent. */
+/** 从 URL 路径前缀（`/zh/...`、`/en/...`）提取 locale；无前缀返回 null */
 export const localeFromPath = (path: string): SupportedLocale | null => {
   const m = path.match(/^\/(zh|en)(?=\/|$)/)
   return m ? LOCALE_MAP[m[1] as LocaleSegment] : null
 }
 
-/** Strip a leading `/zh`/`/en` prefix from a path (used by App.vue for SEO links). */
+/** 剥离路径前的 `/zh`/`/en` 前缀（App.vue 生成 SEO 链接用） */
 export const stripLocalePrefix = (path: string): string => path.replace(/^\/(zh|en)(?=\/|$)/, '')
 
-/** Coerce any runtime string (i18n locale, storage value) to a supported locale. */
+/** 任意运行时字符串（i18n locale、storage 值）→ 受支持的 locale */
 export const toSupportedLocale = (value: string | null | undefined): SupportedLocale =>
   value === SUPPORTED_LOCALES[1] ? SUPPORTED_LOCALES[1] : SUPPORTED_LOCALES[0]
 
 /**
- * Client-preferred locale segment: persisted `locale` takes precedence,
- * then `navigator.language`; falls back to `zh`.
+ * 客户端首选 locale 段：优先持久化的 `locale`，其次 `navigator.language`，最后回退 `zh`。
  */
 export const preferredLocaleSegment = (): LocaleSegment => {
   if (typeof window !== 'undefined') {

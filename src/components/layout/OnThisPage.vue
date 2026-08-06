@@ -1,4 +1,3 @@
-<!-- OnThisPage.vue -->
 <template>
   <nav class="on-this-page">
     <div class="otp-header">

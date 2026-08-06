@@ -57,7 +57,7 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 
 ```
 src/                        # 浏览器应用（含 SSR；不包含任何 Node 构建脚本）
-├── main.ts                    # Entry: createApp → Pinia → Router → i18n；内联 v-reveal 指令定义
+├── main.ts                    # Entry: ViteSSG → Pinia → Router → i18n；内联 v-reveal 指令定义
 ├── App.vue                   # <AppHeader> + <router-view> + <AppFooter>
 ├── router/index.ts           # 语言前缀路由（/{zh,en} × 5 路由）+ 旧 URL 重定向
 ├── i18n/
@@ -274,7 +274,8 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 
 ### 品牌与头像
 
-- 品牌为**文字 Logo**：`zorrooz's blog`（`.app-nav__brand`，`--font-serif` 宋体），无图形 logo、无 favicon 文件。
+- 品牌为**文字 Logo**：`zorrooz's blog`（`.app-nav__brand`，`--font-serif` 宋体），无图形 logo。
+- favicon 与 PWA 图标：`public/{favicon,apple-touch-icon,icon-512}.png`，由 `index.html`（favicon/apple-touch + og:image）与 `vite.config.ts` 的 PWA manifest（64/180/512 + maskable）引用。
 - 关于页头像：`src/assets/avatar.*`（任意图片格式），`About.vue` 通过 `import.meta.glob('../../assets/avatar.*')` 自动接入（有图用图、无图回退字母 monogram）；头像框为**黑色线框**（`1.5px solid var(--ink)`，无底色）。
 
 ### 复制功能

@@ -37,7 +37,7 @@ gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所
 | 状态管理 | Pinia |
 | 路由 | Vue Router 4（history 模式，语言前缀 + 旧 URL 重定向） |
 | UI 框架 | Bootstrap 5 + Sass |
-| Markdown | unified（remark-parse → remark-gfm → remark-math → rehype-highlight → rehype-katex） |
+| Markdown | unified（remark-parse → remark-gfm → remark-breaks → remark-math → remark-rehype → rehype-highlight → rehype-katex → rehype-stringify） |
 | 国际化 | vue-i18n（App 层） + 内容层双语镜像 |
 | 搜索 | MiniSearch（索引构建期预生成） |
 | PWA | vite-plugin-pwa（autoUpdate + generateSW） |
@@ -81,6 +81,8 @@ scripts/                      # Node 内容工具链（构建期运行，不进�
 └── tagMerger/                # zh→en 标签映射补齐 + 一致性修复（CLI）
 
 vite/contentDevPlugin.ts      # dev 插件：监听数据目录 → 重跑生成器 → full-reload
+
+public/                       # favicon.png / apple-touch-icon.png / icon-512.png（PWA 图标）
 
 # 数据分支（data，本地挂 ../blog-data）
 content-src/                  # 第一层 src：纯手写中文源（仅这里编辑）

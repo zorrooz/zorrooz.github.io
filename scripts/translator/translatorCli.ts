@@ -7,13 +7,11 @@ import fs from 'fs/promises'
 const program = new Command()
 const manager = new TranslationManager()
 
-// 设置命令行程序
 program
   .name('translator')
   .description('模块化文件翻译工具 - 支持MD和YAML文件的批量增量翻译')
   .version('2.0.0')
 
-// 翻译命令
 program
   .command('translate [target]')
   .description('翻译文件或目录（默认：数据分支的 content-src）')
@@ -44,7 +42,6 @@ program
     }
   })
 
-// 检查翻译状态
 program
   .command('status <target>')
   .description('检查文件翻译状态')
@@ -117,7 +114,6 @@ program
     }
   })
 
-// 显示帮助信息
 program
   .command('help')
   .description('显示帮助信息')
@@ -142,14 +138,13 @@ program
     `)
   })
 
-// 处理未知命令
 program.on('command:*', () => {
   console.error('[ERROR] 未知命令: %s', program.args.join(' '))
   console.log('请使用 "npm run translate -- help" 查看可用命令')
   process.exit(1)
 })
 
-// 默认命令 - 当没有提供子命令时执行
+// 默认命令：未提供子命令时翻译 content-src
 program
   .command('default', { isDefault: true })
   .description('默认翻译数据分支的 content-src 目录')
@@ -166,5 +161,4 @@ program
     }
   })
 
-// 解析命令行参数
 program.parse(process.argv)

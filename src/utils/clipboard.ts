@@ -1,7 +1,6 @@
 /**
- * Copy text to the clipboard with a hidden-textarea fallback.
- * Resolves on success; rejects when both the Clipboard API and the
- * legacy execCommand path fail (callers can surface the error).
+ * 复制文本到剪贴板：优先 Clipboard API，失败时用隐藏 textarea + execCommand 回退。
+ * 两条路径都失败则 reject（调用方可自行处理）。
  */
 export async function copyText(text: string): Promise<void> {
   try {

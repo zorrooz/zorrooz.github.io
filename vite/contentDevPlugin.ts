@@ -1,10 +1,8 @@
 /**
- * Vite dev plugin: regenerate content when the data source layers change.
- * 监听两层源：content-src（zh 手写）与 cache/en（英文机器层）。
- * translation 曾经的循环风险已消除：翻译输出不再回写 content-src，
- * 而是写入 cache/en（重建不会反向写它，故不会形成「触发→翻译→触发」循环）。
- * New/removed files require a server restart (import.meta.glob is resolved
- * at module transform time and would otherwise miss them).
+ * Vite dev 插件：数据源变更时重生成内容。
+ * 监听两层源：content-src（zh 手写）与 cache/en（英文机器层）。翻译输出只写 cache/en，
+ * 不反向写回 content-src，故无「触发→翻译→触发」循环风险；
+ * 新增/删除文件需重启 dev server（import.meta.glob 在模块 transform 期解析，否则漏检）。
  */
 
 import { watch } from 'chokidar'

@@ -37,7 +37,7 @@ gblog uses a **code/data dual-branch** architecture: the `main` branch contains 
 | State | Pinia |
 | Routing | Vue Router 4 (history mode, locale prefix + legacy redirects) |
 | UI | Bootstrap 5 + Sass |
-| Markdown | unified (remark-parse → remark-gfm → remark-math → rehype-highlight → rehype-katex) |
+| Markdown | unified (remark-parse → remark-gfm → remark-breaks → remark-math → remark-rehype → rehype-highlight → rehype-katex → rehype-stringify) |
 | i18n | vue-i18n (app layer) + mirrored content layer |
 | Search | MiniSearch (index pre-generated at build time) |
 | PWA | vite-plugin-pwa (autoUpdate + generateSW) |
@@ -81,6 +81,8 @@ scripts/                      # Node content toolchain (build-time, never bundle
   └── tagMerger/              # zh→en tag mapping + consistency fix (CLI)
 
 vite/contentDevPlugin.ts      # Dev plugin: watches data dir → rerun generators → full-reload
+
+public/                       # favicon.png / apple-touch-icon.png / icon-512.png (PWA icons)
 
 # Data branch (data, worktree at ../blog-data)
 content-src/                  # Layer 1: hand-written Chinese sources (edit only here)

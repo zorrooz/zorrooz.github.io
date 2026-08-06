@@ -277,7 +277,7 @@ async function copyArticle() {
       text = md.trim()
     }
   } catch {
-    // fall through to text extraction
+    // 回退到纯文本提取
   }
   if (!text) {
     const body = document.querySelector('.markdown-body')

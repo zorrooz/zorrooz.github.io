@@ -14,12 +14,10 @@ export default {
   searchPlaceholder: '搜索文章标题或正文...',
   searchNoResults: '未找到匹配的文章',
   searchUnavailable: '搜索索引加载失败',
-  searchEnterHint: 'Enter 打开',
   searchEscHint: 'Esc 关闭',
   searchResultsLabel: '条结果',
 
   // 导航
-  home: '首页',
   categories: '分类',
   resources: '资源',
   about: '关于',
@@ -27,7 +25,6 @@ export default {
   // 首页
   greeting: '你好，我是',
   greetingPrefix: '//',
-  avatar: '头像',
   developer: '开发者',
   wordUnit: '字',
   recentPosts: '最近文章',
@@ -60,12 +57,9 @@ export default {
 
   // 资源页面
   resourceSubtitle: '生物信息学与结构生物学领域常用工具',
-  resourceItems: '项',
 
   // 关于页面
   experience: '经历',
-  introduction: '自我介绍',
-  contact: '联系我',
   thanks: '感谢您的关注！',
   designedByPrefix: '由',
   designedBySuffix: '设计',

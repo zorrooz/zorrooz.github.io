@@ -1,4 +1,3 @@
-<!-- SearchModal.vue -->
 <template>
   <Teleport to="body">
     <div class="search-overlay" @click.self="close" @keydown.esc="close">

@@ -1,4 +1,3 @@
-<!-- RenderMarkdown.vue -->
 <template>
   <div class="markdown-body" v-html="renderedMarkdown" ref="markdownContainer"></div>
 </template>

@@ -1,9 +1,8 @@
 /**
- * Generates the client-side full-text search index.
- * Reads categories.json (article metadata) + pre-rendered article HTML
- * (content/html/**), strips tags to plain text, and writes
- * content/search-index.json (per locale, -en suffix pattern).
- * Runs after generateHtml, mirrors loadJsonContent lookup semantics.
+ * 生成客户端全文检索索引：
+ * 读取 categories.json（文章元数据）+ 预渲染文章 HTML（content/html/**），
+ * 去标签转纯文本后写入 content/search-index.json（按 locale，-en 后缀）。
+ * 在 generateHtml 之后运行，镜像 loadJsonContent 的查找语义。
  */
 
 import fs from 'fs'

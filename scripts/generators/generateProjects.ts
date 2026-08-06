@@ -12,10 +12,9 @@ import {
 } from './core/index.ts'
 
 /**
- * 项目已改为纯元信息模式：不再从 md 扫描文章，
- * 仅从 categories.yaml 读取项目元信息（md 源文件保留但不生成文章）。
+ * 项目为纯元信息模式：不从 md 扫描文章，仅从 categories.yaml 读取项目元数据。
  */
-export interface ProjectItem {
+interface ProjectItem {
   name: string
   title: string
   desc: string

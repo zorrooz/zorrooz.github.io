@@ -94,7 +94,6 @@ const sections = computed(() => data.value.section)
 </script>
 
 <style scoped>
-/* ---------- Head: centered identity + intro ---------- */
 .about-head {
   display: flex;
   flex-direction: column;
@@ -167,7 +166,6 @@ const sections = computed(() => data.value.section)
   max-width: 65ch;
 }
 
-/* ---------- Foot: contacts ---------- */
 .about-foot {
   display: flex;
   flex-direction: column;
@@ -217,14 +215,12 @@ const sections = computed(() => data.value.section)
   color: var(--fg-3);
 }
 
-/* ---------- Body ---------- */
 .about-body {
   display: flex;
   flex-direction: column;
   gap: var(--sp-16);
 }
 
-/* ---------- Experience (centered) ---------- */
 .about-section {
   width: 100%;
   max-width: 720px;
@@ -252,7 +248,6 @@ const sections = computed(() => data.value.section)
   flex-shrink: 0;
 }
 
-/* ---------- Timeline ---------- */
 .timeline {
   padding: var(--sp-2) 0;
 }
@@ -322,7 +317,6 @@ const sections = computed(() => data.value.section)
   line-height: 1.65;
 }
 
-/* ---------- Section cards ---------- */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -389,7 +383,6 @@ const sections = computed(() => data.value.section)
   margin-top: 2px;
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 767px) {
   .about-grid {
     grid-template-columns: 1fr;

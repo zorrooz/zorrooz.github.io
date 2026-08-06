@@ -1,9 +1,8 @@
 /**
  * 浮动按钮（BackToTop / TocDrawer）共享的定位与协调逻辑。
- *
- * 两个按钮通过 window CustomEvent 'floating-buttons-base-top' 协调纵向位置：
- * - mode 'match'：直接占据广播的 base（自身 top = base，广播自身 top）
- * - mode 'stack'：挂在上方（自身 top = base - gap，回广播 top + gap）
+ * 两按钮通过 window CustomEvent 'floating-buttons-base-top' 协调纵向位置：
+ * - mode 'match'：直接占据广播的 base
+ * - mode 'stack'：挂在 base 上方（top = base - gap）
  * 支持触摸拖拽（constrained 到边界）与单击释放（触发 onRelease）。
  */
 import { ref } from 'vue'

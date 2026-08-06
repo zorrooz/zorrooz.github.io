@@ -24,7 +24,7 @@ interface CategoryEntry {
   subMap: Record<string, unknown>
 }
 
-export interface PostItem {
+interface PostItem {
   id: number
   no: number
   title: string
@@ -46,6 +46,7 @@ function deriveCategory(relativePath: unknown): string[] {
 function buildNotesCategoryMap(categoriesArr: unknown): Map<string, CategoryEntry> {
   const map = new Map<string, CategoryEntry>()
   if (!Array.isArray(categoriesArr)) return map
+  // 取 categories.json 的 notes 段（zh 源标题恒为「笔记」）映射分类
   const notesSection = categoriesArr.find((s) => s && s.title === '笔记' && Array.isArray(s.items))
   if (!notesSection) return map
   for (const item of notesSection.items) {

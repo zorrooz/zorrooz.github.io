@@ -94,8 +94,7 @@ const config: UserConfig & { ssgOptions?: ViteSSGOptions } = {
     },
   },
   ssgOptions: {
-    // i18n.global.locale is a module singleton; serial rendering keeps each
-    // page's locale from being clobbered by a concurrent page's setup
+    // i18n.global.locale 是模块单例，串行渲染保证各页 locale 不被并发页覆盖
     concurrency: 1,
     includedRoutes: (paths: string[]) => {
       const redirectOnly = new Set(['/', '/category', '/resource', '/about'])

@@ -1,12 +1,11 @@
 @use 'bootstrap/scss/bootstrap';
 
 /* ============================================================
-   zorrooz's blog Design System v7 — Blue Tech Editorial
-   Single brand blue, cool-grey neutrals, editorial spacing.
-   Flat surfaces (no card shadows), hairline borders, 3-tier radii.
+   设计系统 v7 — 蓝色科技编辑风
+   单一主蓝 + 冷灰中性色，扁平表面（无卡片阴影）、发丝边框、三级圆角。
    ============================================================ */
 
-/* ========== FONTS ========== */
+/* ========== 字体 ========== */
 @font-face {
   font-family: 'Agave';
   src:
@@ -123,14 +122,14 @@
   --tint-sky: var(--seed-primary-soft);
   --on-primary: #ffffff;
 
-  /* Radius system: controls 6, buttons 8, cards 12, panels 16, pills full */
+  /* 圆角分层：控件 6 / 按钮 8 / 卡片 12 / 面板 16 / 胶囊全圆 */
   --radius-sm: 6px;
   --radius-btn: 8px;
   --radius: 12px;
   --radius-lg: 16px;
   --radius-pill: 9999px;
 
-  /* Shadows: cards stay flat; shadows only for floats, menus, modals */
+  /* 阴影：卡片扁平，仅浮层 / 菜单 / 弹窗使用 */
   --shadow-card: none;
   --shadow-soft: 0 1px 2px rgba(22, 25, 31, 0.04), 0 4px 12px rgba(22, 25, 31, 0.05);
   --shadow-lift: 0 8px 28px rgba(22, 25, 31, 0.1);
@@ -139,7 +138,7 @@
 
   --success: #0a9d6c;
 
-  /* Fonts: serif headings + sans body */
+  /* 字体：宋体标题 + 黑体正文 */
   --font-sans:
     system-ui, -apple-system, 'Segoe UI', 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-serif:
@@ -148,7 +147,7 @@
     'Agave', ui-monospace, 'Cascadia Code', 'JetBrains Mono', 'SF Mono', Consolas, 'Courier New',
     monospace;
 
-  /* ---------- Type scale (8 levels, 76px hero → 13px caption) ---------- */
+  /* ---------- 字号阶梯（8 级：76px 大标题 → 13px 说明） ---------- */
   --text-xs: 13px;
   --text-sm: 14px;
   --text-base: 15px;
@@ -162,7 +161,7 @@
   --text-5xl: 48px;
   --text-hero: 76px;
 
-  /* ---------- Motion ---------- */
+  /* ---------- 动效 ---------- */
   --dur-fast: 0.14s;
   --dur-base: 0.22s;
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
@@ -182,7 +181,7 @@
   --sp-24: calc(var(--sp) * 12);
   --sp-28: calc(var(--sp) * 14);
 
-  /* ---------- Compatibility layer ---------- */
+  /* ---------- 兼容层（旧 app-* 变量映射） ---------- */
   --app-bg: var(--bg);
   --app-bg-tertiary: var(--bg);
   --app-bg-light: var(--tint);
@@ -236,7 +235,7 @@
   --app-radius-lg: 16px;
   --app-radius-pill: 9999px;
 
-  /* Markdown */
+  /* Markdown 代码块 */
   --app-markdown-code-bg: #f3f5f8;
   --app-markdown-code-color: var(--blue-600);
   --app-markdown-external-link-color: var(--primary);
@@ -244,7 +243,7 @@
   --app-markdown-code-header-bg: #eceff4;
 }
 
-/* ========== DARK ========== */
+/* ========== 暗色 ========== */
 [data-bs-theme='dark'] {
   /* 黑 / 灰 / 蓝 三族反白映射 */
   --ink: #e7e9ee;
@@ -296,7 +295,7 @@
   --app-markdown-code-header-bg: #202735;
 }
 
-/* ========== BASE ========== */
+/* ========== 基础 ========== */
 *,
 *::before,
 *::after {
@@ -363,7 +362,7 @@ a {
   color: var(--fg);
 }
 
-/* Scrollbar */
+/* 滚动条 */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -397,7 +396,7 @@ button {
   user-select: none;
 }
 
-/* ========== Layout ========== */
+/* ========== 布局 ========== */
 .page-wrap {
   display: flex;
   flex-direction: column;
@@ -446,16 +445,16 @@ button {
   margin: 0 auto;
 }
 
-/* ========== Components ========== */
+/* ========== 组件 ========== */
 
-/* Panel (flat card) */
+/* 面板（扁平卡片） */
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
 }
 
-/* Tag — neutral chip, blue only on hover */
+/* 标签 — 灰底灰字，hover 变蓝 */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -481,7 +480,7 @@ button {
   border-color: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
-/* Tag size tiers (home tag cloud, by popularity) */
+/* 标签尺寸分级（首页标签云按热度） */
 .tag--lg {
   font-size: 15px;
   padding: 6px 16px;
@@ -497,7 +496,7 @@ button {
   padding: 4px 11px;
 }
 
-/* Pagination */
+/* 分页 */
 .page-btn {
   min-width: 36px;
   height: 36px;
@@ -536,7 +535,7 @@ button {
   color: var(--on-primary);
 }
 
-/* Tree sidebar */
+/* 树形侧栏 */
 .tree-group {
   margin-bottom: var(--sp-6);
 }
@@ -597,7 +596,7 @@ button {
   font-size: var(--text-sm);
 }
 
-/* Contact chip */
+/* 联系胶囊 */
 .contact-chip {
   display: inline-flex;
   align-items: center;
@@ -627,7 +626,7 @@ button {
   font-size: 14px;
 }
 
-/* Headings — serif display font */
+/* 标题 — 宋体展示字 */
 h1,
 h2,
 h3,
@@ -662,7 +661,7 @@ h6 {
   border-bottom: 1px solid var(--line);
 }
 
-/* Title-style classes get the serif display font */
+/* 标题类样式统一用宋体 */
 .hero__name,
 .about-head__name,
 .about-cell__item-name,
@@ -676,7 +675,7 @@ h6 {
   font-family: var(--font-serif);
 }
 
-/* Bootstrap overrides */
+/* Bootstrap 覆写 */
 .card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -717,7 +716,7 @@ h6 {
   line-height: 1.65;
 }
 
-/* Global transitions */
+/* 全局过渡 */
 a,
 button {
   transition:
@@ -728,7 +727,7 @@ button {
     opacity 0.14s ease;
 }
 
-/* Utility: vertical divider */
+/* 工具：竖向分隔线 */
 .divider-v {
   width: 1px;
   height: 14px;
@@ -737,7 +736,7 @@ button {
   display: inline-block;
 }
 
-/* Utility: icon button */
+/* 工具：图标按钮 */
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -761,7 +760,7 @@ button {
   background: var(--surface-2);
 }
 
-/* Utility: indicator line */
+/* 工具：指示线 */
 .indicator-v {
   width: 2px;
   height: 16px;
@@ -770,7 +769,7 @@ button {
   flex-shrink: 0;
 }
 
-/* Utility: dot */
+/* 工具：圆点 */
 .dot {
   width: 8px;
   height: 8px;
@@ -779,7 +778,7 @@ button {
   flex-shrink: 0;
 }
 
-/* Reveal animation (simple opacity) */
+/* 显现动画（纯透明度） */
 @keyframes revealIn {
   from {
     opacity: 0;
@@ -799,7 +798,7 @@ button {
   animation-delay: var(--reveal-delay, 0ms);
 }
 
-/* Number tabular */
+/* 数字等宽对齐 */
 .num {
   font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);

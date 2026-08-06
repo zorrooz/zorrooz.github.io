@@ -1,7 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
-import { isDirectRun, logWriteSuccess, readYaml, runCliScript, writeJsonFile } from './core/index.ts'
+import {
+  isDirectRun,
+  logWriteSuccess,
+  readYaml,
+  runCliScript,
+  writeJsonFile,
+} from './core/index.ts'
 
 interface ExperienceItem {
   year: string

@@ -1,7 +1,6 @@
 /**
- * Shared utilities for content generators.
- * Behavior must stay byte-identical to the original per-generator copies;
- * verify by diffing generated JSON before/after refactor.
+ * 内容生成器共享工具。行为须与重构前各生成器的原实现逐字节一致，
+ * 重构后须对比前后生成的 JSON 验证。
  */
 
 import fs from 'fs'
@@ -77,24 +76,20 @@ export function parseFrontMatterAndBody(raw: string): FrontMatterResult {
   return { frontmatter: {}, body: raw }
 }
 
-// Crude markdown -> plain text for counting words
+/** 粗略去除 markdown 标记 → 纯文本，用于字数统计 */
 export function markdownToPlain(text: string): string {
-  // remove code fences first
+  // 先剥代码块与行内代码
   let t = text.replace(/```[\s\S]*?```/g, ' ')
-  // remove inline code
   t = t.replace(/`[^`]*`/g, ' ')
-  // remove images ![alt](url)
+  // 图像/链接/HTML 标签
   t = t.replace(/!\[[^\]]*]\([^)]+\)/g, ' ')
-  // remove links [text](url)
   t = t.replace(/\[[^\]]*]\([^)]+\)/g, ' ')
-  // remove html tags
   t = t.replace(/<[^>]+>/g, ' ')
-  // remove headings/bold/italic/quotes/lists/tables markers
+  // 标题、加粗/斜体/引用/列表/表格标记与参考链接
   t = t.replace(/^#{1,6}\s+/gm, ' ')
   t = t.replace(/[*_~`>#|-]{1,}/g, ' ')
-  // remove reference links [id]: url
   t = t.replace(/^\s*\[[^\]]+]:\s+\S+.*$/gm, ' ')
-  // collapse whitespace
+  // 折叠空白
   t = t.replace(/\s+/g, ' ').trim()
   return t
 }
@@ -116,9 +111,8 @@ export function safeArray(x: unknown): unknown[] {
 }
 
 /**
- * Parse a JSON file. Returns the parsed value (could be null when the file
- * literally contains `null`), or null when the file is missing / unreadable.
- * Callers distinguish "missing" via fs.existsSync; invalid JSON yields null.
+ * 读取 JSON 文件：文件缺失或非法返回 null（文件内容为字面 `null` 时返回 null 本身）。
+ * 调用方可用 fs.existsSync 区分「缺失」。
  */
 export function readJson(filePath: string): unknown {
   try {
@@ -129,7 +123,7 @@ export function readJson(filePath: string): unknown {
   }
 }
 
-/** Parse a YAML file; returns null when missing, or undefined for an empty file. */
+/** 读取 YAML 文件；缺失返回 null，空文件返回 undefined */
 export function readYaml(filePath: string): unknown {
   try {
     if (!fs.existsSync(filePath)) return null
@@ -145,17 +139,14 @@ export function writeJsonFile(filePath: string, data: unknown, space = 2): void 
 }
 
 /**
- * True when the module is executed directly (node foo.ts), tolerant of
- * relative/absolute argv forms. Used to gate CLI entry points so that
- * importing a generator module does not trigger its main().
+ * 判断模块是否被直接执行（node foo.ts），容忍相对/绝对 argv 形式。
+ * 用于门控 CLI 入口，避免 import 生成器模块时误触发其 main()。
  */
 export function isDirectRun(importMeta: ImportMeta): boolean {
-  return Boolean(
-    process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(importMeta.url),
-  )
+  return Boolean(process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(importMeta.url))
 }
 
-/** Standard single-generator CLI bootstrap: banner + run + exit code on failure. */
+/** 单个生成器 CLI 的通用引导：banner + 执行 + 失败退出码 */
 export function runCliScript(name: string, run: () => void | Promise<void>): void {
   console.log(`Starting ${name} generation script...`)
   const done = () => console.log(`${name} generation complete.`)
@@ -175,12 +166,12 @@ export function runCliScript(name: string, run: () => void | Promise<void>): voi
   }
 }
 
-/** Uniform "Successfully generated" log with optional parenthesized detail. */
+/** 统一的「生成成功」日志，可附括号明细 */
 export function logWriteSuccess(targetPath: string, detail?: string): void {
   console.log(`Successfully generated: ${targetPath}${detail ? ` (${detail})` : ''}`)
 }
 
-/** Markdown file predicate honoring the -en identity contract per locale. */
+/** md 文件过滤器：zh 排除 -en 身份后缀，en 全收 */
 export function mdFileFilter(locale: string): (filePath: string) => boolean {
   return (filePath) =>
     locale === 'zh-CN'

@@ -12,10 +12,9 @@ import {
 } from './core/index.ts'
 
 /**
- * 课题已改为纯元信息模式：不再从 md 扫描文章，
- * 仅从 categories.yaml 读取课题元信息（md 源文件保留但不生成文章）。
+ * 课题为纯元信息模式：仅从 categories.yaml 读取课题元数据。
  */
-export interface TopicItem {
+interface TopicItem {
   name: string
   title: string
   desc: string
