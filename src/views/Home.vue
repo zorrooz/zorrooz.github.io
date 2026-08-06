@@ -72,7 +72,7 @@ import { useRoute, useRouter } from 'vue-router'
 import PostList from '@/components/layout/PostList.vue'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
-import { goToTag } from '@/utils/tagQuery'
+import { goToTag } from '@/utils/navigation'
 import { scrollToTop } from '@/utils/scroll'
 import { SITE, toSupportedLocale } from '@/config/site'
 

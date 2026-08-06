@@ -1,83 +1,113 @@
 # gblog
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/zorrooz/zorrooz.github.io)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4fc08d)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646cff)](https://vitejs.dev/)
-[![GitHub stars](https://img.shields.io/github/stars/zorrooz/gblog?style=social)](https://github.com/zorrooz/zorrooz.github.io)
-[![English Version](https://img.shields.io/badge/English-Version-blue)](README_EN.md)
-
+[![GitHub stars](https://img.shields.io/github/stars/zorrooz/zorrooz.github.io?style=social)](https://github.com/zorrooz/zorrooz.github.io)
+[![中文版](https://img.shields.io/badge/中文-Version-blue)](README.md)
 
 [English](README_EN.md) | [中文](README.md)
 
-gblog is a modern personal blog system built with Vue 3 + Vite, featuring bilingual support (English/Chinese), theme switching, Markdown article management, and more.
+gblog is a modern bilingual static blog system built with Vue 3 + Vite 7, featuring English/Chinese switching, light/dark themes, Markdown article management, full-text search, and PWA offline support.
 
 ## ✨ Project Introduction
 
-gblog is a fully-featured static blog system designed for personal knowledge management and content presentation. Developed with Vue 3's Composition API and Vite as the build tool, it supports responsive design and a modern user experience.
+gblog uses a **code/data dual-branch** architecture: the `main` branch contains code only, while all content lives on the `data` branch (attached locally via a git worktree at `../blog-data`). Content is written as Markdown + YAML sources, converted to JSON/HTML artifacts by Node generators at build time, and presented through SSG pre-rendering with runtime loading — balancing SEO and first-paint speed.
 
 ### 🎯 Core Features
 
-- **Bilingual Support**: Built-in English and Chinese language switching
-- **Theme Switching**: Supports light / dark / system-follow modes
-- **Markdown Rendering**: Full Markdown support with code highlighting and mathematical formulas
-- **Content Copying**: One-click copy for articles and tables (tables copied as TSV, paste-ready for Excel)
-- **Content Organization**: Multi-dimensional content management with categories, resources, about page, etc.
-- **Auto Translation**: Integrated AI translation tool for automatic English-Chinese content translation
-- **Responsive Design**: Adapts to various screen sizes
-- **Fast Loading**: Quick builds and hot updates powered by Vite
+- **Bilingual Content**: `/zh` and `/en` locale-prefixed routing; content managed as "hand-written Chinese source + AI-translated mirror"
+- **Theme Switching**: light / dark / follows-system modes (Bootstrap 5 theme variables + Sass)
+- **SSR / SSG Pre-rendering**: vite-ssg renders every page at build time for SEO
+- **Full-text Search**: MiniSearch client-side search, index pre-generated at build time (`search-index.json`)
+- **Markdown Rendering**: GFM + syntax highlighting (highlight.js) + math formulas (KaTeX)
+- **Content Copying**: one-click article text copy; tables copied as TSV, paste-ready for Excel
+- **Complete Reading Experience**: three-column article layout (tree nav + content + on-this-page), TOC drawer, reading time, tag filtering, back-to-top
+- **PWA Offline**: vite-plugin-pwa auto-generates a Service Worker and precaches content artifacts
+- **Auto Translation**: DeepSeek API incremental translation keyed on content hashes (untouched files cost nothing to skip)
+- **Responsive Design**: unified margins and breakpoints across desktop / tablet / mobile
 
 ### 🛠️ Tech Stack
 
-- **Frontend Framework**: Vue 3 (Composition API)
-- **Build Tool**: Vite 7
-- **State Management**: Pinia
-- **Routing Management**: Vue Router 4
-- **UI Framework**: Bootstrap 5
-- **Theme Implementation**: Sass
-- **Markdown Processing**: unified ecosystem (remark and rehype)
-- **Internationalization**: vue-i18n
-- **Deployment**: GitHub Pages
+| Area | Technology |
+|------|------------|
+| Frontend | Vue 3 (Composition API + `<script>` mix) |
+| Build tool | Vite 7 (ESM) |
+| SSR / SSG | vite-ssg (per-page pre-rendering) |
+| State | Pinia |
+| Routing | Vue Router 4 (history mode, locale prefix + legacy redirects) |
+| UI | Bootstrap 5 + Sass |
+| Markdown | unified (remark-parse → remark-gfm → remark-math → rehype-highlight → rehype-katex) |
+| i18n | vue-i18n (app layer) + mirrored content layer |
+| Search | MiniSearch (index pre-generated at build time) |
+| PWA | vite-plugin-pwa (autoUpdate + generateSW) |
+| AI Translation | OpenAI SDK + DeepSeek (incremental translator + tag mapper) |
+| Deployment | GitHub Actions + GitHub Pages |
+| Node | `>=23.6.0` (native type stripping runs `.ts` scripts directly) |
 
 ### 📁 Project Structure
 
-Content lives on the `data` branch (local worktree at `../blog-data`); `main` branch holds code only:
-
 ```
-src/  
-├── views/               # Page components  
-├── components/          # Reusable components  
-├── stores/              # Pinia state management  
-├── utils/               # Utility functions and generators  
-└── router/              # Routing configuration  
+# Code branch (main)
+src/                          # Browser app (incl. SSR; no Node build scripts)
+├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n
+├── App.vue                   # AppHeader + router-view + AppFooter
+├── router/index.ts           # /{zh,en} × 5 routes + legacy URL redirects
+├── i18n/                     # vue-i18n instance + locales/{zh-CN,en-US}.ts
+├── stores/                   # theme.ts / locale.ts (Pinia)
+├── config/site.ts            # SITE constants, locale maps, theme modes
+├── views/                    # Home / Category / Resource / About / Article
+├── components/
+│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList,
+│   │                         # RenderMarkdown, NavigationTree, OnThisPage
+│   └── widgets/              # BackToTop, SearchModal, TocDrawer
+├── composables/              # useFloatingButton / useLocalizedContent
+├── utils/                    # Browser runtime helpers (do not import scripts/)
+│   ├── contentLoader.ts      # Typed import.meta.glob loading (@data alias)
+│   ├── navigation.ts         # Locale paths, language switch, tag nav, article paths
+│   ├── scroll.ts             # Back-to-top + overlay scroll locking
+│   ├── clipboard.ts          # Copy (Clipboard API + fallback)
+│   ├── readingTime.ts        # Reading time estimate
+│   └── reveal.ts             # v-reveal scroll-in directive
+├── types/content.ts          # Domain types matching content/*.json artifacts
+└── assets/                   # Fonts / styles / avatar
 
-# data branch (../blog-data)
-content-src/             # Layer 1 src: hand-written Chinese sources (edit here only)
-│   ├── notes/           # Note articles (only directory with markdown)  
-│   ├── projects/        # Project metadata (yaml only, no articles)  
-│   ├── topics/          # Topic metadata (yaml only, no articles)  
-│   ├── categories.yaml  # Category definitions  
-│   ├── about.yaml       # About page content  
-│   └── resources.yaml   # Resources page content  
-cache/                   # Layer 2 cache: machine-maintained persistent state (committed)
-│   ├── en/              #   English translation layer (mirrors content-src, -en identity)
-│   ├── tag-mapping.json #   zh→en tag mapping
-│   └── .translate-state.json # incremental translation state
-content/                 # Layer 3 final: generated JSON + html (regenerable, not committed)
+scripts/                      # Node content toolchain (build-time, never bundled)
+  ├── dataConfig.ts           # Single entry for data dirs (supports GBLOG_DATA_DIR)
+  ├── markdownProcessor.ts    # unified pipeline: md → HTML
+  ├── runAllGenerators.ts     # Generator orchestration
+  ├── llmConfig.ts            # DeepSeek API config (gitignored, never committed)
+  ├── generators/             # core/ (shared IO) + 11 generators
+  ├── translator/             # AI incremental translation (CLI: translate/status/help)
+  └── tagMerger/              # zh→en tag mapping + consistency fix (CLI)
+
+vite/contentDevPlugin.ts      # Dev plugin: watches data dir → rerun generators → full-reload
+
+# Data branch (data, worktree at ../blog-data)
+content-src/                  # Layer 1: hand-written Chinese sources (edit only here)
+  ├── categories.yaml         # categories + all notes/projects/topics metadata
+  ├── about.yaml              # about page
+  ├── resources.yaml          # resources page
+  └── notes/<cat>/<sub>/<article>/<article>.md
+cache/                        # Layer 2: machine-maintained persistent state (committed)
+  ├── en/                     #   English translation layer (mirrors content-src, -en identity)
+  ├── tag-mapping.json        #   zh→en tag mapping
+  └── .translate-state.json   #   incremental translation state (source → content hash)
+content/                      # Layer 3: generated JSON + html (regenerable, not committed)
 ```
 
 ## 🚀 Getting Started
 
 ### 🌍 Environment
 
-- **Node.js**: `>=23.6.0` (Node native type stripping runs `.ts` generators directly)
+- **Node.js** `>=23.6.0` (native type stripping runs `.ts` generators directly)
 
 ### 💻 Installation
 
 1. Clone the repository and attach the data worktree (sibling dir `../blog-data`)
 
    ```
-   git clone https://github.com/zorrooz/zorrooz.github.io.git  
+   git clone https://github.com/zorrooz/zorrooz.github.io.git
    cd zorrooz.github.io
    git worktree add ../blog-data data
    ```
@@ -88,236 +118,216 @@ content/                 # Layer 3 final: generated JSON + html (regenerable, no
    npm install
    ```
 
-3. Start the development server
-   
-   ```
-   npm run dev
-   ```
+### Common Commands
 
-   The development server will run at http://localhost:5173 by default.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Dev server at http://localhost:5173 (watches data dir; regenerates content + HMR) |
+| `npm run prebuild` | Content generators only |
+| `npm run build` | Generators + vite-ssg build (SSG pre-render + PWA) |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | ESLint (auto-fix) |
+| `npm run typecheck` | vue-tsc + tsc dual-project type check |
+| `npm run format` | Prettier (`src/ scripts/ vite/`) |
+| `npm run translate` | AI incremental translation (writes `cache/en`) |
+| `npm run tagmerge` | Incrementally complete zh→en tag mappings |
+| `npm run deploy` | Commit and push the data branch; CI rebuilds and deploys |
 
-4. Build for production
+### Publish Flow
 
-   ```
-   npm run build
-   ```
+1. Edit `../blog-data/content-src/**` (Chinese sources only)
+2. Verify locally: `npm run prebuild` (run `npm run translate` first if new content needs English)
+3. Publish: `npm run deploy` (auto `add -A → commit → push origin data`)
+4. GitHub Actions rebuilds and deploys to GitHub Pages
 
-5. Preview the production build
+> `npm run data:publish` pushes the data branch only, without committing local changes.
 
-   ```
-   npm run preview
-   ```
+## 📖 Detailed Usage
 
-6. Publish (after editing `../blog-data/content-src/**`)
+### Three-Layer Content Model
 
-   Commit and push the data branch; GitHub Actions rebuilds and deploys automatically:
+- **Layer 1 `content-src/`**: hand-written Chinese sources, the only human-edited area, strictly machine-free
+- **Layer 2 `cache/`**: machine-maintained persistent state (English mirror, tag mapping, translation state), committed as evidence
+- **Layer 3 `content/`**: regenerable final artifacts (JSON + HTML), gitignored
 
-   ```
-   npm run deploy
-   ```
+CI builds with `GBLOG_NO_TRANSLATE=1` to skip translation/tag-sync and reuse the committed `cache/` artifacts.
 
-### 📖 Detailed Usage
+### Category Content Management
 
-gblog uses a pure Markdown + YAML metadata approach for content management. The system converts source files into optimized JSON files through a build-time generator, enabling fast content loading and navigation.
+Three content types are defined in `content-src/categories.yaml`:
 
-**Workflow:**
+1. **Notes** — learning records & technical articles, with Markdown files
 
-1. **Writing Phase**: Create Markdown files and YAML configurations in `content-src/` on the data branch (`../blog-data/content-src/`)
-2. **Build Phase**: The `prebuild` script automatically runs generators to convert content to JSON (`../blog-data/content/`)
-3. **Runtime Phase**: Vue components load JSON files and render page content
-4. **Publish Phase**: `npm run deploy` commits and pushes the data branch; CI rebuilds and deploys
-
-#### Category Content Management
-
-The project supports three content types, defined in `content-src/categories.yaml`:
-
-1. **Notes (notes)**
-
-   For learning records and technical documentation:
-
-   ```
-   - name: "category_identifier"  
-     title: "Display Title"  
-     desc: "Category description"  
-     date: "creation_date"  
-     categories:  
-       subcategory_key: "Subcategory Display Name"  
-       another_subcategory_key: "Subcategory Display Name"
+   ```yaml
+   - name: "category_identifier"
+     title: "Display Title"
+     desc: "Category description"
+     date: "creation_date"
+     categories:
+       subcategory_key: "Subcategory Display Name"
        ...
    ```
 
-2. **Projects (projects)**
+2. **Projects** — YAML metadata only, no article pages; cards link to GitHub
 
-   For code projects and practical cases:
-
-   ```
-   - name: "project_identifier"  
-     title: "Project Display Name"  
-     desc: "Project function description"  
-     github: "GitHub repository URL"  
-     date: "project_creation_date"  
-     categories:  
-       subcategory_key: "Subcategory Display Name"  
-       another_subcategory_key: "Subcategory Display Name"
+   ```yaml
+   - name: "project_identifier"
+     title: "Project Display Name"
+     desc: "Project description"
+     github: "GitHub repo URL"
+     date: "creation_date"
+     categories:
+       subcategory_key: "Subcategory Display Name"
        ...
    ```
 
-3. **Topics (topics)**
+3. **Topics** — YAML metadata only, no article pages; cards link to DOI
 
-   For research topics and academic content:
-   
-   ```
-   - name: "topic_identifier"  
-     title: "Topic Display Name"  
-     desc: "Research content description"  
-     doi: "academic_identifier"  
-     date: "topic_end_date"  
-     categories:  
-       subcategory_key: "Subcategory Display Name"  
-       another_subcategory_key: "Subcategory Display Name"
+   ```yaml
+   - name: "topic_identifier"
+     title: "Topic Display Name"
+     desc: "Research description"
+     doi: "academic_identifier"
+     date: "end_date"
+     categories:
+       subcategory_key: "Subcategory Display Name"
        ...
    ```
 
-#### Writing Markdown Files
+> Projects/topics may carry full metadata fields: `github` / `doi` / `url` / `status` / `language` / `license` / `journal` / `year` / `authors`, etc.
 
-This project uses pure Markdown with standard Markdown syntax support. Please edit metadata in `content-src/categories.yaml`.
+### Writing Markdown Articles
 
-File organization structure:
-
-```
-content-src/  
-├── categories.yaml          # Category definitions  
-├── notes/                   # Notes directory (only directory with markdown)  
-│   ├── category_identifier/  
-│   │   ├── subcategory/  
-│   │   │   └── article_name/
-│   │   │       └── article_name.md  
-│   │   └── other_subcategory/  
-│   │       └── article_name/
-│   │           └── article_name.md  
-│   └── other_category/  
-```
-
-> Note: **projects and topics are metadata-only (yaml)** — defined in `categories.yaml` (fields like github/doi/url/language/license), with no markdown articles; their cards link out to GitHub / DOI directly.
-
-Workflow:
-
-1. Create or edit Markdown files in `content-src` on the data branch (`../blog-data/content-src/`)
-2. Write article content
-3. Run `npm run dev` to view the results
-
-#### Resources Page Configuration
-
-The resources page uses a three-level hierarchy: Category → Subcategory → Resource Item, defined in `content-src/resources.yaml`:
+Article directory structure (directory names must match the `name` fields in the `notes` section of `categories.yaml`):
 
 ```
-# Top-level category  
-- title: "Category Name"  
-  children:  
-    # Subcategory  
-    - title: "Subcategory Name"  
-      items:  
-        # Specific resource  
-        - name: "Resource Name"  
-          url: "https://example.com"  
+content-src/notes/
+├── <category_identifier>/
+│   ├── <subcategory>/
+│   │   └── <article_name>/
+│   │       └── <article_name>.md
+│   └── <other_subcategory>/
+│       └── <article_name>/
+│           └── <article_name>.md
+└── <other_category>/
+```
+
+Each article carries YAML frontmatter:
+
+```yaml
+---
+title: Article title
+date: 2025-01-01
+author: zorrooz
+tags: [tag1, tag2]
+draft: false
+description: Summary (used in list cards and search)
+---
+Markdown body here…
+```
+
+> **zh/en frontmatter `tags` must correspond one-to-one** (equal count & semantics for the same article), otherwise the homepage tag cloud will show mismatched counts between languages.
+
+### Bilingual Mechanism
+
+- English is **never hand-written**: `npm run translate` incrementally translates Chinese sources into the `cache/en/` mirror (`-en` suffix is the content identity and part of the URL)
+- Incremental detection is keyed on **content hash**: untouched sources are skipped, costing zero tokens
+- Tags are looked up in `cache/tag-mapping.json`; missing mappings are filled incrementally by `npm run tagmerge`
+- Generators pick sources per locale: `srcDirFor(locale)` (zh→content-src, en→cache/en); outputs are always `content/*` and `content/*-en*`
+
+#### Translation Tool
+
+Before translating, configure the API in `scripts/llmConfig.ts` (gitignored, never committed):
+
+```ts
+export default {
+  url: 'https://api.deepseek.com',
+  apikey: 'your_api_key_here',
+  model: 'your_model_name',
+}
+```
+
+Common commands (args after `--` are passed to the CLI):
+
+```bash
+npm run translate                                   # incremental (default content-src, recommended)
+npm run translate -- translate --new                # translate new files only
+npm run translate -- translate --force              # force re-translate everything
+npm run translate -- status <directory>             # check translation status
+npm run translate -- help                           # full usage
+npm run tagmerge                                    # fill in zh→en tag mappings
+```
+
+### Resources Page Configuration
+
+`content-src/resources.yaml` uses a three-level hierarchy: Category → Subcategory → Resource Item:
+
+```yaml
+- title: "Category Name"
+  children:
+    - title: "Subcategory Name"
+      items:
+        - name: "Resource Name"
+          url: "https://example.com"
           desc: "Resource description"
 ```
 
-#### About Page Configuration
+### About Page Configuration
 
-The about page uses a three-section structure: Personal Introduction + Content Blocks + Contact Information, defined in `content-src/about.yaml`:
+`content-src/about.yaml` uses a three-section structure: introduction + content blocks + contact info:
 
-```
-# Personal introduction (required)  
-introduction: "Your self-introduction here, supports multi-line text"  
-  
-# Content blocks (optional, can have multiple)  
-section:  
-  - title: "Block Title"  
-    items:  
-      - item: "Project name or position"  
-        desc: "Detailed description or explanation"  
-      - item: "Another project"  
-        desc: "Additional information"  
-  
-# Contact information (optional, can have multiple)  
-contacts:  
-  - label: "Contact Type"  
-    value: "Display text"  
-    link: "Link address"  
+```yaml
+introduction: "Self-introduction, multi-line supported"
+section:
+  - title: "Block Title"
+    items:
+      - item: "Project name or role"
+        desc: "Detailed description"
+contacts:
+  - label: "Contact Type"
+    value: "Display text"
+    link: "Link address"
     icon: "Font Awesome icon class"
 ```
 
-#### Using the Translation Tool
+### Content Generators
 
-Before starting the translation, please complete the API Key configuration:
-
-Create a new file `llmConfig.ts` in the `scripts` directory (it is gitignored and never committed) and add the following content:
+`npm run prebuild` (or automatically during `npm run build`) runs 11 generators in a strict order (`scripts/generators/`; orchestrated in `scripts/runAllGenerators.ts`):
 
 ```
-export default {
-  url: 'your_api_endpoint_url',  // Replace with the actual API endpoint URL
-  apikey: 'your_api_key_here',   // Replace with the actual API key
-  model: 'your_model_name',      // Replace with the model name to be used
-};
-
+1.  generateNotes      post index (notes/**/*.md → notes.json)
+2.  generateProjects   metadata (categories.yaml → projects.json)
+3.  generateTopics     metadata (categories.yaml → topics.json)
+4.  generateCategories category tree (YAML + outputs 1-3 → categories.json)
+5.  generatePosts      post list (notes + categories → posts.json)
+6.  generateTags       tag cloud (posts → tags.json)
+    (1-6 run for zh-CN first, then repeated for en-US after translate tag sync)
+7.  Incremental translation   content-hash keyed, writes cache/en (GBLOG_NO_TRANSLATE=1 disables)
+8.  tagMerger           fill tag mappings + fix -en tag consistency
+9.  generateHtml        article md → content/html/** (pre-rendered HTML)
+10. generateSitemap     public/sitemap.xml + robots.txt
+11. generateSearchIndex categories + html → search-index{,-en}.json
 ```
 
-After configuration is complete, you can use the following commands for translation operations:
+Artifact convention: everything but html/sitemap lands in `content/{name}.json`; English gets a `-en` suffix. `generateAbout` / `generateResources` run independently (no dependencies).
 
-- Incremental translation (recommended)
+### Search
 
-  ```
-  npm run translate
-  ```
+At build time `generateSearchIndex` strips article metadata + pre-rendered HTML to plain text (`content/search-index{,-en}.json`); at runtime the SearchModal performs full-text search via MiniSearch, honoring the current locale's index.
 
-- Translate only new files
-  
-  ```
-  npm run translate -- translate --new
-  ```
+### Routing & Legacy Links
 
-- Force re-translation of all files
+- Every page is locale-prefixed: `/zh/`, `/en/` (articles: `/zh/article/notes/...`)
+- Legacy unprefixed URLs (`/article/...`, `/category`, etc.) are 302-redirected to the preferred locale prefix
+- A `404.html` fallback is built for GitHub Pages; the PWA is accessible offline
 
-  ```
-  npm run translate -- translate --force
-  ```
+## ⚙️ CI / Deployment
 
-- Check translation status
+`.github/workflows/build.yml`: checks out `main` + `data` branches → Node 24 install → sets `GBLOG_DATA_DIR` + `GBLOG_NO_TRANSLATE=1` → `prebuild + build` → peaceiris deploys to the `gh-pages` branch.
 
-  ```
-  npm run translate
-  ```
+## 🤝 Acknowledgments
 
-- More usage
-  
-  Use `npm run translate -- help` to view detailed usage.
-
-After translation is complete, please manually trigger a build to update the content:
-
-```
-npm run prebuild
-```
-
-#### Content Generators
-
-Normally, content generators run automatically during build time without manual intervention (`runAllGenerators`).
-To manually update all content, run:
-
-```
-npm run prebuild
-```
-
-The generator will process in sequence:
-
-1. Generate notes, projects, topics indexes
-2. Category structure generation (depends on step 1)
-3. Article list generation (depends on notes information)
-4. Tag cloud generation (depends on article information)
-
-## ⚙️ Acknowledgments
-
-This project was developed personally by Zorrooz, with assistance from multiple LLMs and AI IDEs for coding. Thanks to the following services:
+This project was developed personally by Zorrooz, with assistance from multiple LLMs and AI IDEs. Thanks to the following services:
 
 - [deepseek](https://chat.deepseek.com/)
 - [千问](https://www.qianwen.com/)
@@ -325,7 +335,6 @@ This project was developed personally by Zorrooz, with assistance from multiple 
 - [Trae](https://www.trae.cn/)
 - [CodeBuddy](https://www.codebuddy.ai/)
 - [Visual Studio Code (GitHub Copilot)](https://code.visualstudio.com/)
-
 
 ## 📄 License
 

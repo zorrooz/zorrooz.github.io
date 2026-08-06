@@ -1,83 +1,113 @@
 # gblog
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/zorrooz/zorrooz.github.io)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4fc08d)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-646cff)](https://vitejs.dev/)
-[![GitHub stars](https://img.shields.io/github/stars/zorrooz/gblog?style=social)](https://github.com/zorrooz/zorrooz.github.io)
+[![GitHub stars](https://img.shields.io/github/stars/zorrooz/zorrooz.github.io?style=social)](https://github.com/zorrooz/zorrooz.github.io)
 [![English Version](https://img.shields.io/badge/English-Version-blue)](README_EN.md)
-
 
 [English](README_EN.md) | [中文](README.md)
 
-gblog是基于 Vue 3 + Vite 构建的现代化个人博客系统，支持中英文双语、主题切换、Markdown 文章管理等功能。
+gblog 是基于 Vue 3 + Vite 7 构建的现代化双语静态博客系统，支持中英文切换、亮暗主题、Markdown 文章管理、全文检索与 PWA 离线访问。
 
 ## ✨ 项目介绍
 
-gblog 是一个功能完善的静态博客系统，专为个人知识管理和内容展示设计。项目采用 Vue 3 组合式 API 开发，使用 Vite 作为构建工具，支持响应式设计和现代化的用户体验。
+gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所有内容数据独立存放在 `data` 分支（本地经 git worktree 挂到 `../blog-data`）。内容以 Markdown + YAML 源文件撰写，构建期由 Node 生成器转换为 JSON/HTML 产物，前端以 SSG 预渲染 + 运行时加载的方式呈现，兼顾 SEO 与首屏速度。
 
 ### 🎯 核心特性
 
-- 双语支持：内置中文和英文双语切换功能
-- 主题切换：支持亮色/暗色/跟随系统三种模式
-- Markdown 渲染：完整的 Markdown 支持，包含代码高亮和数学公式
-- 内容复制：文章与表格一键复制（表格为 TSV 格式，可直接粘贴到 Excel）
-- 内容组织：支持分类、资源、关于页等多维度内容管理
-- 自动翻译：集成 AI 翻译工具，支持内容自动中英翻译
-- 响应式设计：适配各种屏幕尺寸
-- 快速加载：基于 Vite 的快速构建和热更新
+- **双语内容**：`/zh`、`/en` 语言前缀路由，内容按「中文手写源 + AI 翻译镜像」双层管理
+- **主题切换**：亮色 / 暗色 / 跟随系统三种模式（Bootstrap 5 主题变量 + Sass）
+- **SSR / SSG 预渲染**：vite-ssg 构建期真实渲染每个页面，利于 SEO
+- **全文检索**：MiniSearch 客户端搜索，索引由构建期预生成（`search-index.json`）
+- **Markdown 渲染**：GFM + 代码高亮（highlight.js）+ 数学公式（KaTeX）
+- **内容复制**：文章一键复制纯文本；表格复制为 TSV，可直接粘贴到 Excel
+- **完整阅读体验**：三栏文章布局（目录树 + 正文 + OnThisPage）、TOC 抽屉、阅读时长、标签筛选、回到顶部
+- **PWA 离线**：vite-plugin-pwa 自动生成 Service Worker，内容产物预缓存
+- **自动翻译**：DeepSeek API 增量翻译（内容哈希判定，零成本跳过未变化文件）
+- **响应式设计**：桌面/平板/移动端统一边距与断点
 
 ### 🛠️ 技术栈
 
-- 前端框架：Vue 3 (Composition API)
-- 构建工具：Vite 7
-- 状态管理：Pinia
-- 路由管理：Vue Router 4
-- UI 框架：Bootstrap 5
-- 主题实现：Sass
-- Markdown 处理：unified生态（remark和rehype）
-- 国际化：vue-i18n
-- 部署：GitHub Pages
+| 领域 | 技术 |
+|------|------|
+| 前端框架 | Vue 3（Composition API + `<script>` 混合） |
+| 构建工具 | Vite 7（ESM） |
+| SSR / SSG | vite-ssg（构建期逐页预渲染） |
+| 状态管理 | Pinia |
+| 路由 | Vue Router 4（history 模式，语言前缀 + 旧 URL 重定向） |
+| UI 框架 | Bootstrap 5 + Sass |
+| Markdown | unified（remark-parse → remark-gfm → remark-math → rehype-highlight → rehype-katex） |
+| 国际化 | vue-i18n（App 层） + 内容层双语镜像 |
+| 搜索 | MiniSearch（索引构建期预生成） |
+| PWA | vite-plugin-pwa（autoUpdate + generateSW） |
+| AI 翻译 | OpenAI SDK + DeepSeek（增量翻译器 + 标签映射器） |
+| 部署 | GitHub Actions + GitHub Pages |
+| Node | `>=23.6.0`（原生 type stripping 直跑 `.ts` 脚本） |
 
 ### 📁 项目结构
 
-内容数据独立在 `data` 分支（本地 worktree 挂到 `../blog-data`），`main` 分支只含代码：
-
 ```
-src/  
-├── views/               # 页面组件
-├── components/          # 可复用组件
-├── stores/              # Pinia 状态管理
-├── utils/               # 工具函数和生成器
-└── router/              # 路由配置
+# 代码分支（main）
+src/                          # 浏览器应用（含 SSR；不含任何 Node 构建脚本）
+├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n
+├── App.vue                   # AppHeader + router-view + AppFooter
+├── router/index.ts           # /{zh,en} × 5 路由 + 旧 URL 重定向
+├── i18n/                     # vue-i18n 实例 + locales/{zh-CN,en-US}.ts
+├── stores/                   # theme.ts / locale.ts（Pinia）
+├── config/site.ts            # SITE 常量、locale 映射、主题模式
+├── views/                    # Home / Category / Resource / About / Article
+├── components/
+│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList,
+│   │                         # RenderMarkdown, NavigationTree, OnThisPage
+│   └── widgets/              # BackToTop, SearchModal, TocDrawer
+├── composables/              # useFloatingButton / useLocalizedContent
+├── utils/                    # 浏览器运行时工具（不 import scripts/）
+│   ├── contentLoader.ts      # import.meta.glob 强类型加载（@data 别名）
+│   ├── navigation.ts         # 语言前缀路径、语言切换、tag 跳转、文章路径转换
+│   ├── scroll.ts             # 回到顶部 + 弹层滚动锁定
+│   ├── clipboard.ts          # 复制（Clipboard API + 回退）
+│   ├── readingTime.ts        # 阅读时长估算
+│   └── reveal.ts             # v-reveal 滚动入场指令
+├── types/content.ts          # 与 content/*.json 产物一一对应的领域类型
+└── assets/                   # 字体 OTF / styles / avatar
 
-# 数据分支（../blog-data，data 分支）
-content-src/             # 第一层 src：纯手写中文源（仅这里编辑，严格无英文）
-│   ├── notes/           # 笔记文章（唯一含 markdown 的目录）  
-│   ├── projects/        # 项目元数据（纯 yaml，无文章）  
-│   ├── topics/          # 课题元数据（纯 yaml，无文章）  
-│   ├── categories.yaml  # 分类定义  
-│   ├── about.yaml       # 关于页面  
-│   └── resources.yaml   # 资源页面  
-cache/                   # 第二层 cache：机器维护的持久态（入库）
-│   ├── en/              #   英文翻译层（镜像 content-src，-en 后缀身份）
-│   ├── tag-mapping.json #   zh→en 标签映射
-│   └── .translate-state.json # 翻译增量状态
-content/                 # 第三层 final：生成 JSON + html（可再生，不入库）
+scripts/                      # Node 内容工具链（构建期运行，不进浏览器）
+├── dataConfig.ts             # 数据目录唯一接入点（支持 GBLOG_DATA_DIR）
+├── markdownProcessor.ts      # unified pipeline: md → HTML
+├── runAllGenerators.ts       # 生成器编排（顺序见下）
+├── llmConfig.ts              # DeepSeek API 配置（gitignore，勿提交）
+├── generators/               # core/（共享 IO）+ 11 个生成器
+├── translator/               # AI 增量翻译（CLI：translate/status/help）
+└── tagMerger/                # zh→en 标签映射补齐 + 一致性修复（CLI）
+
+vite/contentDevPlugin.ts      # dev 插件：监听数据目录 → 重跑生成器 → full-reload
+
+# 数据分支（data，本地挂 ../blog-data）
+content-src/                  # 第一层 src：纯手写中文源（仅这里编辑）
+│   ├── categories.yaml       # 分类 + notes/projects/topics 全部元数据
+│   ├── about.yaml            # 关于页
+│   ├── resources.yaml        # 资源页
+│   └── notes/<分类>/<子分类>/<文章>/<文章>.md
+cache/                        # 第二层 cache：机器维护的持久态（入库）
+│   ├── en/                   #   英文翻译层（镜像 content-src，-en 身份后缀）
+│   ├── tag-mapping.json      #   zh→en 标签映射
+│   └── .translate-state.json #   翻译增量状态（源相对路径 → 内容 hash）
+content/                      # 第三层 final：生成 JSON + html（可再生，不入库）
 ```
 
-### 🚀 快速开始
+## 🚀 快速开始
 
-### 🌍 环境
+### 🌍 环境要求
 
-- **Node.js**: `>=23.6.0`（Node 原生 type stripping 直跑 `.ts` 生成器）
+- **Node.js** `>=23.6.0`（Node 原生 type stripping 直跑 `.ts` 生成器）
 
 ### 💻 安装
 
 1. 克隆仓库并挂数据 worktree（与仓库同级目录 `../blog-data`）
 
    ```
-   git clone https://github.com/zorrooz/zorrooz.github.io.git  
+   git clone https://github.com/zorrooz/zorrooz.github.io.git
    cd zorrooz.github.io
    git worktree add ../blog-data data
    ```
@@ -88,233 +118,214 @@ content/                 # 第三层 final：生成 JSON + html（可再生，�
    npm install
    ```
 
-3. 启动开发服务器
-   
-   ```
-   npm run dev
-   ```
+### 常用命令
 
-   开发服务器将默认运行在 http://localhost:5173 。
-4. 构建生产版本
+| 命令 | 说明 |
+|------|------|
+| `npm run dev` | 开发服务器 http://localhost:5173（监听数据目录，自动重生成内容并热刷新） |
+| `npm run prebuild` | 仅运行内容生成器 |
+| `npm run build` | 生成器 + vite-ssg 构建（SSG 预渲染 + PWA） |
+| `npm run preview` | 预览生产构建 |
+| `npm run lint` | ESLint（自动修复） |
+| `npm run typecheck` | vue-tsc + tsc 双项目类型检查 |
+| `npm run format` | Prettier（src/ scripts/ vite/） |
+| `npm run translate` | AI 增量翻译（写 cache/en） |
+| `npm run tagmerge` | zh→en 标签映射增量补齐 |
+| `npm run deploy` | 提交并推送数据分支变更，触发 CI 重新构建部署 |
 
-   ```
-   npm run build
-   ```
+### 发布流程
 
-5. 预览生产构建
+1. 编辑 `../blog-data/content-src/**`（只写中文源）
+2. 本地验证：`npm run prebuild`（必要时先 `npm run translate` 生成英文）
+3. 发布：`npm run deploy`（自动 `add -A → commit → push origin data`）
+4. GitHub Actions 自动重新构建并部署到 GitHub Pages
 
-   ```
-   npm run preview
-   ```
+> 也可用 `npm run data:publish` 只推送数据分支而不提交本地变更。
 
-6. 发布（编辑 `../blog-data/content-src/**` 后）
+## 📖 详细用法
 
-   提交并推送数据分支，GitHub Actions 自动重新构建并部署到 GitHub Pages：
+### 内容三层模型
 
-   ```
-   npm run deploy
-   ```
+- **第一层 `content-src/`**：纯手写中文源，**唯一人工编辑区**，严格不含机器产物
+- **第二层 `cache/`**：机器维护的持久态（英文翻译镜像、标签映射、翻译状态），**入库留证**
+- **第三层 `content/`**：可再生的最终产物（JSON + HTML），gitignore 不入库
 
-### 📖 详细用法
+CI 构建时设置 `GBLOG_NO_TRANSLATE=1` 跳过翻译与标签补齐，直接使用已入库的 `cache/` 产物。
 
-gblog 采用纯 Markdown + YAML 元数据的内容管理方式。系统通过构建时生成器将源文件转换为优化的 JSON 文件，实现快速的内容加载和导航。
+### 分类内容管理
 
-**工作流程：**
+三种内容类型均在 `content-src/categories.yaml` 中定义：
 
-1. 编写阶段：在数据分支的 `content-src/` 目录（`../blog-data/content-src/`）创建 Markdown 文件和 YAML 配置
-2. 构建阶段：`prebuild`脚本自动运行生成器，将内容转换为 JSON（生成到 `../blog-data/content/`）
-3. 运行阶段：Vue 组件加载 JSON 文件，渲染页面内容
-4. 发布阶段：`npm run deploy` 提交并推送数据分支，CI 自动重新构建部署
+1. **笔记（notes）**——学习记录与技术文档，有 Markdown 文章
 
-#### 分类内容管理
-
-项目支持三种内容类型，在`content-src/categories.yaml`中定义：
-
-1. 笔记 (notes)
-
-   用于学习记录和技术文档：
-
-   ```
-   - name: "分类标识符"  
-     title: "显示标题"  
-     desc: "分类描述说明"  
-     date: "创建日期"  
-     categories:  
-       子分类键: "子分类显示名称"  
-       另一个子分类键: "子分类显示名称"
+   ```yaml
+   - name: "分类标识符"
+     title: "显示标题"
+     desc: "分类描述说明"
+     date: "创建日期"
+     categories:
+       子分类键: "子分类显示名称"
        ...
    ```
 
-2. 项目 (projects)
+2. **项目（projects）**——纯 yaml 元数据，无文章页，卡片外链 GitHub
 
-   用于代码项目和实战案例：
-
-   ```
-   - name: "项目标识符"  
-     title: "项目显示名称"  
-     desc: "项目功能描述"  
-     github: "GitHub仓库地址"  
-     date: "项目创建日期"  
-     categories:  
-       子分类键: "子分类显示名称"  
-       另一个子分类键: "子分类显示名称"
+   ```yaml
+   - name: "项目标识符"
+     title: "项目显示名称"
+     desc: "项目功能描述"
+     github: "GitHub 仓库地址"
+     date: "创建日期"
+     categories:
+       子分类键: "子分类显示名称"
        ...
    ```
 
-3. 课题 (topics)
+3. **课题（topics）**——纯 yaml 元数据，无文章页，卡片外链 DOI
 
-   用于研究课题和学术内容：
-   
-   ```
-   - name: "课题标识符"  
-     title: "课题显示名称"  
-     desc: "研究内容描述"  
-     doi: "学术标识符"  
-     date: "课题结束日期"  
-     categories:  
-       子分类键: "子分类显示名称"  
-       另一个子分类键: "子分类显示名称"
+   ```yaml
+   - name: "课题标识符"
+     title: "课题显示名称"
+     desc: "研究内容描述"
+     doi: "学术标识符"
+     date: "结束日期"
+     categories:
+       子分类键: "子分类显示名称"
        ...
    ```
 
-#### Markdown 文件编写
+> 项目/课题可携带 `github` / `doi` / `url` / `status` / `language` / `license` / `journal` / `year` / `authors` 等完整元数据字段。
 
-本项目采用纯 Markdown，支持标准的 Markdown 语法，请在`content-src/categories.yaml`中编辑元信息。
+### Markdown 文章编写
 
-文件组织结构：
-
-```
-content-src/  
-├── categories.yaml          # 分类定义文件  
-├── notes/                   # 笔记目录（唯一含 markdown 的目录）  
-│   ├── 分类标识符/  
-│   │   ├── 子分类/  
-│   │   │   └── 文章名/
-│   │   │       └── 文章名.md  
-│   │   └── 其他子分类/  
-│   │       └── 文章名/
-│   │           └── 文章名.md  
-│   └── 其他分类/  
-```
-
-> 注：**项目（projects）与课题（topics）为纯 yaml 元数据**，在 `categories.yaml` 中定义（github/doi/url/language/license 等字段），不再有 markdown 文章；分类页卡片直接外链到 GitHub / DOI。
-
-工作流程：
-
-1. 在数据分支的 `content-src`（`../blog-data/content-src/`）目录下创建或编辑 Markdown 文件
-2. 编写文章内容
-3. 运行`npm run dev`查看效果（dev 服务器自动重新生成内容并热刷新）
-4. 发布：`npm run deploy`
-
-#### 资源页面配置
-
-资源页面采用三级层次结构：分类 → 子分类 → 资源项，在`content-src/resources.yaml`中定义：
+文章目录结构（目录名必须匹配 `categories.yaml` 中 notes 段的 `name` 字段）：
 
 ```
-# 顶级分类  
-- title: "分类名称"  
-  children:  
-    # 子分类  
-    - title: "子分类名称"  
-      items:  
-        # 具体资源  
-        - name: "资源名称"  
-          url: "https://example.com"  
+content-src/notes/
+├── <分类标识符>/
+│   ├── <子分类>/
+│   │   └── <文章名>/
+│   │       └── <文章名>.md
+│   └── <其他子分类>/
+│       └── <文章名>/
+│           └── <文章名>.md
+└── <其他分类>/
+```
+
+每篇文章自带 YAML frontmatter：
+
+```yaml
+---
+title: 文章标题
+date: 2025-01-01
+author: zorrooz
+tags: [标签1, 标签2]
+draft: false
+description: 摘要（用于列表卡片与搜索）
+---
+正文 Markdown 内容……
+```
+
+> **中英 frontmatter `tags` 必须一一对应**（同一篇文章 zh/en 标签数量与语义对称），否则首页标签云双语标签数不一致。
+
+### 双语机制
+
+- 英文**绝不手写**：`npm run translate` 将中文源增量翻译到 `cache/en/` 镜像（`-en` 后缀是内容身份，是 URL 的一部分）
+- 翻译器按**内容 hash** 判定增量：源文件未变化即跳过，命中零成本
+- 标签经 `cache/tag-mapping.json` 映射表查表翻译，缺失映射由 `npm run tagmerge` 增量补齐
+- 生成器按 locale 取源：`srcDirFor(locale)`（zh→content-src，en→cache/en），输出恒为 `content/*` 与 `content/*-en*`
+
+#### 翻译工具
+
+翻译前需在 `scripts/llmConfig.ts` 配置 API（该文件被 gitignore，不会入库）：
+
+```ts
+export default {
+  url: 'https://api.deepseek.com',
+  apikey: 'your_api_key_here',
+  model: 'your_model_name',
+}
+```
+
+常用命令（`--` 之后的参数传给 CLI）：
+
+```bash
+npm run translate                                   # 增量翻译（默认 content-src，推荐）
+npm run translate -- translate --new                # 仅翻译新文件
+npm run translate -- translate --force              # 强制重新翻译所有文件
+npm run translate -- status <目录>                  # 检查翻译状态
+npm run translate -- help                           # 查看完整用法
+npm run tagmerge                                    # 补齐 zh→en 标签映射
+```
+
+### 资源页面配置
+
+`content-src/resources.yaml` 采用三级层次：分类 → 子分类 → 资源项：
+
+```yaml
+- title: "分类名称"
+  children:
+    - title: "子分类名称"
+      items:
+        - name: "资源名称"
+          url: "https://example.com"
           desc: "资源描述"
 ```
 
-#### 关于页面配置
+### 关于页面配置
 
-关于页面采用三段式结构：个人介绍 + 内容区块 + 联系方式，在`content-src/about.yaml`中定义：
+`content-src/about.yaml` 三段式结构：个人介绍 + 内容区块 + 联系方式：
 
-```
-# 个人简介（必填）  
-introduction: "这里是你的自我介绍，支持多行文本"  
-  
-# 内容区块（可选，可多个）  
-section:  
-  - title: "区块标题"  
-    items:  
-      - item: "项目名称或职位"  
-        desc: "详细描述或说明"  
-      - item: "另一个项目"  
-        desc: "补充信息"  
-  
-# 联系方式（可选，可多个）  
-contacts:  
-  - label: "联系类型"  
-    value: "显示文本"  
-    link: "链接地址"  
+```yaml
+introduction: "自我介绍，支持多行文本"
+section:
+  - title: "区块标题"
+    items:
+      - item: "项目名称或职位"
+        desc: "详细描述或说明"
+contacts:
+  - label: "联系类型"
+    value: "显示文本"
+    link: "链接地址"
     icon: "Font Awesome 图标类"
 ```
 
-#### 使用翻译工具
+### 内容生成器
 
-在开始翻译前，请先完成API Key配置：
-
-请在`scripts`目录下新建`llmConfig.ts`文件（该文件被 gitignore，不会入库），并填入以下内容：
+`npm run prebuild`（或 `npm run build` 时自动）按严格顺序运行 11 个生成器（`scripts/generators/`，编排见 `scripts/runAllGenerators.ts`）：
 
 ```
-export default {
-  url: 'your_api_endpoint_url',  // 替换为实际的 API 端点 URL
-  apikey: 'your_api_key_here',   // 替换为实际的 API 密钥
-  model: 'your_model_name',      // 替换为使用的模型名称
-};
+1.  generateNotes      笔记索引（notes/**/*.md → notes.json）
+2.  generateProjects   项目元数据（categories.yaml → projects.json）
+3.  generateTopics     课题元数据（categories.yaml → topics.json）
+4.  generateCategories 分类结构（YAML + 前三步产物 → categories.json）
+5.  generatePosts      文章列表（notes + categories → posts.json）
+6.  generateTags       标签云（posts → tags.json）
+    （1-6 先 zh-CN，翻译/标签补齐后重复 en-US）
+7.  增量翻译           内容 hash 判定，写 cache/en（GBLOG_NO_TRANSLATE=1 关闭）
+8.  tagMerger          标签映射补齐 + 以 zh 为基准修复 -en 文件 tags
+9.  generateHtml       文章 md → content/html/**（预渲染 HTML）
+10. generateSitemap    public/sitemap.xml + robots.txt
+11. generateSearchIndex categories + html → search-index{,-en}.json
 ```
 
-配置完成后，可使用以下命令进行翻译操作：
+产物约定：除 html/sitemap 外均为 `content/{名称}.json`，英文追加 `-en` 后缀；`generateAbout` / `generateResources` 无依赖、独立运行。
 
-- 增量翻译（推荐）
+### 搜索
 
-  ```
-  npm run translate
-  ```
+构建期由 `generateSearchIndex` 将文章元数据与预渲染 HTML 清洗为纯文本索引（`content/search-index{,-en}.json`），运行时由 SearchModal 用 MiniSearch 全文检索，支持中英双语索引切换。
 
-- 仅翻译新文件
-  
-  ```
-  npm run translate -- translate --new
-  ```
+### 路由与旧链接
 
-- 强制重新翻译所有文件
+- 所有页面带语言前缀：`/zh/`、`/en/`（文章为 `/zh/article/notes/...`）
+- 旧的无前缀 URL（`/article/...`、`/category` 等）自动 302 重定向到首选语言前缀
+- 部署到 GitHub Pages 时构建 `404.html` 兜底，PWA 离线可访问
 
-  ```
-  npm run translate -- translate --force
-  ```
+## ⚙️ CI / 部署
 
-- 检查翻译状态
+`.github/workflows/build.yml`：`main` 与 `data` 分支双检出 → Node 24 安装依赖 → 设置 `GBLOG_DATA_DIR` 与 `GBLOG_NO_TRANSLATE=1` → `prebuild + build` → peaceiris 部署到 `gh-pages` 分支。
 
-  ```
-  npm run translate -- status
-  ```
-
-- 更多用法
-  
-  使用`npm run translate -- help`查看详细用法。
-
-翻译完成后，请手动构建完成内容更新：
-
-```
-npm run prebuild
-```
-
-#### 内容生成器
-
-一般情况下，内容生成器会在构建时自动运行，无需手动干预`runAllGenerators`。
-如需手动更新所有内容，可运行：
-
-```
-npm run prebuild
-```
-
-生成器会依次处理：
-
-1. 生成笔记、项目、课题索引
-2. 分类结构生成（依赖步骤1）
-3. 文章列表生成（依赖笔记信息）
-4. 标签云生成（依赖文章信息）
-
-## ⚙️ 致谢
+## 🤝 致谢
 
 本项目由 Zorrooz 个人开发，采用了多个 LLM 及 AI IDE 辅助编码，感谢以下产品提供的服务：
 
@@ -324,7 +335,6 @@ npm run prebuild
 - [Trae](https://www.trae.cn/)
 - [CodeBuddy](https://www.codebuddy.ai/)
 - [Visual Studio Code (GitHub Copilot)](https://code.visualstudio.com/)
-
 
 ## 📄 许可证
 

@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useThemeStore } from '@/stores/theme'
-import { switchLocale } from '@/utils/localePath'
+import { switchLocale } from '@/utils/navigation'
 
 withDefaults(defineProps<{ mobile?: boolean }>(), { mobile: false })
 const emit = defineEmits<{ 'open-search': []; 'toggle-menu': [] }>()

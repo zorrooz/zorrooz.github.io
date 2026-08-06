@@ -65,8 +65,12 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadCategories } from '@/utils/contentLoader'
-import { toLocalePath } from '@/utils/localePath'
-import { articlePathFromUrl, joinRoutePathParam, toArticleRoutePath } from '@/utils/articleUrl'
+import {
+  articlePathFromUrl,
+  joinRoutePathParam,
+  toArticleRoutePath,
+  toLocalePath,
+} from '@/utils/navigation'
 import type { CategoryItem } from '@/types/content'
 
 interface TreeFile {

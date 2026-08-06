@@ -101,7 +101,7 @@ import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
-import { toLocalePath } from '@/utils/localePath'
+import { toLocalePath } from '@/utils/navigation'
 import { loadCategories } from '@/utils/contentLoader'
 import type { CategoryItem, CategorySection } from '@/types/content'
 

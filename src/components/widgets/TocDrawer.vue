@@ -35,7 +35,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import { useFloatingButton } from '@/composables/useFloatingButton'
-import { lockScrollPosition, unlockScrollPosition } from '@/utils/scrollLock'
+import { lockScrollPosition, unlockScrollPosition } from '@/utils/scroll'
 
 const { t } = useI18n()
 

@@ -408,6 +408,12 @@ watch(
     overflow-x: auto;
     padding-bottom: 4px;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .res-group__items::-webkit-scrollbar {
+    display: none;
   }
 
   .res-item {

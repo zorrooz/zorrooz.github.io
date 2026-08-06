@@ -13,13 +13,15 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Dev server at http://localhost:5173 |
-| `npm run build` | Generators → `vite build` |
+| `npm run dev` | Dev server at http://localhost:5173（数据目录由 contentDevPlugin 监听） |
+| `npm run build` | Generators → vite-ssg build（SSG 预渲染 + PWA） |
 | `npm run prebuild` | Content generators only |
 | `npm run preview` | Preview production build |
 | `npm run lint` | ESLint with auto-fix |
-| `npm run format` | Prettier on `src/` |
-| `npm run translate` | AI translation CLI (incremental) |
+| `npm run typecheck` | vue-tsc (app) + tsc (node) 双项目类型检查 |
+| `npm run format` | Prettier on `src/ scripts/ vite/` |
+| `npm run translate` | AI translation CLI（增量，写 cache/en） |
+| `npm run tagmerge` | zh→en 标签映射增量补齐 CLI |
 | `npm run data:publish` | 仅推送数据分支（`git -C ../blog-data push origin data`，触发 CI） |
 | `npm run deploy` | 提交数据分支变更并推送（add -A → commit → push origin data，触发 CI） |
 
@@ -57,10 +59,10 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 src/                        # 浏览器应用（含 SSR；不包含任何 Node 构建脚本）
 ├── main.ts                    # Entry: createApp → Pinia → Router → i18n
 ├── App.vue                   # <AppHeader> + <router-view> + <AppFooter>
-├── router/index.ts           # 5 hash-mode routes
+├── router/index.ts           # 语言前缀路由（/{zh,en} × 5 路由）+ 旧 URL 重定向
 ├── i18n/
 │   ├── index.ts              # vue-i18n 实例（createI18n，zh-CN/en-US）
-│   └── locales/{zh-CN,en-US}.ts
+│   └── locales/{zh-CN,en-US}.ts   # 也被 scripts/generators/generateCategories.ts 消费（跨层引用）
 ├── stores/                   # Pinia only
 │   ├── theme.ts              # useThemeStore（theme 状态 + toggleTheme/initTheme）
 │   └── locale.ts             # useLocaleStore（locale 状态）
@@ -80,11 +82,8 @@ src/                        # 浏览器应用（含 SSR；不包含任何 Node �
 │   └── useLocalizedContent.ts# 内容页统一加载模式（首次加载 + locale 重载 + 异常回退）
 ├── utils/                    # 浏览器运行时工具（不 import 任何 scripts/ 代码）
 │   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD（@data 别名），强类型 load*
-│   ├── localePath.ts         # toLocalePath + switchLocale（语言切换）
-│   ├── tagQuery.ts           # goToTag（tag 查询跳转唯一实现）
-│   ├── articleUrl.ts         # articleUrl↔md 路径↔路由路径唯一转换（Article/NavigationTree 共用）
-│   ├── scroll.ts             # scrollToTop（SSR 安全）
-│   ├── scrollLock.ts         # 滚动锁定（overflow / position 钉住两种语义）
+│   ├── navigation.ts         # 站内导航域：toLocalePath/switchLocale（语言切换）、goToTag（tag 查询跳转）、文章/路由路径互转
+│   ├── scroll.ts             # scrollToTop（SSR 安全）+ 弹层滚动锁定（overflow / position 钉住两种语义）
 │   ├── clipboard.ts          # copyText（Clipboard API + execCommand 回退）
 │   ├── readingTime.ts        # 阅读时长估算
 │   └── reveal.ts             # v-reveal 滚动入场指令
@@ -130,6 +129,7 @@ content/                      # 第三层 final — 生成 JSON + html（可再�
 - **中文源**：只写 `content-src/`。**英文**：绝不手写，`npm run translate` 生成到 `cache/en/`（LLM 非确定 + 有成本，故入库存证，CI 靠 `GBLOG_NO_TRANSLATE=1` 跳过生成）。
 - 生成器按 locale 取源：`srcDirFor(locale)`（zh→content-src，en→cache/en），输出恒为 `content/*` 与 `content/*-en*`。
 - 中英实体按镜像相对路径配对：`cache/en/notes/.../<article>-en.md` ↔ `content-src/notes/.../<article>.md`。
+- 现状提示：`content-src/` 根目录存在旧的 `about-en.yaml`/`categories-en.yaml`（历史遗留，当前生成器一律读 cache/en，不消费它们）。
 
 ## Framework
 
@@ -137,9 +137,12 @@ content/                      # 第三层 final — 生成 JSON + html（可再�
 |-------|------|
 | Vue | Vue 3 Composition API (`<script>`, Options API mix) |
 | Build | Vite 7 (ESM, `"type": "module"`) |
+| SSR / SSG | vite-ssg（构建期预渲染每页；`concurrency: 1` 串行保 locale 不被并发覆盖） |
 | State | Pinia |
-| Routing | Vue Router 4, hash mode (`createWebHashHistory`) |
+| Routing | Vue Router 4（history 模式，由 vite-ssg 创建；`/{zh,en}` 语言前缀 + 旧 URL 重定向） |
+| PWA | vite-plugin-pwa（`autoUpdate` + `generateSW`，precache 内容产物） |
 | i18n | vue-i18n (locale in localStorage) |
+| Search | MiniSearch（客户端全文检索，索引由 generateSearchIndex 预生成） |
 | Markdown | unified → remark-parse → remark-gfm → remark-breaks → remark-math → remark-rehype → rehype-highlight → rehype-katex → rehype-stringify |
 | Deployment | gh-pages |
 | Node | `>=23.6.0`（Node 原生 type stripping 直跑 `.ts` 脚本，最低 22.6 需 `--experimental-strip-types`） |
@@ -159,6 +162,9 @@ content/                      # 第三层 final — 生成 JSON + html（可再�
 4.6 tagMerger mapping     — ensureTagTranslation 增量补齐 zh→en 标签映射（缓存于 cache/tag-mapping.json，命中 0 token）
 4.7 tag consistency fix   — 以 zh 文件为基准自动重写 cache/en 的 -en 文件 tags（解决中英标签数量/名称不一致，失败仅告警）
 8.5 tags-consistency check— 构建产物级中英标签一致性校验（输出 [OK]/[Warn]）
+9.  generateHtml     — md → `content/html/**`（markdownProcessor 预渲染文章 HTML）
+10. generateSitemap  — `public/sitemap.xml` + `public/robots.txt`（gitignore，CI 自动生成）
+11. generateSearchIndex — categories.json + content/html → `content/search-index{,-en}.json`
 
 generateAbout and generateResources run independently at import time in runAllGenerators.ts.
 ```
@@ -181,9 +187,15 @@ cache/en/notes/<category>/<subcategory>/<article-dir>/<article-dir>-en.md   # �
 
 ### URL Mapping
 
-File: `notes/Omics/genomics/bwa/bwa.md`
-URL: `/#/article/notes/Omics/genomics/bwa/bwa`
-Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa', 'bwa'] } }`
+路由为 history 模式（`/zh`/`/en` 语言前缀，vite-ssg 构建期真实预渲染每页）：
+
+```
+File:  notes/Omics/genomics/bwa/bwa.md
+URL:   /zh/article/notes/Omics/genomics/bwa/bwa        (en → /en/article/...)
+Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props: true }
+       (zh-*/en-* 前缀命名，其余为 zh-Home/en-Home 等)
+旧 URL /article/...（无前缀）→ 302 重定向到 preferredLocaleSegment() 前缀
+```
 
 ## Internationalization (Dual Layer)
 
@@ -221,9 +233,10 @@ Route: `{ name: 'Article', params: { path: ['notes', 'Omics', 'genomics', 'bwa',
 
 ### Utilities
 - `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`
+- `navigation.ts`（原 articleUrl/localePath/tagQuery 合并）：`toLocalePath()`、`switchLocale()`、`goToTag()`、`articlePathFromUrl()`、`toArticleRoutePath()`、`joinRoutePathParam()`
+- `scroll.ts`（原 scroll/scrollLock 合并）：`scrollToTop()`、`lock/unlockScrollOverflow`、`lock/unlockScrollPosition`；`clipboard.ts`：`copyText()`
 - `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string
 - `useThemeStore`: `theme`, `toggleTheme()`, `initTheme()`；`useLocaleStore`: `locale`, `setLocale()`, `initLocale()`
-- `tagQuery.ts`：`goToTag()`（tag 查询跳转唯一实现）；`scrollLock.ts`：`lock/unlockScrollOverflow` + `lock/unlockScrollPosition`；`clipboard.ts`：`copyText()`
 
 ## Layout & Shape Conventions（布局与形状规则）
 

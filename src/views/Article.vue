@@ -135,10 +135,14 @@ import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadHtmlContent, loadMarkdownSource } from '@/utils/contentLoader'
-import { toLocalePath } from '@/utils/localePath'
-import { articlePathFromUrl, joinRoutePathParam, toArticleRoutePath } from '@/utils/articleUrl'
+import {
+  articlePathFromUrl,
+  goToTag,
+  joinRoutePathParam,
+  toArticleRoutePath,
+  toLocalePath,
+} from '@/utils/navigation'
 import { readingTimeMinutes } from '@/utils/readingTime'
-import { goToTag } from '@/utils/tagQuery'
 import { scrollToTop } from '@/utils/scroll'
 import { copyText } from '@/utils/clipboard'
 import { toSupportedLocale } from '@/config/site'
