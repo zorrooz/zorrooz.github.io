@@ -15,7 +15,7 @@ import {
   runCliScript,
   logWriteSuccess,
 } from './core/index.ts'
-import type { Note as NoteItem } from '../../src/types/content.ts'
+import type { Note as NoteItem } from '../../src/types.ts'
 
 function getFilePaths(locale = 'zh-CN') {
   return {

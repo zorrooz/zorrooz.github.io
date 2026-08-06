@@ -1,4 +1,4 @@
-import type { AboutData, CategoryData, Note, Post, ResourceNode, Tag } from '@/types/content'
+import type { AboutData, CategoryData, Note, Post, ResourceNode, Tag } from '@/types'
 
 const getCurrentLocale = (): string => {
   // SSR prerender: locale injected by main.ts from the /zh|/en route prefix

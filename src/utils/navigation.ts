@@ -12,7 +12,7 @@ import {
   stripLocalePrefix,
   toSupportedLocale,
   type SupportedLocale,
-} from '@/config/site'
+} from '@/config'
 import { scrollToTop } from '@/utils/scroll'
 
 /** `/article/notes/Omics/...` → md 风格路径 `notes/Omics/....md` */

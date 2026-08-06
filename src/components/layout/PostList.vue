@@ -107,8 +107,8 @@ import { loadNotes, loadCategories } from '@/utils/contentLoader'
 import { goToTag, toLocalePath } from '@/utils/navigation'
 import { readingTimeMinutes } from '@/utils/readingTime'
 import { scrollToTop } from '@/utils/scroll'
-import { toSupportedLocale } from '@/config/site'
-import type { Post } from '@/types/content'
+import { toSupportedLocale } from '@/config'
+import type { Post } from '@/types'
 
 const props = withDefaults(defineProps<{ docs: Post[]; perPage?: number }>(), { perPage: 6 })
 

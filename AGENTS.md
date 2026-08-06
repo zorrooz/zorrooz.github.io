@@ -57,7 +57,7 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 
 ```
 src/                        # 浏览器应用（含 SSR；不包含任何 Node 构建脚本）
-├── main.ts                    # Entry: createApp → Pinia → Router → i18n
+├── main.ts                    # Entry: createApp → Pinia → Router → i18n；内联 v-reveal 指令定义
 ├── App.vue                   # <AppHeader> + <router-view> + <AppFooter>
 ├── router/index.ts           # 语言前缀路由（/{zh,en} × 5 路由）+ 旧 URL 重定向
 ├── i18n/
@@ -66,8 +66,7 @@ src/                        # 浏览器应用（含 SSR；不包含任何 Node �
 ├── stores/                   # Pinia only
 │   ├── theme.ts              # useThemeStore（theme 状态 + toggleTheme/initTheme）
 │   └── locale.ts             # useLocaleStore（locale 状态）
-├── config/
-│   └── site.ts               # SITE、locale 映射（LOCALE_MAP/SEGMENT_OF/HTML_LANG）、THEME_MODES
+├── config.ts                 # SITE、locale 映射（LOCALE_MAP/SEGMENT_OF/HTML_LANG）、THEME_MODES
 ├── views/
 │   ├── Home.vue              # hero（greeting + name + stats）+ 标签云（模板内）+ PostList
 │   ├── Category.vue          # Notes/Projects/Topics cards with stats
@@ -80,15 +79,13 @@ src/                        # 浏览器应用（含 SSR；不包含任何 Node �
 ├── composables/
 │   ├── useFloatingButton.ts  # 浮动按钮（BackToTop/TocDrawer）拖拽 + 底沿广播协议（'floating-buttons-base-top'）
 │   └── useLocalizedContent.ts# 内容页统一加载模式（首次加载 + locale 重载 + 异常回退）
-├── utils/                    # 浏览器运行时工具（不 import 任何 scripts/ 代码）
+├── utils/                    # 浏览器运行时纯工具（不 import 任何 scripts/ 代码）
 │   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD（@data 别名），强类型 load*
 │   ├── navigation.ts         # 站内导航域：toLocalePath/switchLocale（语言切换）、goToTag（tag 查询跳转）、文章/路由路径互转
 │   ├── scroll.ts             # scrollToTop（SSR 安全）+ 弹层滚动锁定（overflow / position 钉住两种语义）
 │   ├── clipboard.ts          # copyText（Clipboard API + execCommand 回退）
-│   ├── readingTime.ts        # 阅读时长估算
-│   └── reveal.ts             # v-reveal 滚动入场指令
-├── types/
-│   └── content.ts            # 领域类型：与 content/*.json 产物一一对应（Post/Note/Tag/Category*/Resource/About）
+│   └── readingTime.ts        # 阅读时长估算
+├── types.ts                  # 领域类型：与 content/*.json 产物一一对应（Post/Note/Tag/Category*/Resource/About）
 └── assets/
     ├── fonts/                # 完整字体 OTF（思源宋体×2、思源黑体、Agave）
     ├── styles/               # global.scss + highlight/

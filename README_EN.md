@@ -50,12 +50,13 @@ gblog uses a **code/data dual-branch** architecture: the `main` branch contains 
 ```
 # Code branch (main)
 src/                          # Browser app (incl. SSR; no Node build scripts)
-├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n
+├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n (inline v-reveal directive)
 ├── App.vue                   # AppHeader + router-view + AppFooter
 ├── router/index.ts           # /{zh,en} × 5 routes + legacy URL redirects
 ├── i18n/                     # vue-i18n instance + locales/{zh-CN,en-US}.ts
 ├── stores/                   # theme.ts / locale.ts (Pinia)
-├── config/site.ts            # SITE constants, locale maps, theme modes
+├── config.ts                 # SITE constants, locale maps, theme modes
+├── types.ts                  # Domain types matching content/*.json artifacts
 ├── views/                    # Home / Category / Resource / About / Article
 ├── components/
 │   ├── layout/               # AppHeader, NavActions, AppFooter, PostList,
@@ -67,9 +68,7 @@ src/                          # Browser app (incl. SSR; no Node build scripts)
 │   ├── navigation.ts         # Locale paths, language switch, tag nav, article paths
 │   ├── scroll.ts             # Back-to-top + overlay scroll locking
 │   ├── clipboard.ts          # Copy (Clipboard API + fallback)
-│   ├── readingTime.ts        # Reading time estimate
-│   └── reveal.ts             # v-reveal scroll-in directive
-├── types/content.ts          # Domain types matching content/*.json artifacts
+│   └── readingTime.ts        # Reading time estimate
 └── assets/                   # Fonts / styles / avatar
 
 scripts/                      # Node content toolchain (build-time, never bundled)

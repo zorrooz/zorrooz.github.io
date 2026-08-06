@@ -71,7 +71,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadResources } from '@/utils/contentLoader'
-import type { ResourceNode } from '@/types/content'
+import type { ResourceNode } from '@/types'
 
 const { t } = useI18n()
 
@@ -206,6 +206,13 @@ watch(
 .res-item:hover {
   background: var(--surface-2);
   color: var(--fg);
+}
+
+/* 当前选中项 hover 保持主色（与 NavigationTree 约定一致），不落入 hover 的黑色 */
+.res-item--active:hover {
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--tint-strong);
 }
 
 .res-item--active {

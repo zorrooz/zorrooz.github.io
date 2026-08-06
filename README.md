@@ -50,12 +50,13 @@ gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所
 ```
 # 代码分支（main）
 src/                          # 浏览器应用（含 SSR；不含任何 Node 构建脚本）
-├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n
+├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n（内联 v-reveal 指令）
 ├── App.vue                   # AppHeader + router-view + AppFooter
 ├── router/index.ts           # /{zh,en} × 5 路由 + 旧 URL 重定向
 ├── i18n/                     # vue-i18n 实例 + locales/{zh-CN,en-US}.ts
 ├── stores/                   # theme.ts / locale.ts（Pinia）
-├── config/site.ts            # SITE 常量、locale 映射、主题模式
+├── config.ts                 # SITE 常量、locale 映射、主题模式
+├── types.ts                  # 与 content/*.json 产物一一对应的领域类型
 ├── views/                    # Home / Category / Resource / About / Article
 ├── components/
 │   ├── layout/               # AppHeader, NavActions, AppFooter, PostList,
@@ -67,9 +68,7 @@ src/                          # 浏览器应用（含 SSR；不含任何 Node �
 │   ├── navigation.ts         # 语言前缀路径、语言切换、tag 跳转、文章路径转换
 │   ├── scroll.ts             # 回到顶部 + 弹层滚动锁定
 │   ├── clipboard.ts          # 复制（Clipboard API + 回退）
-│   ├── readingTime.ts        # 阅读时长估算
-│   └── reveal.ts             # v-reveal 滚动入场指令
-├── types/content.ts          # 与 content/*.json 产物一一对应的领域类型
+│   └── readingTime.ts        # 阅读时长估算
 └── assets/                   # 字体 OTF / styles / avatar
 
 scripts/                      # Node 内容工具链（构建期运行，不进浏览器）

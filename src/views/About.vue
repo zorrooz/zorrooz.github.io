@@ -71,7 +71,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { EMPTY_ABOUT, loadAbout } from '@/utils/contentLoader'
-import { SITE } from '@/config/site'
+import { SITE } from '@/config'
 
 const { t } = useI18n()
 

@@ -2,7 +2,7 @@ import { createI18n } from 'vue-i18n'
 import zhCN from './locales/zh-CN'
 import enUS from './locales/en-US'
 
-import { DEFAULT_LOCALE, HTML_LANG, toSupportedLocale } from '@/config/site'
+import { DEFAULT_LOCALE, HTML_LANG, toSupportedLocale } from '@/config'
 
 const savedLocale =
   typeof window !== 'undefined' ? toSupportedLocale(localStorage.getItem('locale')) : DEFAULT_LOCALE

@@ -8,7 +8,7 @@ import {
   localeFromPath,
   toSupportedLocale,
   type SupportedLocale,
-} from '@/config/site'
+} from '@/config'
 
 export const useLocaleStore = defineStore('locale', () => {
   // 语言状态

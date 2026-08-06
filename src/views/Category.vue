@@ -103,7 +103,7 @@ import { useRouter } from 'vue-router'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { toLocalePath } from '@/utils/navigation'
 import { loadCategories } from '@/utils/contentLoader'
-import type { CategoryItem, CategorySection } from '@/types/content'
+import type { CategoryItem, CategorySection } from '@/types'
 
 useHead({ title: 'zorrooz’s blog - Categories' })
 

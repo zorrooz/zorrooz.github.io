@@ -1,14 +1,14 @@
 import { createPinia } from 'pinia'
 import { VueHeadMixin } from '@unhead/vue'
 import { ViteSSG } from 'vite-ssg'
+import type { Directive } from 'vue'
 
 import App from './App.vue'
 import { routes } from './router'
 import i18n from './i18n'
 import { useLocaleStore } from './stores/locale'
 import { useThemeStore } from './stores/theme'
-import { reveal } from './utils/reveal'
-import { localeFromPath } from './config/site'
+import { localeFromPath } from './config'
 
 import './assets/styles/global.scss'
 import './assets/styles/highlight/github.css'
@@ -20,6 +20,35 @@ import 'katex/dist/katex.min.css'
 
 // bootstrap touches document at module scope; SSR build must not include it
 if (!import.meta.env.SSR) import('bootstrap')
+
+// v-reveal 滚动入场指令（IntersectionObserver，一次触发）
+interface RevealElement extends HTMLElement {
+  __revealIo?: IntersectionObserver | null
+}
+
+const reveal: Directive<RevealElement> = {
+  mounted(el) {
+    if (typeof window === 'undefined') return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!('IntersectionObserver' in window)) return
+    el.classList.add('reveal')
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('reveal-visible')
+          io.disconnect()
+        }
+      },
+      { threshold: 0.12 },
+    )
+    io.observe(el)
+    el.__revealIo = io
+  },
+  unmounted(el) {
+    el.__revealIo?.disconnect()
+    el.__revealIo = null
+  },
+}
 
 export const createApp = ViteSSG(
   App,

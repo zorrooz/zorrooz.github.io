@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { THEME_MODES } from '@/config/site.ts'
+import { THEME_MODES } from '@/config'
 
 const setTheme = (mode: string) => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return

@@ -71,7 +71,7 @@ import {
   toArticleRoutePath,
   toLocalePath,
 } from '@/utils/navigation'
-import type { CategoryItem } from '@/types/content'
+import type { CategoryItem } from '@/types'
 
 interface TreeFile {
   title: string

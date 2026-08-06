@@ -74,7 +74,7 @@ import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
 import { goToTag } from '@/utils/navigation'
 import { scrollToTop } from '@/utils/scroll'
-import { SITE, toSupportedLocale } from '@/config/site'
+import { SITE, toSupportedLocale } from '@/config'
 
 useHead({ title: 'zorrooz’s blog - Home' })
 

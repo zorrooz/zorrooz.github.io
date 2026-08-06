@@ -8,7 +8,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { contentDir } from '../dataConfig.ts'
-import { LOCALE_SEGMENTS, SITE } from '../../src/config/site.ts'
+import { LOCALE_SEGMENTS, SITE } from '../../src/config.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from './core/index.ts'
 
 const SITE_URL = SITE.url

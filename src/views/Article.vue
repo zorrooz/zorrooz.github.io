@@ -145,8 +145,8 @@ import {
 import { readingTimeMinutes } from '@/utils/readingTime'
 import { scrollToTop } from '@/utils/scroll'
 import { copyText } from '@/utils/clipboard'
-import { toSupportedLocale } from '@/config/site'
-import type { CategoryArticle, CategoryData } from '@/types/content'
+import { toSupportedLocale } from '@/config'
+import type { CategoryArticle, CategoryData } from '@/types'
 
 /** 由 categories.json 展开的运行时文章元数据 */
 interface ArticleMeta {

@@ -23,6 +23,6 @@
     "vite/**/*.ts",
     "eslint.config.js",
     "scripts/**/*.ts",
-    "src/config/site.ts"
+    "src/config.ts"
   ]
 }

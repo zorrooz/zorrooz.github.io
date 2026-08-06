@@ -8,7 +8,7 @@ import {
   runCliScript,
   logWriteSuccess,
 } from './core/index.ts'
-import type { Tag as TagEntry } from '../../src/types/content.ts'
+import type { Tag as TagEntry } from '../../src/types.ts'
 
 function getFilePaths(locale = 'zh-CN') {
   const suffix = localeSuffix(locale)

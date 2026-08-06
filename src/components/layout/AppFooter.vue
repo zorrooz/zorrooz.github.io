@@ -1,7 +1,7 @@
 <!-- AppFooter.vue -->
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { SITE } from '@/config/site.ts'
+import { SITE } from '@/config'
 
 const { t } = useI18n()
 

@@ -6,7 +6,7 @@ import ArticleView from '@/views/Article.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 
-import { LOCALE_SEGMENTS, preferredLocaleSegment, type LocaleSegment } from '@/config/site'
+import { LOCALE_SEGMENTS, preferredLocaleSegment, type LocaleSegment } from '@/config'
 
 const prefixedRoutes = (prefix: LocaleSegment): RouteRecordRaw[] => [
   { path: `/${prefix}/`, name: `${prefix}-Home`, component: HomeView },
