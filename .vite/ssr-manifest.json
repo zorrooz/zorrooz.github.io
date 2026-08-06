@@ -4485,8 +4485,8 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/minisearch/dist/es/index.js": [
-    "/assets/SearchModal-337CsmbF.js",
-    "/assets/SearchModal-3Sdr560V.css"
+    "/assets/SearchModal-CohfF2JD.js",
+    "/assets/SearchModal-CGQ99zei.css"
   ],
   "node_modules/pinia/dist/pinia.mjs": [
     "/assets/avatar-DQvqWlfS.png",
@@ -5958,7 +5958,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/layout/AppFooter.vue?vue&type=style&index=0&scoped=67d144b1&lang.css": [
+  "src/components/layout/AppFooter.vue?vue&type=style&index=0&scoped=443df76b&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -6168,7 +6168,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/layout/AppHeader.vue?vue&type=style&index=0&scoped=d7e438fd&lang.css": [
+  "src/components/layout/AppHeader.vue?vue&type=style&index=0&scoped=b943a66d&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -6378,7 +6378,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/layout/NavActions.vue?vue&type=style&index=0&scoped=56d88f41&lang.css": [
+  "src/components/layout/NavActions.vue?vue&type=style&index=0&scoped=da55aa12&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -6798,7 +6798,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/layout/OnThisPage.vue?vue&type=style&index=0&scoped=4967be9e&lang.css": [
+  "src/components/layout/OnThisPage.vue?vue&type=style&index=0&scoped=71f06a5d&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -7358,7 +7358,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/widgets/BackToTop.vue?vue&type=style&index=0&scoped=7d71cb18&lang.css": [
+  "src/components/widgets/BackToTop.vue?vue&type=style&index=0&scoped=0f89b0e5&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -7429,16 +7429,16 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/SearchModal.vue": [
-    "/assets/SearchModal-337CsmbF.js",
-    "/assets/SearchModal-3Sdr560V.css"
+    "/assets/SearchModal-CohfF2JD.js",
+    "/assets/SearchModal-CGQ99zei.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-337CsmbF.js",
-    "/assets/SearchModal-3Sdr560V.css"
+    "/assets/SearchModal-CohfF2JD.js",
+    "/assets/SearchModal-CGQ99zei.css"
   ],
-  "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=493d117a&lang.css": [
-    "/assets/SearchModal-337CsmbF.js",
-    "/assets/SearchModal-3Sdr560V.css"
+  "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=28d00439&lang.css": [
+    "/assets/SearchModal-CohfF2JD.js",
+    "/assets/SearchModal-CGQ99zei.css"
   ],
   "src/components/widgets/TocDrawer.vue": [
     "/assets/avatar-DQvqWlfS.png",
@@ -7580,7 +7580,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/components/widgets/TocDrawer.vue?vue&type=style&index=0&scoped=31e98439&lang.css": [
+  "src/components/widgets/TocDrawer.vue?vue&type=style&index=0&scoped=f5b1ecf6&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -8840,7 +8840,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/views/About.vue?vue&type=style&index=0&scoped=b98051c6&lang.css": [
+  "src/views/About.vue?vue&type=style&index=0&scoped=2b357561&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -9050,7 +9050,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/views/Article.vue?vue&type=style&index=0&scoped=ec1fa8f5&lang.css": [
+  "src/views/Article.vue?vue&type=style&index=0&scoped=f29640f6&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
@@ -9680,7 +9680,7 @@
     "/assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
-  "src/views/Resource.vue?vue&type=style&index=0&scoped=9a182285&lang.css": [
+  "src/views/Resource.vue?vue&type=style&index=0&scoped=ffff9aa5&lang.css": [
     "/assets/avatar-DQvqWlfS.png",
     "/assets/Agave-Regular-BYVuOv7L.ttf",
     "/assets/SourceHanSansSC-Regular-BuM0i8bv.otf",
