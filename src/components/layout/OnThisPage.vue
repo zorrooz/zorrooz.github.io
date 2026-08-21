@@ -1,48 +1,51 @@
 <template>
   <nav class="on-this-page">
-    <div class="otp-header">
-      <span class="otp-title">{{ t('tableOfContents') }}</span>
-    </div>
+    <div class="otp-content" ref="otpContent">
+      <span class="otp-marker" ref="marker" aria-hidden="true"></span>
+      <div class="otp-header">
+        <span class="otp-title">{{ t('tableOfContents') }}</span>
+      </div>
 
-    <ul class="otp-list">
-      <li
-        v-for="(item, idx) in toc"
-        :key="idx"
-        :class="['otp-item', { active: activeId === item.id }]"
-      >
-        <a
-          class="otp-link"
-          role="button"
-          tabindex="0"
-          @click.prevent="scrollToId(item.id)"
-          @keydown.enter.prevent="scrollToId(item.id)"
+      <ul class="otp-list">
+        <li
+          v-for="(item, idx) in toc"
+          :key="idx"
+          :class="['otp-item', { active: activeId === item.id }]"
         >
-          <span class="otp-text">{{ item.text }}</span>
-        </a>
-        <ul v-if="item.children && item.children.length" class="otp-sublist">
-          <li
-            v-for="(sub, sIdx) in item.children"
-            :key="sIdx"
-            :class="['otp-subitem', { active: activeId === sub.id }]"
+          <a
+            class="otp-link"
+            role="button"
+            tabindex="0"
+            @click.prevent="scrollToId(item.id)"
+            @keydown.enter.prevent="scrollToId(item.id)"
           >
-            <a
-              class="otp-sublink"
-              role="button"
-              tabindex="0"
-              @click.prevent="scrollToId(sub.id)"
-              @keydown.enter.prevent="scrollToId(sub.id)"
+            <span class="otp-text">{{ item.text }}</span>
+          </a>
+          <ul v-if="item.children && item.children.length" class="otp-sublist">
+            <li
+              v-for="(sub, sIdx) in item.children"
+              :key="sIdx"
+              :class="['otp-subitem', { active: activeId === sub.id }]"
             >
-              <span class="otp-subtext">{{ sub.text }}</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
+              <a
+                class="otp-sublink"
+                role="button"
+                tabindex="0"
+                @click.prevent="scrollToId(sub.id)"
+                @keydown.enter.prevent="scrollToId(sub.id)"
+              >
+                <span class="otp-subtext">{{ sub.text }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 interface TocNode {
@@ -71,10 +74,15 @@ const { t } = useI18n()
 
 const toc = ref<TocNode[]>([])
 const activeId = ref('')
+const otpContent = ref<HTMLElement | null>(null)
+const marker = ref<HTMLElement | null>(null)
 const otpObserver = ref<MutationObserver | null>(null)
 const otpObserverTimer = ref<number | null>(null)
 const otpPoller = ref<number | null>(null)
 const spyObserver = ref<IntersectionObserver | null>(null)
+
+/** 标题行高 32px + marker 相对链接首行的居中偏移，与 VitePress outline-marker 一致 */
+const MARKER_TITLE_OFFSET = 36
 
 function cleanupObservers() {
   if (otpObserver.value) {
@@ -105,7 +113,24 @@ function resetToc() {
 function refreshToc() {
   buildToc()
   setupScrollSpy()
+  nextTick(updateMarker)
 }
+
+/** marker 滑动到当前激活项（offsetTop 相对 .otp-list，+标题行高得到 .otp-content 内位置） */
+function updateMarker() {
+  if (!marker.value || !otpContent.value) return
+  const root = otpContent.value.querySelector('.otp-list')
+  if (!root) return
+  const activeLink = root.querySelector<HTMLElement>('.otp-item.active > .otp-link, .otp-subitem.active > .otp-sublink')
+  if (!activeLink) {
+    marker.value.style.opacity = '0'
+    return
+  }
+  marker.value.style.top = `${activeLink.offsetTop + MARKER_TITLE_OFFSET}px`
+  marker.value.style.opacity = '1'
+}
+
+watch(activeId, () => nextTick(updateMarker))
 
 function setupContainerObserver() {
   setTimeout(() => refreshToc(), 100)
@@ -255,8 +280,8 @@ function scrollToId(id: string) {
 onMounted(() => {
   buildToc()
   setupScrollSpy()
-
   nextTick(() => {
+    updateMarker()
     setupContainerObserver()
   })
 })
@@ -274,99 +299,93 @@ defineExpose({ refreshToc, resetToc })
   font-size: var(--text-base);
 }
 
+/* VitePress outline 容器：左侧发丝导轨 + 滑动 marker */
+.otp-content {
+  position: relative;
+  border-left: 1px solid var(--line);
+  padding-left: 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.otp-marker {
+  position: absolute;
+  top: 32px;
+  left: -1px;
+  z-index: 0;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--primary);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    top 0.25s cubic-bezier(0, 1, 0.5, 1),
+    opacity 0.25s ease;
+}
+
 .otp-header {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-bottom: 0.75rem;
+  line-height: 32px;
 }
 
 .otp-title {
+  font-size: 13px;
   font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fg-3);
+  color: var(--fg);
 }
 
 .otp-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .otp-item {
-  margin: 1px 0;
-  padding-left: 0;
+  margin: 0;
 }
 
+/* 换行显示（不截断省略），多行时 marker 锚定首行 */
 .otp-link {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: 6px 10px;
+  display: block;
+  line-height: 1.55;
+  padding: 3px 0;
+  font-size: 13px;
+  font-weight: 400;
   color: var(--fg-2);
   text-decoration: none;
-  font-size: var(--text-sm);
-  border-radius: var(--radius-sm);
-  transition:
-    color 0.14s ease,
-    background-color 0.14s ease;
-  position: relative;
-  line-height: 1.5;
+  transition: color var(--dur-base) ease;
   cursor: pointer;
 }
 
-.otp-link:hover {
-  color: var(--primary);
-  background-color: var(--surface-2);
-}
-
+.otp-link:hover,
 .otp-item.active > .otp-link {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.otp-item.active > .otp-link::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 12px;
-  border-radius: 99px;
-  background: var(--primary);
+  color: var(--fg);
+  transition: color var(--dur-fast) ease;
 }
 
 .otp-sublist {
   list-style: none;
-  padding-left: 12px;
-  margin: 2px 0;
-  border-left: 1px solid var(--line);
+  padding: 0;
+  margin: 0;
 }
 
-.otp-subitem .otp-sublink {
+.otp-sublink {
   display: block;
-  padding: 4px 10px;
-  color: var(--fg-3);
+  padding: 3px 0 3px 13px;
+  line-height: 1.55;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--fg-2);
   text-decoration: none;
-  font-size: var(--text-sm);
-  border-radius: var(--radius-sm);
-  transition:
-    color 0.14s ease,
-    background-color 0.14s ease;
+  transition: color var(--dur-base) ease;
   cursor: pointer;
-  line-height: 1.5;
 }
 
-.otp-sublink:hover {
-  color: var(--primary);
-  background-color: var(--surface-2);
-}
-
+.otp-sublink:hover,
 .otp-subitem.active > .otp-sublink {
-  color: var(--primary);
-  font-weight: 600;
+  color: var(--fg);
+  transition: color var(--dur-fast) ease;
 }
 </style>

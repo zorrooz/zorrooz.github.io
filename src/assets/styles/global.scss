@@ -535,38 +535,40 @@ button {
   color: var(--on-primary);
 }
 
-/* 树形侧栏 */
+/* 树形侧栏（VitePress/D3 风格：加粗分组标题 + 纯文字链接 + 主色激活） */
 .tree-group {
   margin-bottom: var(--sp-6);
 }
 
+.tree-group + .tree-group {
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-3);
+}
+
 .tree-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-  padding: 0 var(--sp-2);
-  margin-bottom: var(--sp-3);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  padding: 4px 0 var(--sp-2);
+  line-height: 24px;
 }
 
 .tree-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--text-sm);
-  color: var(--fg-2);
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 1px;
-  transition:
-    color var(--dur-fast) ease,
-    background-color var(--dur-fast) ease;
-  cursor: pointer;
   width: 100%;
+  padding: 4px 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--fg-2);
   text-align: left;
   border: none;
   background: transparent;
+  transition: color var(--dur-fast) ease;
+  cursor: pointer;
 }
 
 .tree-item i {
@@ -577,14 +579,11 @@ button {
 }
 
 .tree-item:hover {
-  background: var(--surface-2);
-  color: var(--fg);
+  color: var(--primary);
 }
 
 .tree-item--active {
-  background: var(--tint);
   color: var(--primary);
-  font-weight: 600;
 }
 
 .tree-item--active i {
@@ -592,8 +591,7 @@ button {
 }
 
 .tree-item--child {
-  padding-left: 28px;
-  font-size: var(--text-sm);
+  padding-left: 18px;
 }
 
 /* 联系胶囊 */
@@ -611,15 +609,13 @@ button {
   transition:
     color var(--dur-fast) ease,
     background-color var(--dur-fast) ease,
-    border-color var(--dur-fast) ease,
-    box-shadow var(--dur-base) ease;
+    border-color var(--dur-fast) ease;
 }
 
 .contact-chip:hover {
   border-color: color-mix(in srgb, var(--primary) 40%, transparent);
   color: var(--primary);
   background: var(--tint);
-  box-shadow: var(--shadow-soft);
 }
 
 .contact-chip i {
@@ -637,6 +633,14 @@ h6 {
   color: var(--fg);
   letter-spacing: -0.02em;
   line-height: 1.25;
+}
+
+/* 大标题自动平衡换行，避免孤词 */
+.article-title,
+.section-title,
+.hero__name,
+.posts-header__title {
+  text-wrap: balance;
 }
 
 .article-title {
@@ -675,19 +679,16 @@ h6 {
   font-family: var(--font-serif);
 }
 
-/* Bootstrap 覆写 */
+/* Bootstrap 覆写：卡片扁平化 hover（去阴影，与首页 editorial 语言一致） */
 .card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background-color: var(--surface);
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: border-color 0.18s ease;
 }
 
 .card:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, transparent);
-  box-shadow: var(--shadow-soft);
 }
 
 .badge {

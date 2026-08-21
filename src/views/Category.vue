@@ -1,11 +1,11 @@
 <template>
   <div class="page-section category-view">
     <div class="category-head">
-      <h1 class="article-title">{{ pageTitle }}</h1>
+      <h1 class="article-title" v-reveal>{{ pageTitle }}</h1>
     </div>
 
     <div v-for="(category, index) in categoryList" :key="index" class="cat-section">
-      <div class="cat-section__header">
+      <div class="cat-section__header" v-reveal>
         <h2 class="cat-section__title">
           <i
             :class="['fas', sectionIcon(category.title)]"
@@ -209,21 +209,26 @@ function handleSeeMore(item: CategoryItem) {
 }
 
 .cat-section__icon {
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
   color: var(--primary);
-  width: 18px;
-  text-align: center;
+  background: var(--tint);
+  border-radius: var(--radius-btn);
   flex-shrink: 0;
 }
 
+/* 计数：文章页风格纯文本 meta（去胶囊底），数字等宽对齐 */
 .cat-section__count {
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--primary);
-  background: var(--tint);
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-  letter-spacing: 0.02em;
+  color: var(--fg-3);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
 }
 
 .cat-grid {
@@ -240,14 +245,11 @@ function handleSeeMore(item: CategoryItem) {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: border-color 0.18s ease;
 }
 
 .cat-card:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, transparent);
-  box-shadow: var(--shadow-soft);
 }
 
 .cat-card__head {

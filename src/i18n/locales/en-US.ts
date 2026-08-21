@@ -51,12 +51,16 @@ export default {
   updatedAt: 'Updated at',
   postReadingTime: '{minutes} min',
   articleReadingTime: 'Reading about {minutes} minutes',
-  tableOfContents: 'Table of Contents',
+  tableOfContents: 'On this page',
   openToc: 'Open table of contents',
   backToTop: 'Back to top',
 
   // 资源页面
   resourceSubtitle: 'Commonly used tools in bioinformatics and structural biology',
+
+  // 404
+  pageNotFound: 'This page could not be found',
+  backHome: 'Back to home',
 
   // 关于页面
   experience: 'Experience',

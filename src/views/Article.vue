@@ -654,9 +654,7 @@ onBeforeUnmount(() => {
   color: var(--fg);
   transition:
     color 0.14s ease,
-    background-color 0.14s ease,
-    border-color 0.14s ease,
-    box-shadow 0.18s ease;
+    border-color 0.14s ease;
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -665,8 +663,6 @@ onBeforeUnmount(() => {
 
 .article-nav-item:hover {
   border-color: color-mix(in srgb, var(--primary) 35%, transparent);
-  background: var(--surface-2);
-  box-shadow: var(--shadow-soft);
 }
 
 .article-nav-item.next {

@@ -58,6 +58,10 @@ export default {
   // 资源页面
   resourceSubtitle: '生物信息学与结构生物学领域常用工具',
 
+  // 404
+  pageNotFound: '页面不存在或已被移动',
+  backHome: '返回首页',
+
   // 关于页面
   experience: '经历',
   thanks: '感谢您的关注！',

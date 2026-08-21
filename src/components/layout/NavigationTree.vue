@@ -2,54 +2,69 @@
   <div class="navigation-tree">
     <div v-for="category in navigationTree" :key="category.name" class="tree-group">
       <div class="tree-label">{{ category.name }}</div>
-      <ul class="article-list article-list-root">
-        <template v-for="dir in category.children" :key="dir.name">
-          <li v-if="dir.files && dir.files.length" class="article-item">
-            <div class="directory-node">
-              <div class="tree-item tree-item--folder">
-                {{ dir.name }}
-              </div>
-              <ul v-if="dir.files && dir.files.length" class="article-list sub-list files-level">
-                <li v-for="file in dir.files" :key="file.path" class="article-item">
+      <ul class="article-list">
+        <li v-for="dir in category.children" :key="dir.id" class="article-item">
+          <button
+            type="button"
+            class="tree-item tree-item--folder"
+            :class="{ 'tree-item--branch-open': isExpanded(dir) }"
+            :aria-expanded="isExpanded(dir)"
+            @click="toggleDir(dir)"
+          >
+            <span class="tree-item__text">{{ dir.name }}</span>
+            <i
+              class="fas fa-chevron-right tree-caret"
+              :class="{ 'tree-caret--open': isExpanded(dir) }"
+              aria-hidden="true"
+            ></i>
+          </button>
+
+          <ul v-show="isExpanded(dir)" class="article-list tree-sublist">
+            <li v-for="file in dir.files" :key="file.path" class="article-item">
+              <router-link
+                :to="toArticle(file.path)"
+                class="tree-item tree-item--l2"
+                :class="{ 'tree-item--active': isActive(file.path) }"
+              >
+                {{ file.title }}
+              </router-link>
+            </li>
+
+            <li v-for="sub in dir.children" :key="sub.id" class="article-item">
+              <button
+                type="button"
+                class="tree-item tree-item--folder tree-item--l2"
+                :class="{ 'tree-item--branch-open': isExpanded(sub) }"
+                :aria-expanded="isExpanded(sub)"
+                @click="toggleDir(sub)"
+              >
+                <span class="tree-item__text">{{ sub.name }}</span>
+                <i
+                  class="fas fa-chevron-right tree-caret"
+                  :class="{ 'tree-caret--open': isExpanded(sub) }"
+                  aria-hidden="true"
+                ></i>
+              </button>
+
+              <ul v-show="isExpanded(sub)" class="article-list tree-sublist">
+                <li v-for="file in sub.files" :key="file.path" class="article-item">
                   <router-link
                     :to="toArticle(file.path)"
-                    class="tree-item tree-item--child"
+                    class="tree-item tree-item--l3"
                     :class="{ 'tree-item--active': isActive(file.path) }"
                   >
                     {{ file.title }}
                   </router-link>
                 </li>
               </ul>
-              <ul v-if="dir.children && dir.children.length" class="article-list sub-list">
-                <li v-for="sub in dir.children" :key="sub.name" class="article-item">
-                  <div class="directory-node">
-                    <div class="tree-item tree-item--folder">
-                      {{ sub.name }}
-                    </div>
-                    <ul
-                      v-if="sub.files && sub.files.length"
-                      class="article-list sub-list files-level"
-                    >
-                      <li v-for="file in sub.files" :key="file.path" class="article-item">
-                        <router-link
-                          :to="toArticle(file.path)"
-                          class="tree-item tree-item--child"
-                          :class="{ 'tree-item--active': isActive(file.path) }"
-                        >
-                          {{ file.title }}
-                        </router-link>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </template>
+            </li>
+          </ul>
+        </li>
+
         <li v-for="file in category.files" :key="file.path" class="article-item">
           <router-link
             :to="toArticle(file.path)"
-            class="tree-item tree-item--child"
+            class="tree-item tree-item--l1"
             :class="{ 'tree-item--active': isActive(file.path) }"
           >
             {{ file.title }}
@@ -79,6 +94,7 @@ interface TreeFile {
 }
 
 interface TreeDir {
+  id: string
   name: string
   files: TreeFile[]
   children?: TreeDir[]
@@ -94,6 +110,7 @@ const route = useRoute()
 
 const navigationTree = ref<TreeCategory[]>([])
 const currentPath = ref('')
+const collapsedIds = ref<string[]>([])
 const { data: categoryData } = useLocalizedContent(() => loadCategories(), [])
 
 function toArticle(path: string) {
@@ -101,13 +118,20 @@ function toArticle(path: string) {
 }
 
 function isActive(path: string) {
-  const current = currentPath.value.replace(/\.md$/, '')
-  const articlePath = path.replace(/\.md$/, '')
+  const current = currentPath.value.replace(/\.md$/, '').replace(/-en$/, '')
+  const articlePath = path.replace(/\.md$/, '').replace(/-en$/, '')
+  return current === articlePath
+}
 
-  const cleanCurrentPath = current.replace(/-en$/, '')
-  const cleanArticlePath = articlePath.replace(/-en$/, '')
+/** 默认全部展开；仅记录用户手动折叠的目录 */
+function isExpanded(dir: TreeDir) {
+  return !collapsedIds.value.includes(dir.id)
+}
 
-  return cleanCurrentPath === cleanArticlePath
+function toggleDir(dir: TreeDir) {
+  collapsedIds.value = isExpanded(dir)
+    ? [...collapsedIds.value, dir.id]
+    : collapsedIds.value.filter((id) => id !== dir.id)
 }
 
 function buildTree() {
@@ -166,19 +190,21 @@ function buildTree() {
     })
     if (files.length) {
       children.push({
+        id: `${targetItem!.name}/${cat.key || cat.title}`,
         name: cat.title || cat.key,
         files,
       })
     }
   })
 
-  navigationTree.value = [
+  const tree: TreeCategory[] = [
     {
       name: targetItem.title || targetItem.name || group,
       files: rootFiles,
       children,
     },
   ]
+  navigationTree.value = tree
 }
 
 function syncPathAndBuild() {
@@ -200,28 +226,18 @@ onMounted(() => {
   font-size: var(--text-base);
 }
 
-.tree-group {
-  margin-bottom: var(--sp-6);
+.tree-group + .tree-group {
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-3);
 }
 
 .tree-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-  padding: 0 var(--sp-2);
-  margin-bottom: var(--sp-2);
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.tree-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--line);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  padding: 4px 0 var(--sp-2);
+  line-height: 24px;
 }
 
 .article-list {
@@ -230,74 +246,101 @@ onMounted(() => {
   margin: 0;
 }
 
-.article-list-root {
-  padding-left: 0;
-}
-
 .article-item {
-  margin-bottom: 1px;
+  margin: 0;
 }
 
-.directory-node {
-  padding: 0.1rem 0;
-}
-
+/* ---------- 树节点（VitePress/D3 风格：纯文字链接 + hover 变色 + 激活指示条） ---------- */
 .tree-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: var(--text-sm);
-  color: var(--fg-2);
-  padding: 7px 10px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 1px;
-  transition:
-    color 0.14s ease,
-    background-color 0.14s ease;
-  cursor: pointer;
+  gap: var(--sp-2);
   width: 100%;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--fg-2);
   text-align: left;
+  text-decoration: none;
   border: none;
   background: transparent;
+  cursor: pointer;
   position: relative;
-  text-decoration: none;
-  line-height: 1.45;
+  transition: color var(--dur-fast) ease;
+}
+
+.tree-item__text {
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tree-item:hover {
-  background: var(--surface-2);
+  color: var(--primary);
+}
+
+/* ---------- 层级 1：分类直属文章（无左侧导轨） ---------- */
+.tree-item--l1 {
+  padding-left: 2px;
+}
+
+/* ---------- 目录（可折叠分支）：文字 + 右侧旋转 caret ---------- */
+.tree-item--folder {
+  color: var(--fg-2);
+}
+
+.tree-item--folder:hover {
   color: var(--fg);
 }
 
-/* 当前文章 hover 保持蓝色，不落入 hover 的黑色 */
-.tree-item--active:hover {
-  color: var(--primary);
-  background: var(--tint-strong);
+.tree-item--folder .tree-caret {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--fg-3);
+  transition:
+    color var(--dur-fast) ease,
+    transform var(--dur-base) var(--ease-out);
 }
 
+.tree-item--folder:hover .tree-caret {
+  color: var(--fg-2);
+}
+
+.tree-caret--open {
+  transform: rotate(90deg);
+}
+
+.tree-item--branch-open {
+  color: var(--fg);
+}
+
+/* ---------- 子列表导轨：左侧发丝线 + 缩进 ---------- */
+.tree-sublist {
+  border-left: 1px solid var(--line);
+  padding-left: 16px;
+}
+
+/* ---------- 激活项：主色 + 左侧 2px 指示条（压住导轨线），不加粗 ---------- */
 .tree-item--active {
   color: var(--primary);
-  font-weight: 600;
-  background: var(--tint);
 }
 
-.tree-item--folder {
-  font-weight: 600;
-  color: var(--fg);
-  cursor: default;
+.tree-item--active:hover {
+  color: var(--primary);
 }
 
-.tree-item--child {
-  padding-left: 10px;
-  font-size: var(--text-sm);
-}
-
-/* 子目录内的文章（二级及更深）比分类直属文章小一档 */
-.files-level .tree-item--child {
-  font-size: 13px;
-}
-
-.sub-list {
-  padding-left: 0;
+.tree-item--l2.tree-item--active::before,
+.tree-item--l3.tree-item--active::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: -17px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--primary);
 }
 </style>

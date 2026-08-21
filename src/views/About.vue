@@ -1,7 +1,7 @@
 <template>
   <div class="page-section about-view">
     <header class="about-head">
-      <div class="about-head__identity">
+      <div class="about-head__identity" v-reveal>
         <div class="about-head__avatar">
           <img
             v-if="avatarSrc"
@@ -18,11 +18,11 @@
         </div>
       </div>
 
-      <p v-if="introduction" class="about-intro">{{ introduction }}</p>
+      <p v-if="introduction" class="about-intro" v-reveal>{{ introduction }}</p>
     </header>
 
     <main class="about-body">
-      <section v-if="experience.length" class="about-section">
+      <section v-if="experience.length" class="about-section" v-reveal>
         <div class="about-section__title">{{ t('experience') }}</div>
         <div class="timeline">
           <div v-for="(it, idx) in experience" :key="idx" class="tl-item">
@@ -36,7 +36,13 @@
       </section>
 
       <div class="about-grid" v-if="sections.length">
-        <div v-for="(sec, idx) in sections" :key="idx" class="about-cell">
+        <div
+          v-for="(sec, idx) in sections"
+          :key="idx"
+          class="about-cell"
+          v-reveal
+          :style="{ '--reveal-delay': Math.min(Number(idx), 5) * 40 + 'ms' }"
+        >
           <div class="about-cell__title">{{ sec.title }}</div>
           <div v-for="(it, j) in sec.items" :key="j" class="about-cell__item">
             <span v-if="it.name" class="about-cell__item-name">{{ it.name }}</span>
@@ -329,14 +335,11 @@ const sections = computed(() => data.value.section)
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--sp-8);
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: border-color 0.18s ease;
 }
 
 .about-cell:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, transparent);
-  box-shadow: var(--shadow-soft);
 }
 
 .about-cell__title {

@@ -1,7 +1,7 @@
 <template>
   <div class="page-section resource-view">
     <header class="resource-head">
-      <h1 class="article-title">{{ pageTitle }}</h1>
+      <h1 class="article-title" v-reveal>{{ pageTitle }}</h1>
       <p class="resource-subtitle">
         <i class="fas fa-circle-info resource-head__icon"></i>{{ pageSubtitle }}
       </p>
@@ -36,12 +36,14 @@
             <h3 class="res-group-block__title">{{ group.title }}</h3>
             <div class="res-grid">
               <a
-                v-for="item in group.items"
+                v-for="(item, rIdx) in group.items"
                 :key="item.name"
                 :href="item.url"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="res-card"
+                v-reveal
+                :style="{ '--reveal-delay': Math.min(Number(rIdx), 5) * 40 + 'ms' }"
               >
                 <div class="res-card__head">
                   <span class="res-card__name">{{ item.name }}</span>
@@ -154,70 +156,77 @@ watch(
   margin-bottom: var(--sp-8);
 }
 
+/* 与文章页导航树一致：VitePress 风格分组标题（13px 加粗，不再大写） */
 .res-group__label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-  padding: 0 var(--sp-2);
-  margin-bottom: var(--sp-3);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  padding: 4px 0 var(--sp-2);
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: 24px;
 }
 
 .res-group__count {
   margin-left: auto;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
   color: var(--fg-3);
-  background: var(--surface-2);
-  border-radius: 99px;
-  padding: 1px 8px;
 }
 
+/* 条目容器：左侧发丝导轨 + 缩进（对齐文章页 tree-sublist） */
 .res-group__items {
   display: flex;
   flex-direction: column;
+  border-left: 1px solid var(--line);
+  padding-left: 16px;
 }
 
 .res-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  font-size: var(--text-base);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 24px;
   color: var(--fg-2);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
+  padding: 4px 0;
   cursor: pointer;
-  transition:
-    color var(--dur-fast) ease,
-    background-color var(--dur-fast) ease;
+  transition: color var(--dur-fast) ease;
   width: 100%;
   text-align: left;
   border: none;
   background: transparent;
-  margin-bottom: 2px;
-  font-weight: 500;
+  margin-bottom: 0;
 }
 
 .res-item:hover {
-  background: var(--surface-2);
-  color: var(--fg);
-}
-
-/* 当前选中项 hover 保持主色（与 NavigationTree 约定一致），不落入 hover 的黑色 */
-.res-item--active:hover {
   color: var(--primary);
-  font-weight: 600;
-  background: var(--tint-strong);
 }
 
+/* 选中项：主色 + 左侧 2px 指示条（压住导轨线），不加粗，与导航树约定一致 */
 .res-item--active {
   color: var(--primary);
-  font-weight: 600;
-  background: var(--tint);
+}
+
+.res-item--active:hover {
+  color: var(--primary);
+}
+
+.res-item--active::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: -17px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--primary);
 }
 
 .res-divider {
@@ -276,14 +285,11 @@ watch(
   background: var(--surface);
   text-decoration: none;
   color: var(--fg);
-  transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: border-color 0.18s ease;
 }
 
 .res-card:hover {
   border-color: color-mix(in srgb, var(--primary) 30%, transparent);
-  box-shadow: var(--shadow-soft);
 }
 
 .res-card__head {
@@ -411,6 +417,8 @@ watch(
     gap: var(--sp-2);
     overflow-x: auto;
     padding-bottom: 4px;
+    padding-left: 0;
+    border-left: none;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -432,6 +440,10 @@ watch(
 
   .res-item--active {
     background: var(--tint);
+  }
+
+  .res-item--active::before {
+    display: none;
   }
 
   .res-main {

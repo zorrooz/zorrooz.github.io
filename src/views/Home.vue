@@ -269,16 +269,6 @@ watch(locale, (newLocale, oldLocale) => {
   flex-wrap: wrap;
 }
 
-.posts-header__title::before {
-  content: '';
-  width: 3px;
-  height: 20px;
-  border-radius: 99px;
-  background: var(--primary);
-  flex-shrink: 0;
-  align-self: center;
-}
-
 .posts-header__title--tag::before {
   display: none;
 }
