@@ -259,9 +259,27 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 
 ### 页面 header 模式
 
-- **列表页标题**（首页 posts-header、分类页 section header）：26px serif `section-title` + 左侧 3px 蓝色 indicator（或 tint 图标块）+ hairline 下边框
-- **页面级 H1**（分类/资源/关于页头、文章标题）：`article-title` 风格（clamp(32-46px) serif）
+- **列表页标题**（首页 posts-header、分类页 section header）：26px serif `section-title` + hairline（首页 posts-header 无 indicator；分类页 section header 用 tint 图标块）+ hairline 下边框
+- **页面级 H1**（分类/资源/关于页头、文章标题）：`article-title` 风格（clamp(32-46px) serif，`text-wrap: balance`）
 - 规则：一页只出现一种 header 组合；列表分组标题用「小号大写标签 + hairline」或「带 indicator 的 section-title」，不重复堆叠 H1 样式
+
+### 侧栏导航与 TOC（VitePress/D3 风格）
+
+- **分组标题**（NavigationTree/资源页侧栏）：13px 加粗正文（非大写小标签），组间用 hairline 分隔
+- **条目**：13px 纯文字链接（无圆角底块），hover 变主色；激活项 = 主色 + 左侧 2px 主色指示条（**不加粗**）
+- **可折叠目录**：`tree-item--folder`（button）+ 右侧 `fa-chevron-right` caret（展开时 rotate 90°）；**默认全部展开**，仅记录用户手动折叠（`collapsedIds`），路由切换不重置
+- **子列表导轨**：`.tree-sublist`/`.res-group__items` 用 `border-left: 1px solid var(--line)` + `padding-left: 16px`；激活指示条 `left: -17px` 压在导轨线上
+- **TOC（OnThisPage）**：标题 en `On this page` / zh `本页目录`；`.otp-content` 左侧发丝导轨 + `.otp-marker`（2px 主色条，`top` 平滑过渡跟随激活项，公式 `link.offsetTop + 36`）；链接 13px **换行显示**（不截断省略），hover/激活变 `--fg`，不做圆角底块
+- 分类页计数（`.cat-section__count`）为纯文本 meta（等宽数字），不用 pill
+
+### 卡片与 hover（首页 editorial 语言）
+
+- 卡片（cat-card / res-card / about-cell / article-nav-item / Bootstrap `.card`）：hover = 仅边框变主色微光，**无背景变化、无阴影**；浮动层（抽屉/弹窗/浮动按钮）才用阴影
+- 首页 post-item：无边框卡片，行间 hairline 分隔 + 序号（等宽灰）+ hover 标题/箭头变主色（基准风格，其他页面向其看齐）
+
+### 404
+
+- 语言前缀下的未知路径 → `NotFound.vue`（品牌 404：巨型 serif 数字 + 说明 + 返回首页 pill）；无前缀未知路径先补 locale 前缀再落入 404；`dist/404.html` 由构建 onFinished 复制 index.html 生成
 
 ### 字体
 
