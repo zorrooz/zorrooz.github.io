@@ -64,6 +64,8 @@ const homePath = computed(() => {
   color: var(--fg-2);
   background: var(--surface);
   text-decoration: none;
+  /* 覆盖 App.vue 的 .main-content > * > * { flex: 1 } 链式拉伸（否则 404 短内容会被撑成大椭圆） */
+  flex: none;
   transition:
     color var(--dur-fast) ease,
     background-color var(--dur-fast) ease,
