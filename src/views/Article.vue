@@ -327,7 +327,12 @@ function onScroll() {
   })
 }
 
-function loadArticleContent() {
+interface LoadArticleOptions {
+  /** 内容重载后恢复到此滚动位置（切换语言等场景用；缺省滚回顶部） */
+  restoreScrollY?: number
+}
+
+function loadArticleContent(options: LoadArticleOptions = {}) {
   rawMarkdown.value = ''
   try {
     const matchedPost = findArticle(joinRoutePathParam(route.params.path))
@@ -338,7 +343,12 @@ function loadArticleContent() {
 
     nextTick(() => {
       if (typeof window === 'undefined') return
-      scrollToTop()
+      if (typeof options.restoreScrollY === 'number') {
+        // 切换语言：保持当前内容位置（内容高度因语言不同略有差异，位置按原 scrollY 恢复）
+        window.scrollTo(0, options.restoreScrollY)
+      } else {
+        scrollToTop()
+      }
       updateSidebarDimensions()
       onThisPageRef.value?.refreshToc()
     })
@@ -377,8 +387,11 @@ loadArticleContent()
 
 watch(locale, (newLocale, oldLocale) => {
   if (newLocale !== oldLocale) {
+    // 切换语言：路由 path 参数不变（-en 匹配在 loadHtmlContent 内按 locale 自动处理），
+    // 仅重建内容并恢复到当前滚动位置
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0
     buildFromCategories()
-    loadArticleContent()
+    loadArticleContent({ restoreScrollY: scrollY })
   }
 })
 
@@ -388,6 +401,7 @@ watch(
     const oldPath = joinRoutePathParam(oldPathParam)
     const newPath = joinRoutePathParam(newPathParam)
     if (oldPath !== newPath) {
+      // 文章间导航（上一篇/下一篇/目录点击）：新文章应滚回顶部
       onThisPageRef.value?.resetToc()
       loadArticleContent()
     }
