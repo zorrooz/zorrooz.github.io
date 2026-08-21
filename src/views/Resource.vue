@@ -9,18 +9,18 @@
 
     <div class="res-layout">
       <aside class="res-sidebar">
-        <div v-for="category in resources" :key="category.title" class="res-group">
+        <div v-for="(category, catIdx) in resources" :key="category.title" class="res-group">
           <div class="res-group__label">
             <span>{{ category.title }}</span>
             <span class="res-group__count num">{{ category.children?.length || 0 }}</span>
           </div>
           <div class="res-group__items">
             <button
-              v-for="sub in category.children"
+              v-for="(sub, subIdx) in category.children"
               :key="sub.title"
               class="res-item"
               :class="{ 'res-item--active': isActiveSub(sub) }"
-              @click="selectSub(sub)"
+              @click="selectSub(sub, catIdx, subIdx)"
             >
               {{ sub.title }}
             </button>
@@ -82,6 +82,9 @@ usePageMeta(t('metaResources'))
 
 const { data: resources } = useLocalizedContent(() => loadResources(), [])
 const activeSub = ref<ResourceNode | null>(null)
+// 选中项在资源树中的索引路径 [分类idx, 子分类idx]：跨语言重载后按索引恢复选中
+// （中英 title 不同，不能按 title 匹配；resources.yaml 结构跨语言同构）
+const activePath = ref<[number, number] | null>(null)
 
 const pageTitle = computed(() => t('resources'))
 const pageSubtitle = computed(() => t('resourceSubtitle'))
@@ -95,8 +98,9 @@ const groups = computed<ResourceNode[]>(() => {
   return sub.items?.length ? [{ title: sub.title, items: sub.items }] : []
 })
 
-function selectSub(sub: ResourceNode) {
+function selectSub(sub: ResourceNode, catIdx: number, subIdx: number) {
   activeSub.value = sub
+  activePath.value = [catIdx, subIdx]
 }
 
 function isActiveSub(sub: ResourceNode) {
@@ -106,7 +110,13 @@ function isActiveSub(sub: ResourceNode) {
 watch(
   resources,
   (list) => {
-    activeSub.value = list[0]?.children?.[0] || null
+    // 优先按索引路径恢复用户选中项（语言切换后数据已重载）；失效时回退第一个
+    let restored: ResourceNode | null = null
+    if (activePath.value) {
+      const [ci, si] = activePath.value
+      restored = list[ci]?.children?.[si] ?? null
+    }
+    activeSub.value = restored || list[0]?.children?.[0] || null
   },
   { immediate: true },
 )

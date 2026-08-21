@@ -341,7 +341,8 @@ function loadArticleContent(options: LoadArticleOptions = {}) {
 
     rawMarkdown.value = loadHtmlContent(currentPath.value)
 
-    nextTick(() => {
+    // 双 nextTick：等 v-html 渲染 + 布局稳定后再恢复滚动（单次 nextTick 时高度可能未定型）
+    nextTick(() => nextTick(() => {
       if (typeof window === 'undefined') return
       if (typeof options.restoreScrollY === 'number') {
         // 切换语言：保持当前内容位置（内容高度因语言不同略有差异，位置按原 scrollY 恢复）
@@ -351,7 +352,7 @@ function loadArticleContent(options: LoadArticleOptions = {}) {
       }
       updateSidebarDimensions()
       onThisPageRef.value?.refreshToc()
-    })
+    }))
   } catch {
     rawMarkdown.value =
       '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.'
