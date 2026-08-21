@@ -22,7 +22,7 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 | `npm run format` | Prettier on `src/ scripts/ vite/` |
 | `npm run data:translate` | AI translation CLI（增量，写 cache/en） |
 | `npm run data:tag-merge` | zh→en 标签映射增量补齐 CLI |
-| `npm run data:pack` | 打包文章（assets/ 引用图 → 文章同目录并改写引用；无参数 = 递归全部，幂等） |
+| `npm run data:pack` | 导出文章为自包含包（md + 引用图 → `exports/`；单篇/多篇/全部，`--out` 覆盖目录，`--zip` 压缩；只读源不改文件） |
 | `npm run data:deploy` | 提交数据分支变更并推送（add -A → commit → push origin data，触发 CI） |
 | `npm run data:publish` | 仅推送数据分支（`git -C ../blog-data push origin data`，触发 CI） |
 
@@ -111,7 +111,7 @@ scripts/                    # Node 内容工具链（不被浏览器打包；Nod
 ├── dataConfig.ts           # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR；EN_SUFFIX 常量）
 ├── markdownProcessor.ts    # unified pipeline: remark → rehype
 ├── runAllGenerators.ts     # Build orchestration（locale 步骤表 + 依赖顺序）
-├── packArticle.ts          # 打包文章 CLI（assets 图 → 文章同目录）
+├── packArticle.ts          # 导出文章 CLI（md + 引用图 → 自包含包，只读源）
 ├── llmConfig.ts            # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
 ├── generators/             # core/（兼容 barrel，实现已迁移 scripts/lib/）+ 11 个生成器
 ├── translator/             # AI translation via DeepSeek API（CLI）
@@ -128,7 +128,7 @@ vite/
 ```
 content-src/                 # 第一层 src — 纯手写中文源（严格无机器产物，仅这里编辑）
 │   ├── {categories,about,resources}.yaml
-│   ├── assets/              #   配图集中目录（Obsidian 附件默认位置；发布前 npm run data:pack 打包进文章）
+│   ├── assets/              #   配图集中目录（Obsidian 附件默认位置；站点直接解析，无需打包）
 │   └── notes/<cat>/<sub>/<slug>.md     # 扁平：一篇文章一个 md（slug = 文件名，无同名目录）
 cache/                       # 第二层 cache — 机器维护的持久态（入库），全部由工具生成
 │   ├── en/                  #   英文翻译层：镜像 content-src 结构，文件名沿用 -en 身份后缀
@@ -193,7 +193,7 @@ cache/en/notes/<category>/<subcategory>/<slug>-en.md       # 英文镜像
 ```
 
 - notes 目录名必须匹配 `categories.yaml` 中 `notes` 段的 `name` 字段；子分类目录名匹配其 `categories` 映射 key。
-- **图片**：写作期统一放 `content-src/assets/`（引用 `assets/xx.png`，Obsidian 最短路径格式，站点已支持解析）；发布前 `npm run data:pack -- notes/<cat>/<sub>/<slug>`（或 `npm run data:pack` 递归全部）将引用图片复制到文章同目录并改写引用（同步改写 cache/en 镜像，幂等）。
+- **图片**：写作期统一放 `content-src/assets/`（引用 `assets/xx.png`，Obsidian 最短路径格式，站点已支持解析，无需打包）；需要分享/迁移时用 `npm run data:pack -- notes/<cat>/<sub>/<slug>`（或 `npm run data:pack` 递归全部）导出为自包含包（md + 引用图 → `exports/`，`--zip` 压缩，只读源不改文件）。
 - 每篇文章 md 自带 **YAML frontmatter**：`title` / `date` / `author` / `tags` / `draft` / `description`（zh/en 各自文件分别定义）
 - `categories.yaml` 定义分类层级（`name`/`title`/`desc`/`categories` 子分类映射）；projects/topics 的全部元数据（`github`/`doi`/`url`/`status`/`language`/`license`/`journal`/`year`/`authors` 等）也在此定义
 - **中英 frontmatter `tags` 必须一一对应**（同一篇文章 zh/en 标签数量与语义对称），否则首页标签云双语标签数不一致（如 zh `Shell` / en 误写 `Shell`+`Bash`）
@@ -241,7 +241,7 @@ SEO title 统一走 `usePageMeta`（i18n meta.* 键 + `BLOG_TITLE`）。
 
 ### Adding Content
 1. 创建 `../blog-data/content-src/notes/<cat>/<sub>/<slug>.md`（slug 英文小写连字符，含 YAML frontmatter；Obsidian 中可用 `templates/new-post.md` 模板）
-2. 配图先放 `content-src/assets/`，发布前 `npm run data:pack -- notes/<cat>/<sub>/<slug>` 打包
+2. 配图先放 `content-src/assets/`（站点直接解析）；需要分享/迁移时 `npm run data:pack -- notes/<cat>/<sub>/<slug>` 导出自包含包
 3. 在 `categories.yaml` 添加分类
 4. 运行 `npm run prebuild` 本地验证
 5. 英文：`npm run data:translate`（生成 cache/en，不手写）

@@ -25,7 +25,7 @@ gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所
 - **完整阅读体验**：三栏文章布局（目录树 + 正文 + OnThisPage）、TOC 抽屉、阅读时长、标签筛选、回到顶部
 - **PWA 离线**：vite-plugin-pwa 自动生成 Service Worker，内容产物预缓存
 - **自动翻译**：DeepSeek API 增量翻译（内容哈希判定，零成本跳过未变化文件）
-- **Obsidian 写作**：vault 直接指向内容源（`content-src`），模板 / assets 集中配图 / `data:pack` 打包命令，边写边预览
+- **Obsidian 写作**：vault 直接指向内容源（`content-src`），模板 / assets 集中配图 / `data:pack` 导出分享，边写边预览
 - **无障碍与质感**：skip-to-content 键盘入口、焦点环、reduce-motion 感知动效；页头氛围光 + 微纹理 + blur 入场
 - **响应式设计**：桌面/平板/移动端统一边距与断点
 
@@ -85,7 +85,7 @@ scripts/                      # Node 内容工具链（构建期运行，不进�
 ├── dataConfig.ts             # 数据目录唯一接入点（支持 GBLOG_DATA_DIR；EN_SUFFIX 常量）
 ├── markdownProcessor.ts      # unified pipeline: md → HTML
 ├── runAllGenerators.ts       # 生成器编排（locale 步骤表，顺序见下）
-├── packArticle.ts            # 打包文章（assets 图 → 文章同目录，幂等）
+├── packArticle.ts            # 导出文章（md + 引用图 → 自包含包，只读源）
 ├── llmConfig.ts              # DeepSeek API 配置（gitignore，勿提交）
 ├── generators/               # core/（兼容 barrel，实现已迁 scripts/lib/）+ 11 个生成器
 ├── translator/               # AI 增量翻译（CLI：translate/status/help）
@@ -100,7 +100,7 @@ content-src/                  # 第一层 src：纯手写中文源（仅这里�
 │   ├── categories.yaml       # 分类 + notes/projects/topics 全部元数据
 │   ├── about.yaml            # 关于页
 │   ├── resources.yaml        # 资源页
-│   ├── assets/               # 配图集中目录（Obsidian 附件默认位置；发布前 data:pack 打包进文章）
+│   ├── assets/               # 配图集中目录（Obsidian 附件默认位置；站点直接解析，无需打包）
 │   ├── templates/            # Obsidian 新文章模板（new-post.md）
 │   └── notes/<分类>/<子分类>/<文章>.md   # 扁平：一篇文章一个 md（无同名目录）
 cache/                        # 第二层 cache：机器维护的持久态（入库）
@@ -145,7 +145,7 @@ content/                      # 第三层 final：生成 JSON + html（可再生
 | `npm run format` | Prettier（src/ scripts/ vite/） |
 | `npm run data:translate` | AI 增量翻译（写 cache/en） |
 | `npm run data:tag-merge` | zh→en 标签映射增量补齐 |
-| `npm run data:pack` | 打包文章（assets/ 引用图 → 文章同目录；无参数 = 递归全部，幂等） |
+| `npm run data:pack` | 导出文章为自包含包（md + 引用图 → `exports/`；单篇/多篇/全部，`--out` 覆盖目录，`--zip` 压缩；只读源不改文件） |
 | `npm run data:deploy` | 提交并推送数据分支变更，触发 CI 重新构建部署 |
 | `npm run data:publish` | 仅推送数据分支，不提交本地变更 |
 
@@ -229,7 +229,7 @@ content-src/notes/
 └── <其他分类>/
 ```
 
-**配图**：写作期统一放 `content-src/assets/`（引用 `assets/xx.png`），发布前 `npm run data:pack` 将引用图复制到文章同目录并改写引用（支持单篇/递归全部，幂等，同步改写英文镜像引用）。
+**配图**：写作期统一放 `content-src/assets/`（引用 `assets/xx.png`，Obsidian 最短路径格式，站点直接解析，无需任何打包步骤）。需要**分享/迁移文章**时，用 `npm run data:pack` 导出为自包含包——md + 引用图一起输出到 `exports/`，可整目录或 zip 带走（只读源文件，不改动任何内容）。
 
 **Obsidian 写作**：vault 指向 `content-src` 即可直接写作——frontmatter 即 Properties、附件默认进 `assets/`、新文章用 `templates/new-post.md` 模板；保存后 `npm run dev` 自动重生成并热刷新预览。
 
@@ -278,8 +278,11 @@ npm run data:translate -- translate --force           # 强制重新翻译所有
 npm run data:translate -- status <目录>               # 检查翻译状态
 npm run data:translate -- help                        # 查看完整用法
 npm run data:tag-merge                                # 补齐 zh→en 标签映射
-npm run data:pack -- notes/Programming/bash/bash-scripting   # 打包单篇文章
-npm run data:pack                                     # 递归打包全部文章
+npm run data:pack -- notes/Programming/bash/bash-scripting   # 导出单篇文章（目录包）
+npm run data:pack -- notes/Programming/bash/bash-scripting --zip   # 导出为 zip
+npm run data:pack -- notes/A notes/B                          # 导出多篇
+npm run data:pack -- --out D:\share\blog-exports              # 指定导出目录
+npm run data:pack                                             # 导出全部文章
 ```
 
 ### 资源页面配置

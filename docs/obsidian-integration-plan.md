@@ -3,7 +3,7 @@
 > 目标：把 Obsidian 变成 gblog 的**本地创作前端**，保留现有构建/发布管线不动，
 > 让「在 Obsidian 里写作 → 本地秒级预览 → git 自动同步 → CI 自动部署」成为日常闭环。
 >
-> 状态：**P0/P1 已实施**（2026-06）——扁平化结构、assets 集中图片、`npm run data:pack` 打包命令、
+> 状态：**P0/P1 已实施**（2026-06）——扁平化结构、assets 集中图片、`npm run data:pack` 导出命令、
 > 旧 URL 重定向、gitignore、模板均已落地；P2（callout/高亮语法插件）待做。
 > 适用范围：`gblog`（代码仓库）+ `blog-data`（数据仓库）
 
@@ -140,14 +140,16 @@
   community-plugins.json 等最小配置 + 一份 README 说明），新机器一键拷入，避免各机配置漂移。
 - 若想共享插件列表，可在模板里固定：Templater、obsidian-git、Linter（可选）。
 
-### 5.3 附件策略（已实施：assets 集中 + 打包命令）
+### 5.3 附件策略（已实施：assets 集中 + 导出命令）
 
 - **写作期**：图片统一放 `content-src/assets/`（vault 根 `assets/` 文件夹）。Obsidian 设置：
   「附件默认存放位置」→ 指定文件夹 → `assets`。
 - 引用格式：`![示意图](assets/fig-1.png)`（Obsidian 默认「最短路径」格式即如此；
   `RenderMarkdown.rewriteImageLinks` 已支持 vault 根相对路径解析，见 §8）。
-- **发布前**：`npm run data:pack -- notes/<cat>/<sub>/<slug>`（或 `npm run data:pack` 递归全部）把引用图复制到文章同目录并改写引用
-  （同步改写 cache/en 镜像引用，不复制文件；幂等；同名冲突自动加 slug 前缀）。
+- **站点发布无需打包**：渲染层直接解析 `assets/` 引用，部署与 `data:pack` 无关。
+- **导出分享/迁移**：`npm run data:pack -- notes/<cat>/<sub>/<slug>`（或递归全部）把文章 md + 引用图
+  导出为自包含包（默认 `../blog-data/exports/`，`--out` 覆盖目录，`--zip` 压缩；只读源不改文件；
+  同名图片冲突自动加 slug 前缀；外链引用保留原样）。
 - 命名规范：英文小写连字符（`fig-1.png`、`pipeline.png`），避免中文文件名。
 
 ### 5.4 链接格式（G1 的零成本解法）

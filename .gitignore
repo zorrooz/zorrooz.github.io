@@ -28,6 +28,9 @@ dev-dist/
 public/sitemap.xml
 public/robots.txt
 
+# 导出产物（data:pack 输出到 ../blog-data/exports/，不入库）
+exports/
+
 /cypress/videos/
 /cypress/screenshots/
 
