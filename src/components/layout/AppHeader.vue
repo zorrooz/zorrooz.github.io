@@ -59,7 +59,7 @@
       </div>
 
       <div v-if="isArticle" class="offcanvas-section">
-        <div class="offcanvas-head">{{ t('tableOfContents') }}</div>
+        <div class="offcanvas-head">{{ t('articleNav') }}</div>
         <div class="offcanvas-tree offcanvas-card" @click="handleDirectoryClick">
           <NavigationTree />
         </div>

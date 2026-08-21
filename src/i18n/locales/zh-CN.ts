@@ -72,6 +72,7 @@ export default {
 
   // 无障碍
   skipToContent: '跳转到正文',
+  articleNav: '文章导航',
 
   // 关于页面
   experience: '经历',

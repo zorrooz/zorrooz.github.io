@@ -178,12 +178,12 @@ watch(locale, (newLocale, oldLocale) => {
 }
 
 .hero__stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-7);
   padding: 0 0 var(--sp-2);
   white-space: nowrap;
-  min-width: 320px;
+  min-width: 0;
 }
 
 .hero__stat {
@@ -292,6 +292,8 @@ watch(locale, (newLocale, oldLocale) => {
 
   .hero__stats {
     justify-self: start;
+    flex-direction: row;
+    gap: var(--sp-8);
   }
 }
 

@@ -74,6 +74,7 @@ export default {
 
   // Accessibility
   skipToContent: 'Skip to content',
+  articleNav: 'Article Navigation',
 
   // 关于页面
   experience: 'Experience',
