@@ -138,6 +138,7 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 - **图标**：操作图标 = 内联 stroke SVG（viewBox 24、stroke-width 1.75、fill none、stroke currentColor、18px）；**禁止 PNG 位图图标**；装饰图标用 FontAwesome（数据驱动）
 - **字体**：思源宋体（标题）/ 思源黑体 / Agave（等宽）完整文件引用，**无子集化、无构建脚本**
 - **主题持久化**：`initTheme()` 必须重读 `initialTheme()` 覆盖 SSR 内嵌 pinia state（恒为 auto，hydrate 会覆盖 localStorage）
+- **语言切换不跳位**：zh↔en 切换必须保持当前阅读位置——文章页按 `restoreScrollY` 恢复滚动（双 nextTick 等布局稳定），资源页按索引路径 `[catIdx, subIdx]` 恢复选中子分类（中英 title 不同，不能按名字匹配）
 - **复制**：文章复制取 `.markdown-body` innerText（清辅助元素）；表格复制为 TSV（\t 分隔，可贴 Excel）
 
 ## 颜色系统（三色族：蓝/灰/黑）
