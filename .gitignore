@@ -8,3 +8,7 @@ dist-ssr/
 .vite/
 *.log
 .DS_Store
+
+# Obsidian vault local state (machine-generated config, not content)
+.obsidian/
+.trash/
