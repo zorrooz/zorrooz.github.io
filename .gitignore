@@ -55,6 +55,9 @@ scripts/llmConfig.ts
 # Qoder generated repo wiki index
 .qoder/
 
+# 临时文档/计划（按需另存，不入库）
+docs/
+
 # Reasonix session metadata
 .reasonix/
 
