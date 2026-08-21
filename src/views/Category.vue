@@ -98,16 +98,16 @@
 defineOptions({ name: 'CategoryView' })
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
+import { usePageMeta } from '@/composables/usePageMeta'
 import { toLocalePath } from '@/utils/navigation'
+import { normalizeDoi, normalizeUrl } from '@/utils/url'
 import { loadCategories } from '@/utils/contentLoader'
 import type { CategoryItem, CategorySection } from '@/types'
 
-useHead({ title: 'zorrooz’s blog - Categories' })
-
 const { t } = useI18n()
+usePageMeta(t('metaCategories'))
 const router = useRouter()
 
 const { data: categoryList } = useLocalizedContent(() => loadCategories(), [])
@@ -137,19 +137,6 @@ function sectionCount(category: CategorySection) {
 
 function getLatestDate(item: CategoryItem) {
   return item.stats.latestDate || ''
-}
-
-function normalizeUrl(value: string | undefined) {
-  if (!value || !value.trim()) return ''
-  if (/^https?:\/\//i.test(value)) return value
-  return 'https://' + value.replace(/^\/+/, '')
-}
-
-function normalizeDoi(value: string | undefined) {
-  if (!value || !value.trim()) return ''
-  if (/^https?:\/\//i.test(value)) return value
-  if (/^10\.\d{4,9}\//.test(value)) return 'https://doi.org/' + value
-  return 'https://' + value.replace(/^\/+/, '')
 }
 
 function hasExternalLink(item: CategoryItem) {

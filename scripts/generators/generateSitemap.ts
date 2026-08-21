@@ -9,7 +9,7 @@ import path from 'path'
 
 import { contentDir } from '../dataConfig.ts'
 import { LOCALE_SEGMENTS, SITE } from '../../src/config.ts'
-import { isDirectRun, logWriteSuccess, runCliScript } from './core/index.ts'
+import { isDirectRun, logWriteSuccess, runCliScript, walkCategoryArticles } from './core/index.ts'
 
 const SITE_URL = SITE.url
 const publicDir = path.join(import.meta.dirname, '../../public')
@@ -30,20 +30,14 @@ function collectArticleUrls(): ArticleUrlEntry[] {
   }
   const data = JSON.parse(fs.readFileSync(p, 'utf-8'))
   const urls: ArticleUrlEntry[] = []
-  for (const group of Array.isArray(data) ? data : []) {
-    for (const item of Array.isArray(group?.items) ? group.items : []) {
-      for (const cat of Array.isArray(item?.categories) ? item.categories : []) {
-        for (const art of Array.isArray(cat?.articles) ? cat.articles : []) {
-          if (typeof art?.articleUrl === 'string' && art.articleUrl) {
-            urls.push({
-              loc: art.articleUrl,
-              lastmod: typeof art?.date === 'string' ? art.date : '',
-            })
-          }
-        }
-      }
+  walkCategoryArticles(data, (art) => {
+    if (typeof art?.articleUrl === 'string' && art.articleUrl) {
+      urls.push({
+        loc: art.articleUrl,
+        lastmod: typeof art?.date === 'string' ? art.date : '',
+      })
     }
-  }
+  })
   return urls
 }
 

@@ -14,10 +14,15 @@
     "lint": "eslint . --fix",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "format": "prettier --write src/ scripts/ vite/",
-    "translate": "node ./scripts/translator/translatorCli.ts",
-    "tagmerge": "node ./scripts/tagMerger/tagMergerCli.ts",
+    "data:translate": "node ./scripts/translator/translatorCli.ts",
+    "data:tag-merge": "node ./scripts/tagMerger/tagMergerCli.ts",
+    "data:pack": "node ./scripts/packArticle.ts",
+    "data:deploy": "git -C ../blog-data add -A && git -C ../blog-data commit -m \"chore: update content\" && git -C ../blog-data push origin data",
     "data:publish": "git -C ../blog-data push origin data",
-    "deploy": "git -C ../blog-data add -A && git -C ../blog-data commit -m \"chore: update content\" && git -C ../blog-data push origin data"
+    "translate": "npm run data:translate",
+    "tagmerge": "npm run data:tag-merge",
+    "pack": "npm run data:pack",
+    "deploy": "npm run data:deploy"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.4.0",

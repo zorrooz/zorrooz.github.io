@@ -4,18 +4,18 @@
 
 import path from 'path'
 
-import { contentSrcDir } from '../dataConfig.ts'
+import { contentSrcDir, EN_SUFFIX } from '../dataConfig.ts'
 
 // 支持的翻译配置
 export const TRANSLATION_CONFIG = {
   // 支持的文件类型
   SUPPORTED_EXTENSIONS: ['.md', '.yaml', '.yml'],
 
-  // 输出文件后缀
-  OUTPUT_SUFFIX: '-en',
+  // 输出文件后缀（-en 是内容身份，与 dataConfig.EN_SUFFIX 单一来源）
+  OUTPUT_SUFFIX: EN_SUFFIX,
 
   // 排除的文件模式
-  EXCLUDE_PATTERNS: ['*-en.*', '*.bak', '*.tmp'],
+  EXCLUDE_PATTERNS: [`*${EN_SUFFIX}.*`, '*.bak', '*.tmp'],
 
   // 默认翻译选项
   DEFAULT_OPTIONS: {

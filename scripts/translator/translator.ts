@@ -1,78 +1,29 @@
-import OpenAI from 'openai'
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import { pathToFileURL } from 'url'
 import { cacheDir, contentSrcDir, enSrcDir } from '../dataConfig.ts'
-
-let clientCache: OpenAI | null = null
-
-/** llmConfig.ts（gitignore）支持的字段；thinking 缺省 = 关闭思考模式 */
-interface LlmConfig {
-  url: string
-  apikey: string
-  model: string
-  /** 是否启用 DeepSeek 思考模式（默认关闭：省 token 且恢复 temperature 语义） */
-  thinking?: boolean
-}
-
-/**
- * 懒加载 DeepSeek 配置（llmConfig.ts 被 gitignore，CI 无此文件）。
- * 与 tagMerger 相同：模块可能被 vite-ssg 打包，静态 import 会因缺文件失败。
- */
-async function loadLlmConfig(): Promise<LlmConfig | null> {
-  const cfgPath = path.join(import.meta.dirname, '../llmConfig.ts')
-  if (!fsSync.existsSync(cfgPath)) return null
-  try {
-    const mod = (await import(pathToFileURL(cfgPath).href)) as {
-      default?: Partial<LlmConfig>
-    }
-    const cfg = mod.default || {}
-    if (!cfg.url || !cfg.apikey || !cfg.model) return null
-    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model, thinking: cfg.thinking }
-  } catch {
-    return null
-  }
-}
-
-async function getClient(): Promise<OpenAI> {
-  if (clientCache) return clientCache
-  const cfg = await loadLlmConfig()
-  if (!cfg)
-    throw new Error('未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model[, thinking] }')
-  clientCache = new OpenAI({ baseURL: cfg.url, apiKey: cfg.apikey })
-  return clientCache
-}
+import { completeChat } from '../lib/llm.ts'
+import { rewriteFrontmatterTags } from '../lib/frontmatter.ts'
+import { loadTagMapping } from '../lib/tagMapping.ts'
+import { walkAsync } from '../lib/fs.ts'
 
 /** 翻译一段文本（md 或 yaml），返回英文结果 */
 async function translateText(text: string, fileType = 'md'): Promise<string> {
   try {
-    const [client, cfg] = await Promise.all([getClient(), loadLlmConfig()])
     const systemPrompt =
       fileType === 'yaml'
         ? '你是一个专业翻译器。请将以下YAML文件内容翻译为英文，要求：\n1. 严格保持YAML格式结构（键名不翻译，只翻译值）\n2. 保持缩进、标点等格式不变\n3. 不添加任何解释、注释或额外内容\n4. 只输出翻译结果'
         : '你是一个专业翻译器。请将以下Markdown内容翻译为英文，要求：\n1. 严格保持原始格式（包括Markdown语法、代码块、换行、缩进等）\n2. 不添加任何解释、注释或额外内容\n3. 只输出翻译结果'
 
-    const completion = await client.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: text },
-      ],
-      model: cfg?.model ?? '',
-      temperature: 0.3,
-      // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
-      thinking: { type: cfg?.thinking === true ? 'enabled' : 'disabled' },
-    } as OpenAI.ChatCompletionCreateParamsNonStreaming)
-
-    const usage = completion.usage
-    if (usage) {
+    const result = await completeChat(systemPrompt, text, { temperature: 0.3 })
+    if (result.usage) {
       console.log(
-        `[TOKENS] prompt=${usage.prompt_tokens} completion=${usage.completion_tokens} total=${usage.total_tokens}`,
+        `[TOKENS] prompt=${result.usage.promptTokens} completion=${result.usage.completionTokens} total=${result.usage.totalTokens}`,
       )
     }
 
-    return (completion.choices[0].message.content ?? '').trim()
+    return result.text
   } catch (error) {
     console.error('翻译时发生错误:', (error as Error).message)
     throw error
@@ -145,19 +96,11 @@ let translationCache: Record<string, string> | null = null
 
 function loadTranslationMapping(): Record<string, string> {
   if (translationCache) return translationCache
-  translationCache = {}
-  try {
-    const mappingPath = path.join(cacheDir, 'tag-mapping.json')
-    const raw = fsSync.readFileSync(mappingPath, 'utf-8')
-    const parsed = JSON.parse(raw) as { translation?: Record<string, string> }
-    if (parsed?.translation && typeof parsed.translation === 'object') {
-      translationCache = parsed.translation
-    }
-  } catch (e) {
-    console.warn(
-      `[Warn] 标签映射加载失败（en 标签将保持中文）: ${e instanceof Error ? e.message : e}`,
-    )
+  const mapping = loadTagMapping(path.join(cacheDir, 'tag-mapping.json'))
+  if (!mapping) {
+    console.warn('[Warn] 标签映射加载失败（en 标签将保持中文）')
   }
+  translationCache = mapping?.translation ?? {}
   return translationCache
 }
 
@@ -175,12 +118,8 @@ function translateFrontmatterTags(source: string, translated: string): string {
     if (!en) console.warn(`[Warn] 标签「${tag}」缺少 zh→en 映射（保持中文，请运行 tagMerger 补齐）`)
     return en || tag
   })
-  const enTagsJson = JSON.stringify(enTags)
-  // 只替换 LLM 输出的 frontmatter 区域，避免 tags 正则吞掉正文内容
-  const fmMatch = translated.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!fmMatch) return translated
-  const fm = fmMatch[1].replace(/^tags:\s*\[[\s\S]*?\]/m, `tags: ${enTagsJson}`)
-  return `---\n${fm}\n---${translated.slice(fmMatch[0].length)}`
+  // 只替换 LLM 输出的 frontmatter 区域 tags（见 lib/frontmatter.ts），缺失时原样返回
+  return rewriteFrontmatterTags(translated, () => enTags)
 }
 
 /**
@@ -257,40 +196,17 @@ async function translateDirectory(
   const {
     recursive = true,
     filePatterns = ['*.md', '*.yaml', '*.yml'],
-    excludePatterns = ['*-en.*'],
+    excludePatterns = ['*-en.*', 'templates', 'assets'],
     ...translateOptions
   } = options
 
   try {
-    const files: string[] = []
-
-    async function searchFiles(dir: string) {
-      const entries = await fs.readdir(dir, { withFileTypes: true })
-
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name)
-
-        if (entry.isDirectory() && recursive) {
-          await searchFiles(fullPath)
-        } else if (entry.isFile()) {
-          const matchesPattern = filePatterns.some((pattern) => {
-            const regex = new RegExp(pattern.replace('*', '.*').replace('.', '\\.'))
-            return regex.test(entry.name)
-          })
-
-          const isExcluded = excludePatterns.some((pattern) => {
-            const regex = new RegExp(pattern.replace('*', '.*').replace('.', '\\.'))
-            return regex.test(entry.name)
-          })
-
-          if (matchesPattern && !isExcluded) {
-            files.push(fullPath)
-          }
-        }
-      }
-    }
-
-    await searchFiles(directoryPath)
+    // 遍历+模式匹配收敛至 lib/fs.ts walkAsync（include/exclude 按文件名匹配，语义与原 searchFiles 一致）
+    const files = await walkAsync(directoryPath, {
+      include: filePatterns,
+      exclude: excludePatterns,
+      recursive,
+    })
 
     console.log(`[INFO] 找到 ${files.length} 个需要翻译的文件`)
 

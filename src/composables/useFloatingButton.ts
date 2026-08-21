@@ -1,11 +1,13 @@
 /**
  * 浮动按钮（BackToTop / TocDrawer）共享的定位与协调逻辑。
- * 两按钮通过 window CustomEvent 'floating-buttons-base-top' 协调纵向位置：
+ * 两按钮通过 window CustomEvent（FLOATING_BASE_EVENT）协调纵向位置：
  * - mode 'match'：直接占据广播的 base
  * - mode 'stack'：挂在 base 上方（top = base - gap）
  * 支持触摸拖拽（constrained 到边界）与单击释放（触发 onRelease）。
  */
-import { ref } from 'vue'
+import { onScopeDispose, ref } from 'vue'
+
+export const FLOATING_BASE_EVENT = 'floating-buttons-base-top'
 
 export interface FloatingButtonOptions {
   sourceId: string
@@ -31,6 +33,7 @@ export function useFloatingButton(opts: FloatingButtonOptions) {
   const initialTop = ref(0)
   const buttonTop = ref(opts.defaultTop)
   const touchMoved = ref(false)
+  let rafId: number | null = null
 
   const getBounds = () => ({
     gap,
@@ -51,14 +54,23 @@ export function useFloatingButton(opts: FloatingButtonOptions) {
   /** 收到的 base → 自身应该落位的 top */
   const topFromBase = (base: number) => (mode === 'stack' ? base - gap : base)
 
+  function cancelPendingRaf() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId)
+      rafId = null
+    }
+    rafPending.value = false
+  }
+
   function dispatchBaseTop() {
     rafLastBaseTop.value = baseFromCurrent(buttonTop.value)
     if (rafPending.value) return
     rafPending.value = true
-    requestAnimationFrame(() => {
+    rafId = requestAnimationFrame(() => {
+      rafId = null
       if (rafLastBaseTop.value !== null) {
         window.dispatchEvent(
-          new CustomEvent('floating-buttons-base-top', {
+          new CustomEvent(FLOATING_BASE_EVENT, {
             detail: { baseTop: rafLastBaseTop.value, source: sourceId },
           }),
         )
@@ -98,12 +110,15 @@ export function useFloatingButton(opts: FloatingButtonOptions) {
   }
 
   function subscribe() {
-    window.addEventListener('floating-buttons-base-top', handleBaseTopEvent)
+    window.addEventListener(FLOATING_BASE_EVENT, handleBaseTopEvent)
   }
 
   function unsubscribe() {
-    window.removeEventListener('floating-buttons-base-top', handleBaseTopEvent)
+    cancelPendingRaf()
+    window.removeEventListener(FLOATING_BASE_EVENT, handleBaseTopEvent)
   }
+
+  onScopeDispose(cancelPendingRaf)
 
   return {
     isDragging,

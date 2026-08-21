@@ -130,15 +130,19 @@ content/                      # 第三层 final：生成 JSON + html（可再生
 | `npm run lint` | ESLint（自动修复） |
 | `npm run typecheck` | vue-tsc + tsc 双项目类型检查 |
 | `npm run format` | Prettier（src/ scripts/ vite/） |
-| `npm run translate` | AI 增量翻译（写 cache/en） |
-| `npm run tagmerge` | zh→en 标签映射增量补齐 |
-| `npm run deploy` | 提交并推送数据分支变更，触发 CI 重新构建部署 |
+| `npm run data:translate` | AI 增量翻译（写 cache/en） |
+| `npm run data:tag-merge` | zh→en 标签映射增量补齐 |
+| `npm run data:pack` | 打包文章（assets/ 引用图 → 文章同目录；无参数 = 递归全部，幂等） |
+| `npm run data:deploy` | 提交并推送数据分支变更，触发 CI 重新构建部署 |
+| `npm run data:publish` | 仅推送数据分支，不提交本地变更 |
+
+> 命令规范：数据分支操作统一 `data:` 前缀；`translate`/`tagmerge`/`pack`/`deploy` 为旧名兼容别名。
 
 ### 发布流程
 
 1. 编辑 `../blog-data/content-src/**`（只写中文源）
-2. 本地验证：`npm run prebuild`（必要时先 `npm run translate` 生成英文）
-3. 发布：`npm run deploy`（自动 `add -A → commit → push origin data`）
+2. 本地验证：`npm run prebuild`（必要时先 `npm run data:translate` 生成英文）
+3. 发布：`npm run data:deploy`（自动 `add -A → commit → push origin data`）
 4. GitHub Actions 自动重新构建并部署到 GitHub Pages
 
 > 也可用 `npm run data:publish` 只推送数据分支而不提交本地变更。
@@ -231,9 +235,9 @@ description: 摘要（用于列表卡片与搜索）
 
 ### 双语机制
 
-- 英文**绝不手写**：`npm run translate` 将中文源增量翻译到 `cache/en/` 镜像（`-en` 后缀是内容身份，是 URL 的一部分）
+- 英文**绝不手写**：`npm run data:translate` 将中文源增量翻译到 `cache/en/` 镜像（`-en` 后缀是内容身份，是 URL 的一部分）
 - 翻译器按**内容 hash** 判定增量：源文件未变化即跳过，命中零成本
-- 标签经 `cache/tag-mapping.json` 映射表查表翻译，缺失映射由 `npm run tagmerge` 增量补齐
+- 标签经 `cache/tag-mapping.json` 映射表查表翻译，缺失映射由 `npm run data:tag-merge` 增量补齐
 - 生成器按 locale 取源：`srcDirFor(locale)`（zh→content-src，en→cache/en），输出恒为 `content/*` 与 `content/*-en*`
 
 #### 翻译工具
@@ -252,12 +256,14 @@ export default {
 常用命令（`--` 之后的参数传给 CLI）：
 
 ```bash
-npm run translate                                   # 增量翻译（默认 content-src，推荐）
-npm run translate -- translate --new                # 仅翻译新文件
-npm run translate -- translate --force              # 强制重新翻译所有文件
-npm run translate -- status <目录>                  # 检查翻译状态
-npm run translate -- help                           # 查看完整用法
-npm run tagmerge                                    # 补齐 zh→en 标签映射
+npm run data:translate                                # 增量翻译（默认 content-src，推荐）
+npm run data:translate -- translate --new             # 仅翻译新文件
+npm run data:translate -- translate --force           # 强制重新翻译所有文件
+npm run data:translate -- status <目录>               # 检查翻译状态
+npm run data:translate -- help                        # 查看完整用法
+npm run data:tag-merge                                # 补齐 zh→en 标签映射
+npm run data:pack -- notes/Programming/bash/bash-scripting   # 打包单篇文章
+npm run data:pack                                     # 递归打包全部文章
 ```
 
 ### 资源页面配置

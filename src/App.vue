@@ -23,6 +23,7 @@ import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { useLocaleStore } from '@/stores/locale'
 import {
+  ARTICLE_ROUTE_PREFIX,
   HTML_LANG,
   localeFromPath,
   localeSegmentOf,
@@ -56,7 +57,7 @@ useHead({
   // SEO：canonical + 双语 hreflang（SSG 产物为 /zh、/en 物理路径，避免重复内容）
   // 文章页 en 路径带 -en 后缀，alternate 需做后缀映射
   link: computed(() => {
-    const isArticle = pagePath.value.includes('/article/')
+    const isArticle = pagePath.value.includes(`${ARTICLE_ROUTE_PREFIX}/`)
     const zhAlt = isArticle ? pagePath.value.replace(/-en$/, '') : pagePath.value
     const enAlt =
       isArticle && !pagePath.value.endsWith('-en') ? `${pagePath.value}-en` : pagePath.value

@@ -76,10 +76,12 @@ defineOptions({ name: 'AboutView' })
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
+import { usePageMeta } from '@/composables/usePageMeta'
 import { EMPTY_ABOUT, loadAbout } from '@/utils/contentLoader'
 import { SITE } from '@/config'
 
 const { t } = useI18n()
+usePageMeta(t('metaAbout'))
 
 const { data } = useLocalizedContent(() => loadAbout(), EMPTY_ABOUT)
 

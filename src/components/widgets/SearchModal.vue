@@ -1,7 +1,6 @@
 <template>
-  <Teleport to="body">
-    <div class="search-overlay" @click.self="close" @keydown.esc="close">
-      <div class="search-panel" role="dialog" aria-modal="true" :aria-label="t('search')">
+  <ModalOverlay @close="close">
+    <div class="search-panel" role="dialog" aria-modal="true" :aria-label="t('search')">
         <div class="search-input-row d-flex align-items-center">
           <i class="fas fa-magnifying-glass search-icon"></i>
           <input
@@ -46,104 +45,26 @@
           </li>
         </ul>
       </div>
-    </div>
-  </Teleport>
+  </ModalOverlay>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import MiniSearch from 'minisearch'
+import { useSearch } from '@/composables/useSearch'
+import type { SearchDoc } from '@/types'
 import { toLocalePath } from '@/utils/navigation'
-
-interface SearchDoc {
-  id: string
-  title: string
-  tags: string[]
-  path: string
-  description: string
-  content: string
-}
+import { ARTICLE_ROUTE_PREFIX } from '@/config'
+import ModalOverlay from '@/components/common/ModalOverlay.vue'
 
 const emit = defineEmits(['close'])
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const router = useRouter()
 
-const keyword = ref('')
-const results = ref<SearchDoc[]>([])
-const searching = ref(false)
-const errorMsg = ref('')
+const { keyword, results, searching, errorMsg } = useSearch()
 const searchInput = ref<HTMLInputElement | null>(null)
-
-let engine: MiniSearch<SearchDoc> | null = null
-
-const cjkTokenize = (text: string) => {
-  const words = text
-    .toLowerCase()
-    .split(/[^a-z0-9\u4e00-\u9fa5]+/)
-    .filter(Boolean)
-  const tokens: string[] = []
-  for (const word of words) {
-    if (word.length > 2 && /[\u4e00-\u9fa5]/.test(word)) {
-      for (let i = 0; i <= word.length - 2; i++) tokens.push(word.slice(i, i + 2))
-    } else {
-      tokens.push(word)
-    }
-  }
-  return tokens
-}
-
-async function ensureEngine() {
-  if (engine) return
-  const mods = import.meta.glob('@data/content/search-index*.json')
-  const key = Object.keys(mods).find((k) =>
-    k.includes(locale.value === 'en-US' ? 'search-index-en.json' : 'search-index.json'),
-  )
-  if (!key) return
-  const loader = mods[key]
-  if (!loader) return
-  const mod = await loader()
-  const docs = ((mod as { default?: SearchDoc[] }).default || []) as SearchDoc[]
-  engine = new MiniSearch<SearchDoc>({
-    fields: ['title', 'description', 'content'],
-    storeFields: ['title', 'tags', 'path', 'description'],
-    tokenize: cjkTokenize,
-    processTerm: (term) => term,
-    searchOptions: {
-      prefix: true,
-      fuzzy: 0.2,
-      boost: { title: 3, description: 2, content: 1 },
-    },
-  })
-  engine.addAll(docs)
-}
-
-async function runSearch() {
-  const kw = keyword.value.trim()
-  if (!kw) {
-    results.value = []
-    return
-  }
-  searching.value = true
-  errorMsg.value = ''
-  try {
-    await ensureEngine()
-    if (!engine) {
-      errorMsg.value = t('searchUnavailable')
-      results.value = []
-      return
-    }
-    results.value = engine.search(kw) as unknown as SearchDoc[]
-  } catch (e) {
-    console.error('Search failed:', e)
-    errorMsg.value = t('searchUnavailable')
-    results.value = []
-  } finally {
-    searching.value = false
-  }
-}
 
 function snippet(item: SearchDoc) {
   const text = item.description || item.content || item.title
@@ -152,14 +73,12 @@ function snippet(item: SearchDoc) {
 
 function goToResult(item: SearchDoc) {
   close()
-  router.push(toLocalePath(`/article/${item.path}`))
+  router.push(toLocalePath(`${ARTICLE_ROUTE_PREFIX}/${item.path}`))
 }
 
 function close() {
   emit('close')
 }
-
-watch(keyword, () => runSearch())
 
 nextTick(() => {
   searchInput.value?.focus()
@@ -167,17 +86,6 @@ nextTick(() => {
 </script>
 
 <style scoped>
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1080;
-  background: rgba(0, 0, 0, 0.42);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 14vh;
-}
-
 .search-panel {
   width: min(600px, 92vw);
   background: var(--surface);

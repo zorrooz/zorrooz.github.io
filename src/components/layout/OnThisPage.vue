@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { scrollToHeading } from '@/utils/scroll'
 
 interface TocNode {
   id: string
@@ -251,30 +252,8 @@ function scrollToId(id: string) {
   emit('navigate', id)
 
   const el = document.getElementById(id)
-  if (!el) {
-    return
-  }
-  const top = el.getBoundingClientRect().top + window.scrollY - props.offset
-  const reduceMotion =
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const doScroll = () => {
-    window.scrollTo({
-      top,
-      behavior: reduceMotion ? 'auto' : 'smooth',
-    })
-  }
-
-  try {
-    const bodyOverflow = document.body && document.body.style && document.body.style.overflow
-    if (bodyOverflow === 'hidden') {
-      setTimeout(doScroll, 80)
-    } else {
-      doScroll()
-    }
-  } catch {
-    doScroll()
-  }
+  if (!el) return
+  scrollToHeading(el, props.offset)
 }
 
 onMounted(() => {

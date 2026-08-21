@@ -67,20 +67,22 @@
 defineOptions({ name: 'HomeView' })
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useHead } from '@unhead/vue'
 import { useRoute, useRouter } from 'vue-router'
 import PostList from '@/components/layout/PostList.vue'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
+import { usePageMeta } from '@/composables/usePageMeta'
+import { useTagNavigation } from '@/composables/useTagNavigation'
 import { loadPosts, loadTags } from '@/utils/contentLoader'
-import { goToTag } from '@/utils/navigation'
+import { formatCompactNumber } from '@/utils/format'
 import { scrollToTop } from '@/utils/scroll'
-import { SITE, toSupportedLocale } from '@/config'
-
-useHead({ title: 'zorrooz’s blog - Home' })
+import { buildTagCloud, type TagCloudItem } from '@/utils/tags'
+import { SITE } from '@/config'
 
 const { t, locale } = useI18n()
+usePageMeta(t('metaHome'))
 const route = useRoute()
 const router = useRouter()
+const { goTag } = useTagNavigation()
 
 const { data: postData } = useLocalizedContent(() => loadPosts(), [])
 const { data: tagsData } = useLocalizedContent(() => loadTags(), [])
@@ -94,37 +96,11 @@ const filteredDocs = computed(() => {
   return postData.value.filter((p) => p.tags.includes(tag))
 })
 
-interface TagItem {
-  name: string
-  count: number
-  level: 'lg' | 'md' | 'sm'
-}
-
-const tagList = computed<TagItem[]>(() => {
-  const map = new Map<string, number>()
-  postData.value.forEach((p) => p.tags.forEach((t) => map.set(t, (map.get(t) || 0) + 1)))
-  const list = Array.from(map.entries())
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => a.name.localeCompare(b.name))
-  const total = list.length
-  const third = Math.ceil(total / 3)
-  const rank = new Map(
-    [...list].sort((a, b) => b.count - a.count).map((item, idx) => [item.name, idx]),
-  )
-  return list.map((item) => {
-    const idx = rank.get(item.name) ?? 0
-    return { ...item, level: idx < third ? 'lg' : idx < third * 2 ? 'md' : 'sm' }
-  })
-})
+const tagList = computed<TagCloudItem[]>(() => buildTagCloud(postData.value))
 const postCount = computed(() => postData.value.length)
 const tagCount = computed(() => tagsData.value.length)
 const totalWords = computed(() => postData.value.reduce((sum, p) => sum + p.wordCount, 0))
-const totalWordsDisplay = computed(() => {
-  const n = totalWords.value
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(n % 1_000_000 ? 1 : 0) + 'M'
-  if (n >= 1_000) return (n / 1_000).toFixed(n % 1_000 ? 1 : 0) + 'K'
-  return String(n)
-})
+const totalWordsDisplay = computed(() => formatCompactNumber(totalWords.value))
 
 function clearTag() {
   const q = { ...route.query }
@@ -139,13 +115,6 @@ function goBackFromTag() {
   if (fromPath.value) {
     router.push(fromPath.value).catch(() => {})
   }
-}
-
-function goTag(tag: string) {
-  goToTag(router, tag, {
-    locale: toSupportedLocale(locale.value),
-    query: { ...route.query, page: '1' },
-  })
 }
 
 watch(locale, (newLocale, oldLocale) => {

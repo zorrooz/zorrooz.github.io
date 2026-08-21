@@ -9,17 +9,14 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: 'NotFoundView',
-  head() {
-    return { title: '404 - zorrooz’s blog' }
-  },
-})
+defineOptions({ name: 'NotFoundView' })
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { usePageMeta } from '@/composables/usePageMeta'
 
 const { t } = useI18n()
+usePageMeta(t('metaNotFound'))
 const route = useRoute()
 
 const homePath = computed(() => {

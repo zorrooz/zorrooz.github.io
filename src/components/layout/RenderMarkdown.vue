@@ -5,7 +5,11 @@
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useCopyFeedback } from '@/composables/useCopyFeedback'
 import { copyText } from '@/utils/clipboard'
+import { iconSvg } from '@/utils/icons'
+import { scrollToHeading as scrollToHeadingTarget } from '@/utils/scroll'
+import { HEADER_OFFSET } from '@/config'
 
 const { t } = useI18n()
 
@@ -14,19 +18,6 @@ const assetModules = import.meta.glob(
   '@data/{content-src,cache/en}/**/*.{png,jpg,jpeg,gif,svg,webp}',
   { query: '?url', import: 'default', eager: true },
 )
-
-const COPY_ICON_SVG = `
-  <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">
-    <path d="M3 2C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2H3ZM1 3C1 1.89543 1.89543 1 3 1H9C10.1046 1 11 1.89543 11 3V9C11 10.1046 10.1046 11 9 11H3C1.89543 11 1 10.1046 1 9V3Z"/>
-    <path d="M5 4C4.44772 4 4 4.44772 4 5V11C4 11.5523 4.44772 12 5 12H11C11.5523 12 12 11.5523 12 11V5C12 4.44772 11.5523 4 11 4H5Z"/>
-  </svg>
-`
-
-const CHECK_ICON_SVG = `
-  <svg width="16" height="16" viewBox="0 0 14 14" fill="currentColor">
-    <path d="M11.3536 3.64645C11.5488 3.84171 11.5488 4.15829 11.3536 4.35355L5.35355 10.3536C5.15829 10.5488 4.84171 10.5488 4.64645 10.3536L2.64645 8.35355C2.45118 8.15829 2.45118 7.84171 2.64645 7.64645C2.84171 7.45118 3.15829 7.45118 3.35355 7.64645L5 9.29289L10.6464 3.64645C10.8417 3.45118 11.1583 3.45118 11.3536 3.64645Z"/>
-  </svg>
-`
 
 const props = withDefaults(
   defineProps<{
@@ -78,6 +69,17 @@ function rewriteImageLinks(html: string, articlePath: string) {
         )
         if (matched) return assetModules[matched]
       }
+
+      // Obsidian「最短路径」格式：以 vault 根为基准的相对路径（如 assets/fig-1.png）
+      const rootRef = relPath.replace(/^\.\//, '')
+      if (rootRef.startsWith('assets/')) {
+        for (const key of [`@data/content-src/${rootRef}`, rootRef]) {
+          const matched = Object.keys(assetModules).find(
+            (k) => k.endsWith(`/${rootRef}`) || k === key,
+          )
+          if (matched) return assetModules[matched]
+        }
+      }
       return relPath
     }
 
@@ -116,8 +118,7 @@ function cleanDuplicateH1(container: HTMLElement) {
 
 function addAnchorLinks(container: HTMLElement) {
   const scrollToHeading = (heading: Element, anchorBtn: HTMLButtonElement) => {
-    const targetTop = window.scrollY + heading.getBoundingClientRect().top - 88
-    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+    scrollToHeadingTarget(heading, HEADER_OFFSET)
     setTimeout(() => anchorBtn.blur(), 300)
   }
 
@@ -168,7 +169,7 @@ function enhanceCodeBlocks() {
     copyButton.type = 'button'
     copyButton.className = 'copy-button btn-icon d-flex align-items-center justify-content-center'
     copyButton.setAttribute('aria-label', t('copyCode'))
-    copyButton.innerHTML = COPY_ICON_SVG
+    copyButton.innerHTML = iconSvg('copy', 16)
     copyButton.addEventListener('click', () => copyToClipboard(code.textContent ?? '', copyButton))
 
     header.append(langLabel, copyButton)
@@ -193,7 +194,7 @@ function enhanceTables() {
     copyButton.type = 'button'
     copyButton.className = 'table-copy-btn'
     copyButton.setAttribute('aria-label', t('copyTable'))
-    copyButton.innerHTML = COPY_ICON_SVG
+    copyButton.innerHTML = iconSvg('copy', 16)
     copyButton.addEventListener('click', () => copyTableToClipboard(table, copyButton))
 
     wrapper.append(copyButton)
@@ -212,25 +213,45 @@ function copyTableToClipboard(table: HTMLTableElement, button: HTMLButtonElement
   copyToClipboard(lines.join('\n'), button)
 }
 
+const { copied, showSuccess, showFailure } = useCopyFeedback()
+const feedbackButton = ref<HTMLButtonElement | null>(null)
+const feedbackOriginalHtml = ref('')
+
 async function copyToClipboard(text: string, button: HTMLButtonElement) {
   try {
-    await copyText(text)
+    const ok = await copyText(text)
+    if (!ok) {
+      console.warn(t('copyFailed'))
+      showFailure()
+      return
+    }
+    restoreCopyFeedback()
+    feedbackButton.value = button
+    feedbackOriginalHtml.value = button.innerHTML
+    showCopyFeedback(button)
+    showSuccess()
   } catch (err) {
     console.error(t('copyFailed'), err)
-  } finally {
-    showCopyFeedback(button)
+    showFailure()
   }
 }
 
 function showCopyFeedback(button: HTMLButtonElement) {
-  const original = button.innerHTML
   button.style.color = 'var(--primary)'
-  button.innerHTML = CHECK_ICON_SVG
-  setTimeout(() => {
-    button.innerHTML = original
-    button.style.color = ''
-  }, 1200)
+  button.innerHTML = iconSvg('check', 16)
 }
+
+function restoreCopyFeedback() {
+  const button = feedbackButton.value
+  if (!button) return
+  button.innerHTML = feedbackOriginalHtml.value
+  button.style.color = ''
+  feedbackButton.value = null
+}
+
+watch(copied, (active) => {
+  if (!active) restoreCopyFeedback()
+})
 
 watch(
   () => props.rawMarkdown,

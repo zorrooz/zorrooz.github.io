@@ -1,7 +1,9 @@
 import path from 'path'
 import zhCN from '../../src/i18n/locales/zh-CN.ts'
 import enUS from '../../src/i18n/locales/en-US.ts'
+import { ARTICLE_ROUTE_PREFIX } from '../../src/config.ts'
 import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
+import { normalizeProjectTopicEntry } from '../lib/yamlEntries.ts'
 import {
   isDirectRun,
   logWriteSuccess,
@@ -41,7 +43,7 @@ function getFilePaths(locale = 'zh-CN') {
 function getSubCategoryKeyFromUrl(url: unknown): string {
   if (typeof url !== 'string') return ''
   const parts = url.replace(/^\/+/, '').split('/')
-  const articleIndex = parts[0] === 'article' ? 1 : 0
+  const articleIndex = parts[0] === ARTICLE_ROUTE_PREFIX.slice(1) ? 1 : 0
   return parts[articleIndex + 2] || ''
 }
 
@@ -50,7 +52,7 @@ function formatArticle(article: Record<string, unknown>, type: string): Formatte
   return {
     title:
       typeof article.title === 'string' ? article.title : relativePath.split('/').pop() || '未命名',
-    articleUrl: `/article/${type}/${relativePath}`,
+    articleUrl: `${ARTICLE_ROUTE_PREFIX}/${type}/${relativePath}`,
     wordCount: Number(article?.wordCount) || 0,
     date: typeof article?.date === 'string' ? article.date : '',
     tags: safeArray(article?.tags).filter((t) => typeof t === 'string'),
@@ -88,44 +90,6 @@ function normalizeNoteConfig(rawDef: Record<string, unknown>): NormalizedNoteCon
     date: typeof rawDef?.date === 'string' ? rawDef.date : '',
     categories:
       typeof rawCats === 'object' && rawCats !== null ? (rawCats as Record<string, unknown>) : {},
-  }
-}
-
-interface NormalizedProjectTopicConfig extends Omit<NormalizedNoteConfig, 'categories'> {
-  tags: string[]
-  github: string
-  doi: string
-  url: string
-  status: string
-  language: string
-  stars: number
-  license: string
-  version: string
-  journal: string
-  year: number
-  authors: string[]
-}
-
-function normalizeProjectTopicConfig(
-  rawDef: Record<string, unknown>,
-): NormalizedProjectTopicConfig {
-  return {
-    name: typeof rawDef?.name === 'string' ? rawDef.name : '',
-    title: typeof rawDef?.title === 'string' ? rawDef.title : '',
-    desc: typeof rawDef?.desc === 'string' ? rawDef.desc : '',
-    date: typeof rawDef?.date === 'string' ? rawDef.date : '',
-    tags: safeArray(rawDef?.tags).filter((t) => typeof t === 'string'),
-    github: typeof rawDef?.github === 'string' ? rawDef.github : '',
-    doi: typeof rawDef?.doi === 'string' ? rawDef.doi : '',
-    url: typeof rawDef?.url === 'string' ? rawDef.url : '',
-    status: typeof rawDef?.status === 'string' ? rawDef.status : '',
-    language: typeof rawDef?.language === 'string' ? rawDef.language : '',
-    stars: Number(rawDef?.stars) || 0,
-    license: typeof rawDef?.license === 'string' ? rawDef.license : '',
-    version: typeof rawDef?.version === 'string' ? rawDef.version : '',
-    journal: typeof rawDef?.journal === 'string' ? rawDef.journal : '',
-    year: Number(rawDef?.year) || 0,
-    authors: safeArray(rawDef?.authors).filter((t) => typeof t === 'string'),
   }
 }
 
@@ -236,7 +200,7 @@ function buildDetailedProjectTopicCategories(
 ): DetailedProjectTopicCategory[] {
   return ptConfigs
     .map((rawConfig) => {
-      const config = normalizeProjectTopicConfig(rawConfig)
+      const config = normalizeProjectTopicEntry(rawConfig)
       if (!config.name) return null
 
       const nameKey = config.name.toLowerCase().replace(/\s+/g, '')
@@ -263,7 +227,7 @@ function buildDetailedProjectTopicCategories(
       }
 
       let rootUrl = ''
-      if (config.url && config.url.startsWith('/article/')) {
+      if (config.url && config.url.startsWith(`${ARTICLE_ROUTE_PREFIX}/`)) {
         rootUrl = config.url
       } else {
         rootUrl =

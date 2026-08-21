@@ -7,28 +7,27 @@
 
 import fs from 'fs'
 import path from 'path'
-import { pathToFileURL } from 'url'
 import yaml from 'js-yaml'
-import OpenAI from 'openai'
 
-import { contentSrcDir, cacheDir, enSrcDir, localeSuffix } from '../dataConfig.ts'
+import { contentSrcDir, cacheDir, enSrcDir, localeSuffix, EN_SUFFIX } from '../dataConfig.ts'
 import { walk, parseFrontMatterAndBody, normalizeTags } from '../generators/core/index.ts'
+import { completeChat, loadLlmConfig, type LlmConfig } from '../lib/llm.ts'
+import { rewriteFrontmatterTags } from '../lib/frontmatter.ts'
+import { countTags } from '../lib/tags.ts'
+import { loadTagMapping, type TagMapping } from '../lib/tagMapping.ts'
+
+export { type TagMapping }
 
 export const defaultMappingPath = path.join(cacheDir, 'tag-mapping.json')
-
-export interface TagMapping {
-  locale: string
-  generatedAt: string
-  mapping: Record<string, string>
-  translation?: Record<string, string>
-}
 
 /** 收集指定 locale 下全部标签（md frontmatter + categories yaml），返回 标签 → 出现次数 */
 export function collectTags(locale: 'zh-CN' | 'en-US'): Map<string, number> {
   const map = new Map<string, number>()
 
   const addTags = (tags: unknown) => {
-    for (const t of normalizeTags(tags)) map.set(t, (map.get(t) || 0) + 1)
+    for (const [t, count] of countTags(normalizeTags(tags))) {
+      map.set(t, (map.get(t) || 0) + count)
+    }
   }
 
   // 目录即契约：zh 扫手写源，en 扫机器翻译层（各自目录内全部 .md）
@@ -63,7 +62,8 @@ export function formatTagStats(tags: Map<string, number>): string {
   return sorted.join('\n')
 }
 
-export function extractJson(text: string): Record<string, string> {
+/** 解析 LLM 输出 JSON：剥代码围栏 → 取首尾大括号 → JSON.parse → 校验对象 → 过滤非字符串，取指定键 */
+export function extractJsonObject(text: string, key: string): Record<string, string> {
   let t = text.trim()
   const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i)
   if (fence) t = fence[1].trim()
@@ -71,35 +71,25 @@ export function extractJson(text: string): Record<string, string> {
   const end = t.lastIndexOf('}')
   if (start === -1 || end <= start) throw new Error('LLM 输出中未找到 JSON')
   const parsed = JSON.parse(t.slice(start, end + 1)) as Record<string, unknown>
-  const mapping = parsed.mapping
-  if (!mapping || typeof mapping !== 'object' || Array.isArray(mapping)) {
-    throw new Error('LLM 输出缺少 mapping 对象')
+  const obj = parsed[key]
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+    throw new Error(`LLM 输出缺少 ${key} 对象`)
   }
   const result: Record<string, string> = {}
-  for (const [oldTag, newTag] of Object.entries(mapping as Record<string, unknown>)) {
-    if (typeof newTag === 'string' && newTag.trim()) result[oldTag] = newTag.trim()
+  for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+    if (typeof v === 'string' && v.trim()) result[k] = v.trim()
   }
   return result
 }
 
+/** 解析 LLM 输出的标签合并映射 JSON（{"mapping": {...}}） */
+export function extractJson(text: string): Record<string, string> {
+  return extractJsonObject(text, 'mapping')
+}
+
 /** 解析 LLM 输出的 zh→en 翻译映射 JSON（{"translation": {...}}） */
 export function extractTranslationJson(text: string): Record<string, string> {
-  let t = text.trim()
-  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i)
-  if (fence) t = fence[1].trim()
-  const start = t.indexOf('{')
-  const end = t.lastIndexOf('}')
-  if (start === -1 || end <= start) throw new Error('LLM 输出中未找到 JSON')
-  const parsed = JSON.parse(t.slice(start, end + 1)) as Record<string, unknown>
-  const translation = parsed.translation
-  if (!translation || typeof translation !== 'object' || Array.isArray(translation)) {
-    throw new Error('LLM 输出缺少 translation 对象')
-  }
-  const result: Record<string, string> = {}
-  for (const [zh, en] of Object.entries(translation as Record<string, unknown>)) {
-    if (typeof en === 'string' && en.trim()) result[zh] = en.trim()
-  }
-  return result
+  return extractJsonObject(text, 'translation')
 }
 
 /** 找出 translation 映射中缺失的 zh 标签（增量翻译只用这部分，省 token） */
@@ -117,9 +107,8 @@ export function missingTranslationTags(
 /** LLM 生成 zh→en 标签翻译映射（一对一、数量守恒；仅传缺失标签） */
 export async function generateTranslationWithLlm(
   zhTags: Map<string, number>,
-  api: { url: string; apikey: string; model: string; thinking?: boolean },
+  api: LlmConfig,
 ): Promise<Record<string, string>> {
-  const openai = new OpenAI({ baseURL: api.url, apiKey: api.apikey })
   const systemPrompt = `你是专业翻译。下面是一个中文技术博客的标签列表（括号内为出现次数）。
 请把每个标签翻译为英文，要求：
 1. 输出 JSON：{"translation": {"中文标签": "英文标签"}}
@@ -127,19 +116,12 @@ export async function generateTranslationWithLlm(
 3. 专有名词/软件名保持原样（如 Python、BWA、HISAT2、ggplot2、KaTeX、RELION、PyMOL、ChimeraX）
 4. 英文每个单词首字母大写、其余小写
 5. 只输出 JSON，不要任何解释或额外内容`
-  const completion = await openai.chat.completions.create({
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: formatTagStats(zhTags) },
-    ],
-    model: api.model,
+  const result = await completeChat(systemPrompt, formatTagStats(zhTags), {
     temperature: 0.2,
-    // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
-    thinking: { type: api.thinking === true ? 'enabled' : 'disabled' },
-  } as OpenAI.ChatCompletionCreateParamsNonStreaming)
-  const content = completion.choices[0]?.message?.content
-  if (!content) throw new Error('LLM 返回空内容')
-  return extractTranslationJson(content)
+    thinking: api.thinking,
+  })
+  if (!result.text) throw new Error('LLM 返回空内容')
+  return extractTranslationJson(result.text)
 }
 
 /**
@@ -207,17 +189,14 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
   // 1. cache/en 的 -en.md：以镜像位置对应的 content-src zh.md 为基准
   for (const enPath of walk(enSrcDir, (p) => /\.md$/i.test(p))) {
     const rel = path.relative(enSrcDir, enPath)
-    const zhPath = path.join(contentSrcDir, rel.replace(/-en\.md$/, '.md'))
+    const zhPath = path.join(contentSrcDir, rel.replace(new RegExp(`${EN_SUFFIX}\\.md$`), '.md'))
     if (!fs.existsSync(zhPath)) continue
     const zh = parseFrontMatterAndBody(fs.readFileSync(zhPath, 'utf-8'))
     if (!Array.isArray(zh.frontmatter.tags)) continue
     const enTags = translateList(zh.frontmatter.tags as string[])
     const raw = fs.readFileSync(enPath, 'utf-8')
-    // 只替换 frontmatter 区域，避免 tags 正则吞掉正文内容
-    const fmMatch = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-    const updated = fmMatch
-      ? `---\n${fmMatch[1].replace(/^tags:\s*\[[\s\S]*?\]/m, `tags: ${JSON.stringify(enTags)}`)}\n---${raw.slice(fmMatch[0].length)}`
-      : raw
+    // 只替换 frontmatter 区域的 tags 行/块（见 lib/frontmatter.ts），避免正则吞掉正文内容
+    const updated = rewriteFrontmatterTags(raw, () => enTags)
     if (updated !== raw) {
       fs.writeFileSync(enPath, updated, 'utf-8')
       fixed++
@@ -229,7 +208,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
   //    按行序配对（zh/en yaml 结构由翻译器同步维护，顺序一致）——不能用「缩进+tags:」做
   //    Map key，同一缩进的多个 tags 行会互相覆盖。
   const zhYamlPath = path.join(contentSrcDir, 'categories.yaml')
-  const enYamlPath = path.join(enSrcDir, 'categories-en.yaml')
+  const enYamlPath = path.join(enSrcDir, `categories${EN_SUFFIX}.yaml`)
   if (fs.existsSync(zhYamlPath) && fs.existsSync(enYamlPath)) {
     const zhYaml = fs.readFileSync(zhYamlPath, 'utf-8')
     const enYaml = fs.readFileSync(enYamlPath, 'utf-8')
@@ -281,10 +260,8 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
 export async function generateMappingWithLlm(
   tags: Map<string, number>,
   locale: 'zh-CN' | 'en-US',
-  api: { url: string; apikey: string; model: string; thinking?: boolean },
+  api: LlmConfig,
 ): Promise<Record<string, string>> {
-  const openai = new OpenAI({ baseURL: api.url, apiKey: api.apikey })
-
   const isZh = locale === 'zh-CN'
   const systemPrompt = isZh
     ? `你是标签规范化专家。下面是一个中文技术博客的全部标签（括号内为使用次数）。
@@ -302,56 +279,17 @@ Output a tag merge mapping JSON following these rules:
 4. List every tag, mapping unchanged tags to themselves
 5. Output only JSON: {"mapping": {"old tag": "new tag"}}, no explanations`
 
-  const completion = await openai.chat.completions.create({
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: formatTagStats(tags) },
-    ],
-    model: api.model,
+  const result = await completeChat(systemPrompt, formatTagStats(tags), {
     temperature: 0.2,
-    // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
-    thinking: { type: api.thinking === true ? 'enabled' : 'disabled' },
-  } as OpenAI.ChatCompletionCreateParamsNonStreaming)
-
-  const content = completion.choices[0]?.message?.content
-  if (!content) throw new Error('LLM 返回空内容')
-  return extractJson(content)
+    thinking: api.thinking,
+  })
+  if (!result.text) throw new Error('LLM 返回空内容')
+  return extractJson(result.text)
 }
 
-/** llmConfig.ts（gitignore）支持的字段；thinking 缺省 = 关闭思考模式 */
-interface LlmConfig {
-  url: string
-  apikey: string
-  model: string
-  /** 是否启用 DeepSeek 思考模式（默认关闭：省 token 且恢复 temperature 语义） */
-  thinking?: boolean
-}
-
-async function loadLlmConfig(): Promise<LlmConfig | null> {
-  const cfgPath = path.join(import.meta.dirname, '../llmConfig.ts')
-  if (!fs.existsSync(cfgPath)) return null
-  try {
-    const mod = (await import(pathToFileURL(cfgPath).href)) as {
-      default?: Partial<LlmConfig>
-    }
-    const cfg = mod.default || {}
-    if (!cfg.url || !cfg.apikey || !cfg.model) return null
-    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model, thinking: cfg.thinking }
-  } catch {
-    return null
-  }
-}
-
-/** 读取已存在的映射文件 */
+/** 读取已存在的映射文件（完整逻辑见 lib/tagMapping.ts） */
 export function loadMapping(mappingPath: string): TagMapping | null {
-  try {
-    if (!fs.existsSync(mappingPath)) return null
-    const parsed = JSON.parse(fs.readFileSync(mappingPath, 'utf-8')) as TagMapping
-    if (!parsed?.mapping || typeof parsed.mapping !== 'object') return null
-    return parsed
-  } catch {
-    return null
-  }
+  return loadTagMapping(mappingPath)
 }
 
 /** 将映射写回 md frontmatter 的 tags 字段（仅替换 tags 行/块，保留其余格式与行尾） */
@@ -376,32 +314,9 @@ export function applyMappingToMarkdown(
       continue
     }
 
-    const eol = raw.includes('\r\n') ? '\r\n' : '\n'
-    const lines = raw.split(/\r?\n/)
-    let tagsStart = -1
-    let tagsEnd = -1
-    for (let i = 0; i < lines.length; i++) {
-      if (/^tags:/i.test(lines[i])) {
-        tagsStart = i
-        if (/^tags:\s*\[/i.test(lines[i])) {
-          tagsEnd = i
-        } else {
-          let j = i + 1
-          while (j < lines.length && /^\s+-\s+/.test(lines[j])) j++
-          tagsEnd = j - 1
-        }
-        break
-      }
-    }
-    if (tagsStart === -1) continue
-
-    const rendered = newTags.map((t) => `  - ${JSON.stringify(t)}`).join(eol)
-    const replacement =
-      tagsEnd === tagsStart
-        ? `tags: [${newTags.map((t) => JSON.stringify(t)).join(', ')}]`
-        : `tags:${eol}${rendered}`
-    lines.splice(tagsStart, tagsEnd - tagsStart + 1, replacement)
-    fs.writeFileSync(mdPath, lines.join(eol), 'utf-8')
+    const updated = rewriteFrontmatterTags(raw, () => newTags)
+    if (updated === raw) continue
+    fs.writeFileSync(mdPath, updated, 'utf-8')
     changed++
   }
   return changed

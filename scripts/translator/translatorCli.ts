@@ -1,11 +1,28 @@
-import { TranslationManager } from './translator.ts'
+import { TranslationManager, needsTranslation } from './translator.ts'
 import { TRANSLATION_CONFIG, TRANSLATION_TARGETS } from './translatorConfig.ts'
+import { cacheDir } from '../dataConfig.ts'
 import { Command } from 'commander'
 import path from 'path'
 import fs from 'fs/promises'
+import fsSync from 'fs'
 
 const program = new Command()
 const manager = new TranslationManager()
+
+interface TranslationState {
+  [sourcePath: string]: string
+}
+
+/** 翻译增量状态（键为相对 content-src 的路径，与 translator.ts 写入格式一致） */
+function loadState(): TranslationState {
+  try {
+    return JSON.parse(
+      fsSync.readFileSync(path.join(cacheDir, '.translate-state.json'), 'utf-8'),
+    ) as TranslationState
+  } catch {
+    return {}
+  }
+}
 
 program
   .name('translator')
@@ -59,6 +76,8 @@ program
       let translatedFiles = 0
       let needUpdate = 0
 
+      const state = loadState()
+
       async function checkDirectory(dir: string) {
         const entries = await fs.readdir(dir, { withFileTypes: true })
 
@@ -83,9 +102,8 @@ program
                   await fs.access(targetPath)
                   translatedFiles++
 
-                  const sourceStats = await fs.stat(sourcePath)
-                  const targetStats = await fs.stat(targetPath)
-                  if (sourceStats.mtime > targetStats.mtime) {
+                  // 与实际翻译同口径：内容 hash 判定（而非 mtime）
+                  if (await needsTranslation(sourcePath, targetPath, state)) {
                     needUpdate++
                   }
                 } catch {

@@ -8,18 +8,7 @@ import {
   runCliScript,
   writeJsonFile,
 } from './core/index.ts'
-
-interface ResourceItem {
-  name: string
-  url: string
-  desc: string
-}
-
-interface ResourceNode {
-  title: string
-  items?: ResourceItem[]
-  children?: ResourceNode[]
-}
+import type { ResourceItem, ResourceNode } from '../../src/types.ts'
 
 interface ResourceCategory {
   title: string

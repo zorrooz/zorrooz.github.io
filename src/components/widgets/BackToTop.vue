@@ -1,22 +1,21 @@
 <template>
-  <button
-    v-show="showBackToTop"
-    class="back-to-top d-flex align-items-center justify-content-center"
-    @click="handleClick"
-    :aria-label="t('backToTop')"
-    @touchstart.prevent.stop="handleTouchStart"
-    @touchmove.prevent.stop="handleTouchMove"
-    @touchend.prevent.stop="handleTouchEnd"
-    :style="{ top: buttonTop + 'px' }"
+  <FloatingButton
+    source-id="btt"
+    :default-top="defaultTop"
+    mode="match"
+    :on-release="backToTop"
+    :ariaLabel="t('backToTop')"
+    :show="showBackToTop"
   >
     <i class="fas fa-arrow-up"></i>
-  </button>
+  </FloatingButton>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useFloatingButton } from '@/composables/useFloatingButton'
+import FloatingButton from '@/components/widgets/FloatingButton.vue'
+import { scrollToTop } from '@/utils/scroll'
 
 const { t } = useI18n()
 
@@ -24,35 +23,11 @@ const showBackToTop = ref(false)
 const scrollObserver = ref<IntersectionObserver | null>(null)
 const scrollSentinel = ref<HTMLDivElement | null>(null)
 
+const defaultTop = (typeof window !== 'undefined' ? window.innerHeight : 1024) - 100
+
 function backToTop() {
-  const reduceMotion =
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
+  scrollToTop()
 }
-
-const {
-  isDragging,
-  buttonTop,
-  dispatchBaseTop,
-  onTouchStart,
-  onTouchMove,
-  onTouchEnd,
-  subscribe,
-  unsubscribe,
-} = useFloatingButton({
-  sourceId: 'btt',
-  defaultTop: (typeof window !== 'undefined' ? window.innerHeight : 1024) - 100,
-  mode: 'match',
-  onRelease: backToTop,
-})
-
-const handleClick = () => {
-  if (!isDragging.value) backToTop()
-}
-const handleTouchStart = onTouchStart
-const handleTouchMove = onTouchMove
-const handleTouchEnd = onTouchEnd
 
 function setupScrollObserver() {
   if (scrollObserver.value) return
@@ -65,7 +40,6 @@ function setupScrollObserver() {
   scrollObserver.value = new IntersectionObserver(
     ([entry]) => {
       showBackToTop.value = !entry.isIntersecting
-      if (showBackToTop.value) dispatchBaseTop()
     },
     { threshold: 0 },
   )
@@ -74,9 +48,6 @@ function setupScrollObserver() {
 
 onMounted(() => {
   setupScrollObserver()
-  subscribe()
-  buttonTop.value = window.innerHeight - 100
-  dispatchBaseTop()
 })
 
 onBeforeUnmount(() => {
@@ -88,43 +59,5 @@ onBeforeUnmount(() => {
     scrollSentinel.value.remove()
     scrollSentinel.value = null
   }
-  unsubscribe()
 })
 </script>
-
-<style scoped>
-.back-to-top {
-  position: fixed;
-  right: 28px;
-  width: 40px;
-  height: 40px;
-  background-color: var(--surface);
-  color: var(--fg-2);
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  font-size: 13px;
-  cursor: pointer;
-  box-shadow: var(--shadow-soft);
-  z-index: 1000;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: none;
-  transition:
-    background-color 0.14s ease,
-    box-shadow 0.14s ease,
-    transform 0.14s ease,
-    color 0.14s ease,
-    border-color 0.14s ease;
-}
-
-.back-to-top:hover {
-  background-color: var(--primary);
-  color: var(--on-primary);
-  border-color: transparent;
-  box-shadow: var(--shadow-lift);
-}
-
-.back-to-top:active {
-  transform: scale(0.93);
-}
-</style>

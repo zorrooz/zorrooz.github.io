@@ -33,7 +33,9 @@ export const cacheDir = path.join(dataDir, 'cache')
 export const enSrcDir = path.join(cacheDir, 'en')
 
 /** locale 身份后缀：zh-CN 无后缀，en-US 为 -en（-en 是内容身份而非文件位置） */
-export const localeSuffix = (locale: string): string => (locale === 'zh-CN' ? '' : '-en')
+export const EN_SUFFIX = '-en'
+
+export const localeSuffix = (locale: string): string => (locale === 'zh-CN' ? '' : EN_SUFFIX)
 
 /** 某一 locale 的源根目录：zh 读手写源，en 读机器翻译缓存 */
 export const srcDirFor = (locale: string): string => (locale === 'en-US' ? enSrcDir : contentSrcDir)

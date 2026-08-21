@@ -1,21 +1,16 @@
 import type { AboutData, CategoryData, Note, Post, ResourceNode, Tag } from '@/types'
-
-const getCurrentLocale = (): string => {
-  // SSR 预渲染：locale 由 main.ts 从 /zh|/en 路由前缀注入
-  const injected = globalThis.__GBLOG_LOCALE__
-  if (injected) return injected
-  return (typeof window !== 'undefined' ? localStorage.getItem('locale') : null) || 'zh-CN'
-}
+import { currentLocale } from '@/locale'
+import { EN_SUFFIX } from '@/config'
 
 const getLocalizedFileName = (baseName: string, extension = '.json'): string => {
-  const locale = getCurrentLocale()
+  const locale = currentLocale()
   const isEnglish = locale === 'en-US'
 
-  if (baseName.endsWith('-en')) {
+  if (baseName.endsWith(EN_SUFFIX)) {
     return `${baseName}${extension}`
   }
 
-  return isEnglish ? `${baseName}-en${extension}` : `${baseName}${extension}`
+  return isEnglish ? `${baseName}${EN_SUFFIX}${extension}` : `${baseName}${extension}`
 }
 
 // 急切加载核心 JSON（about/categories/notes/posts/projects/resources/tags/topics 含 -en 变体）；
@@ -47,7 +42,7 @@ const loadJsonContent = <T>(fileName: string, fallback: T): T => {
 
   console.error(`Failed to load JSON content: ${localizedFileName}`)
 
-  if (getCurrentLocale() === 'en-US') {
+  if (currentLocale() === 'en-US') {
     const fallbackKey = Object.keys(jsonModules).find((key) => key.includes(`${fileName}.json`))
 
     if (fallbackKey) {
@@ -64,7 +59,7 @@ const loadJsonContent = <T>(fileName: string, fallback: T): T => {
  * 回退到中文（en-US: bwa-en.html → bwa.html；zh-CN: bwa.html 或路径自带 -en 时取 -en）。
  */
 export const loadHtmlContent = (filePath: string): string => {
-  const locale = getCurrentLocale()
+  const locale = currentLocale()
   const isEnglish = locale === 'en-US'
   const base = filePath.replace(/\.md$/i, '')
 
@@ -110,7 +105,7 @@ export const loadAbout = (): AboutData => loadJsonContent('about', EMPTY_ABOUT)
  * 自动按当前 locale 匹配 `-en` 变体。找不到时返回 null。
  */
 export const loadMarkdownSource = async (articlePath: string): Promise<string | null> => {
-  const suffix = getCurrentLocale() === 'en-US' ? '-en' : ''
+  const suffix = currentLocale() === 'en-US' ? '-en' : ''
   // articlePath 可能已带 .md（如 notes/.../python-basics.md），统一去后缀后拼接
   const target = `${articlePath.replace(/\.md$/, '')}${suffix}.md`
   const key = Object.keys(markdownModules).find(

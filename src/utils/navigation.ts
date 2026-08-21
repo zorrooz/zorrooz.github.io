@@ -6,6 +6,7 @@ import type { Router, RouteLocationNormalizedLoaded } from 'vue-router'
 
 import i18n from '@/i18n/index'
 import {
+  ARTICLE_ROUTE_PREFIX,
   localeFromPath,
   localeSegmentOf,
   stripLocalePrefix,
@@ -17,12 +18,20 @@ import { scrollToTop } from '@/utils/scroll'
 /** `/article/notes/Omics/...` → md 路径 `notes/Omics/....md` */
 export const articlePathFromUrl = (articleUrl: string): string => {
   const parts = articleUrl.replace(/^\/+/, '').split('/')
-  const i0 = parts[0] === 'article' ? 1 : 0
+  const i0 = parts[0] === ARTICLE_ROUTE_PREFIX.slice(1) ? 1 : 0
   return `${parts[i0]}/${parts[i0 + 1]}/${parts.slice(i0 + 2).join('/')}.md`
 }
 
 /** md 路径 → 文章路由路径（去 .md） */
-export const toArticleRoutePath = (path: string): string => `/article/${path.replace(/\.md$/, '')}`
+export const toArticleRoutePath = (path: string): string =>
+  `${ARTICLE_ROUTE_PREFIX}/${path.replace(/\.md$/, '')}`
+
+/** md 路径 → 带 locale 前缀的文章路由路径（Article/NavigationTree 共用） */
+export const toArticle = (path: string): string => toLocalePath(toArticleRoutePath(path))
+
+/** 去掉 .md 与 -en 后缀，用于路径匹配（容忍语言后缀差异） */
+export const normalizeArticleKey = (path: string): string =>
+  path.replace(/\.md$/, '').replace(/-en$/, '')
 
 /** 路由 `path` 参数（string | string[]）→ 路径字符串 */
 export const joinRoutePathParam = (p: string | string[]): string =>

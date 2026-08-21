@@ -6,6 +6,9 @@ export const SITE = {
   startYear: 2025,
 } as const
 
+/** 品牌名（SEO title 后缀，非翻译内容） */
+export const BLOG_TITLE = 'zorrooz’s blog'
+
 export const SUPPORTED_LOCALES = ['zh-CN', 'en-US'] as const
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
 
@@ -13,8 +16,23 @@ export const LOCALE_SEGMENTS = ['zh', 'en'] as const
 export type LocaleSegment = (typeof LOCALE_SEGMENTS)[number]
 
 export const THEME_MODES = ['auto', 'light', 'dark'] as const
+export type ThemeMode = (typeof THEME_MODES)[number]
 
 export const DEFAULT_LOCALE: SupportedLocale = 'zh-CN'
+
+/** localStorage 键：locale（与 html lang / 重定向共用） */
+export const LOCALE_STORAGE_KEY = 'locale'
+/** localStorage 键：theme */
+export const THEME_STORAGE_KEY = 'theme'
+
+/** 英文内容身份后缀（文件与 URL 的一部分；与 scripts/dataConfig.ts 的 EN_SUFFIX 语义一致） */
+export const EN_SUFFIX = '-en'
+
+/** 文章路由前缀（路由 / SEO / 生成器共用，改版只改此处） */
+export const ARTICLE_ROUTE_PREFIX = '/article'
+
+/** 吸顶 header 高度（锚点滚动偏移，RenderMarkdown/OnThisPage/TocDrawer 共用） */
+export const HEADER_OFFSET = 88
 
 /** URL 段（/zh、/en）→ 完整 locale */
 export const LOCALE_MAP: Record<LocaleSegment, SupportedLocale> = {
@@ -55,7 +73,7 @@ export const toSupportedLocale = (value: string | null | undefined): SupportedLo
  */
 export const preferredLocaleSegment = (): LocaleSegment => {
   if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('locale')
+    const saved = localStorage.getItem(LOCALE_STORAGE_KEY)
     if (saved === SUPPORTED_LOCALES[1]) return SEGMENT_OF[SUPPORTED_LOCALES[1]]
     if (saved === SUPPORTED_LOCALES[0]) return SEGMENT_OF[SUPPORTED_LOCALES[0]]
     if (navigator.language && navigator.language.toLowerCase().startsWith('en')) return 'en'

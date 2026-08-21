@@ -1,8 +1,9 @@
-import fs from 'fs'
 import path from 'path'
 import { contentDir, localeSuffix } from '../dataConfig.ts'
 import {
+  findNotesSection,
   readJson,
+  requireJsonArray,
   safeArray,
   writeJsonFile,
   isDirectRun,
@@ -45,18 +46,19 @@ function deriveCategory(relativePath: unknown): string[] {
 
 function buildNotesCategoryMap(categoriesArr: unknown): Map<string, CategoryEntry> {
   const map = new Map<string, CategoryEntry>()
-  if (!Array.isArray(categoriesArr)) return map
-  // 取 categories.json 的 notes 段（zh 源标题恒为「笔记」）映射分类
-  const notesSection = categoriesArr.find((s) => s && s.title === '笔记' && Array.isArray(s.items))
+  // 按结构特征定位 notes 段（标题是翻译产物，不可作匹配依据；见 core.findNotesSection）
+  const notesSection = findNotesSection(categoriesArr)
   if (!notesSection) return map
-  for (const item of notesSection.items) {
+  const items = notesSection.items as unknown[]
+  for (const item of items) {
     if (!item || typeof item !== 'object') continue
-    const name = (item as Record<string, unknown>).name
+    const rec = item as Record<string, unknown>
+    const name = rec.name
     if (typeof name !== 'string') continue
-    const groupTitle = typeof item.title === 'string' && item.title.trim() ? item.title : name
+    const groupTitle = typeof rec.title === 'string' && rec.title.trim() ? rec.title : name
     const subMap =
-      item.categories && typeof item.categories === 'object'
-        ? (item.categories as Record<string, unknown>)
+      rec.categories && typeof rec.categories === 'object'
+        ? (rec.categories as Record<string, unknown>)
         : {}
     map.set(name, { groupTitle, subMap })
   }
@@ -114,31 +116,17 @@ function generatePostsJson(locale = 'zh-CN') {
   const paths = getFilePaths(locale)
   const notesFileName = `notes${localeSuffix(locale)}.json`
 
-  if (!fs.existsSync(paths.notesJsonPath)) {
-    console.error(
-      `${notesFileName} not found at ${paths.notesJsonPath}. Please run generateNotes.ts first.`,
-    )
-    process.exitCode = 1
-    return
-  }
-
-  const parsed = readJson(paths.notesJsonPath)
-  if (parsed === null) {
-    console.error(`Failed to read/parse ${notesFileName}:`)
-    process.exitCode = 1
-    return
-  }
-  if (!Array.isArray(parsed)) {
-    console.error(`${notesFileName} is not an array. Abort.`)
-    process.exitCode = 1
-    return
-  }
-  const notesArr = parsed as Record<string, unknown>[]
+  const notesArr = requireJsonArray(
+    paths.notesJsonPath,
+    notesFileName,
+    'Please run generateNotes.ts first.',
+  )
+  if (notesArr === null) return
 
   const categoriesArr = safeArray(readJson(paths.categoriesJsonPath))
   const notesCategoryMap = buildNotesCategoryMap(categoriesArr)
 
-  const posts = buildPostsFromNotes(notesArr, notesCategoryMap)
+  const posts = buildPostsFromNotes(notesArr as Record<string, unknown>[], notesCategoryMap)
 
   try {
     const targetPath = paths.postsJsonPath

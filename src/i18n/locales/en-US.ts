@@ -1,3 +1,5 @@
+import type { AppMessages } from '../schema'
+
 export default {
   // 通用
   tags: 'Tags',
@@ -28,6 +30,7 @@ export default {
   developer: 'Developer',
   wordUnit: 'words',
   recentPosts: 'Recent Posts',
+  noPosts: 'No posts yet',
 
   // 分类页面
   notes: 'Notes',
@@ -62,6 +65,13 @@ export default {
   pageNotFound: 'This page could not be found',
   backHome: 'Back to home',
 
+  // SEO title
+  metaHome: 'Home',
+  metaCategories: 'Categories',
+  metaResources: 'Resources',
+  metaAbout: 'About',
+  metaNotFound: '404',
+
   // 关于页面
   experience: 'Experience',
   thanks: 'Thank you for your attention!',
@@ -71,4 +81,4 @@ export default {
   // 过滤功能
   clearFilter: 'Clear filter',
   backToArticle: 'Back to article',
-}
+} satisfies AppMessages

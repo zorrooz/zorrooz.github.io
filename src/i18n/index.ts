@@ -2,10 +2,10 @@ import { createI18n } from 'vue-i18n'
 import zhCN from './locales/zh-CN'
 import enUS from './locales/en-US'
 
-import { DEFAULT_LOCALE, HTML_LANG, toSupportedLocale } from '@/config'
+import { DEFAULT_LOCALE, HTML_LANG } from '@/config'
+import { currentLocale } from '@/locale'
 
-const savedLocale =
-  typeof window !== 'undefined' ? toSupportedLocale(localStorage.getItem('locale')) : DEFAULT_LOCALE
+const savedLocale = currentLocale()
 if (typeof document !== 'undefined') document.documentElement.lang = HTML_LANG[savedLocale]
 
 const i18n = createI18n({

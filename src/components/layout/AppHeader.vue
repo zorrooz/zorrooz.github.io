@@ -75,7 +75,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useThemeStore } from '@/stores/theme'
 import { useLocaleStore } from '@/stores/locale'
-import { SITE } from '@/config'
+import { ARTICLE_ROUTE_PREFIX, SITE } from '@/config'
 import { toLocalePath } from '@/utils/navigation'
 import { lockScrollOverflow, unlockScrollOverflow } from '@/utils/scroll'
 import NavigationTree from '@/components/layout/NavigationTree.vue'
@@ -101,7 +101,7 @@ const isActive = (href: string) => {
   return href !== toLocalePath('/') && route.path.startsWith(href)
 }
 
-const isArticle = computed(() => route.path.includes('/article/'))
+const isArticle = computed(() => route.path.includes(`${ARTICLE_ROUTE_PREFIX}/`))
 
 const onMobileMenuClick = () => {
   const isMobile = window.innerWidth < 992

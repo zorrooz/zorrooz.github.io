@@ -20,13 +20,17 @@ A static personal blog system built with Vue 3 + Vite 7 + Bootstrap 5. Markdown 
 | `npm run lint` | ESLint with auto-fix |
 | `npm run typecheck` | vue-tsc (app) + tsc (node) 双项目类型检查 |
 | `npm run format` | Prettier on `src/ scripts/ vite/` |
-| `npm run translate` | AI translation CLI（增量，写 cache/en） |
-| `npm run tagmerge` | zh→en 标签映射增量补齐 CLI |
+| `npm run data:translate` | AI translation CLI（增量，写 cache/en） |
+| `npm run data:tag-merge` | zh→en 标签映射增量补齐 CLI |
+| `npm run data:pack` | 打包文章（assets/ 引用图 → 文章同目录并改写引用；无参数 = 递归全部，幂等） |
+| `npm run data:deploy` | 提交数据分支变更并推送（add -A → commit → push origin data，触发 CI） |
 | `npm run data:publish` | 仅推送数据分支（`git -C ../blog-data push origin data`，触发 CI） |
-| `npm run deploy` | 提交数据分支变更并推送（add -A → commit → push origin data，触发 CI） |
+
+> **命令规范**：数据分支操作统一 `data:` 前缀（kebab-case）；`translate`/`tagmerge`/`pack`/`deploy`
+> 为旧名兼容别名（内部转调 `data:*`）。构建/质量命令用生态标准名（dev/build/prebuild/lint/typecheck/format/preview）。
 
 **Always lint and build after changes.**
-**发布流程**：编辑 `../blog-data/content-src/**` → `npm run prebuild` 本地验证 → `npm run deploy`（自动提交 data 分支）→ GitHub Actions 重新构建并部署到 gh-pages。
+**发布流程**：编辑 `../blog-data/content-src/**` → `npm run prebuild` 本地验证 → `npm run data:deploy`（自动提交 data 分支）→ GitHub Actions 重新构建并部署到 gh-pages。
 
 ## Documents (约定文档索引)
 
@@ -74,16 +78,25 @@ src/                        # 浏览器应用（含 SSR；不包含任何 Node �
 │   ├── About.vue             # 头部（左介绍 + 右名片） + stats + 时间线 + sections
 │   └── Article.vue           # NavigationTree + RenderMarkdown + OnThisPage
 ├── components/
-│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList, RenderMarkdown, NavigationTree, OnThisPage
-│   └── widgets/              # BackToTop, SearchModal, TocDrawer
+│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList, RenderMarkdown, NavigationTree, TreeNode, OnThisPage
+│   ├── widgets/              # BackToTop, SearchModal, TocDrawer, FloatingButton（BackToTop/TocDrawer 共享浮动按钮）
+│   └── common/               # IconButton（统一 stroke SVG 图标）、ModalOverlay（弹层基座）、PostCard、Pagination、EmptyState
 ├── composables/
-│   ├── useFloatingButton.ts  # 浮动按钮（BackToTop/TocDrawer）拖拽 + 底沿广播协议（'floating-buttons-base-top'）
-│   └── useLocalizedContent.ts# 内容页统一加载模式（首次加载 + locale 重载 + 异常回退）
+│   ├── useLocalizedContent.ts# 内容页统一加载模式（首次加载 + locale 重载 + 异常回退）
+│   ├── usePageMeta.ts        # 统一页面 SEO title（i18n 键 + BLOG_TITLE）
+│   ├── useSearch.ts          # MiniSearch 全文检索（CJK 分词 + locale 切换重建索引）
+│   ├── useTagNavigation.ts   # 标签筛选跳转（Home/PostList/Article 共用）
+│   ├── useCopyFeedback.ts    # 复制成功/失败反馈（1.2s 复原）
+│   └── useFloatingButton.ts  # 浮动按钮拖拽 + 底沿广播协议（FLOATING_BASE_EVENT 常量）
 ├── utils/                    # 浏览器运行时纯工具（不 import 任何 scripts/ 代码）
 │   ├── contentLoader.ts      # Runtime: import.meta.glob for JSON & MD（@data 别名），强类型 load*
-│   ├── navigation.ts         # 站内导航域：toLocalePath/switchLocale（语言切换）、goToTag（tag 查询跳转）、文章/路由路径互转
-│   ├── scroll.ts             # scrollToTop（SSR 安全）+ 弹层滚动锁定（overflow / position 钉住两种语义）
-│   ├── clipboard.ts          # copyText（Clipboard API + execCommand 回退）
+│   ├── navigation.ts         # 站内导航域：toLocalePath/switchLocale/goToTag/toArticle/normalizeArticleKey
+│   ├── articles.ts           # flattenCategoryArticles（分类 → 文章列表展开）
+│   ├── icons.ts              # 操作图标 path 数据单一来源（IconButton/iconSvg 共用）
+│   ├── pagination.ts         # getVisiblePages 窗口化分页纯函数
+│   ├── format.ts / tags.ts / url.ts  # 数字缩写 / 标签云 / URL·DOI 规范化纯函数
+│   ├── scroll.ts             # scrollToTop/scrollToHeading（reduce-motion 感知）+ 弹层滚动锁定
+│   ├── clipboard.ts          # copyText（Promise<boolean>，Clipboard API + execCommand 回退）
 │   └── readingTime.ts        # 阅读时长估算
 ├── types.ts                  # 领域类型：与 content/*.json 产物一一对应（Post/Note/Tag/Category*/Resource/About）
 └── assets/
@@ -94,11 +107,13 @@ src/                        # 浏览器应用（含 SSR；不包含任何 Node �
 
 ```
 scripts/                    # Node 内容工具链（不被浏览器打包；Node 原生 type stripping 直跑 .ts）
-├── dataConfig.ts           # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR）
+├── lib/                     # 共享工具层：llm（配置/客户端/调用骨架）、fs（walk/walkAsync/JSON·YAML IO）、text、cli、frontmatter、tags、tagMapping、yamlEntries
+├── dataConfig.ts           # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR；EN_SUFFIX 常量）
 ├── markdownProcessor.ts    # unified pipeline: remark → rehype
-├── runAllGenerators.ts     # Build orchestration
+├── runAllGenerators.ts     # Build orchestration（locale 步骤表 + 依赖顺序）
+├── packArticle.ts          # 打包文章 CLI（assets 图 → 文章同目录）
 ├── llmConfig.ts            # DeepSeek API 配置；被 gitignore 忽略（API key，勿提交）
-├── generators/             # core/（shared IO helpers）+ 11 个生成器
+├── generators/             # core/（兼容 barrel，实现已迁移 scripts/lib/）+ 11 个生成器
 ├── translator/             # AI translation via DeepSeek API（CLI）
 └── tagMerger/              # zh→en 标签映射增量工具（CLI）
 
@@ -113,20 +128,20 @@ vite/
 ```
 content-src/                 # 第一层 src — 纯手写中文源（严格无机器产物，仅这里编辑）
 │   ├── {categories,about,resources}.yaml
-│   └── notes/<cat>/<sub>/<article>/<article>.md
+│   ├── assets/              #   配图集中目录（Obsidian 附件默认位置；发布前 npm run data:pack 打包进文章）
+│   └── notes/<cat>/<sub>/<slug>.md     # 扁平：一篇文章一个 md（slug = 文件名，无同名目录）
 cache/                       # 第二层 cache — 机器维护的持久态（入库），全部由工具生成
 │   ├── en/                  #   英文翻译层：镜像 content-src 结构，文件名沿用 -en 身份后缀
-│   │   │                       （categories-en.yaml、notes/.../<article>-en.md）
+│   │   │                       （categories-en.yaml、notes/.../<slug>-en.md）
 │   │   └── …                #   -en 后缀是「内容身份」（URL 的一部分），cache/en 目录表示机器层
 │   ├── tag-mapping.json     #   zh→en 标签映射 / 标签合并映射
 │   └── .translate-state.json#   翻译增量状态（源相对路径 → 内容 hash）
 content/                      # 第三层 final — 生成 JSON + html（可再生，gitignore，不入库）
 ```
 
-- **中文源**：只写 `content-src/`。**英文**：绝不手写，`npm run translate` 生成到 `cache/en/`（LLM 非确定 + 有成本，故入库存证，CI 靠 `GBLOG_NO_TRANSLATE=1` 跳过生成）。
+- **中文源**：只写 `content-src/`。**英文**：绝不手写，`npm run data:translate` 生成到 `cache/en/`（LLM 非确定 + 有成本，故入库存证，CI 靠 `GBLOG_NO_TRANSLATE=1` 跳过生成）。
 - 生成器按 locale 取源：`srcDirFor(locale)`（zh→content-src，en→cache/en），输出恒为 `content/*` 与 `content/*-en*`。
-- 中英实体按镜像相对路径配对：`cache/en/notes/.../<article>-en.md` ↔ `content-src/notes/.../<article>.md`。
-- 现状提示：`content-src/` 根目录存在旧的 `about-en.yaml`/`categories-en.yaml`（历史遗留，当前生成器一律读 cache/en，不消费它们）。
+- 中英实体按镜像相对路径配对：`cache/en/notes/.../<slug>-en.md` ↔ `content-src/notes/.../<slug>.md`。
 
 ## Framework
 
@@ -173,11 +188,12 @@ generateAbout and generateResources run independently at import time in runAllGe
 **只有 notes 有 markdown 文章**；projects/topics 为纯 yaml 元数据（无 md 文件、无文章页，卡片外链到 GitHub/DOI）。
 
 ```
-content-src/notes/<category>/<subcategory>/<article-dir>/<article-dir>.md
-cache/en/notes/<category>/<subcategory>/<article-dir>/<article-dir>-en.md   # 英文镜像
+content-src/notes/<category>/<subcategory>/<slug>.md        # 扁平：一篇文章一个 md
+cache/en/notes/<category>/<subcategory>/<slug>-en.md       # 英文镜像
 ```
 
-- notes 目录名必须匹配 `categories.yaml` 中 `notes` 段的 `name` 字段。
+- notes 目录名必须匹配 `categories.yaml` 中 `notes` 段的 `name` 字段；子分类目录名匹配其 `categories` 映射 key。
+- **图片**：写作期统一放 `content-src/assets/`（引用 `assets/xx.png`，Obsidian 最短路径格式，站点已支持解析）；发布前 `npm run data:pack -- notes/<cat>/<sub>/<slug>`（或 `npm run data:pack` 递归全部）将引用图片复制到文章同目录并改写引用（同步改写 cache/en 镜像，幂等）。
 - 每篇文章 md 自带 **YAML frontmatter**：`title` / `date` / `author` / `tags` / `draft` / `description`（zh/en 各自文件分别定义）
 - `categories.yaml` 定义分类层级（`name`/`title`/`desc`/`categories` 子分类映射）；projects/topics 的全部元数据（`github`/`doi`/`url`/`status`/`language`/`license`/`journal`/`year`/`authors` 等）也在此定义
 - **中英 frontmatter `tags` 必须一一对应**（同一篇文章 zh/en 标签数量与语义对称），否则首页标签云双语标签数不一致（如 zh `Shell` / en 误写 `Shell`+`Bash`）
@@ -187,11 +203,12 @@ cache/en/notes/<category>/<subcategory>/<article-dir>/<article-dir>-en.md   # �
 路由为 history 模式（`/zh`/`/en` 语言前缀，vite-ssg 构建期真实预渲染每页）：
 
 ```
-File:  notes/Omics/genomics/bwa/bwa.md
-URL:   /zh/article/notes/Omics/genomics/bwa/bwa        (en → /en/article/...)
+File:  notes/Omics/genomics/bwa.md
+URL:   /zh/article/notes/Omics/genomics/bwa        (en → /en/article/notes/Omics/genomics/bwa-en)
 Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props: true }
        (zh-*/en-* 前缀命名，其余为 zh-Home/en-Home 等)
 旧 URL /article/...（无前缀）→ 302 重定向到 preferredLocaleSegment() 前缀
+旧「每文一目录」URL（.../bwa/bwa 或 .../bwa/bwa-en）→ Article 路由 beforeEnter 自动重定向到新 URL
 ```
 
 ## Internationalization (Dual Layer)
@@ -221,12 +238,12 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 - **Topics** (课题): research case studies, DOI-linked
 
 ### Adding Content
-1. 在数据分支创建目录（`../blog-data/content-src/notes/`，即 data 分支）
-2. 创建 `.md` 文件（含 YAML frontmatter）
+1. 创建 `../blog-data/content-src/notes/<cat>/<sub>/<slug>.md`（slug 英文小写连字符，含 YAML frontmatter；Obsidian 中可用 `templates/new-post.md` 模板）
+2. 配图先放 `content-src/assets/`，发布前 `npm run data:pack -- notes/<cat>/<sub>/<slug>` 打包
 3. 在 `categories.yaml` 添加分类
 4. 运行 `npm run prebuild` 本地验证
-5. 英文：`article-en.md` 或 `npm run translate`
-6. 发布：`npm run deploy`（提交并推送 data 分支 → CI 自动构建部署）
+5. 英文：`npm run data:translate`（生成 cache/en，不手写）
+6. 发布：`npm run data:deploy`（提交并推送 data 分支 → CI 自动构建部署）
 
 ### Utilities
 - `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`

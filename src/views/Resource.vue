@@ -72,10 +72,13 @@ defineOptions({ name: 'ResourceView' })
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
+import { usePageMeta } from '@/composables/usePageMeta'
 import { loadResources } from '@/utils/contentLoader'
+import { displayUrl, isDoi } from '@/utils/url'
 import type { ResourceNode } from '@/types'
 
 const { t } = useI18n()
+usePageMeta(t('metaResources'))
 
 const { data: resources } = useLocalizedContent(() => loadResources(), [])
 const activeSub = ref<ResourceNode | null>(null)
@@ -98,15 +101,6 @@ function selectSub(sub: ResourceNode) {
 
 function isActiveSub(sub: ResourceNode) {
   return activeSub.value === sub
-}
-
-function displayUrl(url: string) {
-  if (!url) return ''
-  return url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-}
-
-function isDoi(url: string) {
-  return !!url && (url.includes('doi.org') || /^10\.\d{4,9}\//.test(url))
 }
 
 watch(

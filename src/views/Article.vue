@@ -46,7 +46,7 @@
                     v-for="(tag, idx) in currentPost.tags"
                     :key="idx"
                     class="article-tag"
-                    @click="onTagClick(tag)"
+                    @click="goTagFromArticle(tag)"
                   >
                     # {{ tag }}
                   </span>
@@ -104,7 +104,7 @@
               ref="onThisPageRef"
               containerSelector=".markdown-body"
               :levels="[2, 3]"
-              :offset="88"
+              :offset="HEADER_OFFSET"
             />
           </div>
         </div>
@@ -116,20 +116,13 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: 'ArticleView',
-  head() {
-    return {
-      title: this.currentPost ? `${this.currentPost.title} - zorrooz’s blog` : 'zorrooz’s blog',
-      meta: this.currentPost?.description
-        ? [{ name: 'description', content: this.currentPost.description }]
-        : [],
-    }
-  },
-})
+defineOptions({ name: 'ArticleView' })
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import { useHead } from '@unhead/vue'
+import { usePageMeta } from '@/composables/usePageMeta'
+import { useTagNavigation } from '@/composables/useTagNavigation'
 import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
 import OnThisPage from '@/components/layout/OnThisPage.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
@@ -137,16 +130,16 @@ import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadHtmlContent, loadMarkdownSource } from '@/utils/contentLoader'
 import {
   articlePathFromUrl,
-  goToTag,
   joinRoutePathParam,
-  toArticleRoutePath,
-  toLocalePath,
+  normalizeArticleKey,
+  toArticle,
 } from '@/utils/navigation'
+import { flattenCategoryArticles } from '@/utils/articles'
 import { readingTimeMinutes } from '@/utils/readingTime'
 import { scrollToTop } from '@/utils/scroll'
 import { copyText } from '@/utils/clipboard'
-import { toSupportedLocale } from '@/config'
-import type { CategoryArticle, CategoryData } from '@/types'
+import { HEADER_OFFSET } from '@/config'
+import type { CategoryData } from '@/types'
 
 /** 由 categories.json 展开的运行时文章元数据 */
 interface ArticleMeta {
@@ -165,7 +158,7 @@ interface LinearArticle {
 
 const { t, locale } = useI18n()
 const route = useRoute()
-const router = useRouter()
+const { goTagFromArticle } = useTagNavigation()
 
 const rawMarkdown = ref('')
 const currentPath = ref('')
@@ -189,22 +182,23 @@ const nextPageText = computed(() => t('nextPage'))
 
 const stripMd = (path: string) => path.replace(/\.md$/, '')
 
-/** 文章路径匹配（容忍 -en 语言后缀差异） */
-const pathsMatch = (articlePath: string, current: string) => {
-  const a = stripMd(articlePath)
-  const c = stripMd(current)
-  if (a === c) return true
-  if (c.endsWith('-en') && a === c.replace(/-en$/, '')) return true
-  if (!c.endsWith('-en') && a === c + '-en') return true
-  return false
-}
-
 const findArticle = (path: string) =>
-  allArticles.value.find((article) => pathsMatch(article.path, path)) || null
+  allArticles.value.find(
+    (article) => normalizeArticleKey(article.path) === normalizeArticleKey(path),
+  ) || null
 
 const currentPost = computed(() => {
   if (!currentPath.value) return null
   return findArticle(currentPath.value)
+})
+
+usePageMeta(computed(() => currentPost.value?.title))
+useHead({
+  meta: computed(() =>
+    currentPost.value?.description
+      ? [{ name: 'description', content: currentPost.value.description }]
+      : [],
+  ),
 })
 
 const groupLinearArticles = computed(() => {
@@ -255,18 +249,6 @@ function getReadingTimeText(minutes: number) {
   return t('articleReadingTime', { minutes })
 }
 
-function toArticle(path: string) {
-  return toLocalePath(toArticleRoutePath(path))
-}
-
-function onTagClick(tag: string) {
-  goToTag(router, tag, {
-    locale: toSupportedLocale(locale.value),
-    query: { from: route.fullPath },
-    scroll: false,
-  })
-}
-
 async function copyArticle() {
   if (!currentPost.value) return
   // 优先复制完整 markdown 源（含 frontmatter，粘贴即得 .md 文件）；加载失败回退纯文本
@@ -289,46 +271,40 @@ async function copyArticle() {
     const bodyText = (clone.innerText || '').trim()
     text = `${currentPost.value.title}\n\n${bodyText}`
   }
-  try {
-    await copyText(text)
-  } catch (err) {
-    console.error(t('copyFailed'), err)
-  } finally {
+  const copied = await copyText(text)
+  if (copied) {
     copyFeedback.value = true
     if (copyFeedbackTimer) clearTimeout(copyFeedbackTimer)
     copyFeedbackTimer = window.setTimeout(() => {
       copyFeedback.value = false
     }, 1200)
+  } else {
+    console.warn(t('copyFailed'))
   }
 }
 
-const pushArticle = (all: ArticleMeta[], article: CategoryArticle, dateStr: string) => {
-  const path = articlePathFromUrl(article.articleUrl)
-  all.push({
-    title: article.title,
-    path,
-    date: dateStr,
-    tags: article.tags,
-    wordCount: article.wordCount,
-  })
-}
-
 function buildFromCategories() {
-  const all: ArticleMeta[] = []
   try {
     const categoryData = loadCategories()
     categoryList.value = categoryData
-    categoryData.forEach((section) => {
+    const latestDateByUrl = new Map<string, string>()
+    categoryData.forEach((section) =>
       section.items.forEach((item) => {
         const itemLatest = item.stats.latestDate || ''
-        item.articles?.forEach((a) => pushArticle(all, a, itemLatest))
+        item.articles?.forEach((a) => latestDateByUrl.set(a.articleUrl, itemLatest))
         item.categories.forEach((cat) => {
           const catLatest = cat.stats.latestDate || itemLatest
-          cat.articles.forEach((a) => pushArticle(all, a, catLatest))
+          cat.articles.forEach((a) => latestDateByUrl.set(a.articleUrl, catLatest))
         })
-      })
-    })
-    allArticles.value = all
+      }),
+    )
+    allArticles.value = flattenCategoryArticles(categoryData).map((article) => ({
+      title: article.title,
+      path: articlePathFromUrl(article.articleUrl),
+      date: latestDateByUrl.get(article.articleUrl) ?? '',
+      tags: article.tags,
+      wordCount: article.wordCount,
+    }))
   } catch {
     allArticles.value = []
     categoryList.value = []

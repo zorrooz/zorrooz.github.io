@@ -3,7 +3,9 @@
 > 目标：把 Obsidian 变成 gblog 的**本地创作前端**，保留现有构建/发布管线不动，
 > 让「在 Obsidian 里写作 → 本地秒级预览 → git 自动同步 → CI 自动部署」成为日常闭环。
 >
-> 状态：草案（ideation 阶段，未实施）｜ 适用范围：`gblog`（代码仓库）+ `blog-data`（数据仓库）
+> 状态：**P0/P1 已实施**（2026-06）——扁平化结构、assets 集中图片、`npm run data:pack` 打包命令、
+> 旧 URL 重定向、gitignore、模板均已落地；P2（callout/高亮语法插件）待做。
+> 适用范围：`gblog`（代码仓库）+ `blog-data`（数据仓库）
 
 ---
 
@@ -138,20 +140,21 @@
   community-plugins.json 等最小配置 + 一份 README 说明），新机器一键拷入，避免各机配置漂移。
 - 若想共享插件列表，可在模板里固定：Templater、obsidian-git、Linter（可选）。
 
-### 5.3 附件策略
+### 5.3 附件策略（已实施：assets 集中 + 打包命令）
 
-- Obsidian 设置：**「附件默认存放：与当前文件相同的文件夹」**（`Files & Links → Default location for
-  attachments → Same folder as current file`）。
-- 这样图片 = `![](fig.png)` 相对路径，与站点现有图片解析（`RenderMarkdown.rewriteImageLinks` +
-  图片 `import.meta.glob`）**完全兼容，零代码**。
-- 不使用全局 `assets/` 集中目录（会破坏相对路径解析，除非再改 rewriteImageLinks）。
+- **写作期**：图片统一放 `content-src/assets/`（vault 根 `assets/` 文件夹）。Obsidian 设置：
+  「附件默认存放位置」→ 指定文件夹 → `assets`。
+- 引用格式：`![示意图](assets/fig-1.png)`（Obsidian 默认「最短路径」格式即如此；
+  `RenderMarkdown.rewriteImageLinks` 已支持 vault 根相对路径解析，见 §8）。
+- **发布前**：`npm run data:pack -- notes/<cat>/<sub>/<slug>`（或 `npm run data:pack` 递归全部）把引用图复制到文章同目录并改写引用
+  （同步改写 cache/en 镜像引用，不复制文件；幂等；同名冲突自动加 slug 前缀）。
+- 命名规范：英文小写连字符（`fig-1.png`、`pipeline.png`），避免中文文件名。
 
 ### 5.4 链接格式（G1 的零成本解法）
 
 - Obsidian 设置：**「新链接格式 = 基于最短路径的 Markdown 链接」**（`Files & Links → New link format
   → Shortest path when possible`，并**关闭** `Use [[Wikilinks]]`）。
-- 效果：`[[bash-scripting]]` → 写作时插入的是 `[Bash 编程…](../bash-scripting/bash-scripting.md)`，
-  即标准相对 Markdown 链接 —— **管线零改动**，站点点击即跳转（当前 `remark-parse` 原生支持相对链接）。
+- 效果：`[[bash-scripting]]` → 写作时插入标准 Markdown 链接，**管线零改动**，站点点击即跳转。
   配合 Obsidian「重命名时自动更新内部链接」，移动/改名文章链接自动维护。
 - 代价：丢失 wikilink 的「按文件名解引用」便利（需引用时输入相对路径，Obsidian 有补全提示）。
 - **若要保留 wikilink 体验**，见 §6.1 的增强路径（构建期解析）。
@@ -204,7 +207,7 @@ Obsidian 写作（自动保存）
    ├─▶ [本地] npm run dev：contentDevPlugin 检测变更 → 重生成 → 浏览器热刷新（秒级预览）
    │
    └─▶ [同步] obsidian-git 插件：定时（如每 5 分钟）或手动
-            commit + push origin data（相当于自动执行 npm run deploy 的提交部分）
+            commit + push origin data（相当于自动执行 npm run data:deploy 的提交部分）
                  │
                  ▼
         [CI] GitHub Actions：prebuild → build → 部署 gh-pages（现状，零改动）
@@ -212,8 +215,8 @@ Obsidian 写作（自动保存）
 
 - 发布节奏策略：**日常小改走 obsidian-git 自动推送**（data 分支每次推送都触发 CI，约 1-2 分钟上线）；
   **批量/敏感改动**（改 categories.yaml 结构、删文章、调 frontmatter）走
-  `npm run prebuild` 本地验证 + `npm run deploy` 手动推送。
-- `npm run translate`（英文生成）仍为本地手动步骤，不进 vault 自动流程；需要发布英文时先跑一次。
+  `npm run prebuild` 本地验证 + `npm run data:deploy` 手动推送。
+- `npm run data:translate`（英文生成）仍为本地手动步骤，不进 vault 自动流程；需要发布英文时先跑一次。
 
 ### 7.2 新文章 SOP（Templater 模板）
 
@@ -283,7 +286,7 @@ Obsidian 写作（自动保存）
 **风险与对策**
 1. **英文层被手改**：vault 只含 `content-src`，`cache/en` 不在创作视野；AGENTS.md 明确
    「英文只能站点审阅，源文件只动 zh」；lint 可加「-en 文件不应出现在 content-src」检查。
-2. **`npm run deploy` 误提交 `.obsidian/`**：P0 必须 gitignore，模板目录提供一致配置。
+2. **`npm run data:deploy` 误提交 `.obsidian/`**：P0 必须 gitignore，模板目录提供一致配置。
 3. **Obsidian 写文件触发 dev 重生成**：watcher 忽略规则 + 300ms 防抖已存在；Obsidian 自动保存
    频率远低于触发阈值。
 4. **新增/删除文件需 dev server 重启**：现有 `contentDevPlugin` 已自动 `server.restart()`，无感。

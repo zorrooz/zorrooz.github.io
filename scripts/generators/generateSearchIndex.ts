@@ -9,22 +9,16 @@ import fs from 'fs'
 import path from 'path'
 
 import { contentDir, localeSuffix } from '../dataConfig.ts'
-import { isDirectRun, logWriteSuccess, runCliScript, writeJsonFile } from './core/index.ts'
-
-function stripHtmlToText(html: string): string {
-  return html
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;|&apos;/gi, "'")
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
+import { ARTICLE_ROUTE_PREFIX } from '../../src/config.ts'
+import type { SearchDoc } from '../../src/types.ts'
+import { stripHtmlToText } from '../lib/text.ts'
+import {
+  isDirectRun,
+  logWriteSuccess,
+  runCliScript,
+  walkCategoryArticles,
+  writeJsonFile,
+} from './core/index.ts'
 
 function loadDescriptions(locale: 'zh-CN' | 'en-US'): Map<string, string> {
   const notesPath = path.join(contentDir, `notes${localeSuffix(locale)}.json`)
@@ -38,15 +32,6 @@ function loadDescriptions(locale: 'zh-CN' | 'en-US'): Map<string, string> {
   return map
 }
 
-interface SearchDoc {
-  id: string
-  title: string
-  tags: string[]
-  path: string
-  description: string
-  content: string
-}
-
 function collectArticles(locale: 'zh-CN' | 'en-US'): SearchDoc[] {
   const categoriesPath = path.join(contentDir, `categories${localeSuffix(locale)}.json`)
   if (!fs.existsSync(categoriesPath)) {
@@ -58,44 +43,39 @@ function collectArticles(locale: 'zh-CN' | 'en-US'): SearchDoc[] {
   const data = JSON.parse(fs.readFileSync(categoriesPath, 'utf-8'))
   const docs: SearchDoc[] = []
 
-  for (const section of Array.isArray(data) ? data : []) {
-    for (const item of Array.isArray(section?.items) ? section.items : []) {
-      for (const cat of Array.isArray(item?.categories) ? item.categories : []) {
-        for (const art of Array.isArray(cat?.articles) ? cat.articles : []) {
-          if (typeof art?.articleUrl !== 'string' || !art.articleUrl) continue
-          const rel = art.articleUrl.replace(/^\/article\//, '')
-          const htmlPath = path.join(contentDir, 'html', `${rel}.html`)
+  walkCategoryArticles(data, (art) => {
+    if (typeof art?.articleUrl !== 'string' || !art.articleUrl) return
+    const rel = art.articleUrl.replace(`${ARTICLE_ROUTE_PREFIX}/`, '')
+    const htmlPath = path.join(contentDir, 'html', `${rel}.html`)
 
-          let content = ''
-          if (fs.existsSync(htmlPath)) {
-            content = stripHtmlToText(fs.readFileSync(htmlPath, 'utf-8'))
-          }
+    let content = ''
+    if (fs.existsSync(htmlPath)) {
+      content = stripHtmlToText(fs.readFileSync(htmlPath, 'utf-8'))
+    }
 
-          const tags: string[] = []
-          if (Array.isArray(art.tags)) {
-            for (const tag of art.tags) {
-              if (typeof tag === 'string') tags.push(tag)
-            }
-          }
-
-          const key = rel.replace(/^notes\//, '')
-          let description = descriptions.get(key) || ''
-          if (!description && key.endsWith('-en')) {
-            description = descriptions.get(key.slice(0, -3)) || ''
-          }
-
-          docs.push({
-            id: rel,
-            title: typeof art.title === 'string' ? art.title : '',
-            tags,
-            path: rel,
-            description,
-            content,
-          })
-        }
+    const tags: string[] = []
+    if (Array.isArray(art.tags)) {
+      for (const tag of art.tags) {
+        if (typeof tag === 'string') tags.push(tag)
       }
     }
-  }
+
+    const key = rel.replace(/^notes\//, '')
+    let description = descriptions.get(key) || ''
+    if (!description && key.endsWith('-en')) {
+      description = descriptions.get(key.slice(0, -3)) || ''
+    }
+
+    docs.push({
+      id: rel,
+      title: typeof art.title === 'string' ? art.title : '',
+      tags,
+      path: rel,
+      description,
+      content,
+    })
+  })
+
   return docs
 }
 

@@ -1,13 +1,14 @@
-import fs from 'fs'
 import path from 'path'
 import { contentDir, localeSuffix } from '../dataConfig.ts'
 import {
   readJson,
+  requireJsonArray,
   writeJsonFile,
   isDirectRun,
   runCliScript,
   logWriteSuccess,
 } from './core/index.ts'
+import { countTags, sortTagsByName } from '../lib/tags.ts'
 import type { Tag as TagEntry } from '../../src/types.ts'
 
 function getFilePaths(locale = 'zh-CN') {
@@ -19,43 +20,21 @@ function getFilePaths(locale = 'zh-CN') {
 }
 
 function generateTagsFromPosts(posts: Array<{ tags?: unknown }>): TagEntry[] {
-  const map = new Map<string, number>()
-  for (const p of posts) {
-    const tags = Array.isArray(p?.tags) ? p.tags : []
-    for (const raw of tags) {
-      const name = typeof raw === 'string' ? raw.trim() : ''
-      if (!name) continue
-      map.set(name, (map.get(name) || 0) + 1)
-    }
-  }
-  return Array.from(map.entries())
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN'))
+  return sortTagsByName(
+    countTags(posts.flatMap((p) => (Array.isArray(p?.tags) ? p.tags : []))),
+  )
 }
 
 function generateTagsJson(locale = 'zh-CN') {
   const paths = getFilePaths(locale)
   const postsFileName = `posts${localeSuffix(locale)}.json`
 
-  if (!fs.existsSync(paths.postsJsonPath)) {
-    console.error(
-      `${postsFileName} not found at ${paths.postsJsonPath}. Please generate posts.json first.`,
-    )
-    process.exitCode = 1
-    return
-  }
-
-  const parsed = readJson(paths.postsJsonPath)
-  if (parsed === null) {
-    console.error(`Failed to read/parse ${postsFileName}:`)
-    process.exitCode = 1
-    return
-  }
-  if (!Array.isArray(parsed)) {
-    console.error(`${postsFileName} is not an array. Abort.`)
-    process.exitCode = 1
-    return
-  }
+  const parsed = requireJsonArray(
+    paths.postsJsonPath,
+    postsFileName,
+    'Please generate posts.json first.',
+  )
+  if (parsed === null) return
 
   const tags = generateTagsFromPosts(parsed as Array<{ tags?: unknown }>)
 

@@ -8,7 +8,8 @@ export interface Post {
   no: number
   title: string
   date: string
-  category: [string, string]
+  /** 本地化分类：长度 1（无子分类）或 2（分类 + 子分类标题） */
+  category: string[]
   tags: string[]
   preview: string
   wordCount: number
@@ -28,6 +29,16 @@ export interface Note {
 export interface Tag {
   name: string
   count: number
+}
+
+/** 全文检索文档（search-index*.json 产物，SearchModal/useSearch 消费） */
+export interface SearchDoc {
+  id: string
+  title: string
+  tags: string[]
+  path: string
+  description: string
+  content: string
 }
 
 export interface CategoryArticle {

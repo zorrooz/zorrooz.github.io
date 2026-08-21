@@ -130,15 +130,19 @@ content/                      # Layer 3: generated JSON + html (regenerable, not
 | `npm run lint` | ESLint (auto-fix) |
 | `npm run typecheck` | vue-tsc + tsc dual-project type check |
 | `npm run format` | Prettier (`src/ scripts/ vite/`) |
-| `npm run translate` | AI incremental translation (writes `cache/en`) |
-| `npm run tagmerge` | Incrementally complete zh→en tag mappings |
-| `npm run deploy` | Commit and push the data branch; CI rebuilds and deploys |
+| `npm run data:translate` | AI incremental translation (writes `cache/en`) |
+| `npm run data:tag-merge` | Incrementally complete zh→en tag mappings |
+| `npm run data:pack` | Pack articles (assets/ images → article dir; no args = recursive all, idempotent) |
+| `npm run data:deploy` | Commit and push the data branch; CI rebuilds and deploys |
+| `npm run data:publish` | Push the data branch only, without committing local changes |
+
+> Command convention: data-branch operations use the `data:` prefix; `translate`/`tagmerge`/`pack`/`deploy` are legacy aliases.
 
 ### Publish Flow
 
 1. Edit `../blog-data/content-src/**` (Chinese sources only)
-2. Verify locally: `npm run prebuild` (run `npm run translate` first if new content needs English)
-3. Publish: `npm run deploy` (auto `add -A → commit → push origin data`)
+2. Verify locally: `npm run prebuild` (run `npm run data:translate` first if new content needs English)
+3. Publish: `npm run data:deploy` (auto `add -A → commit → push origin data`)
 4. GitHub Actions rebuilds and deploys to GitHub Pages
 
 > `npm run data:publish` pushes the data branch only, without committing local changes.
@@ -231,9 +235,9 @@ Markdown body here…
 
 ### Bilingual Mechanism
 
-- English is **never hand-written**: `npm run translate` incrementally translates Chinese sources into the `cache/en/` mirror (`-en` suffix is the content identity and part of the URL)
+- English is **never hand-written**: `npm run data:translate` incrementally translates Chinese sources into the `cache/en/` mirror (`-en` suffix is the content identity and part of the URL)
 - Incremental detection is keyed on **content hash**: untouched sources are skipped, costing zero tokens
-- Tags are looked up in `cache/tag-mapping.json`; missing mappings are filled incrementally by `npm run tagmerge`
+- Tags are looked up in `cache/tag-mapping.json`; missing mappings are filled incrementally by `npm run data:tag-merge`
 - Generators pick sources per locale: `srcDirFor(locale)` (zh→content-src, en→cache/en); outputs are always `content/*` and `content/*-en*`
 
 #### Translation Tool
@@ -252,12 +256,14 @@ export default {
 Common commands (args after `--` are passed to the CLI):
 
 ```bash
-npm run translate                                   # incremental (default content-src, recommended)
-npm run translate -- translate --new                # translate new files only
-npm run translate -- translate --force              # force re-translate everything
-npm run translate -- status <directory>             # check translation status
-npm run translate -- help                           # full usage
-npm run tagmerge                                    # fill in zh→en tag mappings
+npm run data:translate                                # incremental (default content-src, recommended)
+npm run data:translate -- translate --new             # translate new files only
+npm run data:translate -- translate --force           # force re-translate everything
+npm run data:translate -- status <directory>          # check translation status
+npm run data:translate -- help                        # full usage
+npm run data:tag-merge                                # fill in zh→en tag mappings
+npm run data:pack -- notes/Programming/bash/bash-scripting   # pack a single article
+npm run data:pack                                     # pack all articles recursively
 ```
 
 ### Resources Page Configuration

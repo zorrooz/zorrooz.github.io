@@ -28,6 +28,7 @@ export default {
   developer: '开发者',
   wordUnit: '字',
   recentPosts: '最近文章',
+  noPosts: '暂无文章',
 
   // 分类页面
   notes: '笔记',
@@ -61,6 +62,13 @@ export default {
   // 404
   pageNotFound: '页面不存在或已被移动',
   backHome: '返回首页',
+
+  // SEO title
+  metaHome: '首页',
+  metaCategories: '分类',
+  metaResources: '资源',
+  metaAbout: '关于',
+  metaNotFound: '404',
 
   // 关于页面
   experience: '经历',
