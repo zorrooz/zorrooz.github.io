@@ -34,6 +34,9 @@ export const useThemeStore = defineStore('theme', () => {
   }
 
   const initTheme = () => {
+    // SSR 预渲染内嵌的 pinia state 恒为构建期默认（auto），客户端必须以 localStorage 为准覆盖，
+    // 否则 hydrate 后主题偏好丢失（setTheme('auto') 还会把存储清掉）。
+    theme.value = initialTheme()
     setTheme(theme.value)
   }
 
