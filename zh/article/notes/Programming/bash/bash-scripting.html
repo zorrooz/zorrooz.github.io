@@ -1,0 +1,274 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#5aa0f8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bash 编程：变量、条件、循环与实用脚本 - zorrooz’s blog</title>
+    <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zorrooz.github.io/zh/article/notes/Programming/bash/bash-scripting">
+    <meta property="og:site_name" content="zorrooz’s blog">
+    <meta property="og:title" content="zorrooz’s blog">
+    <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
+    <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="module" crossorigin="" src="/assets/app-C-BvHiB9.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-D59InFS0.css">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/zh/article/notes/Programming/bash/bash-scripting"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/Programming/bash/bash-scripting"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/Programming/bash/bash-scripting-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/Programming/bash/bash-scripting"></head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-41a9b5b1=""><!--[--><header class="app-header" data-v-3e6c0786=""><div class="container px-0" data-v-3e6c0786=""><nav class="navbar navbar-expand-lg app-nav" data-v-3e6c0786=""><div class="container-fluid d-flex app-nav__inner" data-v-3e6c0786=""><a href="/zh/" class="navbar-brand app-nav__brand" data-v-3e6c0786=""><span class="app-nav__wordmark" data-v-3e6c0786="">zorrooz<span class="app-nav__apos" data-v-3e6c0786="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-3e6c0786="" data-v-259baced=""><button type="button" class="icon-btn" aria-label="搜索" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button type="button" class="icon-btn" aria-label="主题" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><button type="button" class="icon-btn" aria-label="语言" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg></button><button type="button" class="icon-btn" aria-label="菜单" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button></div><div class="navbar-collapse collapse" data-v-3e6c0786=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-3e6c0786=""><li class="app-nav__link-divider" aria-hidden="true" data-v-3e6c0786=""></li><!--[--><li class="nav-item" data-v-3e6c0786=""><a href="/zh/category" class="nav-link app-nav__link" data-v-3e6c0786="">分类</a></li><li class="nav-item" data-v-3e6c0786=""><a href="/zh/resource" class="nav-link app-nav__link" data-v-3e6c0786="">资源</a></li><li class="nav-item" data-v-3e6c0786=""><a href="/zh/about" class="nav-link app-nav__link" data-v-3e6c0786="">关于</a></li><!--]--></ul></div><div class="d-flex d-none d-lg-flex ms-auto app-nav__actions" data-v-3e6c0786="" data-v-259baced=""><button type="button" class="icon-btn" aria-label="搜索" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button type="button" class="icon-btn" aria-label="主题" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><button type="button" class="icon-btn" aria-label="语言" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg></button><!----></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-41a9b5b1=""><div class="container view-container article-view" data-v-41a9b5b1="" data-v-01e8bde1=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-01e8bde1=""></div><div class="row py-4 px-0" data-v-01e8bde1=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-01e8bde1=""><div class="sticky-sidebar" data-v-01e8bde1=""><div class="navigation-container mb-0" data-v-01e8bde1=""><div class="navigation-tree" data-v-01e8bde1="" data-v-5d73a6b9=""><!--[--><div class="tree-group" data-v-5d73a6b9=""><div class="tree-label" data-v-5d73a6b9="">编程</div><ul class="article-list" data-v-5d73a6b9=""><!--[--><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">Python</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/zh/article/notes/Programming/python/python-advanced" class="tree-item tree-item--l2">Python 进阶：函数、类与模块</a></li><li class="article-item"><a href="/zh/article/notes/Programming/python/python-basics" class="tree-item tree-item--l2">Python 编程入门：环境、语法与数据类型</a></li><li class="article-item"><a href="/zh/article/notes/Programming/python/python-data" class="tree-item tree-item--l2">Python 数据处理实战：文件 IO、正则与 NumPy/Pandas</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">R</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/zh/article/notes/Programming/r/r-basics" class="tree-item tree-item--l2">R 语言入门：数据结构、向量化与函数</a></li><li class="article-item"><a href="/zh/article/notes/Programming/r/r-ggplot2" class="tree-item tree-item--l2">R ggplot2 数据可视化：图层语法与常用图表</a></li><li class="article-item"><a href="/zh/article/notes/Programming/r/r-tidyverse" class="tree-item tree-item--l2">R tidyverse 数据操作：dplyr 管道与数据清洗</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">Linux</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/zh/article/notes/Programming/linux/linux-basics" class="tree-item tree-item--l2">Linux 命令行基础：文件系统、权限与文本处理</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">Bash</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a aria-current="page" href="/zh/article/notes/Programming/bash/bash-scripting" class="router-link-active router-link-exact-active tree-item tree-item--l2 tree-item--active">Bash 编程：变量、条件、循环与实用脚本</a></li><!--]--><!--[--><!--]--></ul></li><!--]--><!--[--><!--]--></ul></div><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-01e8bde1=""><div class="article-panel" data-v-01e8bde1=""><div class="article-panel__body" data-v-01e8bde1=""><div class="article-content" data-v-01e8bde1=""><div class="article-meta" data-v-01e8bde1=""><h1 class="article-title" data-v-01e8bde1="">Bash 编程：变量、条件、循环与实用脚本</h1><div class="article-meta__row" data-v-01e8bde1=""><span class="meta-line" data-v-01e8bde1=""><i class="fas fa-calendar-alt" data-v-01e8bde1=""></i>更新于 2026-08-04</span><span class="meta-line" data-v-01e8bde1=""><i class="fas fa-clock" data-v-01e8bde1=""></i>阅读约 1 分钟</span><button type="button" class="article-copy-btn" aria-label="复制文章" aria-live="polite" data-v-01e8bde1=""><i class="fas fa-copy" data-v-01e8bde1=""></i><span data-v-01e8bde1="">复制文章</span></button></div><div class="article-meta__tags" data-v-01e8bde1=""><!--[--><span class="article-tag" data-v-01e8bde1=""> # Bash</span><span class="article-tag" data-v-01e8bde1=""> # Shell</span><span class="article-tag" data-v-01e8bde1=""> # 脚本编程</span><span class="article-tag" data-v-01e8bde1=""> # 教程</span><!--]--></div></div><div class="markdown-body" data-v-01e8bde1=""><h1>Bash 编程：变量、条件、循环与实用脚本</h1>
+<p>Bash 脚本把命令行操作组织成可复用的程序，是自动化批处理的核心工具。本文从脚本基础到实战，覆盖变量、条件、循环、函数与常见任务。</p>
+<h2>1. 脚本基础</h2>
+<h3>1.1 脚本结构</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 第一行 shebang：指定解释器</span>
+
+<span class="hljs-comment"># 给脚本执行权限</span>
+<span class="hljs-built_in">chmod</span> +x myscript.sh
+<span class="hljs-comment"># 运行</span>
+./myscript.sh
+<span class="hljs-comment"># 或用 bash 直接运行（无需执行权限）</span>
+bash myscript.sh
+</code></pre>
+<h3>1.2 调试</h3>
+<pre><code class="hljs language-bash">bash -x script.sh    <span class="hljs-comment"># 跟踪执行，显示每条命令</span>
+<span class="hljs-comment"># 脚本内开启：set -x（跟踪）/ set -e（出错即退出）/ set -u（未定义变量报错）</span>
+</code></pre>
+<p>生产脚本推荐在开头加：</p>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">set</span> -euo pipefail   <span class="hljs-comment"># 出错即停、未定义变量报错、管道失败检测</span>
+</code></pre>
+<h2>2. 变量</h2>
+<h3>2.1 定义与引用</h3>
+<pre><code class="hljs language-bash">name=<span class="hljs-string">"zorrooz"</span>        <span class="hljs-comment"># 注意：= 两边不能有空格</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Hello, <span class="hljs-variable">$name</span>"</span>   <span class="hljs-comment"># 双引号内变量展开</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">'Hello, $name'</span>   <span class="hljs-comment"># 单引号内原样输出</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"长度: <span class="hljs-variable">${#name}</span>"</span> <span class="hljs-comment"># 字符串长度</span>
+</code></pre>
+<h3>2.2 命令替换与算术</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 命令替换：$(...)</span>
+today=$(<span class="hljs-built_in">date</span> +%F)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"今天是 <span class="hljs-variable">$today</span>"</span>
+files=$(<span class="hljs-built_in">ls</span> | <span class="hljs-built_in">wc</span> -l)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"共 <span class="hljs-variable">$files</span> 个文件"</span>
+
+<span class="hljs-comment"># 算术：$((...))</span>
+a=10
+b=3
+<span class="hljs-built_in">echo</span> $((a + b))    <span class="hljs-comment"># 13</span>
+<span class="hljs-built_in">echo</span> $((a % b))    <span class="hljs-comment"># 1</span>
+</code></pre>
+<h3>2.3 位置参数</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"脚本名: <span class="hljs-variable">$0</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"第一个参数: <span class="hljs-variable">$1</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"第二个参数: <span class="hljs-variable">$2</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"所有参数: <span class="hljs-variable">$@</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"参数个数: <span class="hljs-variable">$#</span>"</span>
+
+<span class="hljs-comment"># 运行：./script.sh file1 file2</span>
+</code></pre>
+<h3>2.4 特殊变量</h3>
+<pre><code class="hljs language-bash">$?    <span class="hljs-comment"># 上一条命令的退出码（0 成功，非 0 失败）</span>
+$$    <span class="hljs-comment"># 当前进程 PID</span>
+$!    <span class="hljs-comment"># 后台进程 PID</span>
+</code></pre>
+<h2>3. 条件判断</h2>
+<h3>3.1 if / elif / else</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+score=<span class="hljs-variable">$1</span>
+
+<span class="hljs-keyword">if</span> (( score &gt;= <span class="hljs-number">90</span> )); <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"优秀"</span>
+<span class="hljs-keyword">elif</span> (( score &gt;= <span class="hljs-number">60</span> )); <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"及格"</span>
+<span class="hljs-keyword">else</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"不及格"</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<h3>3.2 test 表达式</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 文件判断</span>
+[ -f file.txt ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"是普通文件"</span>
+[ -d <span class="hljs-built_in">dir</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"是目录"</span>
+[ -e path ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"存在"</span>
+[ -s file ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"非空文件"</span>
+
+<span class="hljs-comment"># 字符串比较</span>
+[ <span class="hljs-string">"<span class="hljs-variable">$name</span>"</span> = <span class="hljs-string">"zorrooz"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"匹配"</span>
+[ -z <span class="hljs-string">"<span class="hljs-variable">$var</span>"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"变量为空"</span>     <span class="hljs-comment"># -n 非空</span>
+
+<span class="hljs-comment"># 数值比较（[ ] 内）</span>
+[ <span class="hljs-string">"<span class="hljs-variable">$a</span>"</span> -gt <span class="hljs-string">"<span class="hljs-variable">$b</span>"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"a &gt; b"</span>    <span class="hljs-comment"># -eq -ne -gt -ge -lt -le</span>
+
+<span class="hljs-comment"># 逻辑组合</span>
+[ -f <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] &amp;&amp; [ -s <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"非空文件"</span>
+[ -f <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] || <span class="hljs-built_in">echo</span> <span class="hljs-string">"文件不存在"</span>
+</code></pre>
+<h3>3.3 case 分支</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-keyword">case</span> <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> <span class="hljs-keyword">in</span>
+  start)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"启动服务"</span>
+    ;;
+  stop|<span class="hljs-built_in">kill</span>)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"停止服务"</span>
+    ;;
+  *)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"用法: <span class="hljs-variable">$0</span> {start|stop}"</span>
+    <span class="hljs-built_in">exit</span> 1
+    ;;
+<span class="hljs-keyword">esac</span>
+</code></pre>
+<h2>4. 循环</h2>
+<h3>4.1 for 循环</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 遍历列表</span>
+<span class="hljs-keyword">for</span> fruit <span class="hljs-keyword">in</span> apple banana cherry; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"处理 <span class="hljs-variable">$fruit</span>"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-comment"># 遍历范围</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..5}; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"第 <span class="hljs-variable">$i</span> 次"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-comment"># 遍历文件（最常用）</span>
+<span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> *.fasta; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"处理 <span class="hljs-variable">$file</span>"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-comment"># C 风格</span>
+<span class="hljs-keyword">for</span> ((i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++)); <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h3>4.2 while 循环</h3>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 逐行读取文件</span>
+<span class="hljs-keyword">while</span> IFS= <span class="hljs-built_in">read</span> -r line; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"读取: <span class="hljs-variable">$line</span>"</span>
+<span class="hljs-keyword">done</span> &lt; input.txt
+
+<span class="hljs-comment"># 计数循环</span>
+count=0
+<span class="hljs-keyword">while</span> [ <span class="hljs-variable">$count</span> -lt 5 ]; <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$count</span>
+    count=$((count + <span class="hljs-number">1</span>))
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h3>4.3 break / continue</h3>
+<pre><code class="hljs language-bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..10}; <span class="hljs-keyword">do</span>
+    [ <span class="hljs-variable">$i</span> -eq 3 ] &amp;&amp; <span class="hljs-built_in">continue</span>   <span class="hljs-comment"># 跳过 3</span>
+    [ <span class="hljs-variable">$i</span> -eq 7 ] &amp;&amp; <span class="hljs-built_in">break</span>      <span class="hljs-comment"># 到 7 终止</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h2>5. 函数</h2>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+
+<span class="hljs-comment"># 定义函数</span>
+<span class="hljs-function"><span class="hljs-title">greet</span></span>() {
+    <span class="hljs-built_in">local</span> name=<span class="hljs-variable">$1</span>           <span class="hljs-comment"># local：局部变量</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Hello, <span class="hljs-variable">$name</span>!"</span>
+    <span class="hljs-built_in">return</span> 0                <span class="hljs-comment"># 返回值（退出码）</span>
+}
+
+<span class="hljs-comment"># 调用</span>
+greet <span class="hljs-string">"zorrooz"</span>
+
+<span class="hljs-comment"># 函数返回数值（注意：不是 return，是 echo 捕获）</span>
+<span class="hljs-function"><span class="hljs-title">add</span></span>() {
+    <span class="hljs-built_in">echo</span> $(( <span class="hljs-variable">$1</span> + <span class="hljs-variable">$2</span> ))
+}
+result=$(add 3 4)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"3 + 4 = <span class="hljs-variable">$result</span>"</span>
+</code></pre>
+<h2>6. 数组与字符串</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 数组</span>
+genes=(<span class="hljs-string">"TP53"</span> <span class="hljs-string">"BRCA1"</span> <span class="hljs-string">"EGFR"</span>)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${genes[0]}</span>"</span>          <span class="hljs-comment"># TP53</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${genes[@]}</span>"</span>          <span class="hljs-comment"># 所有元素</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${#genes[@]}</span>"</span>         <span class="hljs-comment"># 长度</span>
+genes+=(<span class="hljs-string">"MYC"</span>)              <span class="hljs-comment"># 追加</span>
+
+<span class="hljs-comment"># 字符串处理</span>
+<span class="hljs-built_in">seq</span>=<span class="hljs-string">"ATGCCGTAA"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq:0:3}</span>"</span>           <span class="hljs-comment"># 截取前 3 个字符：ATG</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq//T/U}</span>"</span>          <span class="hljs-comment"># 全部替换 T→U</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq/AT/XX}</span>"</span>         <span class="hljs-comment"># 替换第一个 AT</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">${seq^^}</span>"</span>             <span class="hljs-comment"># 转大写（bash 4+）</span>
+</code></pre>
+<h2>7. 实战脚本</h2>
+<h3>7.1 批量重命名</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 把所有 .txt 后缀改为 .log</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+
+<span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> *.txt; <span class="hljs-keyword">do</span>
+    [ -e <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> ] || <span class="hljs-built_in">continue</span>          <span class="hljs-comment"># 无匹配时跳过</span>
+    <span class="hljs-built_in">mv</span> <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span> <span class="hljs-string">"<span class="hljs-variable">${file%.txt}</span>.log"</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"重命名: <span class="hljs-variable">$file</span> -&gt; <span class="hljs-variable">${file%.txt}</span>.log"</span>
+<span class="hljs-keyword">done</span>
+</code></pre>
+<h3>7.2 生信批处理：批量跑 FASTQ 质控</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 用法: ./qc_pipeline.sh data_dir output_dir</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+
+DATA_DIR=<span class="hljs-variable">${1:?"请提供数据目录"}</span>
+OUT_DIR=<span class="hljs-variable">${2:?"请提供输出目录"}</span>
+<span class="hljs-built_in">mkdir</span> -p <span class="hljs-string">"<span class="hljs-variable">$OUT_DIR</span>"</span>
+
+<span class="hljs-keyword">for</span> fq <span class="hljs-keyword">in</span> <span class="hljs-string">"<span class="hljs-variable">$DATA_DIR</span>"</span>/*_R1.fastq.gz; <span class="hljs-keyword">do</span>
+    base=$(<span class="hljs-built_in">basename</span> <span class="hljs-string">"<span class="hljs-variable">$fq</span>"</span> _R1.fastq.gz)
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"=== 处理样本: <span class="hljs-variable">$base</span> ==="</span>
+
+    fastqc -o <span class="hljs-string">"<span class="hljs-variable">$OUT_DIR</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$fq</span>"</span>
+    fastqc -o <span class="hljs-string">"<span class="hljs-variable">$OUT_DIR</span>"</span> <span class="hljs-string">"<span class="hljs-variable">${DATA_DIR}</span>/<span class="hljs-variable">${base}</span>_R2.fastq.gz"</span>
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"全部完成，结果位于 <span class="hljs-variable">$OUT_DIR</span>"</span>
+</code></pre>
+<h3>7.3 日志监控与告警</h3>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 监控日志中 ERROR 数量，超过阈值打印告警</span>
+LOG_FILE=<span class="hljs-string">"app.log"</span>
+THRESHOLD=<span class="hljs-variable">${1:-10}</span>
+
+count=$(grep -c <span class="hljs-string">"ERROR"</span> <span class="hljs-string">"<span class="hljs-variable">$LOG_FILE</span>"</span> || <span class="hljs-literal">true</span>)
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"当前 ERROR 数量: <span class="hljs-variable">$count</span>"</span>
+
+<span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$count</span>"</span> -gt <span class="hljs-string">"<span class="hljs-variable">$THRESHOLD</span>"</span> ]; <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"⚠️ 错误数量超过阈值 <span class="hljs-variable">$THRESHOLD</span>！"</span>
+    <span class="hljs-built_in">exit</span> 1
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<h2>8. 常见坑位提醒</h2>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 1. 变量赋值等号两边不能有空格</span>
+name = <span class="hljs-string">"x"</span>    <span class="hljs-comment"># 错误！会被当成命令</span>
+name=<span class="hljs-string">"x"</span>      <span class="hljs-comment"># 正确</span>
+
+<span class="hljs-comment"># 2. 引号：路径含空格必须加引号</span>
+file=<span class="hljs-string">"my data.txt"</span>
+<span class="hljs-built_in">cat</span> <span class="hljs-string">"<span class="hljs-variable">$file</span>"</span>   <span class="hljs-comment"># 正确</span>
+<span class="hljs-built_in">cat</span> <span class="hljs-variable">$file</span>     <span class="hljs-comment"># 错误：拆成两个参数</span>
+
+<span class="hljs-comment"># 3. [ ] 内部两端必须有空格</span>
+[ <span class="hljs-string">"<span class="hljs-variable">$a</span>"</span> = <span class="hljs-string">"<span class="hljs-variable">$b</span>"</span> ]   <span class="hljs-comment"># 正确</span>
+[<span class="hljs-string">"<span class="hljs-variable">$a</span>"</span>=<span class="hljs-string">"<span class="hljs-variable">$b</span>"</span>]       <span class="hljs-comment"># 错误</span>
+
+<span class="hljs-comment"># 4. 管道中 set -e 的坑：grep 无匹配返回非 0 会中断</span>
+grep <span class="hljs-string">"x"</span> file || <span class="hljs-literal">true</span>    <span class="hljs-comment"># 显式容忍</span>
+</code></pre>
+<h2>9. 小结</h2>
+<ul>
+<li>脚本头：<code>#!/bin/bash</code> + <code>set -euo pipefail</code></li>
+<li>变量：<code>$name</code>、<code>${#name}</code>、<code>$(cmd)</code>、<code>$((...))</code></li>
+<li>判断：<code>[ 条件 ]</code>、<code>(( 算术 ))</code>、<code>case</code></li>
+<li>循环：<code>for file in *.txt</code>、<code>while read line</code></li>
+<li>函数：<code>local</code> 变量、echo 捕获返回值</li>
+</ul>
+<p>至此编程方向教程完成：Python ×3、R ×3、Linux ×1、Bash ×1，从零到实战。</p></div><nav class="article-navigation" data-v-01e8bde1=""><!----><a href="/zh/article/notes/Programming/linux/linux-basics" class="article-nav-item prev" data-v-01e8bde1=""><div class="nav-arrow" data-v-01e8bde1=""><i class="fas fa-arrow-left" data-v-01e8bde1=""></i></div><div class="nav-details" data-v-01e8bde1=""><div class="nav-label" data-v-01e8bde1="">上一页</div><div class="nav-title" data-v-01e8bde1="">Linux 命令行基础：文件系统、权限与文本处理</div></div></a><!----></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-01e8bde1=""><div class="sticky-sidebar" data-v-01e8bde1=""><div class="toc-container mt-0" data-v-01e8bde1=""><nav class="on-this-page" data-v-01e8bde1="" data-v-8e56cd8b=""><div class="otp-content" data-v-8e56cd8b=""><span class="otp-marker" aria-hidden="true" data-v-8e56cd8b=""></span><div class="otp-header" data-v-8e56cd8b=""><span class="otp-title" data-v-8e56cd8b="">本页目录</span></div><ul class="otp-list" data-v-8e56cd8b=""><!--[--><!--]--></ul></div></nav></div></div></div></div><!--[--><button class="floating-btn d-flex align-items-center justify-content-center d-lg-none" aria-label="打开目录" style="top:864px;display:none;" data-v-2d948131="" data-v-c4c6a9da=""><!--[--><i class="fas fa-bookmark" data-v-2d948131=""></i><!--]--></button><!----><!--]--></div></main><footer class="site-footer" data-v-41a9b5b1="" data-v-c2ed6d91=""><div class="container" data-v-c2ed6d91=""><div class="site-footer__inner" data-v-c2ed6d91=""><p class="footer-copy" data-v-c2ed6d91="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-c2ed6d91=""><p class="footer-designed__text" data-v-c2ed6d91="">由<strong class="footer-designed__name" data-v-c2ed6d91="">zorrooz</strong>设计</p><div class="footer-designed__icons" data-v-c2ed6d91=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-c2ed6d91=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-c2ed6d91=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-c2ed6d91=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-c2ed6d91=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a></div></div></div></div></footer><button class="floating-btn d-flex align-items-center justify-content-center" aria-label="回到顶部" style="top:924px;display:none;" data-v-41a9b5b1="" data-v-c4c6a9da=""><!--[--><i class="fas fa-arrow-up"></i><!--]--></button><!----></div></div>
+<script>window.__INITIAL_STATE__="{\"pinia\":{\"theme\":{\"theme\":\"auto\"},\"locale\":{\"locale\":\"zh-CN\"}}}"</script>
+  
+
+</body></html>
