@@ -48,16 +48,13 @@ src/                      # 浏览器应用（含 SSR；不含 Node 构建脚本
 
 ```
 scripts/                  # Node 工具链（Node >=23.6 原生 type stripping 直跑 .ts）
-├── lib/                  # llm / fs / text / cli / frontmatter（含 sanitizeFrontmatter）/ tags
-│                         # / tagMapping / yamlEntries / yamlJson（YAML→JSON 骨架）/ metadata（projects/topics）
 ├── dataConfig.ts         # 数据目录唯一接入点（GBLOG_DATA_DIR；contentSrcDir/enSrcDir/contentDir/cacheDir）
-├── markdownProcessor.ts  # unified pipeline: remark → rehype（构建期专用，客户端勿 import）
-├── runAllGenerators.ts   # 生成器编排（locale 步骤表 + 依赖顺序）
-├── packArticle.ts        # 导出文章 CLI
+├── runAllGenerators.ts   # 生成器编排（locale 步骤表 + 依赖顺序；vite dev 插件复用）
 ├── llmConfig.ts          # DeepSeek API 配置（gitignore，勿提交）
-├── generators/           # core/（兼容 barrel，实现已迁 scripts/lib/）+ 11 个生成器
-├── translator/           # AI 翻译（translator/translatorCli/translatorConfig）
-└── tagMerger/            # 标签映射（tagMerger/tagMergerCli）
+├── lib/                  # 共享工具层：llm / fs / text / cli / frontmatter（含 sanitizeFrontmatter）/ tags
+│                         # / tagMapping / yamlEntries / yamlJson（YAML→JSON 骨架）/ metadata（projects/topics）
+├── generators/           # 11 个生成器 + markdownProcessor（md→HTML 渲染管线）+ core/（兼容 barrel）
+└── tools/                # 独立 CLI 内容工具：packArticle（导出）/ translator（AI 翻译）/ tagMerger（标签映射）
 
 vite/contentDevPlugin.ts  # dev 插件：监听数据目录 → runAllGenerators → full-reload
 ```
@@ -132,6 +129,7 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 ## 布局与形状规则（硬性）
 
 - **内容宽度**：内容页 `.page-section` 1120px（pad 48/32/20）；文章页 container 1280px、正文 `.article-content` **780px** 居中、左右 sidebar 各 **240px**；移动端水平边距全局统一 20px
+- **标题层级**：文章标题 `.article-title` clamp(30-40px)；正文 H1 32 / H2 24 / H3 20 / H4 18 / H5 17 / H6 14（移动端 ≤768：24/21/19，≤576：22/19/18；正文 16px）
 - **圆角分层**：控件 6 / 按钮 8 / 卡片 12 / 面板 16 / 胶囊 full；圆形（50%）仅用于图标操作按钮，方形按钮一律 8px，同一容器不混用
 - **侧栏导航/TOC**：分组标题 13px 加粗正文；条目 13px 纯文字链接（无圆角底块），hover 变主色，激活 = 主色 + 左侧 2px 指示条（不加粗）；可折叠目录 caret 旋转；`.tree-sublist` 导轨 `border-left` + padding-left 16px，激活条 `left: -17px`；TOC 链接 13px 换行显示（不截断）
 - **卡片 hover**：仅边框变主色微光（无背景变化、无阴影）；浮动层（抽屉/弹窗/浮动按钮）才用阴影

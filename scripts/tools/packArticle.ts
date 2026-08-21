@@ -12,8 +12,8 @@ import path from 'path'
 import { Command } from 'commander'
 import JSZip from 'jszip'
 
-import { contentSrcDir, dataDir } from './dataConfig.ts'
-import { mdFileFilter, walk } from './generators/core/index.ts'
+import { contentSrcDir, dataDir } from '../dataConfig.ts'
+import { mdFileFilter, walk } from '../generators/core/index.ts'
 
 const IMG_RE = /\.(png|jpe?g|gif|svg|webp)([?#].*)?$/i
 const DEFAULT_OUT = path.join(dataDir, 'exports')

@@ -10,7 +10,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { contentDir, srcDirFor } from '../dataConfig.ts'
-import { renderMarkdown } from '../markdownProcessor.ts'
+import { renderMarkdown } from './markdownProcessor.ts'
 import {
   ensureDirectoryExistence,
   isDirectRun,

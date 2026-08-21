@@ -73,7 +73,7 @@ export async function runAllGenerators() {
       return
     }
     try {
-      const { default: manager } = await import('./translator/translator.ts')
+      const { default: manager } = await import('./tools/translator/translator.ts')
       await manager.translate(contentSrcDir, { skipExisting: true })
     } catch (err) {
       console.warn('[Warn] incremental translation failed (build continues):', err)
@@ -84,7 +84,7 @@ export async function runAllGenerators() {
   await runStep('tag-mapping', async () => {
     if (process.env.GBLOG_NO_TRANSLATE === '1') return
     try {
-      const { ensureTagTranslation } = await import('./tagMerger/tagMerger.ts')
+      const { ensureTagTranslation } = await import('./tools/tagMerger/tagMerger.ts')
       await ensureTagTranslation()
     } catch (err) {
       console.warn('[Warn] tag mapping sync failed (en 标签将保持中文):', err)
@@ -95,7 +95,7 @@ export async function runAllGenerators() {
   await runStep('tag-consistency', async () => {
     if (process.env.GBLOG_NO_TRANSLATE === '1') return
     try {
-      const { fixTagConsistency } = await import('./tagMerger/tagMerger.ts')
+      const { fixTagConsistency } = await import('./tools/tagMerger/tagMerger.ts')
       fixTagConsistency()
     } catch (err) {
       console.warn('[Warn] tag consistency fix failed:', err)

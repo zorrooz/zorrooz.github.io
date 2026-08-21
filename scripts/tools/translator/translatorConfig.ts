@@ -1,10 +1,10 @@
-/**
+﻿/**
  * 翻译器配置文件
  */
 
 import path from 'path'
 
-import { contentSrcDir, EN_SUFFIX } from '../dataConfig.ts'
+import { contentSrcDir, EN_SUFFIX } from '../../dataConfig.ts'
 
 // 支持的翻译配置
 export const TRANSLATION_CONFIG = {

@@ -75,8 +75,8 @@ npm run data:deploy     # 提交推送 data 分支 → GitHub Actions 自动构�
 
 ```
 src/            浏览器应用（Vue 3 + Pinia + vue-i18n；含 SSR，无 Node 构建脚本）
-scripts/        Node 内容工具链：lib/（共享层）、generators/（11 个生成器）、
-                translator/（AI 翻译）、tagMerger/（标签映射）、packArticle.ts（导出）
+scripts/        Node 内容工具链：lib/（共享层）、generators/（11 个生成器 + 渲染管线）、
+                tools/（pack 导出 / AI 翻译 / 标签映射，独立 CLI）
 vite/           contentDevPlugin（dev 监听数据目录 → 重跑生成器）
 .github/        CI：main + data 双检出 → prebuild + build → 部署 gh-pages
 ```

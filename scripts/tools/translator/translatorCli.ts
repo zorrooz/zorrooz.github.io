@@ -1,6 +1,6 @@
-import { TranslationManager, needsTranslation } from './translator.ts'
+﻿import { TranslationManager, needsTranslation } from './translator.ts'
 import { TRANSLATION_CONFIG, TRANSLATION_TARGETS } from './translatorConfig.ts'
-import { cacheDir } from '../dataConfig.ts'
+import { cacheDir } from '../../dataConfig.ts'
 import { Command } from 'commander'
 import path from 'path'
 import fs from 'fs/promises'

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TagMerger — AI 辅助标签合并工具（核心逻辑）
  *
  * 收集博客全部标签（notes md frontmatter + categories.yaml 的 projects/topics tags），
@@ -9,12 +9,12 @@ import fs from 'fs'
 import path from 'path'
 import yaml from 'js-yaml'
 
-import { contentSrcDir, cacheDir, enSrcDir, localeSuffix, EN_SUFFIX } from '../dataConfig.ts'
-import { walk, parseFrontMatterAndBody, normalizeTags } from '../generators/core/index.ts'
-import { completeChat, loadLlmConfig, type LlmConfig } from '../lib/llm.ts'
-import { rewriteFrontmatterTags } from '../lib/frontmatter.ts'
-import { countTags } from '../lib/tags.ts'
-import { loadTagMapping, type TagMapping } from '../lib/tagMapping.ts'
+import { contentSrcDir, cacheDir, enSrcDir, localeSuffix, EN_SUFFIX } from '../../dataConfig.ts'
+import { walk, parseFrontMatterAndBody, normalizeTags } from '../../generators/core/index.ts'
+import { completeChat, loadLlmConfig, type LlmConfig } from '../../lib/llm.ts'
+import { rewriteFrontmatterTags } from '../../lib/frontmatter.ts'
+import { countTags } from '../../lib/tags.ts'
+import { loadTagMapping, type TagMapping } from '../../lib/tagMapping.ts'
 
 export { type TagMapping }
 

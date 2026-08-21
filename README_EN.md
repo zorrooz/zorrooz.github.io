@@ -75,8 +75,8 @@ npm run data:deploy     # commit & push data branch → GitHub Actions builds an
 
 ```
 src/            browser app (Vue 3 + Pinia + vue-i18n; incl. SSR, no Node build scripts)
-scripts/        Node content toolchain: lib/ (shared), generators/ (11 generators),
-                translator/ (AI translation), tagMerger/ (tag mapping), packArticle.ts (export)
+scripts/        Node content toolchain: lib/ (shared), generators/ (11 generators + render pipeline),
+                tools/ (pack export / AI translation / tag mapping, standalone CLIs)
 vite/           contentDevPlugin (dev watcher → regenerate → full-reload)
 .github/        CI: checkout main + data → prebuild + build → deploy gh-pages
 ```

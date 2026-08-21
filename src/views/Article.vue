@@ -573,7 +573,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.markdown-body h1) {
-  font-size: var(--text-4xl);
+  font-size: 32px;
   font-weight: 700;
   margin-top: 3rem;
   margin-bottom: 1.25rem;
@@ -581,7 +581,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.markdown-body h2) {
-  font-size: var(--text-2xl);
+  font-size: 24px;
   font-weight: 700;
   margin-top: 2.75rem;
   margin-bottom: 1rem;
@@ -764,11 +764,11 @@ onBeforeUnmount(() => {
   }
 
   :deep(.markdown-body h1) {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   :deep(.markdown-body h2) {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   :deep(.markdown-body h3) {
@@ -782,11 +782,11 @@ onBeforeUnmount(() => {
   }
 
   :deep(.markdown-body h1) {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   :deep(.markdown-body h2) {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   :deep(.markdown-body h3) {

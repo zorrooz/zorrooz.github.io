@@ -1,12 +1,12 @@
-import fs from 'fs/promises'
+﻿import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import { cacheDir, contentSrcDir, enSrcDir } from '../dataConfig.ts'
-import { completeChat } from '../lib/llm.ts'
-import { rewriteFrontmatterTags, sanitizeFrontmatter } from '../lib/frontmatter.ts'
-import { loadTagMapping } from '../lib/tagMapping.ts'
-import { walkAsync } from '../lib/fs.ts'
+import { cacheDir, contentSrcDir, enSrcDir } from '../../dataConfig.ts'
+import { completeChat } from '../../lib/llm.ts'
+import { rewriteFrontmatterTags, sanitizeFrontmatter } from '../../lib/frontmatter.ts'
+import { loadTagMapping } from '../../lib/tagMapping.ts'
+import { walkAsync } from '../../lib/fs.ts'
 
 /** 翻译一段文本（md 或 yaml），返回英文结果 */
 async function translateText(text: string, fileType = 'md'): Promise<string> {
