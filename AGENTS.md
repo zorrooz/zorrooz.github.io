@@ -255,7 +255,7 @@ SEO title 统一走 `usePageMeta`（i18n meta.* 键 + `BLOG_TITLE`）。
 - `scroll.ts`：`scrollToTop()`、`scrollToHeading(el, offset)`（reduce-motion 感知 + 锁延迟）、`isScrollLocked()`、`lock/unlockScrollOverflow`、`lock/unlockScrollPosition`；`clipboard.ts`：`copyText(): Promise<boolean>`
 - composables：`useLocalizedContent`（内容页加载模式）、`usePageMeta`（SEO title）、`useSearch`（MiniSearch + locale 重建）、`useTagNavigation`、`useCopyFeedback`、`useFloatingButton`（`FLOATING_BASE_EVENT` 常量）
 - `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string（构建期专用，客户端勿 import）
-- `useThemeStore`: `theme: ThemeMode`, `toggleTheme()`, `initTheme()`；`useLocaleStore`: `locale`, `setLocale()`, `initLocale()`
+- `useThemeStore`: `theme: ThemeMode`, `toggleTheme()`, `initTheme()`（**必须以 localStorage 为准覆盖**：SSR 预渲染内嵌的 pinia state 恒为 `auto`，hydrate 会覆盖客户端初始值，`initTheme` 里重新读 `initialTheme()` 才能持久化）；`useLocaleStore`: `locale`, `setLocale()`, `initLocale()`
 
 ## Layout & Shape Conventions（布局与形状规则）
 
@@ -297,11 +297,18 @@ SEO title 统一走 `usePageMeta`（i18n meta.* 键 + `BLOG_TITLE`）。
 ### 卡片与 hover（首页 editorial 语言）
 
 - 卡片（cat-card / res-card / about-cell / article-nav-item / Bootstrap `.card`）：hover = 仅边框变主色微光，**无背景变化、无阴影**；浮动层（抽屉/弹窗/浮动按钮）才用阴影
-- 首页 post-item：无边框卡片，行间 hairline 分隔 + 序号（等宽灰）+ hover 标题/箭头变主色（基准风格，其他页面向其看齐）
+- 首页 post-item：无边框卡片，行间 hairline 分隔 + 序号（等宽灰）+ hover 标题变主色、箭头 `translateX(3px)` 微位移（基准风格，其他页面向其看齐）
+
+### 动效与无障碍
+
+- **v-reveal 入场**（`main.ts` 指令 + `global.scss` keyframes）：`opacity 0→1 + translateY(14px)→0 + blur(5px)→0`，`--reveal-delay` 做 stagger；`prefers-reduced-motion` 用户由指令直接跳过（不挂类）。
+- **skip link**：`App.vue` 的 `.skip-link`（Tab 聚焦时显示，`main#main-content` 为目标）；新增全局可访问入口时保留该约定。
+- 所有交互元素：hover/active/focus-visible 三态齐全；过渡 140-220ms（`--dur-fast`/`--dur-base`）；滚动平滑走 `scrollToHeading`（reduce-motion 感知）。
 
 ### 404
 
 - 语言前缀下的未知路径 → `NotFound.vue`（品牌 404：巨型 serif 数字 + 说明 + 返回首页 pill）；无前缀未知路径先补 locale 前缀再落入 404；`dist/404.html` 由构建 onFinished 复制 index.html 生成
+- **返回按钮 `flex: none` 不可移除**：App.vue 的 `.main-content > * > * { flex: 1 }` 链式布局会拉伸 404 短页面的最后一个子元素（曾出现 200px 高的大椭圆 pill）
 
 ### 字体
 

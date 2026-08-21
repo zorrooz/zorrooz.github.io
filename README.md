@@ -26,6 +26,7 @@ gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所
 - **PWA 离线**：vite-plugin-pwa 自动生成 Service Worker，内容产物预缓存
 - **自动翻译**：DeepSeek API 增量翻译（内容哈希判定，零成本跳过未变化文件）
 - **Obsidian 写作**：vault 直接指向内容源（`content-src`），模板 / assets 集中配图 / `data:pack` 打包命令，边写边预览
+- **无障碍与质感**：skip-to-content 键盘入口、焦点环、reduce-motion 感知动效；页头氛围光 + 微纹理 + blur 入场
 - **响应式设计**：桌面/平板/移动端统一边距与断点
 
 ### 🛠️ 技术栈

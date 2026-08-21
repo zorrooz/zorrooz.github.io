@@ -26,6 +26,7 @@ gblog uses a **code/data dual-branch** architecture: the `main` branch contains 
 - **PWA Offline**: vite-plugin-pwa auto-generates a Service Worker and precaches content artifacts
 - **Auto Translation**: DeepSeek API incremental translation keyed on content hashes (untouched files cost nothing to skip)
 - **Obsidian Authoring**: point a vault at `content-src` — templates, central `assets/` images, and the `data:pack` command; write and preview side by side
+- **Accessibility & Polish**: skip-to-content keyboard entry, focus rings, reduce-motion-aware motion; ambient header light, micro-grain texture, blur entrance
 - **Responsive Design**: unified margins and breakpoints across desktop / tablet / mobile
 
 ### 🛠️ Tech Stack
