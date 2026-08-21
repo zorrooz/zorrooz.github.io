@@ -25,6 +25,7 @@ gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所
 - **完整阅读体验**：三栏文章布局（目录树 + 正文 + OnThisPage）、TOC 抽屉、阅读时长、标签筛选、回到顶部
 - **PWA 离线**：vite-plugin-pwa 自动生成 Service Worker，内容产物预缓存
 - **自动翻译**：DeepSeek API 增量翻译（内容哈希判定，零成本跳过未变化文件）
+- **Obsidian 写作**：vault 直接指向内容源（`content-src`），模板 / assets 集中配图 / `data:pack` 打包命令，边写边预览
 - **响应式设计**：桌面/平板/移动端统一边距与断点
 
 ### 🛠️ 技术栈
@@ -52,31 +53,40 @@ gblog 采用 **代码/数据双分支** 架构：`main` 分支只含代码，所
 src/                          # 浏览器应用（含 SSR；不含任何 Node 构建脚本）
 ├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n（内联 v-reveal 指令）
 ├── App.vue                   # AppHeader + router-view + AppFooter
-├── router/index.ts           # /{zh,en} × 5 路由 + 旧 URL 重定向
-├── i18n/                     # vue-i18n 实例 + locales/{zh-CN,en-US}.ts
+├── router/index.ts           # /{zh,en} × 5 路由 + 旧 URL 重定向 + 旧文章 URL 自动跳转
+├── locale.ts                 # 「当前 locale」单一事实来源（注入 → localStorage → 默认）
+├── i18n/                     # vue-i18n + schema（语言包编译期键校验）+ locales/{zh-CN,en-US}.ts
 ├── stores/                   # theme.ts / locale.ts（Pinia）
-├── config.ts                 # SITE 常量、locale 映射、主题模式
+├── config.ts                 # SITE/BLOG_TITLE、locale 映射、主题模式、ARTICLE_ROUTE_PREFIX/HEADER_OFFSET 常量
 ├── types.ts                  # 与 content/*.json 产物一一对应的领域类型
 ├── views/                    # Home / Category / Resource / About / Article
 ├── components/
-│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList,
-│   │                         # RenderMarkdown, NavigationTree, OnThisPage
-│   └── widgets/              # BackToTop, SearchModal, TocDrawer
-├── composables/              # useFloatingButton / useLocalizedContent
-├── utils/                    # 浏览器运行时工具（不 import scripts/）
+│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList, RenderMarkdown,
+│   │                         # NavigationTree, TreeNode（递归目录树）, OnThisPage
+│   ├── widgets/              # BackToTop, SearchModal, TocDrawer, FloatingButton（共享浮动按钮）
+│   └── common/               # IconButton, ModalOverlay, PostCard, Pagination, EmptyState
+├── composables/              # useLocalizedContent / usePageMeta / useSearch / useTagNavigation
+│                             # / useCopyFeedback / useFloatingButton
+├── utils/                    # 浏览器运行时纯工具（不 import scripts/）
 │   ├── contentLoader.ts      # import.meta.glob 强类型加载（@data 别名）
-│   ├── navigation.ts         # 语言前缀路径、语言切换、tag 跳转、文章路径转换
-│   ├── scroll.ts             # 回到顶部 + 弹层滚动锁定
-│   ├── clipboard.ts          # 复制（Clipboard API + 回退）
+│   ├── navigation.ts         # 语言前缀路径、语言切换、tag 跳转、toArticle/normalizeArticleKey
+│   ├── articles.ts           # flattenCategoryArticles（分类 → 文章列表展开）
+│   ├── icons.ts              # 操作图标 path 单一来源（stroke SVG 规范）
+│   ├── pagination.ts         # getVisiblePages 窗口化分页纯函数
+│   ├── format.ts / tags.ts / url.ts  # 数字缩写 / 标签云 / URL·DOI 规范化
+│   ├── scroll.ts             # scrollToTop/scrollToHeading（reduce-motion 感知）+ 弹层滚动锁定
+│   ├── clipboard.ts          # copyText（Clipboard API + 回退，Promise<boolean>）
 │   └── readingTime.ts        # 阅读时长估算
 └── assets/                   # 字体 OTF / styles / avatar
 
 scripts/                      # Node 内容工具链（构建期运行，不进浏览器）
-├── dataConfig.ts             # 数据目录唯一接入点（支持 GBLOG_DATA_DIR）
+├── lib/                      # 共享工具层：llm / fs / text / cli / frontmatter / tags / tagMapping / yamlEntries
+├── dataConfig.ts             # 数据目录唯一接入点（支持 GBLOG_DATA_DIR；EN_SUFFIX 常量）
 ├── markdownProcessor.ts      # unified pipeline: md → HTML
-├── runAllGenerators.ts       # 生成器编排（顺序见下）
+├── runAllGenerators.ts       # 生成器编排（locale 步骤表，顺序见下）
+├── packArticle.ts            # 打包文章（assets 图 → 文章同目录，幂等）
 ├── llmConfig.ts              # DeepSeek API 配置（gitignore，勿提交）
-├── generators/               # core/（共享 IO）+ 11 个生成器
+├── generators/               # core/（兼容 barrel，实现已迁 scripts/lib/）+ 11 个生成器
 ├── translator/               # AI 增量翻译（CLI：translate/status/help）
 └── tagMerger/                # zh→en 标签映射补齐 + 一致性修复（CLI）
 
@@ -89,7 +99,9 @@ content-src/                  # 第一层 src：纯手写中文源（仅这里�
 │   ├── categories.yaml       # 分类 + notes/projects/topics 全部元数据
 │   ├── about.yaml            # 关于页
 │   ├── resources.yaml        # 资源页
-│   └── notes/<分类>/<子分类>/<文章>/<文章>.md
+│   ├── assets/               # 配图集中目录（Obsidian 附件默认位置；发布前 data:pack 打包进文章）
+│   ├── templates/            # Obsidian 新文章模板（new-post.md）
+│   └── notes/<分类>/<子分类>/<文章>.md   # 扁平：一篇文章一个 md（无同名目录）
 cache/                        # 第二层 cache：机器维护的持久态（入库）
 │   ├── en/                   #   英文翻译层（镜像 content-src，-en 身份后缀）
 │   ├── tag-mapping.json      #   zh→en 标签映射
@@ -203,19 +215,22 @@ CI 构建时设置 `GBLOG_NO_TRANSLATE=1` 跳过翻译与标签补齐，直接�
 
 ### Markdown 文章编写
 
-文章目录结构（目录名必须匹配 `categories.yaml` 中 notes 段的 `name` 字段）：
+文章目录结构（分类/子分类目录名必须匹配 `categories.yaml` 中 notes 段的映射；**一篇文章一个 md，直接放在子分类下，无同名目录**）：
 
 ```
 content-src/notes/
 ├── <分类标识符>/
 │   ├── <子分类>/
-│   │   └── <文章名>/
-│   │       └── <文章名>.md
+│   │   ├── <文章>.md
+│   │   └── <另一篇>.md
 │   └── <其他子分类>/
-│       └── <文章名>/
-│           └── <文章名>.md
+│       └── <文章>.md
 └── <其他分类>/
 ```
+
+**配图**：写作期统一放 `content-src/assets/`（引用 `assets/xx.png`），发布前 `npm run data:pack` 将引用图复制到文章同目录并改写引用（支持单篇/递归全部，幂等，同步改写英文镜像引用）。
+
+**Obsidian 写作**：vault 指向 `content-src` 即可直接写作——frontmatter 即 Properties、附件默认进 `assets/`、新文章用 `templates/new-post.md` 模板；保存后 `npm run dev` 自动重生成并热刷新预览。
 
 每篇文章自带 YAML frontmatter：
 

@@ -214,6 +214,8 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 ## Internationalization (Dual Layer)
 
 **Layer 1 — App:** `src/i18n/locales/{zh-CN,en-US}.ts` via vue-i18n. Controls nav, buttons, labels.
+语言包结构以 zh-CN 为基准（`src/i18n/schema.ts` 的 `AppMessages`），en-US 用 `satisfies` 做编译期键校验；
+SEO title 统一走 `usePageMeta`（i18n meta.* 键 + `BLOG_TITLE`）。
 
 **Layer 2 — Content:** locale 源目录分层（`srcDirFor(locale)`）+ `-en` 后缀身份：
 - Chinese: `content-src/article.md` → 输出 `content/categories.json`
@@ -246,11 +248,14 @@ Route: { path: '/:locale/article/:path*', name: 'zh-Article'|'en-Article', props
 6. 发布：`npm run data:deploy`（提交并推送 data 分支 → CI 自动构建部署）
 
 ### Utilities
-- `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`
-- `navigation.ts`（原 articleUrl/localePath/tagQuery 合并）：`toLocalePath()`、`switchLocale()`、`goToTag()`、`articlePathFromUrl()`、`toArticleRoutePath()`、`joinRoutePathParam()`
-- `scroll.ts`（原 scroll/scrollLock 合并）：`scrollToTop()`、`lock/unlockScrollOverflow`、`lock/unlockScrollPosition`；`clipboard.ts`：`copyText()`
-- `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string
-- `useThemeStore`: `theme`, `toggleTheme()`, `initTheme()`；`useLocaleStore`: `locale`, `setLocale()`, `initLocale()`
+- `contentLoader.ts` provides: `loadPosts()`, `loadCategories()`, `loadNotes()`, `loadTags()`, `loadAbout()`, `loadResources()`, `loadMarkdownContent()`；locale 判定统一走 `src/locale.ts` 的 `currentLocale()`
+- `navigation.ts`：`toLocalePath()`、`switchLocale()`、`goToTag()`、`toArticle()`、`normalizeArticleKey()`（去 .md/-en 后比较）、`articlePathFromUrl()`、`toArticleRoutePath()`、`joinRoutePathParam()`
+- `articles.ts`：`flattenCategoryArticles()`（分类 → 文章列表展开）；`icons.ts`：操作图标 path 单一来源（`ICON_MARKS`/`iconSvg`）
+- `pagination.ts`：`getVisiblePages()` 窗口化分页纯函数；`format.ts`/`tags.ts`/`url.ts`：数字缩写/标签云/URL·DOI 规范化
+- `scroll.ts`：`scrollToTop()`、`scrollToHeading(el, offset)`（reduce-motion 感知 + 锁延迟）、`isScrollLocked()`、`lock/unlockScrollOverflow`、`lock/unlockScrollPosition`；`clipboard.ts`：`copyText(): Promise<boolean>`
+- composables：`useLocalizedContent`（内容页加载模式）、`usePageMeta`（SEO title）、`useSearch`（MiniSearch + locale 重建）、`useTagNavigation`、`useCopyFeedback`、`useFloatingButton`（`FLOATING_BASE_EVENT` 常量）
+- `markdownProcessor.ts` export: `renderMarkdown(markdown)` → HTML string（构建期专用，客户端勿 import）
+- `useThemeStore`: `theme: ThemeMode`, `toggleTheme()`, `initTheme()`；`useLocaleStore`: `locale`, `setLocale()`, `initLocale()`
 
 ## Layout & Shape Conventions（布局与形状规则）
 

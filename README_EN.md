@@ -25,6 +25,7 @@ gblog uses a **code/data dual-branch** architecture: the `main` branch contains 
 - **Complete Reading Experience**: three-column article layout (tree nav + content + on-this-page), TOC drawer, reading time, tag filtering, back-to-top
 - **PWA Offline**: vite-plugin-pwa auto-generates a Service Worker and precaches content artifacts
 - **Auto Translation**: DeepSeek API incremental translation keyed on content hashes (untouched files cost nothing to skip)
+- **Obsidian Authoring**: point a vault at `content-src` — templates, central `assets/` images, and the `data:pack` command; write and preview side by side
 - **Responsive Design**: unified margins and breakpoints across desktop / tablet / mobile
 
 ### 🛠️ Tech Stack
@@ -52,33 +53,42 @@ gblog uses a **code/data dual-branch** architecture: the `main` branch contains 
 src/                          # Browser app (incl. SSR; no Node build scripts)
 ├── main.ts                   # Entry: ViteSSG → Pinia → Router → i18n (inline v-reveal directive)
 ├── App.vue                   # AppHeader + router-view + AppFooter
-├── router/index.ts           # /{zh,en} × 5 routes + legacy URL redirects
-├── i18n/                     # vue-i18n instance + locales/{zh-CN,en-US}.ts
+├── router/index.ts           # /{zh,en} × 5 routes + legacy URL redirects + old article URL redirect
+├── locale.ts                 # Single source of truth for the current locale (injected → localStorage → default)
+├── i18n/                     # vue-i18n + schema (compile-time key checks) + locales/{zh-CN,en-US}.ts
 ├── stores/                   # theme.ts / locale.ts (Pinia)
-├── config.ts                 # SITE constants, locale maps, theme modes
+├── config.ts                 # SITE/BLOG_TITLE, locale maps, theme modes, ARTICLE_ROUTE_PREFIX/HEADER_OFFSET
 ├── types.ts                  # Domain types matching content/*.json artifacts
 ├── views/                    # Home / Category / Resource / About / Article
 ├── components/
-│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList,
-│   │                         # RenderMarkdown, NavigationTree, OnThisPage
-│   └── widgets/              # BackToTop, SearchModal, TocDrawer
-├── composables/              # useFloatingButton / useLocalizedContent
+│   ├── layout/               # AppHeader, NavActions, AppFooter, PostList, RenderMarkdown,
+│   │                         # NavigationTree, TreeNode (recursive tree), OnThisPage
+│   ├── widgets/              # BackToTop, SearchModal, TocDrawer, FloatingButton (shared float button)
+│   └── common/               # IconButton, ModalOverlay, PostCard, Pagination, EmptyState
+├── composables/              # useLocalizedContent / usePageMeta / useSearch / useTagNavigation
+│                             # / useCopyFeedback / useFloatingButton
 ├── utils/                    # Browser runtime helpers (do not import scripts/)
 │   ├── contentLoader.ts      # Typed import.meta.glob loading (@data alias)
-│   ├── navigation.ts         # Locale paths, language switch, tag nav, article paths
-│   ├── scroll.ts             # Back-to-top + overlay scroll locking
-│   ├── clipboard.ts          # Copy (Clipboard API + fallback)
+│   ├── navigation.ts         # Locale paths, language switch, tag nav, toArticle/normalizeArticleKey
+│   ├── articles.ts           # flattenCategoryArticles (categories → article list)
+│   ├── icons.ts              # Single source for action icon paths (stroke SVG spec)
+│   ├── pagination.ts         # getVisiblePages windowed pagination pure function
+│   ├── format.ts / tags.ts / url.ts  # Number abbreviation / tag cloud / URL·DOI helpers
+│   ├── scroll.ts             # scrollToTop/scrollToHeading (reduce-motion aware) + overlay scroll locking
+│   ├── clipboard.ts          # Copy (Clipboard API + fallback, Promise<boolean>)
 │   └── readingTime.ts        # Reading time estimate
 └── assets/                   # Fonts / styles / avatar
 
 scripts/                      # Node content toolchain (build-time, never bundled)
-  ├── dataConfig.ts           # Single entry for data dirs (supports GBLOG_DATA_DIR)
-  ├── markdownProcessor.ts    # unified pipeline: md → HTML
-  ├── runAllGenerators.ts     # Generator orchestration
-  ├── llmConfig.ts            # DeepSeek API config (gitignored, never committed)
-  ├── generators/             # core/ (shared IO) + 11 generators
-  ├── translator/             # AI incremental translation (CLI: translate/status/help)
-  └── tagMerger/              # zh→en tag mapping + consistency fix (CLI)
+├── lib/                      # Shared layer: llm / fs / text / cli / frontmatter / tags / tagMapping / yamlEntries
+├── dataConfig.ts             # Single entry for data dirs (supports GBLOG_DATA_DIR; EN_SUFFIX)
+├── markdownProcessor.ts      # unified pipeline: md → HTML
+├── runAllGenerators.ts       # Generator orchestration (locale step table)
+├── packArticle.ts            # Pack articles (assets images → article dir, idempotent)
+├── llmConfig.ts              # DeepSeek API config (gitignored, never committed)
+├── generators/               # core/ (compat barrel; implementations moved to scripts/lib/) + 11 generators
+├── translator/               # AI incremental translation (CLI: translate/status/help)
+└── tagMerger/                # zh→en tag mapping + consistency fix (CLI)
 
 vite/contentDevPlugin.ts      # Dev plugin: watches data dir → rerun generators → full-reload
 
@@ -86,14 +96,16 @@ public/                       # favicon.png / apple-touch-icon.png / icon-512.pn
 
 # Data branch (data, worktree at ../blog-data)
 content-src/                  # Layer 1: hand-written Chinese sources (edit only here)
-  ├── categories.yaml         # categories + all notes/projects/topics metadata
-  ├── about.yaml              # about page
-  ├── resources.yaml          # resources page
-  └── notes/<cat>/<sub>/<article>/<article>.md
+│   ├── categories.yaml       # categories + all notes/projects/topics metadata
+│   ├── about.yaml            # about page
+│   ├── resources.yaml        # resources page
+│   ├── assets/               # central image folder (Obsidian attachment target; data:pack into articles)
+│   ├── templates/            # Obsidian new-post template (new-post.md)
+│   └── notes/<cat>/<sub>/<article>.md   # flat: one md per article (no same-name folder)
 cache/                        # Layer 2: machine-maintained persistent state (committed)
-  ├── en/                     #   English translation layer (mirrors content-src, -en identity)
-  ├── tag-mapping.json        #   zh→en tag mapping
-  └── .translate-state.json   #   incremental translation state (source → content hash)
+│   ├── en/                   #   English translation layer (mirrors content-src, -en identity)
+│   ├── tag-mapping.json      #   zh→en tag mapping
+│   └── .translate-state.json #   incremental translation state (source → content hash)
 content/                      # Layer 3: generated JSON + html (regenerable, not committed)
 ```
 
@@ -203,19 +215,22 @@ Three content types are defined in `content-src/categories.yaml`:
 
 ### Writing Markdown Articles
 
-Article directory structure (directory names must match the `name` fields in the `notes` section of `categories.yaml`):
+Article directory structure (category/subcategory directory names must match the mappings in the `notes` section of `categories.yaml`; **one md per article, placed directly under the subcategory, no same-name folder**):
 
 ```
 content-src/notes/
 ├── <category_identifier>/
 │   ├── <subcategory>/
-│   │   └── <article_name>/
-│   │       └── <article_name>.md
+│   │   ├── <article>.md
+│   │   └── <another_article>.md
 │   └── <other_subcategory>/
-│       └── <article_name>/
-│           └── <article_name>.md
+│       └── <article>.md
 └── <other_category>/
 ```
+
+**Images**: keep them centrally in `content-src/assets/` while writing (reference as `assets/xx.png`); run `npm run data:pack` before publishing to copy referenced images into the article directory and rewrite references (single article or recursive all, idempotent; also rewrites English mirror references).
+
+**Obsidian authoring**: open a vault pointing at `content-src` — frontmatter maps to Properties, attachments default into `assets/`, and new posts use the `templates/new-post.md` template; saving triggers `npm run dev` regeneration + hot reload.
 
 Each article carries YAML frontmatter:
 
