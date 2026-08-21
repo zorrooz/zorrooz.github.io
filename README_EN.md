@@ -245,6 +245,7 @@ export default {
   url: 'https://api.deepseek.com',
   apikey: 'your_api_key_here',
   model: 'your_model_name',
+  // thinking: true, // optional: enable DeepSeek thinking mode (disabled by default; temperature only applies when disabled)
 }
 ```
 

@@ -245,6 +245,7 @@ export default {
   url: 'https://api.deepseek.com',
   apikey: 'your_api_key_here',
   model: 'your_model_name',
+  // thinking: true, // 可选：显式开启 DeepSeek 思考模式（默认关闭，省 token 且 temperature 生效）
 }
 ```
 

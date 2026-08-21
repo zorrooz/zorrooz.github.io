@@ -8,20 +8,29 @@ import { cacheDir, contentSrcDir, enSrcDir } from '../dataConfig.ts'
 
 let clientCache: OpenAI | null = null
 
+/** llmConfig.ts（gitignore）支持的字段；thinking 缺省 = 关闭思考模式 */
+interface LlmConfig {
+  url: string
+  apikey: string
+  model: string
+  /** 是否启用 DeepSeek 思考模式（默认关闭：省 token 且恢复 temperature 语义） */
+  thinking?: boolean
+}
+
 /**
  * 懒加载 DeepSeek 配置（llmConfig.ts 被 gitignore，CI 无此文件）。
  * 与 tagMerger 相同：模块可能被 vite-ssg 打包，静态 import 会因缺文件失败。
  */
-async function loadLlmConfig(): Promise<{ url: string; apikey: string; model: string } | null> {
+async function loadLlmConfig(): Promise<LlmConfig | null> {
   const cfgPath = path.join(import.meta.dirname, '../llmConfig.ts')
   if (!fsSync.existsSync(cfgPath)) return null
   try {
     const mod = (await import(pathToFileURL(cfgPath).href)) as {
-      default?: { url?: string; apikey?: string; model?: string }
+      default?: Partial<LlmConfig>
     }
     const cfg = mod.default || {}
     if (!cfg.url || !cfg.apikey || !cfg.model) return null
-    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model }
+    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model, thinking: cfg.thinking }
   } catch {
     return null
   }
@@ -31,7 +40,7 @@ async function getClient(): Promise<OpenAI> {
   if (clientCache) return clientCache
   const cfg = await loadLlmConfig()
   if (!cfg)
-    throw new Error('未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model }')
+    throw new Error('未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model[, thinking] }')
   clientCache = new OpenAI({ baseURL: cfg.url, apiKey: cfg.apikey })
   return clientCache
 }
@@ -52,7 +61,9 @@ async function translateText(text: string, fileType = 'md'): Promise<string> {
       ],
       model: cfg?.model ?? '',
       temperature: 0.3,
-    })
+      // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
+      thinking: { type: cfg?.thinking === true ? 'enabled' : 'disabled' },
+    } as OpenAI.ChatCompletionCreateParamsNonStreaming)
 
     const usage = completion.usage
     if (usage) {

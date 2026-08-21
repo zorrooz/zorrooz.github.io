@@ -117,7 +117,7 @@ export function missingTranslationTags(
 /** LLM 生成 zh→en 标签翻译映射（一对一、数量守恒；仅传缺失标签） */
 export async function generateTranslationWithLlm(
   zhTags: Map<string, number>,
-  api: { url: string; apikey: string; model: string },
+  api: { url: string; apikey: string; model: string; thinking?: boolean },
 ): Promise<Record<string, string>> {
   const openai = new OpenAI({ baseURL: api.url, apiKey: api.apikey })
   const systemPrompt = `你是专业翻译。下面是一个中文技术博客的标签列表（括号内为出现次数）。
@@ -134,7 +134,9 @@ export async function generateTranslationWithLlm(
     ],
     model: api.model,
     temperature: 0.2,
-  })
+    // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
+    thinking: { type: api.thinking === true ? 'enabled' : 'disabled' },
+  } as OpenAI.ChatCompletionCreateParamsNonStreaming)
   const content = completion.choices[0]?.message?.content
   if (!content) throw new Error('LLM 返回空内容')
   return extractTranslationJson(content)
@@ -279,7 +281,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
 export async function generateMappingWithLlm(
   tags: Map<string, number>,
   locale: 'zh-CN' | 'en-US',
-  api: { url: string; apikey: string; model: string },
+  api: { url: string; apikey: string; model: string; thinking?: boolean },
 ): Promise<Record<string, string>> {
   const openai = new OpenAI({ baseURL: api.url, apiKey: api.apikey })
 
@@ -307,23 +309,34 @@ Output a tag merge mapping JSON following these rules:
     ],
     model: api.model,
     temperature: 0.2,
-  })
+    // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
+    thinking: { type: api.thinking === true ? 'enabled' : 'disabled' },
+  } as OpenAI.ChatCompletionCreateParamsNonStreaming)
 
   const content = completion.choices[0]?.message?.content
   if (!content) throw new Error('LLM 返回空内容')
   return extractJson(content)
 }
 
-async function loadLlmConfig(): Promise<{ url: string; apikey: string; model: string } | null> {
+/** llmConfig.ts（gitignore）支持的字段；thinking 缺省 = 关闭思考模式 */
+interface LlmConfig {
+  url: string
+  apikey: string
+  model: string
+  /** 是否启用 DeepSeek 思考模式（默认关闭：省 token 且恢复 temperature 语义） */
+  thinking?: boolean
+}
+
+async function loadLlmConfig(): Promise<LlmConfig | null> {
   const cfgPath = path.join(import.meta.dirname, '../llmConfig.ts')
   if (!fs.existsSync(cfgPath)) return null
   try {
     const mod = (await import(pathToFileURL(cfgPath).href)) as {
-      default?: { url?: string; apikey?: string; model?: string }
+      default?: Partial<LlmConfig>
     }
     const cfg = mod.default || {}
     if (!cfg.url || !cfg.apikey || !cfg.model) return null
-    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model }
+    return { url: cfg.url, apikey: cfg.apikey, model: cfg.model, thinking: cfg.thinking }
   } catch {
     return null
   }

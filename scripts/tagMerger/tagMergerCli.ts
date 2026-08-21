@@ -68,7 +68,7 @@ async function main() {
     const llm = await loadLlmConfig()
     if (!llm) {
       console.error(
-        '[ERROR] 未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model }，该文件被 gitignore。',
+        '[ERROR] 未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model[, thinking] }，该文件被 gitignore。',
       )
       process.exitCode = 1
       return
