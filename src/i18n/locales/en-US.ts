@@ -72,6 +72,9 @@ export default {
   metaAbout: 'About',
   metaNotFound: '404',
 
+  // Accessibility
+  skipToContent: 'Skip to content',
+
   // 关于页面
   experience: 'Experience',
   thanks: 'Thank you for your attention!',

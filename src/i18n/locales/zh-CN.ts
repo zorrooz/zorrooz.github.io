@@ -70,6 +70,9 @@ export default {
   metaAbout: '关于',
   metaNotFound: '404',
 
+  // 无障碍
+  skipToContent: '跳转到正文',
+
   // 关于页面
   experience: '经历',
   thanks: '感谢您的关注！',

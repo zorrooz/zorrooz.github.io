@@ -161,7 +161,7 @@ watch(locale, (newLocale, oldLocale) => {
 }
 
 .hero__name {
-  font-size: clamp(46px, 7.5vw, 76px);
+  font-size: clamp(48px, 8.5vw, 88px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;

@@ -283,9 +283,9 @@
   --on-primary: #0c0f14;
 
   --ring: var(--blue-600);
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.28);
-  --shadow-lift: 0 8px 28px rgba(0, 0, 0, 0.42);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 1px 2px rgba(30, 44, 84, 0.38), 0 4px 14px rgba(30, 44, 84, 0.34);
+  --shadow-lift: 0 8px 28px rgba(32, 50, 100, 0.5);
+  --shadow-modal: 0 24px 64px rgba(32, 50, 100, 0.58);
 
   --app-header-bg: rgba(12, 15, 20, 0.8);
   --app-footer-bg: var(--bg);
@@ -411,6 +411,32 @@ button {
   margin: 0 auto;
   padding: var(--sp-16) 48px var(--sp-24);
   position: relative;
+  isolation: isolate;
+}
+
+/* 页头氛围光：极淡主色 radial，打破「纯文字贴底」的平面感（亮暗主题通用） */
+.page-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 95% 55% at 50% -10%,
+    color-mix(in srgb, var(--primary) 6%, transparent),
+    transparent 70%
+  );
+}
+
+/* 整站微纹理：极淡 noise（SVG feTurbulence），打破数字平面感 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (max-width: 991px) {
@@ -779,13 +805,17 @@ button {
   flex-shrink: 0;
 }
 
-/* 显现动画（纯透明度） */
+/* 显现动画（透明度 + 上移 + 虚化入场；reduce-motion 用户由指令跳过） */
 @keyframes revealIn {
   from {
     opacity: 0;
+    transform: translateY(14px);
+    filter: blur(5px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -803,4 +833,25 @@ button {
 .num {
   font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);
+}
+
+/* 键盘入口：跳转到正文（Tab 聚焦时可见） */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 1100;
+  padding: 10px 18px;
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-btn);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 12px;
 }

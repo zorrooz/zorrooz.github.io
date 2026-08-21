@@ -211,11 +211,13 @@ function readingTime(wordCount: number) {
   opacity: 0;
   transition:
     opacity var(--dur-base) ease,
-    color var(--dur-fast) ease;
+    color var(--dur-fast) ease,
+    transform var(--dur-fast) ease;
 }
 
 .post-item:hover .post-item__arrow {
   opacity: 1;
+  transform: translateX(3px);
 }
 
 .post-item__arrow:hover {

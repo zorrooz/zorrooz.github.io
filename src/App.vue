@@ -1,8 +1,9 @@
 <template>
   <div class="page-wrap">
+    <a href="#main-content" class="skip-link">{{ t('skipToContent') }}</a>
     <AppHeader @open-search="searchOpen = true" />
 
-    <main class="main-content">
+    <main id="main-content" class="main-content">
       <router-view v-slot="{ Component }">
         <transition name="view" mode="out-in">
           <component :is="Component" />
@@ -40,7 +41,7 @@ const SearchModal = defineAsyncComponent(() => import('@/components/widgets/Sear
 
 const route = useRoute()
 const localeStore = useLocaleStore()
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 
 // html lang 与当前语言同步（SSG 产物与运行时一致，保证字体/拼写按语言环境渲染）
 // SSG 渲染时 route.path 已含 /zh、/en 前缀，运行时 hash 路由不含——统一剥离后拼接
