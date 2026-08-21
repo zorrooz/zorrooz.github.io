@@ -537,13 +537,17 @@ onBeforeUnmount(() => {
 @media (min-width: 992px) {
   .docs-sidebar-col,
   .docs-toc-col {
+    /* 覆盖 Bootstrap col-lg-2 的 16.67%：固定 240px，Bootstrap 栅格只保留 order/换行语义 */
     flex: 0 0 240px;
     max-width: 240px;
     width: 240px;
   }
 
   .docs-main-col {
-    flex: 1 1 auto;
+    /* 覆盖 col-lg-8 的固定 width 66.67%：flex-basis 0% 使列完全自适应剩余空间
+       （flex-basis:auto 会回退 width，240+853+240 超行宽 → TOC 被 wrap 挤到第二行） */
+    flex: 1 1 0%;
+    width: auto;
     max-width: none;
   }
 
