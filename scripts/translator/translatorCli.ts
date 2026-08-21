@@ -133,37 +133,6 @@ program
   })
 
 program
-  .command('help')
-  .description('显示帮助信息')
-  .action(() => {
-    console.log(`
-命令:
-  translate <目录路径>    翻译文件或目录
-  status <目录路径>       检查翻译状态
-  help                    显示此帮助信息
-
-选项:
-  -f, --force            强制重新翻译所有文件
-  -n, --new              仅翻译新文件
-  -s, --suffix <后缀>    翻译文件后缀（默认：-en）
-
-示例:
-  npm run translate                                     # 增量翻译默认目录
-  npm run translate -- translate                        # 同上
-  npm run translate -- translate --force                # 强制重新翻译
-  npm run translate -- translate <content-src 路径> --new  # 仅翻译新文件
-  npm run translate -- status <content-src 路径>        # 检查状态
-    `)
-  })
-
-program.on('command:*', () => {
-  console.error('[ERROR] 未知命令: %s', program.args.join(' '))
-  console.log('请使用 "npm run translate -- help" 查看可用命令')
-  process.exit(1)
-})
-
-// 默认命令：未提供子命令时翻译 content-src
-program
   .command('default', { isDefault: true })
   .description('默认翻译数据分支的 content-src 目录')
   .action(async () => {

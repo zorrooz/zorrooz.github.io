@@ -107,7 +107,9 @@ src/                        # 浏览器应用（含 SSR；不包含任何 Node �
 
 ```
 scripts/                    # Node 内容工具链（不被浏览器打包；Node 原生 type stripping 直跑 .ts）
-├── lib/                     # 共享工具层：llm（配置/客户端/调用骨架）、fs（walk/walkAsync/JSON·YAML IO）、text、cli、frontmatter、tags、tagMapping、yamlEntries
+├── lib/                     # 共享工具层：llm（配置/客户端/调用骨架）、fs（walk/walkAsync/JSON·YAML IO）、
+│                            #   text、cli、frontmatter（含 sanitizeFrontmatter）、tags、tagMapping、
+│                            #   yamlEntries（归一化）、yamlJson（YAML→JSON 生成器骨架）、metadata（projects/topics）
 ├── dataConfig.ts           # 数据目录统一配置（唯一接入点，支持 GBLOG_DATA_DIR；EN_SUFFIX 常量）
 ├── markdownProcessor.ts    # unified pipeline: remark → rehype
 ├── runAllGenerators.ts     # Build orchestration（locale 步骤表 + 依赖顺序）
@@ -262,7 +264,7 @@ SEO title 统一走 `usePageMeta`（i18n meta.* 键 + `BLOG_TITLE`）。
 ### 内容宽度
 
 - 内容页（首页/分类/资源/关于）：`.page-section` max-width **1120px**，左右 padding 48px（`<992px` 32px，`<768px` 20px）
-- 文章页：Bootstrap `container` max-width **1280px**，正文 `.article-content` max-width 820px 居中，左右 sidebar 各约 220px
+- 文章页：Bootstrap `container` max-width **1280px**，正文 `.article-content` max-width 780px 居中，左右 sidebar 各 240px
 - **移动端水平边距全局统一 20px**（header / footer / 内容页 / 文章页 gutter），不得各页面自定
 - **显示缩放断点**：`<1200px`（含 175% 缩放等效视口）header `.container` 放宽为 `max-width: 100%` 贴边；footer 在大缩放下内容居中排列
 - 原因：文章页需容纳三栏（导航/正文/TOC）故放宽；其余页面单栏 1120px 保证行宽

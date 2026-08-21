@@ -451,7 +451,7 @@ onBeforeUnmount(() => {
 
 .article-content {
   min-height: 400px;
-  max-width: 820px;
+  max-width: 780px;
   margin: 0 auto;
 }
 
@@ -535,6 +535,18 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 992px) {
+  .docs-sidebar-col,
+  .docs-toc-col {
+    flex: 0 0 240px;
+    max-width: 240px;
+    width: 240px;
+  }
+
+  .docs-main-col {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+
   .docs-sidebar-col {
     border-right: 1px solid var(--line);
     padding-right: var(--sp-5);
@@ -569,7 +581,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.markdown-body h2) {
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: 700;
   margin-top: 2.75rem;
   margin-bottom: 1rem;
@@ -579,7 +591,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.markdown-body h3) {
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   font-weight: 600;
   margin-top: 2.25rem;
   margin-bottom: 0.875rem;

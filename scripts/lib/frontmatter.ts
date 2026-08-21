@@ -58,6 +58,45 @@ export function parseFrontmatter(raw: string): {
   return { data: frontmatter, body }
 }
 
+/**
+ * frontmatter YAML 安全化：LLM 翻译输出可能产生未加引号且含歧义字符（如 `: `）的标量值，
+ * 导致 remark-parse-frontmatter 等严格解析器崩溃。已合法时原样返回；非法时给歧义标量
+ * 加双引号后重试；仍失败则原样返回并告警（不吞错，仅防崩）。
+ */
+export function sanitizeFrontmatter(raw: string): string {
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!m) return raw
+  try {
+    yaml.load(m[1])
+    return raw
+  } catch {
+    const fixed = m[1]
+      .split('\n')
+      .map((line) => {
+        const kv = line.match(/^(\s*[^:#][^:]*?:\s*)(.*)$/)
+        if (!kv) return line
+        const value = kv[2]
+        if (value === '' || /^["']/.test(value)) return line
+        // 标量中会引入 YAML 歧义的字符：冒号+空格、井号（注释）、flow/标签/指示符
+        if (/:\s|\s#|[{}[\],&*!|>%@`]/.test(value)) {
+          return `${kv[1]}${JSON.stringify(value)}`
+        }
+        return line
+      })
+      .join('\n')
+    try {
+      yaml.load(fixed)
+      return raw.replace(m[1], fixed)
+    } catch (e) {
+      console.warn(
+        'Warn: frontmatter YAML 仍非法（已尝试修复）:',
+        e instanceof Error ? e.message : e,
+      )
+      return raw
+    }
+  }
+}
+
 /** 解析行内数组 `tags: [...]`（可能跨行）；非 JSON（裸值）时按逗号切分并剥引号 */
 function parseInlineTags(span: string): string[] {
   const start = span.indexOf('[')

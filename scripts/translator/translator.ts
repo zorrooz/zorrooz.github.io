@@ -4,7 +4,7 @@ import path from 'path'
 import crypto from 'crypto'
 import { cacheDir, contentSrcDir, enSrcDir } from '../dataConfig.ts'
 import { completeChat } from '../lib/llm.ts'
-import { rewriteFrontmatterTags } from '../lib/frontmatter.ts'
+import { rewriteFrontmatterTags, sanitizeFrontmatter } from '../lib/frontmatter.ts'
 import { loadTagMapping } from '../lib/tagMapping.ts'
 import { walkAsync } from '../lib/fs.ts'
 
@@ -166,6 +166,8 @@ async function translateFile(
 
     if (fileType === 'md') {
       translated = translateFrontmatterTags(content, translated)
+      // LLM 输出可能产生非法 YAML（如未引号的 description 含冒号），写盘前安全化
+      translated = sanitizeFrontmatter(translated)
     }
 
     await fs.mkdir(path.dirname(outputPath), { recursive: true })

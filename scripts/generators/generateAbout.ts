@@ -1,13 +1,5 @@
-import fs from 'fs'
-import path from 'path'
-import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
-import {
-  isDirectRun,
-  logWriteSuccess,
-  readYaml,
-  runCliScript,
-  writeJsonFile,
-} from './core/index.ts'
+import { isDirectRun, runCliScript } from './core/index.ts'
+import { generateJsonFromYaml } from '../lib/yamlJson.ts'
 import type {
   AboutContact,
   AboutData,
@@ -56,31 +48,12 @@ function normalize(raw: Record<string, unknown> = {}): AboutData {
 }
 
 function generateAboutJson(locale = 'zh-CN') {
-  const suffix = localeSuffix(locale)
-  const yamlPath = path.join(srcDirFor(locale), `about${suffix}.yaml`)
-  const outputPath = path.join(contentDir, `about${suffix}.json`)
-
-  let raw: unknown = {}
-  if (fs.existsSync(yamlPath)) {
-    const yamlConfig = readYaml(yamlPath)
-    if (yamlConfig !== null && yamlConfig !== undefined) {
-      raw = yamlConfig
-    } else {
-      console.warn(`Warn: failed to parse YAML at ${yamlPath}, using empty object.`)
-      raw = {}
-    }
-  } else {
-    console.warn(`Warn: source YAML not found at ${yamlPath}, using empty object.`)
-  }
-
-  const result = normalize(raw as Record<string, unknown>)
-
-  try {
-    writeJsonFile(outputPath, result)
-    logWriteSuccess(outputPath)
-  } catch (error) {
-    console.error(`Failed to generate ${outputPath}:`, error)
-  }
+  generateJsonFromYaml({
+    locale,
+    baseName: 'about',
+    fallback: {},
+    normalize: (raw) => normalize(raw as Record<string, unknown>),
+  })
 }
 
 if (isDirectRun(import.meta)) {

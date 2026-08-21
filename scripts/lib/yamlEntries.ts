@@ -1,4 +1,4 @@
-import { safeArray } from '../generators/core/index.ts'
+import { safeArray } from './fs.ts'
 
 /**
  * categories.yaml 的 projects/topics 条目统一归一化。
