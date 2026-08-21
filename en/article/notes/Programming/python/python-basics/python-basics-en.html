@@ -4,7 +4,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="theme-color" content="#5aa0f8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>zorrooz’s blog</title>
+    <title>Python 编程入门：环境、语法与数据类型 - zorrooz’s blog</title>
     <meta name="description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://zorrooz.github.io/en/article/notes/Programming/python/python-basics/python-basics-en">
@@ -13,135 +13,135 @@
     <meta property="og:description" content="个人技术博客：生物信息学、编程与结构生物学，记录编程教程与科研笔记">
     <meta property="og:image" content="https://zorrooz.github.io/apple-touch-icon.png">
     <meta name="twitter:card" content="summary">
-    <script type="module" crossorigin="" src="/assets/app-0NbXh2A2.js"></script>
-    <link rel="stylesheet" crossorigin="" href="/assets/app-BKMFe6AM.css">
+    <script type="module" crossorigin="" src="/assets/app-B1e03AW4.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app-D59InFS0.css">
   <link rel="manifest" href="/manifest.webmanifest"><link rel="canonical" href="https://zorrooz.github.io/en/article/notes/Programming/python/python-basics/python-basics-en"><link rel="alternate" hreflang="zh-CN" href="https://zorrooz.github.io/zh/article/notes/Programming/python/python-basics/python-basics"><link rel="alternate" hreflang="en" href="https://zorrooz.github.io/en/article/notes/Programming/python/python-basics/python-basics-en"><link rel="alternate" hreflang="x-default" href="https://zorrooz.github.io/zh/article/notes/Programming/python/python-basics/python-basics"></head>
   <body>
-    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-e6413c2e=""><!--[--><header class="app-header" data-v-b943a66d=""><div class="container px-0" data-v-b943a66d=""><nav class="navbar navbar-expand-lg app-nav" data-v-b943a66d=""><div class="container-fluid d-flex app-nav__inner" data-v-b943a66d=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-b943a66d=""><span class="app-nav__wordmark" data-v-b943a66d="">zorrooz<span class="app-nav__apos" data-v-b943a66d="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-b943a66d="" data-v-da55aa12=""><button class="icon-btn" aria-label="Search" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><circle cx="11" cy="11" r="8" data-v-da55aa12=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-da55aa12=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-da55aa12=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><path d="m5 8 6 6" data-v-da55aa12=""></path><path d="m4 14 6-6 2-3" data-v-da55aa12=""></path><path d="M2 5h12" data-v-da55aa12=""></path><path d="M7 2h1" data-v-da55aa12=""></path><path d="m22 22-5-10-5 10" data-v-da55aa12=""></path><path d="M14 18h6" data-v-da55aa12=""></path></svg></button><button class="icon-btn" aria-label="Menu" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><line x1="3" y1="12" x2="21" y2="12" data-v-da55aa12=""></line><line x1="3" y1="6" x2="21" y2="6" data-v-da55aa12=""></line><line x1="3" y1="18" x2="21" y2="18" data-v-da55aa12=""></line></svg></button></div><div class="navbar-collapse collapse" data-v-b943a66d=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-b943a66d=""><li class="app-nav__link-divider" aria-hidden="true" data-v-b943a66d=""></li><!--[--><li class="nav-item" data-v-b943a66d=""><a href="/en/category" class="nav-link app-nav__link" data-v-b943a66d="">Categories</a></li><li class="nav-item" data-v-b943a66d=""><a href="/en/resource" class="nav-link app-nav__link" data-v-b943a66d="">Resources</a></li><li class="nav-item" data-v-b943a66d=""><a href="/en/about" class="nav-link app-nav__link" data-v-b943a66d="">About</a></li><!--]--></ul></div><div class="d-flex d-none d-lg-flex ms-auto app-nav__actions" data-v-b943a66d="" data-v-da55aa12=""><button class="icon-btn" aria-label="Search" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><circle cx="11" cy="11" r="8" data-v-da55aa12=""></circle><line x1="21" y1="21" x2="16.65" y2="16.65" data-v-da55aa12=""></line></svg></button><button class="icon-btn" aria-label="Theme" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-v-da55aa12=""></path></svg></button><button class="icon-btn" aria-label="Language" data-v-da55aa12=""><svg class="app-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-da55aa12=""><path d="m5 8 6 6" data-v-da55aa12=""></path><path d="m4 14 6-6 2-3" data-v-da55aa12=""></path><path d="M2 5h12" data-v-da55aa12=""></path><path d="M7 2h1" data-v-da55aa12=""></path><path d="m22 22-5-10-5 10" data-v-da55aa12=""></path><path d="M14 18h6" data-v-da55aa12=""></path></svg></button><!----></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-e6413c2e=""><div class="container view-container article-view" data-v-e6413c2e="" data-v-32d6ea44=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-32d6ea44=""></div><div class="row py-4 px-0" data-v-32d6ea44=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-32d6ea44=""><div class="sticky-sidebar" data-v-32d6ea44=""><div class="navigation-container mb-0" data-v-32d6ea44=""><div class="navigation-tree" data-v-32d6ea44="" data-v-c348384c=""><!--[--><div class="tree-group" data-v-c348384c=""><div class="tree-label" data-v-c348384c="">Programming</div><ul class="article-list" data-v-c348384c=""><!--[--><li class="article-item" data-v-c348384c=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true" data-v-c348384c=""><span class="tree-item__text" data-v-c348384c="">Python</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true" data-v-c348384c=""></i></button><ul class="article-list tree-sublist" style="" data-v-c348384c=""><!--[--><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/python/python-advanced/python-advanced-en" class="tree-item tree-item--l2" data-v-c348384c="">Python Advanced: Functions, Classes, and Modules</a></li><li class="article-item" data-v-c348384c=""><a aria-current="page" href="/en/article/notes/Programming/python/python-basics/python-basics-en" class="router-link-active router-link-exact-active tree-item tree-item--l2 tree-item--active" data-v-c348384c="">Introduction to Python Programming: Environment, Syntax, and Data Types</a></li><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/python/python-data/python-data-en" class="tree-item tree-item--l2" data-v-c348384c="">Python Data Processing in Practice: File IO, Regex, and NumPy/Pandas</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-c348384c=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true" data-v-c348384c=""><span class="tree-item__text" data-v-c348384c="">R</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true" data-v-c348384c=""></i></button><ul class="article-list tree-sublist" style="" data-v-c348384c=""><!--[--><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/r/r-basics/r-basics-en" class="tree-item tree-item--l2" data-v-c348384c="">R Language Primer: Data Structures, Vectorization, and Functions</a></li><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/r/r-ggplot2/r-ggplot2-en" class="tree-item tree-item--l2" data-v-c348384c="">R ggplot2 Data Visualization: Grammar of Graphics and Common Charts</a></li><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/r/r-tidyverse/r-tidyverse-en" class="tree-item tree-item--l2" data-v-c348384c="">R tidyverse Data Manipulation: dplyr Pipelines and Data Cleaning</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-c348384c=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true" data-v-c348384c=""><span class="tree-item__text" data-v-c348384c="">Linux</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true" data-v-c348384c=""></i></button><ul class="article-list tree-sublist" style="" data-v-c348384c=""><!--[--><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/linux/linux-basics/linux-basics-en" class="tree-item tree-item--l2" data-v-c348384c="">Linux Command Line Basics: File System, Permissions, and Text Processing</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-c348384c=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true" data-v-c348384c=""><span class="tree-item__text" data-v-c348384c="">Bash</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true" data-v-c348384c=""></i></button><ul class="article-list tree-sublist" style="" data-v-c348384c=""><!--[--><li class="article-item" data-v-c348384c=""><a href="/en/article/notes/Programming/bash/bash-scripting/bash-scripting-en" class="tree-item tree-item--l2" data-v-c348384c="">Bash Programming: Variables, Conditionals, Loops, and Practical Scripts</a></li><!--]--><!--[--><!--]--></ul></li><!--]--><!--[--><!--]--></ul></div><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-32d6ea44=""><div class="article-panel" data-v-32d6ea44=""><div class="article-panel__body" data-v-32d6ea44=""><div class="article-content" data-v-32d6ea44=""><div class="article-meta" data-v-32d6ea44=""><h1 class="article-title" data-v-32d6ea44="">Introduction to Python Programming: Environment, Syntax, and Data Types</h1><div class="article-meta__row" data-v-32d6ea44=""><span class="meta-line" data-v-32d6ea44=""><i class="fas fa-calendar-alt" data-v-32d6ea44=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-32d6ea44=""><i class="fas fa-clock" data-v-32d6ea44=""></i>Reading about 1 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-32d6ea44=""><i class="fas fa-copy" data-v-32d6ea44=""></i><span data-v-32d6ea44="">Copy article</span></button></div><div class="article-meta__tags" data-v-32d6ea44=""><!--[--><span class="article-tag" data-v-32d6ea44=""> # Python</span><span class="article-tag" data-v-32d6ea44=""> # Getting Started</span><span class="article-tag" data-v-32d6ea44=""> # Tutorial</span><!--]--></div></div><div class="markdown-body" data-v-32d6ea44=""><h1>Introduction to Python Programming: Environment, Syntax, and Data Types</h1>
-<p>Python is an interpreted language with clean syntax and a rich ecosystem, widely used in scientific computing, data processing, and script automation. This article starts from scratch, covering environment setup, basic syntax, built-in data types, and control flow. All examples are directly runnable.</p>
-<h2>1. Environment Setup</h2>
-<h3>1.1 Installing Python</h3>
-<p>Visit <a href="https://www.python.org/">python.org</a> to download the installer for your platform. When installing, be sure to check <strong>Add Python to PATH</strong>.</p>
-<p>Verify the installation:</p>
+    <div id="app" data-server-rendered="true"><div class="page-wrap" data-v-41a9b5b1=""><!--[--><header class="app-header" data-v-3e6c0786=""><div class="container px-0" data-v-3e6c0786=""><nav class="navbar navbar-expand-lg app-nav" data-v-3e6c0786=""><div class="container-fluid d-flex app-nav__inner" data-v-3e6c0786=""><a href="/en/" class="navbar-brand app-nav__brand" data-v-3e6c0786=""><span class="app-nav__wordmark" data-v-3e6c0786="">zorrooz<span class="app-nav__apos" data-v-3e6c0786="">’</span>s blog</span></a><div class="d-flex d-lg-none ms-auto app-nav__actions app-nav__actions--mobile" data-v-3e6c0786="" data-v-259baced=""><button type="button" class="icon-btn" aria-label="Search" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button type="button" class="icon-btn" aria-label="Theme" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><button type="button" class="icon-btn" aria-label="Language" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg></button><button type="button" class="icon-btn" aria-label="Menu" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button></div><div class="navbar-collapse collapse" data-v-3e6c0786=""><ul class="navbar-nav mb-2 mb-lg-0 app-nav__links" data-v-3e6c0786=""><li class="app-nav__link-divider" aria-hidden="true" data-v-3e6c0786=""></li><!--[--><li class="nav-item" data-v-3e6c0786=""><a href="/en/category" class="nav-link app-nav__link" data-v-3e6c0786="">Categories</a></li><li class="nav-item" data-v-3e6c0786=""><a href="/en/resource" class="nav-link app-nav__link" data-v-3e6c0786="">Resources</a></li><li class="nav-item" data-v-3e6c0786=""><a href="/en/about" class="nav-link app-nav__link" data-v-3e6c0786="">About</a></li><!--]--></ul></div><div class="d-flex d-none d-lg-flex ms-auto app-nav__actions" data-v-3e6c0786="" data-v-259baced=""><button type="button" class="icon-btn" aria-label="Search" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><button type="button" class="icon-btn" aria-label="Theme" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><button type="button" class="icon-btn" aria-label="Language" data-v-259baced="" data-v-b9ed4622=""><svg class="icon-btn__svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-b9ed4622=""><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg></button><!----></div></div></nav></div></header><!----><!--]--><main class="main-content" data-v-41a9b5b1=""><div class="container view-container article-view" data-v-41a9b5b1="" data-v-01e8bde1=""><div class="reading-progress" style="width:0%;" aria-hidden="true" data-v-01e8bde1=""></div><div class="row py-4 px-0" data-v-01e8bde1=""><div class="col-12 col-lg-2 order-2 order-lg-1 docs-sidebar-col" data-v-01e8bde1=""><div class="sticky-sidebar" data-v-01e8bde1=""><div class="navigation-container mb-0" data-v-01e8bde1=""><div class="navigation-tree" data-v-01e8bde1="" data-v-5d73a6b9=""><!--[--><div class="tree-group" data-v-5d73a6b9=""><div class="tree-label" data-v-5d73a6b9="">编程</div><ul class="article-list" data-v-5d73a6b9=""><!--[--><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">Python</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/en/article/notes/Programming/python/python-advanced/python-advanced" class="tree-item tree-item--l2">Python 进阶：函数、类与模块</a></li><li class="article-item"><a href="/en/article/notes/Programming/python/python-basics/python-basics" class="tree-item tree-item--l2 tree-item--active">Python 编程入门：环境、语法与数据类型</a></li><li class="article-item"><a href="/en/article/notes/Programming/python/python-data/python-data" class="tree-item tree-item--l2">Python 数据处理实战：文件 IO、正则与 NumPy/Pandas</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">R</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/en/article/notes/Programming/r/r-basics/r-basics" class="tree-item tree-item--l2">R 语言入门：数据结构、向量化与函数</a></li><li class="article-item"><a href="/en/article/notes/Programming/r/r-ggplot2/r-ggplot2" class="tree-item tree-item--l2">R ggplot2 数据可视化：图层语法与常用图表</a></li><li class="article-item"><a href="/en/article/notes/Programming/r/r-tidyverse/r-tidyverse" class="tree-item tree-item--l2">R tidyverse 数据操作：dplyr 管道与数据清洗</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">Linux</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/en/article/notes/Programming/linux/linux-basics/linux-basics" class="tree-item tree-item--l2">Linux 命令行基础：文件系统、权限与文本处理</a></li><!--]--><!--[--><!--]--></ul></li><li class="article-item" data-v-5d73a6b9=""><button type="button" class="tree-item--branch-open tree-item tree-item--folder" aria-expanded="true"><span class="tree-item__text">Bash</span><i class="tree-caret--open fas fa-chevron-right tree-caret" aria-hidden="true"></i></button><ul class="article-list tree-sublist" style=""><!--[--><li class="article-item"><a href="/en/article/notes/Programming/bash/bash-scripting/bash-scripting" class="tree-item tree-item--l2">Bash 编程：变量、条件、循环与实用脚本</a></li><!--]--><!--[--><!--]--></ul></li><!--]--><!--[--><!--]--></ul></div><!--]--></div></div></div></div><div class="col-12 col-lg-8 order-1 order-lg-2 docs-main-col" data-v-01e8bde1=""><div class="article-panel" data-v-01e8bde1=""><div class="article-panel__body" data-v-01e8bde1=""><div class="article-content" data-v-01e8bde1=""><div class="article-meta" data-v-01e8bde1=""><h1 class="article-title" data-v-01e8bde1="">Python 编程入门：环境、语法与数据类型</h1><div class="article-meta__row" data-v-01e8bde1=""><span class="meta-line" data-v-01e8bde1=""><i class="fas fa-calendar-alt" data-v-01e8bde1=""></i>Updated at 2026-08-04</span><span class="meta-line" data-v-01e8bde1=""><i class="fas fa-clock" data-v-01e8bde1=""></i>Reading about 2 minutes</span><button type="button" class="article-copy-btn" aria-label="Copy article" aria-live="polite" data-v-01e8bde1=""><i class="fas fa-copy" data-v-01e8bde1=""></i><span data-v-01e8bde1="">Copy article</span></button></div><div class="article-meta__tags" data-v-01e8bde1=""><!--[--><span class="article-tag" data-v-01e8bde1=""> # Python</span><span class="article-tag" data-v-01e8bde1=""> # 入门</span><span class="article-tag" data-v-01e8bde1=""> # 教程</span><!--]--></div></div><div class="markdown-body" data-v-01e8bde1=""><h1>Python 编程入门：环境、语法与数据类型</h1>
+<p>Python 是一门语法简洁、生态丰富的解释型语言，广泛应用于科学计算、数据处理与脚本自动化。本文从零开始，覆盖环境搭建、基础语法、内置数据类型与流程控制，所有示例均可直接运行。</p>
+<h2>1. 环境搭建</h2>
+<h3>1.1 安装 Python</h3>
+<p>访问 <a href="https://www.python.org/">python.org</a> 下载对应平台的安装包。安装时务必勾选 <strong>Add Python to PATH</strong>。</p>
+<p>验证安装：</p>
 <pre><code class="hljs language-bash">python --version
 <span class="hljs-comment"># Python 3.12.x</span>
 </code></pre>
 <blockquote>
-<p>On Linux / WSL, the <code>python3</code> command is typically used; on Windows, it is <code>python</code>.</p>
+<p>在 Linux / WSL 下通常使用 <code>python3</code> 命令，Windows 下为 <code>python</code>。</p>
 </blockquote>
-<h3>1.2 Virtual Environment (Highly Recommended)</h3>
-<p>A virtual environment isolates dependencies for each project, avoiding pollution of the global environment:</p>
-<pre><code class="hljs language-bash"><span class="hljs-comment"># Create a virtual environment</span>
+<h3>1.2 虚拟环境（强烈推荐）</h3>
+<p>虚拟环境为每个项目隔离依赖，避免污染全局环境：</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># 创建虚拟环境</span>
 python -m venv .venv
 
-<span class="hljs-comment"># Activate (Windows)</span>
+<span class="hljs-comment"># 激活（Windows）</span>
 .venv\Scripts\activate
-<span class="hljs-comment"># Activate (Linux / macOS / WSL)</span>
+<span class="hljs-comment"># 激活（Linux / macOS / WSL）</span>
 <span class="hljs-built_in">source</span> .venv/bin/activate
 </code></pre>
-<p>After activation, <code>(.venv)</code> appears before the prompt. Install dependencies:</p>
+<p>激活后提示符前会出现 <code>(.venv)</code>。安装依赖：</p>
 <pre><code class="hljs language-bash">pip install numpy pandas
 </code></pre>
-<p>Export the dependency list to a file for easy reproduction:</p>
+<p>将依赖清单导出到文件，方便复现：</p>
 <pre><code class="hljs language-bash">pip freeze &gt; requirements.txt
 </code></pre>
-<h3>1.3 Interactive Interpreter and Scripts</h3>
-<pre><code class="hljs language-bash">python            <span class="hljs-comment"># Enter REPL interactive mode</span>
-python script.py  <span class="hljs-comment"># Run a script file</span>
+<h3>1.3 交互式解释器与脚本</h3>
+<pre><code class="hljs language-bash">python            <span class="hljs-comment"># 进入 REPL 交互模式</span>
+python script.py  <span class="hljs-comment"># 运行脚本文件</span>
 </code></pre>
-<p>In the REPL, you can directly enter expressions and get immediate results, which is great for quickly validating ideas.</p>
-<h2>2. First Program</h2>
+<p>在 REPL 中可直接输入表达式并立即得到结果，适合快速验证想法。</p>
+<h2>2. 第一个程序</h2>
 <pre><code class="hljs language-python"><span class="hljs-built_in">print</span>(<span class="hljs-string">"Hello, Python!"</span>)
 </code></pre>
-<p>Save it as <code>hello.py</code> and run:</p>
+<p>保存为 <code>hello.py</code> 后运行：</p>
 <pre><code class="hljs language-bash">python hello.py
 <span class="hljs-comment"># Hello, Python!</span>
 </code></pre>
-<h2>3. Basic Syntax</h2>
-<h3>3.1 Comments</h3>
-<pre><code class="hljs language-python"><span class="hljs-comment"># Single-line comment</span>
+<h2>3. 基础语法</h2>
+<h3>3.1 注释</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># 单行注释</span>
 
 <span class="hljs-string">"""
-Multi-line comment (actually a multi-line string,
-often used as documentation)
+多行注释（实际上是多行字符串，
+但常被用作文档说明）
 """</span>
 </code></pre>
-<h3>3.2 Variables and Assignment</h3>
-<p>Python is a dynamically typed language; variables do not require type declarations:</p>
-<pre><code class="hljs language-python">name = <span class="hljs-string">"zorrooz"</span>     <span class="hljs-comment"># string</span>
-age = <span class="hljs-number">25</span>             <span class="hljs-comment"># integer</span>
-height = <span class="hljs-number">1.78</span>        <span class="hljs-comment"># float</span>
-is_student = <span class="hljs-literal">True</span>    <span class="hljs-comment"># boolean</span>
+<h3>3.2 变量与赋值</h3>
+<p>Python 是动态类型语言，变量无需声明类型：</p>
+<pre><code class="hljs language-python">name = <span class="hljs-string">"zorrooz"</span>     <span class="hljs-comment"># 字符串</span>
+age = <span class="hljs-number">25</span>             <span class="hljs-comment"># 整数</span>
+height = <span class="hljs-number">1.78</span>        <span class="hljs-comment"># 浮点数</span>
+is_student = <span class="hljs-literal">True</span>    <span class="hljs-comment"># 布尔值</span>
 
-<span class="hljs-comment"># Assign multiple variables at once</span>
+<span class="hljs-comment"># 同时赋值多个变量</span>
 a, b, c = <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>
 
-<span class="hljs-comment"># Swap two variables</span>
+<span class="hljs-comment"># 交换两个变量的值</span>
 a, b = b, a
 </code></pre>
-<p>Variable naming follows PEP 8: lowercase letters + underscores (<code>snake_case</code>).</p>
-<h3>3.3 Input and Output</h3>
+<p>变量命名遵循 PEP 8：小写字母 + 下划线（<code>snake_case</code>）。</p>
+<h3>3.3 输入输出</h3>
 <pre><code class="hljs language-python">name = <span class="hljs-built_in">input</span>(<span class="hljs-string">"请输入你的名字："</span>)
 <span class="hljs-built_in">print</span>(<span class="hljs-string">"你好，"</span>, name)
 
-<span class="hljs-comment"># f-string formatting (Python 3.6+, recommended)</span>
+<span class="hljs-comment"># f-string 格式化（Python 3.6+，最推荐）</span>
 <span class="hljs-built_in">print</span>(<span class="hljs-string">f"你好，<span class="hljs-subst">{name}</span>，今年 <span class="hljs-subst">{age}</span> 岁"</span>)
 
-<span class="hljs-comment"># format method</span>
+<span class="hljs-comment"># format 方法</span>
 <span class="hljs-built_in">print</span>(<span class="hljs-string">"你好，{}，今年 {} 岁"</span>.<span class="hljs-built_in">format</span>(name, age))
 </code></pre>
-<h2>4. Built-in Data Types</h2>
-<h3>4.1 Numbers</h3>
+<h2>4. 内置数据类型</h2>
+<h3>4.1 数字</h3>
 <pre><code class="hljs language-python">x = <span class="hljs-number">10</span>          <span class="hljs-comment"># int</span>
 y = <span class="hljs-number">3.14</span>        <span class="hljs-comment"># float</span>
 z = <span class="hljs-number">2</span> + <span class="hljs-number">3j</span>      <span class="hljs-comment"># complex</span>
 
-<span class="hljs-comment"># Common operations</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-number">7</span> // <span class="hljs-number">2</span>)   <span class="hljs-comment"># integer division, result 3</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-number">7</span> % <span class="hljs-number">2</span>)    <span class="hljs-comment"># modulo, result 1</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-number">2</span> ** <span class="hljs-number">10</span>)  <span class="hljs-comment"># exponentiation, result 1024</span>
-<span class="hljs-built_in">print</span>(<span class="hljs-built_in">round</span>(<span class="hljs-number">3.14159</span>, <span class="hljs-number">2</span>))  <span class="hljs-comment"># round to 2 decimal places</span>
+<span class="hljs-comment"># 常用运算</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-number">7</span> // <span class="hljs-number">2</span>)   <span class="hljs-comment"># 整除，得 3</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-number">7</span> % <span class="hljs-number">2</span>)    <span class="hljs-comment"># 取余，得 1</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-number">2</span> ** <span class="hljs-number">10</span>)  <span class="hljs-comment"># 幂运算，得 1024</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-built_in">round</span>(<span class="hljs-number">3.14159</span>, <span class="hljs-number">2</span>))  <span class="hljs-comment"># 四舍五入保留 2 位</span>
 </code></pre>
-<h3>4.2 Strings</h3>
+<h3>4.2 字符串</h3>
 <pre><code class="hljs language-python">s = <span class="hljs-string">"hello"</span>
 t = <span class="hljs-string">'world'</span>
 
-<span class="hljs-comment"># Concatenation and repetition</span>
+<span class="hljs-comment"># 拼接与重复</span>
 <span class="hljs-built_in">print</span>(s + <span class="hljs-string">" "</span> + t)   <span class="hljs-comment"># hello world</span>
 <span class="hljs-built_in">print</span>(s * <span class="hljs-number">3</span>)         <span class="hljs-comment"># hellohellohello</span>
 
-<span class="hljs-comment"># Indexing and slicing (left-inclusive, right-exclusive)</span>
+<span class="hljs-comment"># 索引与切片（左闭右开）</span>
 <span class="hljs-built_in">print</span>(s[<span class="hljs-number">0</span>])          <span class="hljs-comment"># h</span>
 <span class="hljs-built_in">print</span>(s[-<span class="hljs-number">1</span>])         <span class="hljs-comment"># o</span>
 <span class="hljs-built_in">print</span>(s[<span class="hljs-number">1</span>:<span class="hljs-number">3</span>])        <span class="hljs-comment"># el</span>
 
-<span class="hljs-comment"># Common methods</span>
+<span class="hljs-comment"># 常用方法</span>
 <span class="hljs-built_in">print</span>(s.upper())          <span class="hljs-comment"># HELLO</span>
 <span class="hljs-built_in">print</span>(s.replace(<span class="hljs-string">"l"</span>, <span class="hljs-string">"L"</span>))  <span class="hljs-comment"># heLLo</span>
 <span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(s))             <span class="hljs-comment"># 5</span>
 <span class="hljs-built_in">print</span>(<span class="hljs-string">", "</span>.join([<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"c"</span>]))  <span class="hljs-comment"># a, b, c</span>
 </code></pre>
-<h3>4.3 Lists (list)</h3>
-<p>Lists are ordered, mutable containers:</p>
+<h3>4.3 列表（list）</h3>
+<p>列表是有序、可变的容器：</p>
 <pre><code class="hljs language-python">fruits = [<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>, <span class="hljs-string">"cherry"</span>]
 
-fruits.append(<span class="hljs-string">"orange"</span>)      <span class="hljs-comment"># append at the end</span>
-fruits.insert(<span class="hljs-number">0</span>, <span class="hljs-string">"grape"</span>)    <span class="hljs-comment"># insert at a specific position</span>
-fruits.remove(<span class="hljs-string">"apple"</span>)       <span class="hljs-comment"># remove by value</span>
-popped = fruits.pop()        <span class="hljs-comment"># pop the last element</span>
+fruits.append(<span class="hljs-string">"orange"</span>)      <span class="hljs-comment"># 末尾追加</span>
+fruits.insert(<span class="hljs-number">0</span>, <span class="hljs-string">"grape"</span>)    <span class="hljs-comment"># 指定位置插入</span>
+fruits.remove(<span class="hljs-string">"apple"</span>)       <span class="hljs-comment"># 按值删除</span>
+popped = fruits.pop()        <span class="hljs-comment"># 弹出末尾元素</span>
 
-<span class="hljs-built_in">print</span>(fruits[<span class="hljs-number">0</span>])             <span class="hljs-comment"># indexing</span>
-<span class="hljs-built_in">print</span>(fruits[-<span class="hljs-number">1</span>])            <span class="hljs-comment"># last element</span>
-<span class="hljs-built_in">print</span>(fruits[<span class="hljs-number">1</span>:<span class="hljs-number">3</span>])           <span class="hljs-comment"># slicing</span>
+<span class="hljs-built_in">print</span>(fruits[<span class="hljs-number">0</span>])             <span class="hljs-comment"># 索引</span>
+<span class="hljs-built_in">print</span>(fruits[-<span class="hljs-number">1</span>])            <span class="hljs-comment"># 最后一个</span>
+<span class="hljs-built_in">print</span>(fruits[<span class="hljs-number">1</span>:<span class="hljs-number">3</span>])           <span class="hljs-comment"># 切片</span>
 
-<span class="hljs-comment"># List comprehension (very commonly used)</span>
+<span class="hljs-comment"># 列表推导式（非常常用）</span>
 squares = [x ** <span class="hljs-number">2</span> <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>)]
 <span class="hljs-built_in">print</span>(squares)  <span class="hljs-comment"># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
 </code></pre>
-<h3>4.4 Tuples (tuple)</h3>
-<p>Tuples are immutable lists, often used for returning multiple values:</p>
+<h3>4.4 元组（tuple）</h3>
+<p>元组是不可变列表，常用于返回多个值：</p>
 <pre><code class="hljs language-python">point = (<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)
-x, y = point          <span class="hljs-comment"># unpacking</span>
+x, y = point          <span class="hljs-comment"># 解包</span>
 <span class="hljs-built_in">print</span>(x, y)           <span class="hljs-comment"># 3 4</span>
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">minmax</span>(<span class="hljs-params">nums</span>):
@@ -150,33 +150,33 @@ x, y = point          <span class="hljs-comment"># unpacking</span>
 lo, hi = minmax([<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>])
 <span class="hljs-built_in">print</span>(lo, hi)         <span class="hljs-comment"># 1 5</span>
 </code></pre>
-<h3>4.5 Dictionaries (dict)</h3>
-<p>Dictionaries are key-value containers with efficient lookup:</p>
+<h3>4.5 字典（dict）</h3>
+<p>字典是键值对容器，查询效率高：</p>
 <pre><code class="hljs language-python">person = {<span class="hljs-string">"name"</span>: <span class="hljs-string">"zorrooz"</span>, <span class="hljs-string">"age"</span>: <span class="hljs-number">25</span>}
 
-<span class="hljs-built_in">print</span>(person[<span class="hljs-string">"name"</span>])            <span class="hljs-comment"># access value</span>
-<span class="hljs-built_in">print</span>(person.get(<span class="hljs-string">"city"</span>, <span class="hljs-string">"未知"</span>))  <span class="hljs-comment"># safe access with default value</span>
-person[<span class="hljs-string">"city"</span>] = <span class="hljs-string">"Lanzhou"</span>       <span class="hljs-comment"># add/update</span>
+<span class="hljs-built_in">print</span>(person[<span class="hljs-string">"name"</span>])            <span class="hljs-comment"># 取值</span>
+<span class="hljs-built_in">print</span>(person.get(<span class="hljs-string">"city"</span>, <span class="hljs-string">"未知"</span>))  <span class="hljs-comment"># 安全的取值，带默认值</span>
+person[<span class="hljs-string">"city"</span>] = <span class="hljs-string">"Lanzhou"</span>       <span class="hljs-comment"># 新增/修改</span>
 
 <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">in</span> person.items():
     <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{key}</span>: <span class="hljs-subst">{value}</span>"</span>)
 
-<span class="hljs-comment"># Dictionary comprehension</span>
+<span class="hljs-comment"># 字典推导式</span>
 squares = {x: x ** <span class="hljs-number">2</span> <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>)}
 <span class="hljs-built_in">print</span>(squares)  <span class="hljs-comment"># {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}</span>
 </code></pre>
-<h3>4.6 Sets (set)</h3>
-<p>Sets are unordered, deduplicating containers:</p>
+<h3>4.6 集合（set）</h3>
+<p>集合是无序、去重的容器：</p>
 <pre><code class="hljs language-python">a = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>}
-<span class="hljs-built_in">print</span>(a)              <span class="hljs-comment"># {1, 2, 3}, automatically deduplicated</span>
+<span class="hljs-built_in">print</span>(a)              <span class="hljs-comment"># {1, 2, 3}，自动去重</span>
 
 b = {<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>}
-<span class="hljs-built_in">print</span>(a &amp; b)          <span class="hljs-comment"># intersection {2, 3}</span>
-<span class="hljs-built_in">print</span>(a | b)          <span class="hljs-comment"># union {1, 2, 3, 4}</span>
-<span class="hljs-built_in">print</span>(a - b)          <span class="hljs-comment"># difference {1}</span>
+<span class="hljs-built_in">print</span>(a &amp; b)          <span class="hljs-comment"># 交集 {2, 3}</span>
+<span class="hljs-built_in">print</span>(a | b)          <span class="hljs-comment"># 并集 {1, 2, 3, 4}</span>
+<span class="hljs-built_in">print</span>(a - b)          <span class="hljs-comment"># 差集 {1}</span>
 </code></pre>
-<h2>5. Control Flow</h2>
-<h3>5.1 Conditional Statements</h3>
+<h2>5. 流程控制</h2>
+<h3>5.1 条件判断</h3>
 <pre><code class="hljs language-python">score = <span class="hljs-number">85</span>
 
 <span class="hljs-keyword">if</span> score &gt;= <span class="hljs-number">90</span>:
@@ -190,53 +190,53 @@ b = {<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <sp
 
 <span class="hljs-built_in">print</span>(<span class="hljs-string">f"等级：<span class="hljs-subst">{grade}</span>"</span>)
 
-<span class="hljs-comment"># Ternary expression</span>
+<span class="hljs-comment"># 三元表达式</span>
 status = <span class="hljs-string">"pass"</span> <span class="hljs-keyword">if</span> score &gt;= <span class="hljs-number">60</span> <span class="hljs-keyword">else</span> <span class="hljs-string">"fail"</span>
 </code></pre>
-<h3>5.2 for Loops</h3>
-<pre><code class="hljs language-python"><span class="hljs-comment"># Iterate over iterable objects</span>
+<h3>5.2 for 循环</h3>
+<pre><code class="hljs language-python"><span class="hljs-comment"># 遍历可迭代对象</span>
 <span class="hljs-keyword">for</span> fruit <span class="hljs-keyword">in</span> [<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>]:
     <span class="hljs-built_in">print</span>(fruit)
 
-<span class="hljs-comment"># Generate number sequences with range</span>
-<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):        <span class="hljs-comment"># 0 to 4</span>
+<span class="hljs-comment"># range 生成数列</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):        <span class="hljs-comment"># 0 到 4</span>
     <span class="hljs-built_in">print</span>(i)
 
 <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">10</span>, <span class="hljs-number">2</span>):  <span class="hljs-comment"># 1, 3, 5, 7, 9</span>
     <span class="hljs-built_in">print</span>(i)
 
-<span class="hljs-comment"># Use enumerate to get index and value simultaneously</span>
+<span class="hljs-comment"># enumerate 同时取索引和值</span>
 <span class="hljs-keyword">for</span> idx, fruit <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>([<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>]):
     <span class="hljs-built_in">print</span>(idx, fruit)
 </code></pre>
-<h3>5.3 while Loops</h3>
+<h3>5.3 while 循环</h3>
 <pre><code class="hljs language-python">n = <span class="hljs-number">0</span>
 <span class="hljs-keyword">while</span> n &lt; <span class="hljs-number">5</span>:
     <span class="hljs-built_in">print</span>(n)
-    n += <span class="hljs-number">1</span>          <span class="hljs-comment"># Note: forgetting to increment causes an infinite loop</span>
+    n += <span class="hljs-number">1</span>          <span class="hljs-comment"># 注意：忘记递增会死循环</span>
 </code></pre>
 <h3>5.4 break / continue / else</h3>
-<pre><code class="hljs language-python"><span class="hljs-comment"># break: terminate the loop early</span>
+<pre><code class="hljs language-python"><span class="hljs-comment"># break：提前终止循环</span>
 <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):
     <span class="hljs-keyword">if</span> i == <span class="hljs-number">3</span>:
         <span class="hljs-keyword">break</span>
-    <span class="hljs-built_in">print</span>(i)        <span class="hljs-comment"># outputs 0 1 2</span>
+    <span class="hljs-built_in">print</span>(i)        <span class="hljs-comment"># 输出 0 1 2</span>
 
-<span class="hljs-comment"># continue: skip the current iteration</span>
+<span class="hljs-comment"># continue：跳过本次迭代</span>
 <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>):
     <span class="hljs-keyword">if</span> i == <span class="hljs-number">2</span>:
         <span class="hljs-keyword">continue</span>
-    <span class="hljs-built_in">print</span>(i)        <span class="hljs-comment"># outputs 0 1 3 4</span>
+    <span class="hljs-built_in">print</span>(i)        <span class="hljs-comment"># 输出 0 1 3 4</span>
 
-<span class="hljs-comment"># for-else: executes when the loop completes normally (not broken)</span>
+<span class="hljs-comment"># for-else：循环正常结束（未被 break）时执行</span>
 <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):
     <span class="hljs-keyword">if</span> i == <span class="hljs-number">99</span>:
         <span class="hljs-keyword">break</span>
 <span class="hljs-keyword">else</span>:
     <span class="hljs-built_in">print</span>(<span class="hljs-string">"循环正常结束"</span>)
 </code></pre>
-<h2>6. Comprehensive Exercise</h2>
-<p>Count the occurrences of each word in a text:</p>
+<h2>6. 综合练习</h2>
+<p>统计一段文本中每个单词的出现次数：</p>
 <pre><code class="hljs language-python">text = <span class="hljs-string">"python is fun and python is powerful"</span>
 
 words = text.split()
@@ -248,21 +248,21 @@ counter = {}
 <span class="hljs-keyword">for</span> word, count <span class="hljs-keyword">in</span> <span class="hljs-built_in">sorted</span>(counter.items(), key=<span class="hljs-keyword">lambda</span> x: -x[<span class="hljs-number">1</span>]):
     <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{word}</span>: <span class="hljs-subst">{count}</span>"</span>)
 </code></pre>
-<p>Output:</p>
+<p>输出：</p>
 <pre><code>python: 2
 is: 2
 fun: 1
 and: 1
 powerful: 1
 </code></pre>
-<h2>7. Summary</h2>
+<h2>7. 小结</h2>
 <ul>
-<li>Use <code>venv</code> to isolate project dependencies, use <code>pip freeze</code> to record dependencies</li>
-<li>Built-in types: <code>int</code> / <code>float</code> / <code>str</code> / <code>list</code> / <code>tuple</code> / <code>dict</code> / <code>set</code></li>
-<li>List and dictionary comprehensions and f-strings are high-frequency syntax in daily use</li>
-<li>Control flow: <code>if/elif/else</code>, <code>for</code>, <code>while</code>, <code>break</code> / <code>continue</code></li>
+<li>用 <code>venv</code> 隔离项目依赖，用 <code>pip freeze</code> 记录依赖</li>
+<li>内置类型：<code>int</code> / <code>float</code> / <code>str</code> / <code>list</code> / <code>tuple</code> / <code>dict</code> / <code>set</code></li>
+<li>列表与字典推导式、f-string 是日常高频语法</li>
+<li>流程控制：<code>if/elif/else</code>、<code>for</code>、<code>while</code>、<code>break</code> / <code>continue</code></li>
 </ul>
-<p>The next article will introduce functions, classes, and modules, moving into real engineering-style programming.</p></div><nav class="article-navigation" data-v-32d6ea44=""><!----><a href="/en/article/notes/Programming/python/python-advanced/python-advanced-en" class="article-nav-item prev" data-v-32d6ea44=""><div class="nav-arrow" data-v-32d6ea44=""><i class="fas fa-arrow-left" data-v-32d6ea44=""></i></div><div class="nav-details" data-v-32d6ea44=""><div class="nav-label" data-v-32d6ea44="">Previous</div><div class="nav-title" data-v-32d6ea44="">Python Advanced: Functions, Classes, and Modules</div></div></a><a href="/en/article/notes/Programming/python/python-data/python-data-en" class="article-nav-item next" data-v-32d6ea44=""><div class="nav-details" data-v-32d6ea44=""><div class="nav-label" data-v-32d6ea44="">Next</div><div class="nav-title" data-v-32d6ea44="">Python Data Processing in Practice: File IO, Regex, and NumPy/Pandas</div></div><div class="nav-arrow" data-v-32d6ea44=""><i class="fas fa-arrow-right" data-v-32d6ea44=""></i></div></a></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-32d6ea44=""><div class="sticky-sidebar" data-v-32d6ea44=""><div class="toc-container mt-0" data-v-32d6ea44=""><nav class="on-this-page" data-v-32d6ea44="" data-v-02208124=""><div class="otp-content" data-v-02208124=""><span class="otp-marker" aria-hidden="true" data-v-02208124=""></span><div class="otp-header" data-v-02208124=""><span class="otp-title" data-v-02208124="">On this page</span></div><ul class="otp-list" data-v-02208124=""><!--[--><!--]--></ul></div></nav></div></div></div></div><!--[--><button class="toc-drawer-btn d-lg-none d-flex align-items-center justify-content-center" aria-label="Open table of contents" style="top:864px;display:none;" data-v-f5b1ecf6=""><i class="fas fa-bookmark" data-v-f5b1ecf6=""></i></button><!----><!--]--></div></main><footer class="site-footer" data-v-e6413c2e="" data-v-443df76b=""><div class="container" data-v-443df76b=""><div class="site-footer__inner" data-v-443df76b=""><p class="footer-copy" data-v-443df76b="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-443df76b=""><p class="footer-designed__text" data-v-443df76b="">Designed by<strong class="footer-designed__name" data-v-443df76b="">zorrooz</strong></p><div class="footer-designed__icons" data-v-443df76b=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-443df76b=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-443df76b=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-443df76b=""></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-443df76b=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-443df76b=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" data-v-443df76b=""></path><polyline points="22,6 12,13 2,6" data-v-443df76b=""></polyline></svg></a></div></div></div></div></footer><button class="back-to-top d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-e6413c2e="" data-v-0f89b0e5=""><i class="fas fa-arrow-up" data-v-0f89b0e5=""></i></button><!----></div></div>
+<p>下一篇将介绍函数、类与模块，进入真正的工程化编程。</p></div><nav class="article-navigation" data-v-01e8bde1=""><!----><a href="/en/article/notes/Programming/python/python-advanced/python-advanced" class="article-nav-item prev" data-v-01e8bde1=""><div class="nav-arrow" data-v-01e8bde1=""><i class="fas fa-arrow-left" data-v-01e8bde1=""></i></div><div class="nav-details" data-v-01e8bde1=""><div class="nav-label" data-v-01e8bde1="">Previous</div><div class="nav-title" data-v-01e8bde1="">Python 进阶：函数、类与模块</div></div></a><a href="/en/article/notes/Programming/python/python-data/python-data" class="article-nav-item next" data-v-01e8bde1=""><div class="nav-details" data-v-01e8bde1=""><div class="nav-label" data-v-01e8bde1="">Next</div><div class="nav-title" data-v-01e8bde1="">Python 数据处理实战：文件 IO、正则与 NumPy/Pandas</div></div><div class="nav-arrow" data-v-01e8bde1=""><i class="fas fa-arrow-right" data-v-01e8bde1=""></i></div></a></nav></div></div></div></div><div class="col-12 col-lg-2 order-3 docs-toc-col" data-v-01e8bde1=""><div class="sticky-sidebar" data-v-01e8bde1=""><div class="toc-container mt-0" data-v-01e8bde1=""><nav class="on-this-page" data-v-01e8bde1="" data-v-8e56cd8b=""><div class="otp-content" data-v-8e56cd8b=""><span class="otp-marker" aria-hidden="true" data-v-8e56cd8b=""></span><div class="otp-header" data-v-8e56cd8b=""><span class="otp-title" data-v-8e56cd8b="">On this page</span></div><ul class="otp-list" data-v-8e56cd8b=""><!--[--><!--]--></ul></div></nav></div></div></div></div><!--[--><button class="floating-btn d-flex align-items-center justify-content-center d-lg-none" aria-label="Open table of contents" style="top:864px;display:none;" data-v-2d948131="" data-v-c4c6a9da=""><!--[--><i class="fas fa-bookmark" data-v-2d948131=""></i><!--]--></button><!----><!--]--></div></main><footer class="site-footer" data-v-41a9b5b1="" data-v-c2ed6d91=""><div class="container" data-v-c2ed6d91=""><div class="site-footer__inner" data-v-c2ed6d91=""><p class="footer-copy" data-v-c2ed6d91="">© 2025 - 2026 zorrooz</p><div class="footer-designed" data-v-c2ed6d91=""><p class="footer-designed__text" data-v-c2ed6d91="">Designed by<strong class="footer-designed__name" data-v-c2ed6d91="">zorrooz</strong></p><div class="footer-designed__icons" data-v-c2ed6d91=""><a href="https://github.com/zorrooz" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="GitHub" data-v-c2ed6d91=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-c2ed6d91=""><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="mailto:zorrooz@163.com" class="footer-link" aria-label="Email" data-v-c2ed6d91=""><svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-v-c2ed6d91=""><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a></div></div></div></div></footer><button class="floating-btn d-flex align-items-center justify-content-center" aria-label="Back to top" style="top:924px;display:none;" data-v-41a9b5b1="" data-v-c4c6a9da=""><!--[--><i class="fas fa-arrow-up"></i><!--]--></button><!----></div></div>
 <script>window.__INITIAL_STATE__="{\"pinia\":{\"theme\":{\"theme\":\"auto\"},\"locale\":{\"locale\":\"en-US\"}}}"</script>
   
 
