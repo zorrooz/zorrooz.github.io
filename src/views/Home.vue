@@ -212,7 +212,7 @@ watch(locale, (newLocale, oldLocale) => {
 .tags-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
   padding: var(--sp-8) 0 var(--sp-8);
 }
 
