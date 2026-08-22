@@ -272,7 +272,6 @@ watch(locale, (newLocale, oldLocale) => {
 
 .chip-close:hover {
   color: var(--primary);
-  background: var(--tint);
 }
 
 .chip-close i {

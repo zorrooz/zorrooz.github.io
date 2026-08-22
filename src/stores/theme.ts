@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { THEME_MODES, THEME_STORAGE_KEY, type ThemeMode } from '@/config'
+import { THEME_STORAGE_KEY, type ThemeMode } from '@/config'
 
 const setTheme = (mode: ThemeMode) => {
   if (typeof window === 'undefined' || typeof document === 'undefined') return
@@ -27,9 +27,15 @@ export const useThemeStore = defineStore('theme', () => {
   const theme = ref<ThemeMode>(initialTheme())
 
   const toggleTheme = () => {
-    const currentIndex = THEME_MODES.indexOf(theme.value)
-    const nextIndex = (currentIndex + 1) % THEME_MODES.length
-    theme.value = THEME_MODES[nextIndex]
+    // auto 视为当前系统色：首击必须产生可见的视觉切换（auto→light/dark 无感）
+    if (theme.value === 'auto') {
+      const prefersDark =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      theme.value = prefersDark ? 'light' : 'dark'
+    } else {
+      theme.value = theme.value === 'light' ? 'dark' : 'light'
+    }
     setTheme(theme.value)
   }
 

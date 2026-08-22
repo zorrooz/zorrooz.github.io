@@ -4,7 +4,7 @@ import { ViteSSG } from 'vite-ssg'
 import type { Directive } from 'vue'
 
 import App from './App.vue'
-import { routes } from './router'
+import { routes, scrollBehavior } from './router'
 import i18n from './i18n'
 import { useLocaleStore } from './stores/locale'
 import { useThemeStore } from './stores/theme'
@@ -52,7 +52,7 @@ const reveal: Directive<RevealElement> = {
 
 export const createApp = ViteSSG(
   App,
-  { routes },
+  { routes, scrollBehavior },
   ({ app, router, initialState, isClient, routePath }) => {
     const pinia = createPinia()
     app.use(pinia)

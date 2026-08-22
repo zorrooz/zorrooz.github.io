@@ -5,7 +5,7 @@ import AboutView from '@/views/About.vue'
 import ArticleView from '@/views/Article.vue'
 import NotFoundView from '@/views/NotFound.vue'
 
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw, RouterOptions } from 'vue-router'
 
 import { ARTICLE_ROUTE_PREFIX, LOCALE_SEGMENTS, preferredLocaleSegment, type LocaleSegment } from '@/config'
 import { loadNotes } from '@/utils/contentLoader'
@@ -59,3 +59,24 @@ export const routes: RouteRecordRaw[] = [
   // 语言前缀下的未知路径 → 品牌 404
   { path: '/:locale(zh|en)/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView },
 ]
+
+/**
+ * 全局滚动策略（vue-router 无默认回顶，SPA 导航会延续滚动位置）：
+ * - 语言切换（同一文章 zh↔en，params.path 不变）→ 保持位置（硬性规则「切换不跳位」，
+ *   Article.vue 内部按 restoreScrollY 双 nextTick 再恢复布局高度差）
+ * - 浏览器前进/后退 → 恢复原位置
+ * - 其余导航一律回到页面顶部
+ */
+export const scrollBehavior: NonNullable<RouterOptions['scrollBehavior']> = (to, from, savedPosition) => {
+  const isArticleRoute = (r: { name?: unknown }): boolean =>
+    !!r.name && r.name.toString().endsWith('-Article')
+  if (
+    isArticleRoute(to) &&
+    isArticleRoute(from) &&
+    JSON.stringify(to.params.path) === JSON.stringify(from.params.path)
+  ) {
+    return false
+  }
+  if (savedPosition) return savedPosition
+  return { top: 0 }
+}

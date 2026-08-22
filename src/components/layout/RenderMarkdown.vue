@@ -385,12 +385,24 @@ watch(
 
 .markdown-body code:not(pre code) {
   background-color: var(--app-markdown-code-bg);
-  color: var(--app-markdown-code-color);
+  color: var(--fg-2);
   padding: 0.18em 0.45em;
   border-radius: var(--radius-sm);
   font-size: 0.88em;
   border: 1px solid var(--line);
   font-family: 'CodeFont', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* 加粗包裹的代码：只变主题色强调，不继承加粗字重 */
+.markdown-body strong code:not(pre code) {
+  color: var(--app-markdown-code-color);
+  font-weight: 400;
+}
+
+/* 链接里的代码：保持链接蓝（交互优先，须在 strong code 之后），不继承外链 600 加粗 */
+.markdown-body a code:not(pre code) {
+  color: var(--primary);
+  font-weight: 400;
 }
 
 .markdown-body pre {
@@ -621,7 +633,7 @@ watch(
 
 .markdown-body blockquote {
   border: none;
-  border-left: 3px solid var(--primary);
+  border-left: 3px solid var(--line-strong);
   background: transparent;
   padding: 0.1em 0 0.1em 1.2em;
   margin: 1.5em 0;

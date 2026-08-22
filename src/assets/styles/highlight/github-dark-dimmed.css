@@ -1,10 +1,9 @@
 [data-bs-theme='dark'] pre code.hljs {
   display: block;
   overflow-x: auto;
-  padding: 1em;
 }
 [data-bs-theme='dark'] code.hljs {
-  padding: 3px 5px;
+  padding: 0;
 }
 /*!
   Theme: GitHub Dark Dimmed

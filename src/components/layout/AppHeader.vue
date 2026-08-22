@@ -51,7 +51,6 @@
                 @click="closeMobileSidebar"
               >
                 <span>{{ item.text }}</span>
-                <i class="fas fa-chevron-right offcanvas-link__chevron"></i>
               </RouterLink>
             </li>
           </ul>
@@ -273,24 +272,12 @@ onBeforeUnmount(() => {
 }
 
 .offcanvas-head {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-  padding: 0 var(--sp-2) var(--sp-2);
-}
-
-.offcanvas-link__chevron {
-  margin-left: auto;
-  font-size: 10px;
-  opacity: 0;
-  transition: opacity 0.14s ease;
-}
-
-.offcanvas-link:hover .offcanvas-link__chevron,
-.offcanvas-link.active .offcanvas-link__chevron {
-  opacity: 1;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  line-height: 24px;
+  padding: 4px var(--sp-2) var(--sp-2);
 }
 
 .offcanvas-section + .offcanvas-section {
@@ -300,46 +287,32 @@ onBeforeUnmount(() => {
 .offcanvas-link {
   display: flex;
   align-items: center;
-  padding: 0.625rem 0.75rem;
-  border-radius: var(--radius-sm);
+  position: relative;
+  gap: var(--sp-2);
+  padding: 4px 0 4px 2px;
   color: var(--fg-2);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  transition:
-    background-color 0.14s ease,
-    color 0.14s ease;
-  line-height: 1.5;
+  line-height: 24px;
   background-color: transparent;
   border: none;
+  transition: color var(--dur-fast) ease;
 }
 
 .offcanvas-link:hover,
 .offcanvas-link:focus {
   color: var(--primary);
-  background-color: var(--tint);
 }
 
 .offcanvas-link.active {
   color: var(--primary);
-  background-color: var(--tint);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .offcanvas-link:focus {
   outline: none;
   box-shadow: none;
-}
-
-.offcanvas-link i {
-  flex-shrink: 0;
-  font-size: 12px;
-}
-
-.offcanvas-link:hover i,
-.offcanvas-link:focus i,
-.offcanvas-link.active i {
-  color: var(--primary);
 }
 
 .offcanvas-tree {

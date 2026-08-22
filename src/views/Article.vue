@@ -524,7 +524,6 @@ onBeforeUnmount(() => {
 
 .article-copy-btn:hover {
   color: var(--primary);
-  background: var(--tint);
 }
 
 .article-copy-btn--copied {
