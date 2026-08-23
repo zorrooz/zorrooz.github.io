@@ -8,16 +8,8 @@ import { useI18n } from 'vue-i18n'
 import { useCopyFeedback } from '@/composables/useCopyFeedback'
 import { copyText } from '@/utils/clipboard'
 import { iconSvg } from '@/utils/icons'
-import { scrollToHeading as scrollToHeadingTarget } from '@/utils/scroll'
-import { HEADER_OFFSET } from '@/config'
-
-const { t } = useI18n()
-
-// @data 别名指向数据分支；文章图片均从数据目录解析（zh 在 content-src，镜像层 cache/en）
-const assetModules = import.meta.glob(
-  '@data/{content-src,cache/en}/**/*.{png,jpg,jpeg,gif,svg,webp}',
-  { query: '?url', import: 'default', eager: true },
-)
+import { rewriteImageLinks } from '@/utils/markdownImages'
+import { enhanceCodeBlocks, enhanceHeadings, enhanceTables } from '@/utils/markdownDom'
 
 const props = withDefaults(
   defineProps<{
@@ -37,185 +29,34 @@ const emit = defineEmits(['markdown-rendered'])
 const renderedMarkdown = ref('')
 const markdownContainer = useTemplateRef<HTMLElement>('markdownContainer')
 
-async function initRender(htmlContent: string) {
-  const processedHtml = rewriteImageLinks(htmlContent, props.articlePath)
-  renderedMarkdown.value = processedHtml
-  await nextTick()
-  emit('markdown-rendered')
-  enhanceCodeBlocks()
-  enhanceTables()
-  enhanceHeadings()
-}
-
-function rewriteImageLinks(html: string, articlePath: string) {
-  try {
-    const articleDir = articlePath
-      .replace(/^[./]*/, '')
-      .replace(/\.md$/, '')
-      .split('/')
-      .slice(0, -1)
-      .join('/')
-
-    const toAssetUrl = (relPath: string) => {
-      if (/^(https?:)?\/\//i.test(relPath) || relPath.startsWith('/')) return relPath
-      const parts = (articleDir + '/' + relPath).split('/').filter((p) => p && p !== '.')
-      const stack: string[] = []
-      parts.forEach((p) => (p === '..' ? stack.pop() : stack.push(p)))
-      const normalized = stack.join('/')
-      const candidateKeys = [`@data/content-src/${normalized}`, `${normalized}`]
-      for (const key of candidateKeys) {
-        const matched = Object.keys(assetModules).find(
-          (k) => k.endsWith(`/${normalized}`) || k === key,
-        )
-        if (matched) return assetModules[matched]
-      }
-
-      // Obsidian「最短路径」格式：以 vault 根为基准的相对路径（如 assets/fig-1.png）
-      const rootRef = relPath.replace(/^\.\//, '')
-      if (rootRef.startsWith('assets/')) {
-        for (const key of [`@data/content-src/${rootRef}`, rootRef]) {
-          const matched = Object.keys(assetModules).find(
-            (k) => k.endsWith(`/${rootRef}`) || k === key,
-          )
-          if (matched) return assetModules[matched]
-        }
-      }
-      return relPath
-    }
-
-    return html.replace(
-      /<img\s+([^>]*?)src=["']([^"']+)["'](.*?)>/gi,
-      (_m, pre, src, post) => `<img ${pre}src="${toAssetUrl(src.trim())}"${post}>`,
-    )
-  } catch (e) {
-    console.warn('rewriteImageLinks failed', e)
-    return html
-  }
-}
-
-function enhanceHeadings() {
-  const container = markdownContainer.value
-  if (!container) return
-  cleanDuplicateH1(container)
-  addAnchorLinks(container)
-}
-
-function cleanDuplicateH1(container: HTMLElement) {
-  if (!props.articleTitle) return
-  const pageTitle = props.articleTitle.trim().toLowerCase()
-  container.querySelectorAll('h1').forEach((h1) => {
-    const h1Text = h1.textContent.trim().toLowerCase()
-    if (h1Text === pageTitle) h1.remove()
-    else
-      h1.replaceWith(
-        Object.assign(document.createElement('h2'), {
-          ...Object.fromEntries(Array.from(h1.attributes).map((attr) => [attr.name, attr.value])),
-          innerHTML: h1.innerHTML,
-        }),
-      )
-  })
-}
-
-function addAnchorLinks(container: HTMLElement) {
-  const scrollToHeading = (heading: Element, anchorBtn: HTMLButtonElement) => {
-    scrollToHeadingTarget(heading, HEADER_OFFSET)
-    setTimeout(() => anchorBtn.blur(), 300)
-  }
-
-  container.querySelectorAll('h2, h3, h4, h5, h6').forEach((heading) => {
-    heading.querySelector('.heading-anchor')?.remove()
-    const anchorBtn = Object.assign(document.createElement('button'), {
-      type: 'button',
-      className: 'heading-anchor',
-      textContent: '#',
-      ariaLabel: t('anchorHeading'),
-      tabIndex: 0,
-      ariaHidden: 'false',
-    })
-
-    anchorBtn.addEventListener('click', (e) => {
-      e.stopPropagation()
-      scrollToHeading(heading, anchorBtn)
-    })
-    anchorBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault()
-        scrollToHeading(heading, anchorBtn)
-      }
-    })
-
-    heading.appendChild(anchorBtn)
-  })
-}
-
-function enhanceCodeBlocks() {
-  const container = markdownContainer.value
-  if (!container) return
-
-  container.querySelectorAll('pre').forEach((pre) => {
-    if (pre.querySelector('.code-block-header')) return
-    const code = pre.querySelector('code')
-    if (!code) return
-
-    const language = (code.className.match(/language-(\w+)/) || ['', 'text'])[1]
-    const header = document.createElement('div')
-    header.className = 'code-block-header d-flex align-items-center justify-content-between'
-
-    const langLabel = document.createElement('span')
-    langLabel.className = 'code-language'
-    langLabel.textContent = language
-
-    const copyButton = document.createElement('button')
-    copyButton.type = 'button'
-    copyButton.className = 'copy-button btn-icon d-flex align-items-center justify-content-center'
-    copyButton.setAttribute('aria-label', t('copyCode'))
-    copyButton.innerHTML = iconSvg('copy', 16)
-    copyButton.addEventListener('click', () => copyToClipboard(code.textContent ?? '', copyButton))
-
-    header.append(langLabel, copyButton)
-    const wrapper = document.createElement('div')
-    wrapper.className = 'code-block-wrapper'
-    pre.parentNode?.insertBefore(wrapper, pre)
-    wrapper.append(header, pre)
-  })
-}
-
-function enhanceTables() {
-  const container = markdownContainer.value
-  if (!container) return
-
-  container.querySelectorAll('table').forEach((table) => {
-    if (table.closest('.table-copyable')) return
-
-    const wrapper = document.createElement('div')
-    wrapper.className = 'table-copyable'
-
-    const copyButton = document.createElement('button')
-    copyButton.type = 'button'
-    copyButton.className = 'table-copy-btn'
-    copyButton.setAttribute('aria-label', t('copyTable'))
-    copyButton.innerHTML = iconSvg('copy', 16)
-    copyButton.addEventListener('click', () => copyTableToClipboard(table, copyButton))
-
-    wrapper.append(copyButton)
-    table.parentNode?.insertBefore(wrapper, table)
-    wrapper.append(table)
-  })
-}
-
-function copyTableToClipboard(table: HTMLTableElement, button: HTMLButtonElement) {
-  const rows = Array.from(table.querySelectorAll('tr'))
-  const lines = rows.map((tr) =>
-    Array.from(tr.querySelectorAll('th, td'))
-      .map((cell) => (cell.textContent || '').trim().replace(/\s+/g, ' '))
-      .join('\t'),
-  )
-  copyToClipboard(lines.join('\n'), button)
-}
-
+const { t } = useI18n()
 const { copied, showSuccess, showFailure } = useCopyFeedback()
 const feedbackButton = ref<HTMLButtonElement | null>(null)
 const feedbackOriginalHtml = ref('')
+
+async function initRender(htmlContent: string) {
+  renderedMarkdown.value = rewriteImageLinks(htmlContent, props.articlePath)
+  await nextTick()
+  emit('markdown-rendered')
+  const container = markdownContainer.value
+  if (!container) return
+  enhanceHeadings(container, props.articleTitle)
+  enhanceCodeBlocks(container, copyToClipboard)
+  enhanceTables(container, copyToClipboard)
+}
+
+function showCopyFeedback(button: HTMLButtonElement) {
+  button.style.color = 'var(--primary)'
+  button.innerHTML = iconSvg('check', 16)
+}
+
+function restoreCopyFeedback() {
+  const button = feedbackButton.value
+  if (!button) return
+  button.innerHTML = feedbackOriginalHtml.value
+  button.style.color = ''
+  feedbackButton.value = null
+}
 
 async function copyToClipboard(text: string, button: HTMLButtonElement) {
   try {
@@ -234,19 +75,6 @@ async function copyToClipboard(text: string, button: HTMLButtonElement) {
     console.error(t('copyFailed'), err)
     showFailure()
   }
-}
-
-function showCopyFeedback(button: HTMLButtonElement) {
-  button.style.color = 'var(--primary)'
-  button.innerHTML = iconSvg('check', 16)
-}
-
-function restoreCopyFeedback() {
-  const button = feedbackButton.value
-  if (!button) return
-  button.innerHTML = feedbackOriginalHtml.value
-  button.style.color = ''
-  feedbackButton.value = null
 }
 
 watch(copied, (active) => {
@@ -399,7 +227,7 @@ watch(
   font-weight: 400;
 }
 
-/* 链接里的代码：保持链接蓝（交互优先，须在 strong code 之后），不继承外链 600 加粗 */
+/* 链接里的代码：保持链接蓝（交互优先，须在 strong code 之后），不继承外链加粗 */
 .markdown-body a code:not(pre code) {
   color: var(--primary);
   font-weight: 400;

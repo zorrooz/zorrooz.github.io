@@ -68,7 +68,7 @@ defineOptions({ name: 'HomeView' })
 import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import PostList from '@/components/layout/PostList.vue'
+import PostList from '@/components/common/PostList.vue'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
 import { usePageMeta } from '@/composables/usePageMeta'
 import { useTagNavigation } from '@/composables/useTagNavigation'

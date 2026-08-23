@@ -3,7 +3,7 @@ import zhCN from './locales/zh-CN'
 import enUS from './locales/en-US'
 
 import { DEFAULT_LOCALE, HTML_LANG } from '@/config'
-import { currentLocale } from '@/locale'
+import { currentLocale } from './locale'
 
 const savedLocale = currentLocale()
 if (typeof document !== 'undefined') document.documentElement.lang = HTML_LANG[savedLocale]

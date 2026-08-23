@@ -1,15 +1,7 @@
 import path from 'path'
 import { contentDir, localeSuffix } from '../dataConfig.ts'
-import {
-  findNotesSection,
-  readJson,
-  requireJsonArray,
-  safeArray,
-  writeJsonFile,
-  isDirectRun,
-  runCliScript,
-  logWriteSuccess,
-} from './core/index.ts'
+import { findNotesSection, readJson, requireJsonArray, safeArray, writeJsonFile } from '../lib/fs.ts'
+import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
 
 function getFilePaths(locale = 'zh-CN') {
   const suffix = localeSuffix(locale)
@@ -46,7 +38,7 @@ function deriveCategory(relativePath: unknown): string[] {
 
 function buildNotesCategoryMap(categoriesArr: unknown): Map<string, CategoryEntry> {
   const map = new Map<string, CategoryEntry>()
-  // 按结构特征定位 notes 段（标题是翻译产物，不可作匹配依据；见 core.findNotesSection）
+  /** 按结构特征定位 notes 段（标题是翻译产物，不可作匹配依据） */
   const notesSection = findNotesSection(categoriesArr)
   if (!notesSection) return map
   const items = notesSection.items as unknown[]

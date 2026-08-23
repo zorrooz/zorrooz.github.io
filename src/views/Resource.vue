@@ -82,8 +82,10 @@ usePageMeta(t('metaResources'))
 
 const { data: resources } = useLocalizedContent(() => loadResources(), [])
 const activeSub = ref<ResourceNode | null>(null)
-// 选中项在资源树中的索引路径 [分类idx, 子分类idx]：跨语言重载后按索引恢复选中
-// （中英 title 不同，不能按 title 匹配；resources.yaml 结构跨语言同构）
+/**
+ * 选中项在资源树中的索引路径 [分类idx, 子分类idx]：跨语言重载后按索引恢复选中。
+ * 中英 title 不同不能按名字匹配；resources.yaml 结构跨语言同构。
+ */
 const activePath = ref<[number, number] | null>(null)
 
 const pageTitle = computed(() => t('resources'))
@@ -110,7 +112,7 @@ function isActiveSub(sub: ResourceNode) {
 watch(
   resources,
   (list) => {
-    // 优先按索引路径恢复用户选中项（语言切换后数据已重载）；失效时回退第一个
+    /** 按索引路径恢复选中项；失效时回退第一个 */
     let restored: ResourceNode | null = null
     if (activePath.value) {
       const [ci, si] = activePath.value

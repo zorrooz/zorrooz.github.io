@@ -21,7 +21,7 @@ const prefixedRoutes = (prefix: LocaleSegment): RouteRecordRaw[] => [
     component: ArticleView,
     props: true,
     beforeEnter: (to) => {
-      // 旧「每文一目录」URL（notes/<cat>/<sub>/<slug>/<slug> 或 .../slug/slug-en）→ 扁平化新 URL
+      /** 旧「每文一目录」URL（.../<slug>/<slug> 或 .../slug/slug-en）重定向到扁平化新 URL */
       const segs = (to.params.path as string[]) || []
       if (segs.length >= 3) {
         const last = segs[segs.length - 1]
@@ -42,7 +42,7 @@ const prefixedRoutes = (prefix: LocaleSegment): RouteRecordRaw[] => [
 ]
 
 export const routes: RouteRecordRaw[] = [
-  // 无前缀旧 URL 重定向到带 locale 前缀的等价路径
+  /* 无前缀旧 URL → 带 locale 前缀的等价路径 */
   { path: '/', redirect: () => `/${preferredLocaleSegment()}/` },
   { path: '/zh', redirect: '/zh/' },
   { path: '/en', redirect: '/en/' },
@@ -53,10 +53,10 @@ export const routes: RouteRecordRaw[] = [
     path: `${ARTICLE_ROUTE_PREFIX}/:path*`,
     redirect: (to) => `/${preferredLocaleSegment()}${to.path}`,
   },
-  // 其余无前缀路径：先补 locale 前缀，落入下方 404
+  /* 其余无前缀路径：补 locale 前缀后落入下方 404 */
   { path: '/:pathMatch(.*)*', redirect: (to) => `/${preferredLocaleSegment()}${to.path}` },
   ...LOCALE_SEGMENTS.map(prefixedRoutes).flat(),
-  // 语言前缀下的未知路径 → 品牌 404
+  /* 语言前缀下的未知路径 → 品牌 404 */
   { path: '/:locale(zh|en)/:pathMatch(.*)*', name: 'NotFound', component: NotFoundView },
 ]
 

@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import OnThisPage from '@/components/layout/OnThisPage.vue'
+import OnThisPage from '@/components/docs/OnThisPage.vue'
 import FloatingButton from '@/components/widgets/FloatingButton.vue'
 import { lockScrollPosition, unlockScrollPosition } from '@/utils/scroll'
 import { HEADER_OFFSET } from '@/config'

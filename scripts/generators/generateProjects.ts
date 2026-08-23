@@ -1,4 +1,4 @@
-import { isDirectRun, runCliScript } from './core/index.ts'
+import { isDirectRun, runCliScript } from '../lib/cli.ts'
 import { generateMetadataItems } from '../lib/metadata.ts'
 
 /**

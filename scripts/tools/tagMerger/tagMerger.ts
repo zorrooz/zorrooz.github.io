@@ -1,4 +1,4 @@
-﻿/**
+/**
  * TagMerger — AI 辅助标签合并工具（核心逻辑）
  *
  * 收集博客全部标签（notes md frontmatter + categories.yaml 的 projects/topics tags），
@@ -10,7 +10,8 @@ import path from 'path'
 import yaml from 'js-yaml'
 
 import { contentSrcDir, cacheDir, enSrcDir, localeSuffix, EN_SUFFIX } from '../../dataConfig.ts'
-import { walk, parseFrontMatterAndBody, normalizeTags } from '../../generators/core/index.ts'
+import { walk } from '../../lib/fs.ts'
+import { normalizeTags, parseFrontMatterAndBody } from '../../lib/frontmatter.ts'
 import { completeChat, loadLlmConfig, type LlmConfig } from '../../lib/llm.ts'
 import { rewriteFrontmatterTags } from '../../lib/frontmatter.ts'
 import { countTags } from '../../lib/tags.ts'
@@ -30,7 +31,7 @@ export function collectTags(locale: 'zh-CN' | 'en-US'): Map<string, number> {
     }
   }
 
-  // 目录即契约：zh 扫手写源，en 扫机器翻译层（各自目录内全部 .md）
+  /** 目录即契约：zh 扫手写源，en 扫机器翻译层（各自目录内全部 .md） */
   const srcDir = locale === 'en-US' ? enSrcDir : contentSrcDir
   const mdFiles = walk(srcDir, (p) => /\.md$/i.test(p))
   for (const mdPath of mdFiles) {
@@ -186,7 +187,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
       return en
     })
 
-  // 1. cache/en 的 -en.md：以镜像位置对应的 content-src zh.md 为基准
+  /** cache/en 的 -en.md：以镜像位置对应的 content-src zh.md 为基准 */
   for (const enPath of walk(enSrcDir, (p) => /\.md$/i.test(p))) {
     const rel = path.relative(enSrcDir, enPath)
     const zhPath = path.join(contentSrcDir, rel.replace(new RegExp(`${EN_SUFFIX}\\.md$`), '.md'))
@@ -195,7 +196,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
     if (!Array.isArray(zh.frontmatter.tags)) continue
     const enTags = translateList(zh.frontmatter.tags as string[])
     const raw = fs.readFileSync(enPath, 'utf-8')
-    // 只替换 frontmatter 区域的 tags 行/块（见 lib/frontmatter.ts），避免正则吞掉正文内容
+    /** 只替换 frontmatter 区域的 tags 行/块（见 lib/frontmatter.ts），避免吞掉正文 */
     const updated = rewriteFrontmatterTags(raw, () => enTags)
     if (updated !== raw) {
       fs.writeFileSync(enPath, updated, 'utf-8')
@@ -204,9 +205,11 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
     }
   }
 
-  // 2. categories-en.yaml：以 categories.yaml 为基准（projects/topics 的 tags）
-  //    按行序配对（zh/en yaml 结构由翻译器同步维护，顺序一致）——不能用「缩进+tags:」做
-  //    Map key，同一缩进的多个 tags 行会互相覆盖。
+  /**
+   * categories-en.yaml：以 categories.yaml 为基准按行序配对
+   * （结构由翻译器同步维护）。不能用「缩进+tags:」做 Map key，
+   * 同一缩进的多个 tags 行会互相覆盖。
+   */
   const zhYamlPath = path.join(contentSrcDir, 'categories.yaml')
   const enYamlPath = path.join(enSrcDir, `categories${EN_SUFFIX}.yaml`)
   if (fs.existsSync(zhYamlPath) && fs.existsSync(enYamlPath)) {

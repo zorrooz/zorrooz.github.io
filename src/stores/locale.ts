@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import i18n from '@/i18n/index'
 
 import { HTML_LANG, localeFromPath, type SupportedLocale } from '@/config'
-import { currentLocale, persistLocale } from '@/locale'
+import { currentLocale, persistLocale } from '@/i18n/locale'
 
 export const useLocaleStore = defineStore('locale', () => {
   const locale = ref<SupportedLocale>(currentLocale())
@@ -16,7 +16,6 @@ export const useLocaleStore = defineStore('locale', () => {
   }
 
   const initLocale = () => {
-    // 优先取 URL 前缀（/zh /en），回退到 localStorage
     if (typeof window !== 'undefined') {
       const localeFromUrl = localeFromPath(window.location.pathname)
       if (localeFromUrl) {

@@ -1,4 +1,6 @@
-// scripts/lib/llm.ts — LLM 配置 / 客户端 / 调用骨架的唯一实现（translator 与 tagMerger 共用）
+/**
+ * LLM 配置 / 客户端 / 调用骨架的唯一实现（translator 与 tagMerger 共用）。
+ */
 import OpenAI from 'openai'
 import fs from 'fs'
 import path from 'path'
@@ -69,7 +71,7 @@ export async function completeChat(
     ],
     model: cfg?.model ?? '',
     temperature: options.temperature ?? 0.7,
-    // DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言）
+    /** DeepSeek 扩展参数：默认关闭思考模式（openai SDK 未内置该字段，需类型断言） */
     thinking: { type: thinking ? 'enabled' : 'disabled' },
   } as OpenAI.ChatCompletionCreateParamsNonStreaming)
 

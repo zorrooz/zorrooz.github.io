@@ -43,8 +43,10 @@ const route = useRoute()
 const localeStore = useLocaleStore()
 const { t, locale } = useI18n()
 
-// html lang 与当前语言同步（SSG 产物与运行时一致，保证字体/拼写按语言环境渲染）
-// SSG 渲染时 route.path 已含 /zh、/en 前缀，运行时 hash 路由不含——统一剥离后拼接
+/**
+ * html lang 与当前语言同步；SSG 渲染时 route.path 已含 /zh、/en 前缀，
+ * 运行时不含——统一剥离后拼接 SEO 链接。
+ */
 const pagePath = computed(() => {
   const p = stripLocalePrefix(route.path)
   return p === '/' || p === '' ? '' : p
@@ -55,8 +57,10 @@ useHead({
   htmlAttrs: {
     lang: () => HTML_LANG[toSupportedLocale(locale.value)],
   },
-  // SEO：canonical + 双语 hreflang（SSG 产物为 /zh、/en 物理路径，避免重复内容）
-  // 文章页 en 路径带 -en 后缀，alternate 需做后缀映射
+  /**
+   * canonical + 双语 hreflang（SSG 产物为 /zh、/en 物理路径，避免重复内容）；
+   * 文章页 en 路径带 -en 后缀，alternate 做后缀映射。
+   */
   link: computed(() => {
     const isArticle = pagePath.value.includes(`${ARTICLE_ROUTE_PREFIX}/`)
     const zhAlt = isArticle ? pagePath.value.replace(/-en$/, '') : pagePath.value

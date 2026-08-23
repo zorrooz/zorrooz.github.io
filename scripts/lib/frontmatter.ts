@@ -1,4 +1,6 @@
-// scripts/lib/frontmatter.ts — frontmatter 解析与 tags 改写共享实现（translator 与 tagMerger 共用）
+/**
+ * frontmatter 解析与 tags 改写共享实现（translator 与 tagMerger 共用）。
+ */
 import yaml from 'js-yaml'
 
 export function normalizeTags(tags: unknown): string[] {
@@ -77,7 +79,7 @@ export function sanitizeFrontmatter(raw: string): string {
         if (!kv) return line
         const value = kv[2]
         if (value === '' || /^["']/.test(value)) return line
-        // 标量中会引入 YAML 歧义的字符：冒号+空格、井号（注释）、flow/标签/指示符
+        /** 引入 YAML 歧义的标量字符：冒号+空格、井号、flow/标签/指示符 */
         if (/:\s|\s#|[{}[\],&*!|>%@`]/.test(value)) {
           return `${kv[1]}${JSON.stringify(value)}`
         }
@@ -113,7 +115,7 @@ function parseInlineTags(span: string): string[] {
         .filter(Boolean)
     }
   } catch {
-    // 非 JSON（未加引号的裸值），走逗号切分
+    /* 非 JSON（未加引号的裸值），走逗号切分 */
   }
   return inner
     .split(',')

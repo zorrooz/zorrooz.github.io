@@ -2,24 +2,15 @@ import fs from 'fs'
 import path from 'path'
 
 import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
-import {
-  walk,
-  normalizeTags,
-  parseFrontMatterAndBody,
-  markdownToPlain,
-  countWordsSmart,
-  toPosixRelativeNoExt,
-  mdFileFilter,
-  writeJsonFile,
-  isDirectRun,
-  runCliScript,
-  logWriteSuccess,
-} from './core/index.ts'
+import { mdFileFilter, toPosixRelativeNoExt, walk, writeJsonFile } from '../lib/fs.ts'
+import { countWordsSmart, markdownToPlain } from '../lib/text.ts'
+import { normalizeTags, parseFrontMatterAndBody } from '../lib/frontmatter.ts'
+import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
 import type { Note as NoteItem } from '../../src/types.ts'
 
 function getFilePaths(locale = 'zh-CN') {
   return {
-    // 源目录按 locale 分层：zh 扫手写源 content-src/notes，en 扫机器层 cache/en/notes
+    /** 源目录按 locale 分层：zh 扫 content-src/notes，en 扫 cache/en/notes */
     notesSrcDir: path.join(srcDirFor(locale), 'notes'),
     outputPath: path.join(contentDir, `notes${localeSuffix(locale)}.json`),
   }
@@ -61,7 +52,7 @@ function generateNotesJson(locale = 'zh-CN') {
     console.warn(`Warn: notes source directory not found at ${notesSrcDir}`)
   }
 
-  // 目录即契约：content-src/notes 只含中文源（排除历史遗留 -en），cache/en/notes 全部是英文
+  /** 目录即契约：content-src/notes 只含中文源，cache/en/notes 全部为英文 */
   const mdFiles = walk(notesSrcDir, mdFileFilter(locale))
 
   const items = mdFiles.map((p) => buildNoteItem(p, notesSrcDir))

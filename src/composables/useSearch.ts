@@ -42,7 +42,7 @@ export function useSearch() {
     const loader = mods[key]
     if (!loader) return
     const mod = await loader()
-    // 加载期间 locale 已切换：丢弃过期索引，由新 locale 的 runSearch 重建
+    /** 加载期间 locale 已切换：丢弃过期索引，由新 locale 的 runSearch 重建 */
     if (locale.value !== currentLocale) return
     const docs = ((mod as { default?: SearchDoc[] }).default || []) as SearchDoc[]
     engine = new MiniSearch<SearchDoc>({

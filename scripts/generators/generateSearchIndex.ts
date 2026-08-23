@@ -12,13 +12,8 @@ import { contentDir, localeSuffix } from '../dataConfig.ts'
 import { ARTICLE_ROUTE_PREFIX } from '../../src/config.ts'
 import type { SearchDoc } from '../../src/types.ts'
 import { stripHtmlToText } from '../lib/text.ts'
-import {
-  isDirectRun,
-  logWriteSuccess,
-  runCliScript,
-  walkCategoryArticles,
-  writeJsonFile,
-} from './core/index.ts'
+import { walkCategoryArticles, writeJsonFile } from '../lib/fs.ts'
+import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
 
 function loadDescriptions(locale: 'zh-CN' | 'en-US'): Map<string, string> {
   const notesPath = path.join(contentDir, `notes${localeSuffix(locale)}.json`)
@@ -83,7 +78,7 @@ function generateSearchIndex(locale: 'zh-CN' | 'en-US') {
   const docs = collectArticles(locale)
   const fileName = `search-index${localeSuffix(locale)}.json`
   const outPath = path.join(contentDir, fileName)
-  // space=0 有意为之：search-index 由 SearchModal 懒加载，紧凑 JSON 减小首屏 payload
+  /** space=0 有意为之：SearchModal 懒加载本索引，紧凑 JSON 减小首屏 payload */
   writeJsonFile(outPath, docs, 0)
   logWriteSuccess(outPath, `${docs.length} docs`)
 }

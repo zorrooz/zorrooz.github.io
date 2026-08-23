@@ -1,4 +1,4 @@
-﻿import fs from 'fs/promises'
+import fs from 'fs/promises'
 import fsSync from 'fs'
 import path from 'path'
 import crypto from 'crypto'
@@ -58,7 +58,7 @@ function loadState(): TranslationState {
 }
 
 function saveState(state: TranslationState): void {
-  // 空状态不写，避免覆盖已建立的翻译状态（否则下次全量重翻）
+  /** 空状态不写，避免覆盖已建立的翻译状态（否则下次全量重翻） */
   if (!state || Object.keys(state).length === 0) return
   try {
     fsSync.writeFileSync(stateFilePath(), JSON.stringify(state, null, 2), 'utf-8')
@@ -118,7 +118,7 @@ function translateFrontmatterTags(source: string, translated: string): string {
     if (!en) console.warn(`[Warn] 标签「${tag}」缺少 zh→en 映射（保持中文，请运行 tagMerger 补齐）`)
     return en || tag
   })
-  // 只替换 LLM 输出的 frontmatter 区域 tags（见 lib/frontmatter.ts），缺失时原样返回
+  /** 只替换 frontmatter 区域的 tags（见 lib/frontmatter.ts），缺失时原样返回 */
   return rewriteFrontmatterTags(translated, () => enTags)
 }
 
@@ -166,7 +166,7 @@ async function translateFile(
 
     if (fileType === 'md') {
       translated = translateFrontmatterTags(content, translated)
-      // LLM 输出可能产生非法 YAML（如未引号的 description 含冒号），写盘前安全化
+      /** LLM 输出可能产生非法 YAML（如未引号 description 含冒号），写盘前安全化 */
       translated = sanitizeFrontmatter(translated)
     }
 
@@ -203,7 +203,7 @@ async function translateDirectory(
   } = options
 
   try {
-    // 遍历+模式匹配收敛至 lib/fs.ts walkAsync（include/exclude 按文件名匹配，语义与原 searchFiles 一致）
+    /** 遍历收敛至 lib/fs.ts walkAsync（include/exclude 按文件名匹配） */
     const files = await walkAsync(directoryPath, {
       include: filePatterns,
       exclude: excludePatterns,
@@ -214,7 +214,7 @@ async function translateDirectory(
 
     const state = loadState()
 
-    // 并发翻译：LLM 调用是 IO 密集，默认 4 路并发显著提速
+    /** LLM 调用为 IO 密集，多路并发显著提速 */
     const concurrency = Math.max(1, Math.min(8, options.concurrency ?? 4))
     const results: string[] = []
     let cursor = 0

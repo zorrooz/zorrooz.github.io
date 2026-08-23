@@ -1,4 +1,6 @@
-// scripts/lib/tagMapping.ts — tag-mapping.json 读取共享实现（translator 与 tagMerger 共用）
+/**
+ * tag-mapping.json 读取共享实现（translator 与 tagMerger 共用）。
+ */
 import fs from 'fs'
 
 export interface TagMapping {

@@ -117,44 +117,28 @@
 
 <script setup lang="ts">
 defineOptions({ name: 'ArticleView' })
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
+
 import { usePageMeta } from '@/composables/usePageMeta'
 import { useTagNavigation } from '@/composables/useTagNavigation'
-import RenderMarkdown from '@/components/layout/RenderMarkdown.vue'
-import OnThisPage from '@/components/layout/OnThisPage.vue'
+import { useReadingProgress } from '@/composables/useReadingProgress'
+import { useStickySidebars } from '@/composables/useStickySidebars'
+import { useCopyFeedback } from '@/composables/useCopyFeedback'
+import RenderMarkdown from '@/components/docs/RenderMarkdown.vue'
+import OnThisPage from '@/components/docs/OnThisPage.vue'
+import NavigationTree from '@/components/docs/NavigationTree.vue'
 import TocDrawer from '@/components/widgets/TocDrawer.vue'
-import NavigationTree from '@/components/layout/NavigationTree.vue'
 import { loadCategories, loadHtmlContent, loadMarkdownSource } from '@/utils/contentLoader'
-import {
-  articlePathFromUrl,
-  joinRoutePathParam,
-  normalizeArticleKey,
-  toArticle,
-} from '@/utils/navigation'
-import { flattenCategoryArticles } from '@/utils/articles'
+import { buildArticleIndex, collectGroupArticles, type ArticleMeta } from '@/utils/articles'
+import { joinRoutePathParam, normalizeArticleKey, toArticle } from '@/utils/navigation'
 import { readingTimeMinutes } from '@/utils/readingTime'
 import { scrollToTop } from '@/utils/scroll'
 import { copyText } from '@/utils/clipboard'
 import { HEADER_OFFSET } from '@/config'
 import type { CategoryData } from '@/types'
-
-/** 由 categories.json 展开的运行时文章元数据 */
-interface ArticleMeta {
-  title: string
-  path: string
-  date: string
-  tags: string[]
-  wordCount: number
-  description?: string
-}
-
-interface LinearArticle {
-  title: string
-  path: string
-}
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -163,22 +147,18 @@ const { goTagFromArticle } = useTagNavigation()
 const rawMarkdown = ref('')
 const currentPath = ref('')
 const allArticles = ref<ArticleMeta[]>([])
-const categoryList = ref<CategoryData>([])
-const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024)
-const progressPercent = ref(0)
-const copyFeedback = ref(false)
-let copyFeedbackTimer: number | null = null
-let scrollTicking = false
+const categoryData = ref<CategoryData>([])
+
+const { progressPercent } = useReadingProgress()
+const { isDesktop, updateSidebarDimensions } = useStickySidebars(() => [
+  leftSidebarContent.value,
+  rightSidebarContent.value,
+])
+const { copied: copyFeedback, showSuccess: showCopySuccess } = useCopyFeedback()
 
 const onThisPageRef = useTemplateRef<InstanceType<typeof OnThisPage>>('onThisPageRef')
 const leftSidebarContent = useTemplateRef<HTMLElement>('leftSidebarContent')
 const rightSidebarContent = useTemplateRef<HTMLElement>('rightSidebarContent')
-
-const isDesktop = computed(() => viewportWidth.value >= 992)
-const isNote = computed(() => !!currentPost.value?.path.startsWith('notes/'))
-const updatedAtText = computed(() => t('updatedAt'))
-const prevPageText = computed(() => t('prevPage'))
-const nextPageText = computed(() => t('nextPage'))
 
 const stripMd = (path: string) => path.replace(/\.md$/, '')
 
@@ -187,10 +167,16 @@ const findArticle = (path: string) =>
     (article) => normalizeArticleKey(article.path) === normalizeArticleKey(path),
   ) || null
 
-const currentPost = computed(() => {
-  if (!currentPath.value) return null
-  return findArticle(currentPath.value)
-})
+const currentPost = computed(() => (currentPath.value ? findArticle(currentPath.value) : null))
+const isNote = computed(() => !!currentPost.value?.path.startsWith('notes/'))
+const updatedAtText = computed(() => t('updatedAt'))
+const prevPageText = computed(() => t('prevPage'))
+const nextPageText = computed(() => t('nextPage'))
+const readingMinutes = computed(() => readingTimeMinutes(currentPost.value?.wordCount ?? 0))
+
+function getReadingTimeText(minutes: number) {
+  return t('articleReadingTime', { minutes })
+}
 
 usePageMeta(computed(() => currentPost.value?.title))
 useHead({
@@ -201,65 +187,39 @@ useHead({
   ),
 })
 
-const groupLinearArticles = computed(() => {
+/** 同组线性文章序列（上一篇/下一篇） */
+const groupArticles = computed(() => {
   if (!currentPost.value) return []
   const [type, group] = stripMd(currentPost.value.path).split('/')
-  const linear: LinearArticle[] = []
-
-  const pushFromUrl = (title: string, articleUrl: string) => {
-    if (!articleUrl.trim()) return
-    const path = stripMd(articlePathFromUrl(articleUrl))
-    const [t, g] = path.split('/')
-    if (t !== type || g !== group) return
-    linear.push({ title, path: `${path}.md` })
-  }
-
-  for (const section of categoryList.value) {
-    for (const item of section.items) {
-      if (item.name !== group) continue
-      item.articles?.forEach((a) => pushFromUrl(a.title, a.articleUrl))
-      item.categories.forEach((cat) =>
-        cat.articles.forEach((a) => pushFromUrl(a.title, a.articleUrl)),
-      )
-    }
-  }
-  return linear
+  return collectGroupArticles(categoryData.value, type, group)
 })
 
 const currentLinearIndex = computed(() => {
   const post = currentPost.value
   if (!post) return -1
-  return groupLinearArticles.value.findIndex((a) => stripMd(a.path) === stripMd(post.path))
+  return groupArticles.value.findIndex((a) => stripMd(a.path) === stripMd(post.path))
 })
 
 const prevPost = computed(() => {
   const idx = currentLinearIndex.value
-  return idx > 0 ? groupLinearArticles.value[idx - 1] : null
+  return idx > 0 ? groupArticles.value[idx - 1] : null
 })
 
 const nextPost = computed(() => {
   const idx = currentLinearIndex.value
-  const last = groupLinearArticles.value.length - 1
-  return idx >= 0 && idx < last ? groupLinearArticles.value[idx + 1] : null
+  const last = groupArticles.value.length - 1
+  return idx >= 0 && idx < last ? groupArticles.value[idx + 1] : null
 })
 
-const readingMinutes = computed(() => readingTimeMinutes(currentPost.value?.wordCount ?? 0))
-
-function getReadingTimeText(minutes: number) {
-  return t('articleReadingTime', { minutes })
-}
-
+/** 优先复制 markdown 源（含 frontmatter）；加载失败回退正文纯文本 */
 async function copyArticle() {
   if (!currentPost.value) return
-  // 优先复制完整 markdown 源（含 frontmatter，粘贴即得 .md 文件）；加载失败回退纯文本
   let text = ''
   try {
     const md = await loadMarkdownSource(currentPost.value.path)
-    if (md) {
-      text = md.trim()
-    }
+    if (md) text = md.trim()
   } catch {
-    // 回退到纯文本提取
+    text = ''
   }
   if (!text) {
     const body = document.querySelector('.markdown-body')
@@ -268,67 +228,24 @@ async function copyArticle() {
     clone
       .querySelectorAll('.heading-anchor, .code-block-header, .copy-button, .table-copy-btn')
       .forEach((el) => el.remove())
-    const bodyText = (clone.innerText || '').trim()
-    text = `${currentPost.value.title}\n\n${bodyText}`
+    text = `${currentPost.value.title}\n\n${(clone.innerText || '').trim()}`
   }
-  const copied = await copyText(text)
-  if (copied) {
-    copyFeedback.value = true
-    if (copyFeedbackTimer) clearTimeout(copyFeedbackTimer)
-    copyFeedbackTimer = window.setTimeout(() => {
-      copyFeedback.value = false
-    }, 1200)
-  } else {
-    console.warn(t('copyFailed'))
-  }
+  if (await copyText(text)) showCopySuccess()
+  else console.warn(t('copyFailed'))
 }
 
-function buildFromCategories() {
+function buildIndex() {
   try {
-    const categoryData = loadCategories()
-    categoryList.value = categoryData
-    const latestDateByUrl = new Map<string, string>()
-    categoryData.forEach((section) =>
-      section.items.forEach((item) => {
-        const itemLatest = item.stats.latestDate || ''
-        item.articles?.forEach((a) => latestDateByUrl.set(a.articleUrl, itemLatest))
-        item.categories.forEach((cat) => {
-          const catLatest = cat.stats.latestDate || itemLatest
-          cat.articles.forEach((a) => latestDateByUrl.set(a.articleUrl, catLatest))
-        })
-      }),
-    )
-    allArticles.value = flattenCategoryArticles(categoryData).map((article) => ({
-      title: article.title,
-      path: articlePathFromUrl(article.articleUrl),
-      date: latestDateByUrl.get(article.articleUrl) ?? '',
-      tags: article.tags,
-      wordCount: article.wordCount,
-    }))
+    categoryData.value = loadCategories()
+    allArticles.value = buildArticleIndex(categoryData.value)
   } catch {
+    categoryData.value = []
     allArticles.value = []
-    categoryList.value = []
   }
-}
-
-function onResize() {
-  viewportWidth.value = window.innerWidth
-  updateSidebarDimensions()
-}
-
-function onScroll() {
-  if (scrollTicking) return
-  scrollTicking = true
-  requestAnimationFrame(() => {
-    scrollTicking = false
-    const doc = document.documentElement
-    const max = doc.scrollHeight - window.innerHeight
-    progressPercent.value = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0
-  })
 }
 
 interface LoadArticleOptions {
-  /** 内容重载后恢复到此滚动位置（切换语言等场景用；缺省滚回顶部） */
+  /** 内容重载后恢复到此滚动位置（切换语言场景），缺省滚回顶部 */
   restoreScrollY?: number
 }
 
@@ -341,18 +258,16 @@ function loadArticleContent(options: LoadArticleOptions = {}) {
 
     rawMarkdown.value = loadHtmlContent(currentPath.value)
 
-    // 双 nextTick：等 v-html 渲染 + 布局稳定后再恢复滚动（单次 nextTick 时高度可能未定型）
-    nextTick(() => nextTick(() => {
-      if (typeof window === 'undefined') return
-      if (typeof options.restoreScrollY === 'number') {
-        // 切换语言：保持当前内容位置（内容高度因语言不同略有差异，位置按原 scrollY 恢复）
-        window.scrollTo(0, options.restoreScrollY)
-      } else {
-        scrollToTop()
-      }
-      updateSidebarDimensions()
-      onThisPageRef.value?.refreshToc()
-    }))
+    /** 双 nextTick：v-html 渲染与布局稳定后再处理滚动（单次 nextTick 高度可能未定型） */
+    nextTick(() =>
+      nextTick(() => {
+        if (typeof window === 'undefined') return
+        if (typeof options.restoreScrollY === 'number') window.scrollTo(0, options.restoreScrollY)
+        else scrollToTop()
+        updateSidebarDimensions()
+        onThisPageRef.value?.refreshToc()
+      }),
+    )
   } catch {
     rawMarkdown.value =
       '# Article Not Found\n\nThe requested article could not be loaded. Please check the URL.'
@@ -364,65 +279,33 @@ function loadArticleContent(options: LoadArticleOptions = {}) {
   }
 }
 
-function updateSidebarDimensions() {
-  if (typeof window === 'undefined') return
-  const header = document.querySelector('header')
-  const headerH = header?.offsetHeight || 60
-  const viewportH = window.innerHeight
-  const availableH = Math.max(200, viewportH - headerH - 24 - 24)
-  const sidebarEls = [leftSidebarContent.value, rightSidebarContent.value]
-  sidebarEls.forEach((el) => {
-    if (!el) return
-    el.style.maxHeight = `${availableH}px`
-    el.style.overflowY = 'auto'
-  })
-}
-
 function handleMarkdownRendered() {
   updateSidebarDimensions()
   nextTick(() => onThisPageRef.value?.refreshToc())
 }
 
-buildFromCategories()
+buildIndex()
 loadArticleContent()
 
 watch(locale, (newLocale, oldLocale) => {
-  if (newLocale !== oldLocale) {
-    // 切换语言：路由 path 参数不变（-en 匹配在 loadHtmlContent 内按 locale 自动处理），
-    // 仅重建内容并恢复到当前滚动位置
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0
-    buildFromCategories()
-    loadArticleContent({ restoreScrollY: scrollY })
-  }
+  if (newLocale === oldLocale) return
+  /** 路由 path 参数不变（-en 匹配在 loadHtmlContent 内处理），重建后恢复滚动位置 */
+  const scrollY = typeof window !== 'undefined' ? window.scrollY : 0
+  buildIndex()
+  loadArticleContent({ restoreScrollY: scrollY })
 })
 
 watch(
   () => route.params.path,
   (newPathParam, oldPathParam) => {
-    const oldPath = joinRoutePathParam(oldPathParam)
-    const newPath = joinRoutePathParam(newPathParam)
-    if (oldPath !== newPath) {
-      // 文章间导航（上一篇/下一篇/目录点击）：新文章应滚回顶部
-      onThisPageRef.value?.resetToc()
-      loadArticleContent()
-    }
+    if (joinRoutePathParam(oldPathParam) === joinRoutePathParam(newPathParam)) return
+    onThisPageRef.value?.resetToc()
+    loadArticleContent()
   },
 )
 
 watch(rawMarkdown, () => {
   nextTick(() => updateSidebarDimensions())
-})
-
-onMounted(() => {
-  viewportWidth.value = window.innerWidth
-  window.addEventListener('resize', onResize)
-  window.addEventListener('scroll', onScroll, { passive: true })
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('scroll', onScroll)
-  if (copyFeedbackTimer) clearTimeout(copyFeedbackTimer)
 })
 </script>
 
@@ -551,15 +434,15 @@ onBeforeUnmount(() => {
 @media (min-width: 992px) {
   .docs-sidebar-col,
   .docs-toc-col {
-    /* 覆盖 Bootstrap col-lg-2 的 16.67%：固定 240px，Bootstrap 栅格只保留 order/换行语义 */
+    /* 覆盖 Bootstrap col-lg-2 的 16.67%：固定 240px，栅格只保留 order/换行语义 */
     flex: 0 0 240px;
     max-width: 240px;
     width: 240px;
   }
 
   .docs-main-col {
-    /* 覆盖 col-lg-8 的固定 width 66.67%：flex-basis 0% 使列完全自适应剩余空间
-       （flex-basis:auto 会回退 width，240+853+240 超行宽 → TOC 被 wrap 挤到第二行） */
+    /* 覆盖 col-lg-8 固定宽度：flex-basis 0% 使列自适应剩余空间，
+       否则 240+853+240 超行宽导致 TOC 被挤到第二行 */
     flex: 1 1 0%;
     width: auto;
     max-width: none;

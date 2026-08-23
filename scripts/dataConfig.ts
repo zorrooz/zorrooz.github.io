@@ -15,7 +15,6 @@
 
 import path from 'path'
 
-// dataConfig.ts 位于 scripts/ → 仓库根 = 其上一层
 const repoRoot = path.resolve(import.meta.dirname, '..')
 
 export const dataDir = process.env.GBLOG_DATA_DIR

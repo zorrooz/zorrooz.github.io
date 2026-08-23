@@ -30,19 +30,25 @@ Vue 3 + Vite 7 双语静态博客（zh-CN / en-US），Markdown + YAML 写作，
 
 ```
 src/                      # 浏览器应用（含 SSR；不含 Node 构建脚本）
-├── main.ts               # ViteSSG → Pinia → Router → i18n；内联 v-reveal 指令
+├── main.ts               # ViteSSG → Pinia → Router → i18n → v-reveal 指令注册
 ├── App.vue               # AppHeader + router-view + AppFooter（含 skip-link → main#main-content）
-├── router/index.ts       # /{zh,en} × 5 路由 + 旧 URL 重定向
-├── locale.ts             # currentLocale()/persistLocale() 单一来源
+├── directives/reveal.ts  # v-reveal 滚动入场指令（IntersectionObserver 一次触发）
+├── router/index.ts       # /{zh,en} × 5 路由 + 旧 URL 重定向 + scrollBehavior
 ├── config.ts             # SITE/BLOG_TITLE、LOCALE_MAP、THEME_MODES、ARTICLE_ROUTE_PREFIX、HEADER_OFFSET
-├── i18n/                 # vue-i18n；schema.ts（AppMessages = typeof zhCN），en-US 用 satisfies 编译期校验
+├── i18n/                 # vue-i18n + locale.ts（currentLocale/persistLocale 单一来源）；
+│                         # schema.ts（AppMessages = typeof zhCN），en-US 用 satisfies 编译期校验
 ├── stores/               # theme.ts（ThemeMode + initTheme）、locale.ts
 ├── views/                # Home / Category / Resource / About / Article
-├── components/           # layout/（AppHeader/NavigationTree/OnThisPage/RenderMarkdown…）
+├── components/           # layout/（AppHeader/AppFooter/NavActions）
+│                         # docs/（RenderMarkdown/OnThisPage/NavigationTree/TreeNode，文档内容渲染域）
 │                         # widgets/（BackToTop/SearchModal/TocDrawer/FloatingButton）
-│                         # common/（IconButton/ModalOverlay/PostCard/Pagination/EmptyState）
-├── composables/          # useLocalizedContent / usePageMeta / useSearch / useTagNavigation / useCopyFeedback / useFloatingButton
-├── utils/                # 浏览器运行时纯工具（不 import 任何 scripts/ 代码）
+│                         # common/（PostList/PostCard/Pagination/IconButton/ModalOverlay/EmptyState）
+├── composables/          # useLocalizedContent / usePageMeta / useSearch / useTagNavigation /
+│                         # useCopyFeedback / useFloatingButton / useReadingProgress /
+│                         # useStickySidebars / useRoutePagination
+├── utils/                # 浏览器运行时纯工具（不 import 任何 scripts/ 代码）：
+│                         # contentLoader / navigation / scroll / markdownImages / markdownDom /
+│                         # toc / articles / pagination / clipboard / icons / url / tags / format / readingTime
 └── assets/               # 字体 OTF / styles / avatar.*
 ```
 
@@ -53,8 +59,9 @@ scripts/                  # Node 工具链（Node >=23.6 原生 type stripping �
 ├── llmConfig.ts          # DeepSeek API 配置（gitignore，勿提交）
 ├── lib/                  # 共享工具层：llm / fs / text / cli / frontmatter（含 sanitizeFrontmatter）/ tags
 │                         # / tagMapping / yamlEntries / yamlJson（YAML→JSON 骨架）/ metadata（projects/topics）
-├── generators/           # 11 个生成器 + markdownProcessor（md→HTML 渲染管线）+ core/（兼容 barrel）
-└── tools/                # 独立 CLI 内容工具：packArticle（导出）/ translator（AI 翻译）/ tagMerger（标签映射）
+├── generators/           # 11 个生成器 + markdownProcessor（md→HTML 渲染管线）
+└── tools/                # 独立 CLI 内容工具，每个工具一个子目录（lib + *Cli.ts）：
+                          # packArticle（导出）/ translator（AI 翻译）/ tagMerger（标签映射）
 
 vite/contentDevPlugin.ts  # dev 插件：监听数据目录 → runAllGenerators → full-reload
 ```

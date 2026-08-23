@@ -77,7 +77,7 @@ import { useLocaleStore } from '@/stores/locale'
 import { ARTICLE_ROUTE_PREFIX, SITE } from '@/config'
 import { toLocalePath } from '@/utils/navigation'
 import { lockScrollOverflow, unlockScrollOverflow } from '@/utils/scroll'
-import NavigationTree from '@/components/layout/NavigationTree.vue'
+import NavigationTree from '@/components/docs/NavigationTree.vue'
 import NavActions from '@/components/layout/NavActions.vue'
 
 const route = useRoute()

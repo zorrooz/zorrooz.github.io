@@ -1,4 +1,4 @@
-import { isDirectRun, runCliScript } from './core/index.ts'
+import { isDirectRun, runCliScript } from '../lib/cli.ts'
 import { generateJsonFromYaml } from '../lib/yamlJson.ts'
 import type {
   AboutContact,

@@ -11,14 +11,8 @@ import path from 'path'
 
 import { contentDir, srcDirFor } from '../dataConfig.ts'
 import { renderMarkdown } from './markdownProcessor.ts'
-import {
-  ensureDirectoryExistence,
-  isDirectRun,
-  mdFileFilter,
-  runCliScript,
-  toPosixRelativeNoExt,
-  walk,
-} from './core/index.ts'
+import { ensureDirectoryExistence, mdFileFilter, toPosixRelativeNoExt, walk } from '../lib/fs.ts'
+import { isDirectRun, runCliScript } from '../lib/cli.ts'
 
 const htmlOutputDir = path.join(contentDir, 'html')
 

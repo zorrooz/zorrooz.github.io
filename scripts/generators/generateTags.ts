@@ -1,13 +1,7 @@
 import path from 'path'
 import { contentDir, localeSuffix } from '../dataConfig.ts'
-import {
-  readJson,
-  requireJsonArray,
-  writeJsonFile,
-  isDirectRun,
-  runCliScript,
-  logWriteSuccess,
-} from './core/index.ts'
+import { readJson, requireJsonArray, writeJsonFile } from '../lib/fs.ts'
+import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
 import { countTags, sortTagsByName } from '../lib/tags.ts'
 import type { Tag as TagEntry } from '../../src/types.ts'
 
@@ -71,7 +65,7 @@ export function checkTagsConsistency(contentDir: string): void {
   const zh = readNames('')
   const en = readNames('-en')
 
-  // 每篇文章 tags 数量配对检查（posts 按 id 配对）
+  /** 中英 tags 数量配对检查（posts 按 id 配对） */
   const readPosts = (suffix: string): Array<{ id?: unknown; tags?: unknown }> => {
     const arr = readJson(path.join(contentDir, `posts${suffix}.json`))
     return Array.isArray(arr) ? (arr as Array<{ id?: unknown; tags?: unknown }>) : []

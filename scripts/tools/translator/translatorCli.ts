@@ -1,4 +1,4 @@
-﻿import { TranslationManager, needsTranslation } from './translator.ts'
+import { TranslationManager, needsTranslation } from './translator.ts'
 import { TRANSLATION_CONFIG, TRANSLATION_TARGETS } from './translatorConfig.ts'
 import { cacheDir } from '../../dataConfig.ts'
 import { Command } from 'commander'
@@ -102,12 +102,12 @@ program
                   await fs.access(targetPath)
                   translatedFiles++
 
-                  // 与实际翻译同口径：内容 hash 判定（而非 mtime）
+                  /** 与实际翻译同口径：内容 hash 判定（而非 mtime） */
                   if (await needsTranslation(sourcePath, targetPath, state)) {
                     needUpdate++
                   }
                 } catch {
-                  // 翻译文件不存在
+                  /* 目标不存在等访问失败 → 视为需要翻译 */
                 }
               }
             }

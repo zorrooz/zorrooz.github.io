@@ -29,7 +29,7 @@ export function contentDev(): Plugin {
 
       await run('startup')
 
-      // 忽略 Obsidian 配置/回收站目录：workspace.json 等频繁写入不应触发重生成风暴
+      /** 忽略 Obsidian 配置/回收站目录：workspace.json 频繁写入不应触发重生成风暴 */
       const watcher = watch([contentSrcDir, enSrcDir], {
         ignoreInitial: true,
         ignored: /(^|[/\\])\.(obsidian|trash)([/\\]|$)/,

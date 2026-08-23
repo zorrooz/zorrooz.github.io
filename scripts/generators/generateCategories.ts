@@ -4,15 +4,8 @@ import enUS from '../../src/i18n/locales/en-US.ts'
 import { ARTICLE_ROUTE_PREFIX } from '../../src/config.ts'
 import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { normalizeProjectTopicEntry } from '../lib/yamlEntries.ts'
-import {
-  isDirectRun,
-  logWriteSuccess,
-  readJson,
-  readYaml,
-  runCliScript,
-  safeArray,
-  writeJsonFile,
-} from './core/index.ts'
+import { readJson, readYaml, safeArray, writeJsonFile } from '../lib/fs.ts'
+import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
 
 interface FormattedArticle {
   title: string
@@ -217,7 +210,7 @@ function buildDetailedProjectTopicCategories(
         })
         .map((art) => formatArticle(art, `${type}s`))
 
-      // projects/topics 为纯元数据（无文章），不再生成子分类
+      /** projects/topics 为纯元数据（无文章），不生成子分类 */
       const detailedSubCats: DetailedSubCategory[] = []
 
       const globalStats = {

@@ -3,20 +3,16 @@
  * markdownToPlain 与 stripHtmlToText 遵循同一风格：剥除标记/标签/实体 → 折叠空白 → trim。
  */
 
-/** 粗略去除 markdown 标记 → 纯文本，用于字数统计 */
+/** 粗略去除 markdown 标记 → 纯文本（代码块 → 图像/链接/标签 → 标记 → 折叠空白） */
 export function markdownToPlain(text: string): string {
-  // 先剥代码块与行内代码
   let t = text.replace(/```[\s\S]*?```/g, ' ')
   t = t.replace(/`[^`]*`/g, ' ')
-  // 图像/链接/HTML 标签
   t = t.replace(/!\[[^\]]*]\([^)]+\)/g, ' ')
   t = t.replace(/\[[^\]]*]\([^)]+\)/g, ' ')
   t = t.replace(/<[^>]+>/g, ' ')
-  // 标题、加粗/斜体/引用/列表/表格标记与参考链接
   t = t.replace(/^#{1,6}\s+/gm, ' ')
   t = t.replace(/[*_~`>#|-]{1,}/g, ' ')
   t = t.replace(/^\s*\[[^\]]+]:\s+\S+.*$/gm, ' ')
-  // 折叠空白
   t = t.replace(/\s+/g, ' ').trim()
   return t
 }

@@ -1,5 +1,5 @@
 import type { AboutData, CategoryData, Note, Post, ResourceNode, Tag } from '@/types'
-import { currentLocale } from '@/locale'
+import { currentLocale } from '@/i18n/locale'
 import { EN_SUFFIX } from '@/config'
 
 const getLocalizedFileName = (baseName: string, extension = '.json'): string => {
@@ -13,15 +13,17 @@ const getLocalizedFileName = (baseName: string, extension = '.json'): string => 
   return isEnglish ? `${baseName}${EN_SUFFIX}${extension}` : `${baseName}${extension}`
 }
 
-// 急切加载核心 JSON（about/categories/notes/posts/projects/resources/tags/topics 含 -en 变体）；
-// search-index* 除外（SearchModal 内懒加载）。@data 别名指向数据分支（GBLOG_DATA_DIR）
+/**
+ * 急切加载核心 JSON（about/categories/notes/posts/projects/resources/tags/topics 含 -en 变体）；
+ * search-index* 除外（SearchModal 内懒加载）。@data 别名指向数据分支（GBLOG_DATA_DIR）
+ */
 const jsonModules = import.meta.glob('@data/content/[abcnprt]*.json', { eager: true })
 const htmlModules = import.meta.glob('@data/content/html/**/*.html', {
   query: '?raw',
   import: 'default',
   eager: true,
 })
-// 惰性加载 markdown 源（复制文章用，按需拆包）：content-src 为 zh 手写源，cache/en 为机器层
+/** 惰性加载 markdown 源（复制文章用，按需拆包）：content-src 为 zh 源，cache/en 为机器层 */
 const markdownModules = import.meta.glob('@data/{content-src,cache/en}/**/*.md', {
   query: '?raw',
   import: 'default',
@@ -106,7 +108,6 @@ export const loadAbout = (): AboutData => loadJsonContent('about', EMPTY_ABOUT)
  */
 export const loadMarkdownSource = async (articlePath: string): Promise<string | null> => {
   const suffix = currentLocale() === 'en-US' ? '-en' : ''
-  // articlePath 可能已带 .md（如 notes/.../python-basics.md），统一去后缀后拼接
   const target = `${articlePath.replace(/\.md$/, '')}${suffix}.md`
   const key = Object.keys(markdownModules).find(
     (k) => k.endsWith(`/${target}`) || k.endsWith(target),

@@ -5,7 +5,7 @@
  */
 
 import { contentSrcDir, contentDir } from './dataConfig.ts'
-import { isDirectRun } from './generators/core/index.ts'
+import { isDirectRun } from './lib/cli.ts'
 import { generateAboutJson } from './generators/generateAbout.ts'
 import { generateResourcesJson } from './generators/generateResources.ts'
 import { generateNotesJson } from './generators/generateNotes.ts'
@@ -51,7 +51,7 @@ async function runLocaleBlock(locale: Locale) {
 export async function runAllGenerators() {
   console.log('== Generators: start ==')
 
-  // 0. 独立 YAML 源 — 中英各一次
+  /* 0. 独立 YAML 源 — 中英各一次 */
   await runStep('about', () => {
     generateAboutJson('zh-CN')
     generateAboutJson('en-US')
@@ -61,12 +61,14 @@ export async function runAllGenerators() {
     generateResourcesJson('en-US')
   })
 
-  // 1-4. 中文基础索引（notes/projects/topics → categories → posts → tags）
+  /* 1-4. 中文基础索引（notes/projects/topics → categories → posts → tags） */
   await runLocaleBlock('zh-CN')
 
-  // 4.5 增量翻译（notes 文章 + about/categories/resources yaml）。
-  // 英文 yaml 由中文 yaml 经翻译生成，不维护手写 -en.yaml；跳过未变更的 -en 文件，
-  // 失败仅告警不阻断构建。
+  /**
+   * 4.5 增量翻译（notes 文章 + about/categories/resources yaml）。
+   * 英文 yaml 由中文 yaml 翻译生成，不维护手写 -en.yaml；
+   * 跳过未变更文件，失败仅告警不阻断构建。
+   */
   await runStep('translate', async () => {
     if (process.env.GBLOG_NO_TRANSLATE === '1') {
       console.log('== Translators: skipped (GBLOG_NO_TRANSLATE=1) ==')
@@ -80,7 +82,7 @@ export async function runAllGenerators() {
     }
   })
 
-  // 4.6 tagMerger 映射 — 增量补齐 zh→en 标签映射（缓存命中 0 token）
+  /* 4.6 tagMerger 映射 — 增量补齐 zh→en 标签映射（缓存命中 0 token） */
   await runStep('tag-mapping', async () => {
     if (process.env.GBLOG_NO_TRANSLATE === '1') return
     try {
@@ -91,7 +93,7 @@ export async function runAllGenerators() {
     }
   })
 
-  // 4.7 tag 一致性自动解决：以 zh 文件为基准重写 -en 文件 tags
+  /* 4.7 tag 一致性自动解决：以 zh 文件为基准重写 -en 文件 tags */
   await runStep('tag-consistency', async () => {
     if (process.env.GBLOG_NO_TRANSLATE === '1') return
     try {
@@ -102,22 +104,22 @@ export async function runAllGenerators() {
     }
   })
 
-  // 5-8. 英文基础索引（en 源 cache/en 由上方翻译步骤生成，须在其后执行）
+  /* 5-8. 英文基础索引（依赖上方翻译步骤产物） */
   await runLocaleBlock('en-US')
 
-  // 8.5 中英标签一致性校验（数量与名称必须一致）
+  /* 8.5 中英标签一致性校验（数量与名称必须一致） */
   await runStep('tags-consistency', () => {
     checkTagsConsistency(contentDir)
   })
 
-  // 9. 文章 HTML（构建期 markdown 渲染）— 中英各一次
+  /* 9. 文章 HTML（构建期 markdown 渲染）— 中英各一次 */
   await runStep('html', () => generateHtml('zh-CN'))
   await runStep('html-en', () => generateHtml('en-US'))
 
-  // 10. sitemap + robots.txt（依赖 zh categories.json）
+  /* 10. sitemap + robots.txt */
   await runStep('sitemap', () => generateSitemap())
 
-  // 11. 搜索索引（依赖 html + categories）— 中英各一次
+  /* 11. 搜索索引 — 中英各一次 */
   await runStep('search-index', () => {
     generateSearchIndex('zh-CN')
     generateSearchIndex('en-US')

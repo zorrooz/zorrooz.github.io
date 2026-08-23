@@ -45,7 +45,7 @@ export function getVisiblePages(
     }
     result.push(sorted[idx])
   }
-  // 首部被窗口挤出时用省略号占位（尾部恒有 total，无需补位）
+  /** 首部被窗口挤出时用省略号占位（尾部恒有 total，无需补位） */
   if (result[0] !== 1) {
     result.unshift('...')
   }

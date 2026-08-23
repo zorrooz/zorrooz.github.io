@@ -1,5 +1,6 @@
-// scripts/lib/yamlJson.ts — 「读 YAML → 兜底 → 归一化 → 写 JSON」生成器骨架
-// generateAbout / generateResources 共用；行为与迁移前逐字节一致。
+/**
+ * 「读 YAML → 兜底 → 归一化 → 写 JSON」生成器骨架，generateAbout / generateResources 共用。
+ */
 import fs from 'fs'
 import path from 'path'
 

@@ -9,7 +9,8 @@ import path from 'path'
 
 import { contentDir } from '../dataConfig.ts'
 import { LOCALE_SEGMENTS, SITE } from '../../src/config.ts'
-import { isDirectRun, logWriteSuccess, runCliScript, walkCategoryArticles } from './core/index.ts'
+import { walkCategoryArticles } from '../lib/fs.ts'
+import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
 
 const SITE_URL = SITE.url
 const publicDir = path.join(import.meta.dirname, '../../public')

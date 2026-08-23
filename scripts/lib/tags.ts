@@ -1,4 +1,6 @@
-// scripts/lib/tags.ts — 标签计数 / 排序共享实现（generateTags 与 tagMerger 共用）
+/**
+ * 标签计数 / 排序共享实现（generateTags 与 tagMerger 共用）。
+ */
 /** 遍历元素：字符串 trim 后计数，空串与非字符串跳过 */
 export function countTags(iterable: Iterable<unknown>): Map<string, number> {
   const map = new Map<string, number>()

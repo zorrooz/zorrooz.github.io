@@ -1,6 +1,7 @@
-// scripts/lib/metadata.ts — projects/topics 元数据生成骨架（自 generateProjects 下沉）
-// 「读 categories.yaml → 归一化 → 写 JSON」，generateProjects/generateTopics 共用；
-// 消除生成器互引，与 lib/yamlEntries.ts 归一化配合。
+/**
+ * projects/topics 元数据生成骨架：「读 categories.yaml → 归一化 → 写 JSON」。
+ * generateProjects/generateTopics 共用，消除生成器互引；配合 lib/yamlEntries.ts。
+ */
 import fs from 'fs'
 import path from 'path'
 
@@ -80,7 +81,7 @@ function buildMetadataItem(
 
 export function generateMetadataItems(kind: MetadataKind, locale = 'zh-CN') {
   const suffix = localeSuffix(locale)
-  // 源按 locale 分层：zh 读手写源，en 读机器翻译层
+  /** 源按 locale 分层：zh 读手写源，en 读机器翻译层 */
   const yamlPath = path.join(srcDirFor(locale), `categories${suffix}.yaml`)
   const outputPath = path.join(contentDir, `${kind}${suffix}.json`)
 

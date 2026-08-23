@@ -35,8 +35,10 @@ export async function walkAsync(
   dir: string,
   options: { include?: string[]; exclude?: string[]; recursive?: boolean } = {},
 ): Promise<string[]> {
-  // 语义沿袭 translator 原 searchFiles：仅匹配 entry.name（文件名），
-  // 目录名同样应用 exclude（如 templates/assets 工具目录不遍历）
+  /**
+   * 仅匹配 entry.name（文件名），目录名同样应用 exclude
+   * （如 templates/assets 工具目录不遍历）；语义沿袭 translator 原 searchFiles。
+   */
   const { include = [], exclude = [], recursive = true } = options
   const files: string[] = []
 

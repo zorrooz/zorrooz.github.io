@@ -33,38 +33,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
 import EmptyState from '@/components/common/EmptyState.vue'
 import Pagination from '@/components/common/Pagination.vue'
 import PostCard from '@/components/common/PostCard.vue'
 import { useLocalizedContent } from '@/composables/useLocalizedContent'
+import { useRoutePagination } from '@/composables/useRoutePagination'
 import { useTagNavigation } from '@/composables/useTagNavigation'
 import { loadNotes, loadCategories } from '@/utils/contentLoader'
 import { toArticle } from '@/utils/navigation'
 import { getVisiblePages } from '@/utils/pagination'
-import { scrollToTop } from '@/utils/scroll'
 import type { Post } from '@/types'
 
 const props = withDefaults(defineProps<{ docs: Post[]; perPage?: number }>(), { perPage: 6 })
 
 const { t, locale } = useI18n()
-const route = useRoute()
-const router = useRouter()
 const { goTag } = useTagNavigation()
 
-const currentPage = ref(1)
 const maxVisiblePages = ref(5)
 const { data: notesFlat } = useLocalizedContent(() => loadNotes(), [])
 const { data: categoriesData } = useLocalizedContent(() => loadCategories(), [])
 
 const totalPages = computed(() => Math.max(1, Math.ceil(props.docs.length / props.perPage)))
+const { currentPage, goToPage, prevPage, nextPage } = useRoutePagination(
+  computed(() => props.docs),
+  () => totalPages.value,
+)
 
 const displayedPosts = computed(() => {
   const start = (currentPage.value - 1) * props.perPage
-  const end = start + props.perPage
-  return props.docs.slice(start, end)
+  return props.docs.slice(start, start + props.perPage)
 })
 
 const allVisiblePages = computed(() =>
@@ -100,47 +99,13 @@ const categoryTitleMap = computed(() => {
 
 function getArticlePath(post: Post) {
   const found = notesFlat.value.find((item) => item.title === post.title)
-  let articlePath: string
-  if (found && found.relativePath) {
-    articlePath = `notes/${found.relativePath}.md`
-  } else {
-    const basePath = post.category[1] || 'notes'
-    const fileName = post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')
-    articlePath = `${basePath}/${fileName}.md`
-    if (locale.value === 'en-US') {
-      articlePath = articlePath.replace('.md', '-en.md')
-    }
-  }
+  if (found?.relativePath) return toArticle(`notes/${found.relativePath}.md`)
+
+  const basePath = post.category[1] || 'notes'
+  const fileName = post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')
+  let articlePath = `${basePath}/${fileName}.md`
+  if (locale.value === 'en-US') articlePath = articlePath.replace('.md', '-en.md')
   return toArticle(articlePath)
-}
-
-function pushPage(page: number) {
-  currentPage.value = page
-  const q = { ...route.query, page: String(page) }
-  router.push({ path: route.path, query: q }).catch(() => {})
-  scrollToTop()
-}
-
-function goToPage(page: number) {
-  if (page >= 1 && page <= totalPages.value) {
-    pushPage(page)
-  }
-}
-
-function prevPage() {
-  if (currentPage.value > 1) {
-    pushPage(currentPage.value - 1)
-  }
-}
-
-function nextPage() {
-  if (currentPage.value < totalPages.value) {
-    pushPage(currentPage.value + 1)
-  }
-}
-
-function handleResize() {
-  maxVisiblePages.value = window.innerWidth < 480 ? 3 : 5
 }
 
 function formatCategory(cat: Post['category']) {
@@ -150,28 +115,11 @@ function formatCategory(cat: Post['category']) {
   return `${top} / ${subTitle}`
 }
 
-watch(
-  () => props.docs,
-  () => {
-    currentPage.value = 1
-  },
-)
-
-watch(
-  () => route.query.page,
-  (newVal) => {
-    const p = parseInt(String(newVal))
-    const page = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
-    if (page !== currentPage.value) {
-      currentPage.value = page
-      scrollToTop()
-    }
-  },
-)
+function handleResize() {
+  maxVisiblePages.value = window.innerWidth < 480 ? 3 : 5
+}
 
 onMounted(() => {
-  const p = parseInt(String(route.query.page))
-  currentPage.value = Number.isFinite(p) && p >= 1 ? Math.min(p, totalPages.value) : 1
   handleResize()
   window.addEventListener('resize', handleResize)
 })
