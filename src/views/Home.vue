@@ -31,7 +31,6 @@
         v-for="tag in tagList"
         :key="tag.name"
         class="tag"
-        :class="`tag--${tag.level}`"
         @click="goTag(tag.name)"
         >{{ tag.name }}</span
       >

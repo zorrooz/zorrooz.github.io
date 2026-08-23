@@ -506,22 +506,6 @@ body::after {
   border-color: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
-/* 标签尺寸分级（首页标签云按热度） */
-.tag--lg {
-  font-size: 15px;
-  padding: 6px 16px;
-}
-
-.tag--md {
-  font-size: 13px;
-  padding: 5px 14px;
-}
-
-.tag--sm {
-  font-size: 12px;
-  padding: 4px 11px;
-}
-
 /* 分页 */
 .page-btn {
   min-width: 36px;
