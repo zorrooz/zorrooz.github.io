@@ -441,11 +441,12 @@ watch(rawMarkdown, () => {
   }
 
   .docs-main-col {
-    /* 覆盖 col-lg-8 固定宽度：flex-basis 0% 使列自适应剩余空间，
-       否则 240+853+240 超行宽导致 TOC 被挤到第二行 */
+    /* 覆盖 col-lg-8 固定宽度：flex-basis 0% + min-width 0 使列自适应剩余空间。
+       缺 min-width:0 时列的最小内容宽度会把 TOC 挤换行到页面底部 */
     flex: 1 1 0%;
     width: auto;
     max-width: none;
+    min-width: 0;
   }
 
   .docs-sidebar-col {

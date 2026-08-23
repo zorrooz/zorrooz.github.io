@@ -79,7 +79,14 @@ const MARKER_TITLE_OFFSET = 36
 let containerObserver: MutationObserver | null = null
 let containerTimer: number | null = null
 let containerPoller: number | null = null
-let spyObserver: IntersectionObserver | null = null
+let spyTicking = false
+
+/**
+ * 点击导航后的抑制窗口：平滑滚动途中高亮会随经过的标题短暂变化，
+ * 窗口期内以点击目标为准，结束后 scrollspy 自动恢复接管。
+ */
+const SPY_SUPPRESS_MS = 900
+let spySuppressedUntil = 0
 
 function cleanupObservers() {
   containerObserver?.disconnect()
@@ -92,8 +99,43 @@ function cleanupObservers() {
     clearInterval(containerPoller)
     containerPoller = null
   }
-  spyObserver?.disconnect()
-  spyObserver = null
+  window.removeEventListener('scroll', onSpyScroll)
+  window.removeEventListener('resize', onSpyScroll)
+}
+
+/**
+ * 滚动位置驱动的 scrollspy：取「判定线（视口顶部 + offset）以上最近的标题」。
+ * 不用 IntersectionObserver——目标标题被 scrollToHeading 定位在观察区上边缘时
+ * 会被判为不相交，高亮被其下第一个子标题抢走。
+ */
+function updateActiveByScroll() {
+  if (Date.now() < spySuppressedUntil) return
+  const root = document.querySelector(props.containerSelector)
+  if (!root) return
+  const selector = props.levels.map((l) => `h${l}`).join(',')
+  const headings = root.querySelectorAll(selector)
+  if (headings.length === 0) return
+
+  const line = window.scrollY + props.offset + 1
+  let current = ''
+  for (const h of headings) {
+    if (h.getBoundingClientRect().top + window.scrollY <= line) current = h.id
+    else break
+  }
+  activeId.value = current
+}
+
+function onSpyScroll() {
+  if (spyTicking) return
+  spyTicking = true
+  requestAnimationFrame(() => {
+    spyTicking = false
+    updateActiveByScroll()
+  })
+}
+
+function setupScrollSpy() {
+  updateActiveByScroll()
 }
 
 function resetToc() {
@@ -174,38 +216,22 @@ function buildToc() {
   toc.value = buildTocTree(headings, props.levels)
 }
 
-function setupScrollSpy() {
-  spyObserver?.disconnect()
-  spyObserver = null
-  const root = document.querySelector(props.containerSelector)
-  if (!root) return
-
-  const selector = props.levels.map((l) => `h${l}`).join(',')
-  const headings = Array.from(root.querySelectorAll(selector))
-  if (headings.length === 0) return
-
-  spyObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) activeId.value = (entry.target as HTMLElement).id
-      }
-    },
-    { rootMargin: `-${props.offset}px 0px -60% 0px`, threshold: 0 },
-  )
-  headings.forEach((h) => spyObserver?.observe(h))
-}
-
 function scrollToId(id: string) {
   emit('navigate', id)
 
   const el = document.getElementById(id)
   if (!el) return
+  // 点击目标立即高亮；抑制窗口过后 scrollspy 自动恢复接管
+  activeId.value = id
+  spySuppressedUntil = Date.now() + SPY_SUPPRESS_MS
   scrollToHeading(el, props.offset)
 }
 
 onMounted(() => {
   buildToc()
   setupScrollSpy()
+  window.addEventListener('scroll', onSpyScroll, { passive: true })
+  window.addEventListener('resize', onSpyScroll)
   nextTick(() => {
     updateMarker()
     setupContainerObserver()
