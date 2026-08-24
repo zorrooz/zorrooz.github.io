@@ -22,6 +22,7 @@ Vue 3 + Vite 7 双语静态博客（zh-CN / en-US），Markdown + YAML 写作，
 | `npm run data:pack` | 导出文章自包含包（md + 引用图 → `exports/`；`--out`/`--zip`；只读源） |
 | `npm run data:deploy` | `git -C ../blog-data add -A && commit && push origin data`（触发 CI） |
 | `npm run data:publish` | 仅 `git -C ../blog-data push origin data` |
+| `npm run help [name]` | 数据工具帮助总入口：无参列工具，带名转发对应 CLI 的 `--help`（如 `npm run help translate`） |
 
 > 规范：数据分支操作统一 `data:` 前缀（kebab-case）；`translate`/`tagmerge`/`pack`/`deploy` 为旧名别名。
 > **Always lint and build after changes.** 发布流程：编辑 content-src → `npm run prebuild` 验证 → `npm run data:deploy` → CI 部署。

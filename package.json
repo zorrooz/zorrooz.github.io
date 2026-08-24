@@ -14,6 +14,7 @@
     "lint": "eslint . --fix",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "format": "prettier --write src/ scripts/ vite/",
+    "help": "node ./scripts/tools/helpCli.ts",
     "data:translate": "node ./scripts/tools/translator/translatorCli.ts",
     "data:tag-merge": "node ./scripts/tools/tagMerger/tagMergerCli.ts",
     "data:pack": "node ./scripts/tools/packArticle/packArticleCli.ts",
