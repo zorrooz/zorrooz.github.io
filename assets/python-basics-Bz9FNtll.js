@@ -40,7 +40,7 @@ python -m venv .venv
 source .venv/bin/activate
 \`\`\`
 
-激活后提示符前会出现 \`(.venv)\`。安装依赖：
+激活后提示符前会出现 \`(.venv)\`。用 [\`pip install\`](https://pip.pypa.io/en/stable/) 安装依赖：
 
 \`\`\`bash
 pip install numpy pandas

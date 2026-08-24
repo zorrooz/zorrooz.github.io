@@ -225,7 +225,7 @@
     "/assets/python-advanced-en-D8iy_BGO.js"
   ],
   "data-branch/cache/en/notes/Programming/python/python-basics-en.md?raw": [
-    "/assets/python-basics-en-BREIlyQp.js"
+    "/assets/python-basics-en-66y4kMrS.js"
   ],
   "data-branch/cache/en/notes/Programming/python/python-data-en.md?raw": [
     "/assets/python-data-en-BL-OlVb4.js"
@@ -270,7 +270,7 @@
     "/assets/python-advanced-iN1UORRl.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-basics.md?raw": [
-    "/assets/python-basics-uh9Cz9FQ.js"
+    "/assets/python-basics-Bz9FNtll.js"
   ],
   "data-branch/content-src/notes/Programming/python/python-data.md?raw": [
     "/assets/python-data-CmFq1YcA.js"
@@ -3100,10 +3100,10 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "data-branch/content/search-index-en.json": [
-    "/assets/search-index-en-Dx3Wl4QH.js"
+    "/assets/search-index-en-CPcYRGw9.js"
   ],
   "data-branch/content/search-index.json": [
-    "/assets/search-index-LugnQ6zS.js"
+    "/assets/search-index-ChQcd0y4.js"
   ],
   "data-branch/content/tags-en.json": [
     "/assets/avatar-DQvqWlfS.png",
@@ -4464,7 +4464,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "node_modules/minisearch/dist/es/index.js": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "node_modules/pinia/dist/pinia.mjs": [
@@ -6218,15 +6218,15 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/common/ModalOverlay.vue": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/components/common/ModalOverlay.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/components/common/ModalOverlay.vue?vue&type=style&index=0&scoped=1509d987&lang.css": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/components/common/Pagination.vue": [
@@ -8260,15 +8260,15 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/components/widgets/SearchModal.vue": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/components/widgets/SearchModal.vue?vue&type=style&index=0&scoped=bb19278d&lang.css": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/components/widgets/TocDrawer.vue": [
@@ -8902,7 +8902,7 @@
     "/assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf"
   ],
   "src/composables/useSearch.ts": [
-    "/assets/SearchModal-D9KeR00u.js",
+    "/assets/SearchModal-UGcbFY_q.js",
     "/assets/SearchModal-Cu0-bXnC.css"
   ],
   "src/composables/useStickySidebars.ts": [
