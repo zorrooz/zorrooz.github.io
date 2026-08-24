@@ -22,6 +22,7 @@ import {
   defaultMappingPath,
   loadLlmConfig,
 } from './tagMerger.ts'
+import { logError, logInfo, logOk, logSection } from '../../lib/log.ts'
 
 program
   .name('tagmerge')
@@ -39,7 +40,7 @@ function resolveLocale(raw: string): 'zh-CN' | 'en-US' {
   const r = raw.toLowerCase()
   if (r === 'zh' || r === 'zh-cn') return 'zh-CN'
   if (r === 'en' || r === 'en-us') return 'en-US'
-  console.error('[ERROR] 无效的 --locale 值，仅支持 zh / en（或 zh-CN / en-US）')
+  logError('无效的 --locale 值，仅支持 zh / en（或 zh-CN / en-US）')
   process.exit(1)
 }
 
@@ -48,11 +49,11 @@ const outputPath = path.resolve(opts.output)
 const apply = Boolean(opts.apply)
 
 async function main() {
-  console.log(`== TagMerger (${locale}) ==`)
+  logSection(`TagMerger (${locale})`)
 
   const tags = collectTags(locale)
   if (tags.size === 0) {
-    console.error('[ERROR] 未收集到任何标签')
+    logError('未收集到任何标签')
     process.exitCode = 1
     return
   }
@@ -62,18 +63,18 @@ async function main() {
   let mapping: Record<string, string>
   const existing = loadMapping(outputPath)
   if (existing && existing.locale === locale && !opts.force) {
-    console.log(`[INFO] 使用已有映射文件：${outputPath}（--force 可重新生成）`)
+    logInfo(`使用已有映射文件：${outputPath}（--force 可重新生成）`)
     mapping = existing.mapping
   } else {
     const llm = await loadLlmConfig()
     if (!llm) {
-      console.error(
-        '[ERROR] 未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model[, thinking] }，该文件被 gitignore。',
+      logError(
+        '未找到 LLM 配置：请在 scripts/llmConfig.ts 配置 { url, apikey, model[, thinking] }，该文件被 gitignore。',
       )
       process.exitCode = 1
       return
     }
-    console.log('[INFO] 正在调用 LLM 生成合并映射...')
+    logInfo('正在调用 LLM 生成合并映射...')
     mapping = await generateMappingWithLlm(tags, locale, llm)
     const out: { locale: string; generatedAt: string; mapping: Record<string, string> } = {
       locale,
@@ -81,7 +82,7 @@ async function main() {
       mapping,
     }
     fs.writeFileSync(outputPath, JSON.stringify(out, null, 2), 'utf-8')
-    console.log(`[INFO] 映射文件已写入：${outputPath}`)
+    logOk(`映射文件已写入：${outputPath}`)
   }
 
   const changes = Object.entries(mapping).filter(([oldTag, newTag]) => oldTag !== newTag)
@@ -96,13 +97,13 @@ async function main() {
   if (apply) {
     const mdChanged = applyMappingToMarkdown(mapping, locale)
     const yamlChanged = applyMappingToCategoriesYaml(mapping, locale)
-    console.log(`[INFO] 已写回：${mdChanged} 个 md 文件、${yamlChanged} 个 categories.yaml`)
+    logOk(`已写回：${mdChanged} 个 md 文件、${yamlChanged} 个 categories.yaml`)
   } else {
-    console.log(`[INFO] dry-run 模式，未写回源文件。确认映射后使用 --apply 应用。`)
+    logInfo('dry-run 模式，未写回源文件。确认映射后使用 --apply 应用。')
   }
 }
 
 main().catch((err) => {
-  console.error('[ERROR]', err instanceof Error ? err.message : err)
+  logError(err instanceof Error ? err.message : String(err))
   process.exitCode = 1
 })

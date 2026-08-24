@@ -13,6 +13,7 @@ import { contentDir, srcDirFor } from '../dataConfig.ts'
 import { renderMarkdown } from './markdownProcessor.ts'
 import { ensureDirectoryExistence, mdFileFilter, toPosixRelativeNoExt, walk } from '../lib/fs.ts'
 import { isDirectRun, runCliScript } from '../lib/cli.ts'
+import { logInfo, logOk } from '../lib/log.ts'
 
 const htmlOutputDir = path.join(contentDir, 'html')
 
@@ -25,7 +26,7 @@ function cleanDeprecatedHtml() {
     const dir = path.join(htmlOutputDir, section)
     if (fs.existsSync(dir)) {
       fs.rmSync(dir, { recursive: true, force: true })
-      console.log(`Cleaned deprecated html output: ${dir}`)
+      logInfo(`清理废弃 html 输出: ${dir}`)
     }
   }
 }
@@ -49,7 +50,7 @@ export async function generateHtml(locale = 'zh-CN') {
       count++
     }
   }
-  console.log(`Successfully generated: html (${locale}) (${count} files)`)
+  logOk(`已生成 html (${locale}) (${count} files)`)
 }
 
 if (isDirectRun(import.meta)) {

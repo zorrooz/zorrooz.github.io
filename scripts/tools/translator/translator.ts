@@ -7,6 +7,7 @@ import { completeChat } from '../../lib/llm.ts'
 import { rewriteFrontmatterTags, sanitizeFrontmatter } from '../../lib/frontmatter.ts'
 import { loadTagMapping } from '../../lib/tagMapping.ts'
 import { walkAsync } from '../../lib/fs.ts'
+import { logError, logInfo, logOk, logWarn } from '../../lib/log.ts'
 
 /** 翻译一段文本（md 或 yaml），返回英文结果 */
 async function translateText(text: string, fileType = 'md'): Promise<string> {
@@ -25,7 +26,7 @@ async function translateText(text: string, fileType = 'md'): Promise<string> {
 
     return result.text
   } catch (error) {
-    console.error('翻译时发生错误:', (error as Error).message)
+    logError('翻译时发生错误:', (error as Error).message)
     throw error
   }
 }
@@ -63,10 +64,8 @@ function saveState(state: TranslationState): void {
   try {
     fsSync.writeFileSync(stateFilePath(), JSON.stringify(state, null, 2), 'utf-8')
   } catch (e) {
-    console.warn(
-      `[Warn] 翻译状态写入失败（不影响本次翻译，但下次会重复翻译）: ${
-        e instanceof Error ? e.message : e
-      }`,
+    logWarn(
+      `翻译状态写入失败（不影响本次翻译，但下次会重复翻译）: ${e instanceof Error ? e.message : e}`,
     )
   }
 }
@@ -98,7 +97,7 @@ function loadTranslationMapping(): Record<string, string> {
   if (translationCache) return translationCache
   const mapping = loadTagMapping(path.join(cacheDir, 'tag-mapping.json'))
   if (!mapping) {
-    console.warn('[Warn] 标签映射加载失败（en 标签将保持中文）')
+    logWarn('标签映射加载失败（en 标签将保持中文）')
   }
   translationCache = mapping?.translation ?? {}
   return translationCache
@@ -115,7 +114,7 @@ function translateFrontmatterTags(source: string, translated: string): string {
   const zhTags = JSON.parse(srcTags[1]) as string[]
   const enTags = zhTags.map((tag) => {
     const en = translation[tag]
-    if (!en) console.warn(`[Warn] 标签「${tag}」缺少 zh→en 映射（保持中文，请运行 tagMerger 补齐）`)
+    if (!en) logWarn(`标签「${tag}」缺少 zh→en 映射（保持中文，请运行 data:tag-merge 补齐）`)
     return en || tag
   })
   /** 只替换 frontmatter 区域的 tags（见 lib/frontmatter.ts），缺失时原样返回 */
@@ -139,7 +138,7 @@ async function translateFile(
   try {
     const ext = path.extname(inputFilePath).toLowerCase()
     if (!['.md', '.yaml', '.yml'].includes(ext)) {
-      console.log(`[WARN] 跳过不支持的文件类型: ${inputFilePath}`)
+      logWarn(`跳过不支持的文件类型: ${inputFilePath}`)
       return null
     }
 
@@ -153,14 +152,14 @@ async function translateFile(
     if (skipExisting && !force) {
       const shouldTranslate = await needsTranslation(inputFilePath, outputPath, localState)
       if (!shouldTranslate) {
-        console.log(`[INFO] 跳过已翻译文件: ${inputFilePath}`)
+        logInfo(`跳过已翻译文件: ${inputFilePath}`)
         return null
       }
     }
 
     const content = await fs.readFile(inputFilePath, 'utf-8')
 
-    console.log(`[INFO] 正在翻译文件: ${inputFilePath}`)
+    logInfo(`正在翻译文件: ${inputFilePath}`)
     const fileType = ext === '.yaml' || ext === '.yml' ? 'yaml' : 'md'
     let translated = await translateText(content, fileType)
 
@@ -172,13 +171,13 @@ async function translateFile(
 
     await fs.mkdir(path.dirname(outputPath), { recursive: true })
     await fs.writeFile(outputPath, translated, 'utf-8')
-    console.log(`[INFO] 翻译完成: ${outputPath}`)
+    logOk(`翻译完成: ${outputPath}`)
     localState[toStateKey(inputFilePath)] = contentHash(content)
     if (saveLocal) saveState(localState)
 
     return outputPath
   } catch (error) {
-    console.error(`[ERROR] 处理文件时出错 (${inputFilePath}):`, (error as Error).message)
+    logError(`处理文件时出错 (${inputFilePath}):`, (error as Error).message)
     throw error
   }
 }
@@ -210,7 +209,7 @@ async function translateDirectory(
       recursive,
     })
 
-    console.log(`[INFO] 找到 ${files.length} 个需要翻译的文件`)
+    logInfo(`找到 ${files.length} 个需要翻译的文件`)
 
     const state = loadState()
 
@@ -225,7 +224,7 @@ async function translateDirectory(
           const result = await translateFile(file, translateOptions, state)
           if (result) results.push(result)
         } catch (error) {
-          console.error(`[ERROR] 翻译失败: ${file}`, (error as Error).message)
+          logError(`翻译失败: ${file}`, (error as Error).message)
         }
       }
     })
@@ -233,10 +232,10 @@ async function translateDirectory(
 
     saveState(state)
 
-    console.log(`[INFO] 批量翻译完成，成功翻译 ${results.length} 个文件（并发 ${concurrency}）`)
+    logOk(`批量翻译完成，成功翻译 ${results.length} 个文件（并发 ${concurrency}）`)
     return results
   } catch (error) {
-    console.error('[ERROR] 批量翻译时出错:', (error as Error).message)
+    logError('批量翻译时出错:', (error as Error).message)
     throw error
   }
 }
@@ -265,7 +264,7 @@ class TranslationManager {
         return await translateFile(targetPath, mergedOptions)
       }
     } catch (error) {
-      console.error('[ERROR] 路径检查失败:', (error as Error).message)
+      logError('路径检查失败:', (error as Error).message)
       throw error
     }
   }

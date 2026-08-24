@@ -3,6 +3,8 @@
  */
 import yaml from 'js-yaml'
 
+import { logWarn } from './log.ts'
+
 export function normalizeTags(tags: unknown): string[] {
   if (Array.isArray(tags)) {
     return tags.map((t) => (typeof t === 'string' ? t.trim() : '')).filter(Boolean)
@@ -37,10 +39,7 @@ export function parseFrontMatterAndBody(raw: string): FrontMatterResult {
       try {
         fm = (yaml.load(fmText) as Record<string, unknown>) || {}
       } catch (e) {
-        console.warn(
-          'Warn: failed to parse frontmatter YAML. Using empty object.',
-          e instanceof Error ? e.message : e,
-        )
+        logWarn('frontmatter YAML 解析失败，使用空对象:', e instanceof Error ? e.message : e)
       }
       const body = lines.slice(endIdx + 1).join('\n')
       return { frontmatter: fm || {}, body }
@@ -90,10 +89,7 @@ export function sanitizeFrontmatter(raw: string): string {
       yaml.load(fixed)
       return raw.replace(m[1], fixed)
     } catch (e) {
-      console.warn(
-        'Warn: frontmatter YAML 仍非法（已尝试修复）:',
-        e instanceof Error ? e.message : e,
-      )
+      logWarn('frontmatter YAML 仍非法（已尝试修复）:', e instanceof Error ? e.message : e)
       return raw
     }
   }

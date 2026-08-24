@@ -13,6 +13,7 @@ import { Command } from 'commander'
 
 import { contentSrcDir } from '../../dataConfig.ts'
 import { mdFileFilter, walk } from '../../lib/fs.ts'
+import { logError, logInfo, logOk, logWarn } from '../../lib/log.ts'
 import { DEFAULT_OUT, exportArticle } from './packArticle.ts'
 
 const program = new Command()
@@ -31,7 +32,7 @@ program
       rels = targets.map((t) => t.replace(/\.md$/i, '').replace(/\\/g, '/'))
       for (const rel of rels) {
         if (!rel.startsWith('notes/')) {
-          console.error(`[ERROR] 参数必须是 notes/... 相对路径: ${rel}`)
+          logError(`参数必须是 notes/... 相对路径: ${rel}`)
           process.exit(1)
         }
       }
@@ -40,7 +41,7 @@ program
       rels = walk(notesRoot, mdFileFilter('zh-CN')).map((f) =>
         path.relative(contentSrcDir, f).split(path.sep).join('/').replace(/\.md$/i, ''),
       )
-      console.log(`[INFO] 导出全部文章（${rels.length} 篇）`)
+      logInfo(`导出全部文章（${rels.length} 篇）`)
     }
 
     const outRoot = path.resolve(opts.out ?? DEFAULT_OUT)
@@ -53,16 +54,15 @@ program
         totalImages += r.images.length
         const shown = path.relative(outRoot, r.outPath).split(path.sep).join('/')
         const note = r.images.length > 0 ? `（${r.images.length} 图）` : '（无图）'
-        console.log(`[OK] ${rel} → ${shown} ${note}`)
+        logOk(`${rel} → ${shown} ${note}`)
         for (const src of r.images) console.log(`      ${path.relative(contentSrcDir, src)}`)
       } catch (e) {
         failed++
-        console.error(`[ERROR] ${rel}: ${(e as Error).message}`)
+        logError(`${rel}: ${(e as Error).message}`)
       }
     }
-    console.log(
-      `[INFO] 导出完成：${rels.length - failed}/${rels.length} 篇，复制 ${totalImages} 图 → ${outRoot}`,
-    )
+    if (failed > 0) logWarn(`导出完成：${rels.length - failed}/${rels.length} 篇，复制 ${totalImages} 图 → ${outRoot}`)
+    else logOk(`导出完成：${rels.length}/${rels.length} 篇，复制 ${totalImages} 图 → ${outRoot}`)
     if (failed > 0) process.exitCode = 1
   })
 

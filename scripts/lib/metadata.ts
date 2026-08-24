@@ -9,6 +9,7 @@ import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { readYaml, safeArray, writeJsonFile } from './fs.ts'
 import { logWriteSuccess } from './cli.ts'
 import { normalizeProjectTopicEntry } from './yamlEntries.ts'
+import { logError, logWarn } from './log.ts'
 
 export interface ProjectItem {
   name: string
@@ -89,14 +90,14 @@ export function generateMetadataItems(kind: MetadataKind, locale = 'zh-CN') {
   if (fs.existsSync(yamlPath)) {
     const yamlConfig = readYaml(yamlPath) as Record<string, unknown> | null
     if (yamlConfig === null) {
-      console.error(`Failed to parse ${kind} from ${yamlPath}:`)
+      logError(`解析 ${kind} 失败: ${yamlPath}:`)
     } else {
       items = safeArray(yamlConfig?.[kind])
         .map((p) => buildMetadataItem(kind, p as Record<string, unknown>))
         .filter((p): p is MetadataItem => p !== null)
     }
   } else {
-    console.warn(`Warn: categories yaml not found at ${yamlPath}`)
+    logWarn(`categories yaml 不存在: ${yamlPath}`)
   }
 
   items.sort((a, b) => a.name.localeCompare(b.name))
@@ -105,6 +106,6 @@ export function generateMetadataItems(kind: MetadataKind, locale = 'zh-CN') {
     writeJsonFile(outputPath, items)
     logWriteSuccess(outputPath, `${items.length} ${kind}`)
   } catch (e) {
-    console.error(`Failed to write ${locale} ${kind}.json:`, e)
+    logError(`写入 ${locale} ${kind}.json 失败:`, e)
   }
 }

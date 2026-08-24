@@ -11,6 +11,7 @@ import { contentDir } from '../dataConfig.ts'
 import { LOCALE_SEGMENTS, SITE } from '../../src/config.ts'
 import { walkCategoryArticles } from '../lib/fs.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
+import { logWarn } from '../lib/log.ts'
 
 const SITE_URL = SITE.url
 const publicDir = path.join(import.meta.dirname, '../../public')
@@ -26,7 +27,7 @@ interface ArticleUrlEntry {
 function collectArticleUrls(): ArticleUrlEntry[] {
   const p = path.join(contentDir, 'categories.json')
   if (!fs.existsSync(p)) {
-    console.warn('Warn: categories.json not found, skipping sitemap articles.')
+    logWarn('categories.json 不存在，跳过 sitemap 文章部分。')
     return []
   }
   const data = JSON.parse(fs.readFileSync(p, 'utf-8'))

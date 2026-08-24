@@ -6,6 +6,8 @@ import { spawnSync } from 'child_process'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { logError } from '../lib/log.ts'
+
 const here = path.dirname(fileURLToPath(import.meta.url))
 
 interface ToolEntry {
@@ -36,7 +38,7 @@ if (!name) {
 } else {
   const entry = TOOLS[name]
   if (!entry) {
-    console.error(`未知工具：${name}`)
+    logError(`未知工具：${name}`)
     listAll()
     process.exitCode = 1
   } else if (entry.cli) {

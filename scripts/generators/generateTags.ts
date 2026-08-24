@@ -2,6 +2,7 @@ import path from 'path'
 import { contentDir, localeSuffix } from '../dataConfig.ts'
 import { readJson, requireJsonArray, writeJsonFile } from '../lib/fs.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
+import { logError, logOk, logWarn } from '../lib/log.ts'
 import { countTags, sortTagsByName } from '../lib/tags.ts'
 import type { Tag as TagEntry } from '../../src/types.ts'
 
@@ -37,7 +38,7 @@ function generateTagsJson(locale = 'zh-CN') {
     writeJsonFile(targetPath, tags)
     logWriteSuccess(targetPath, `${tags.length} tags`)
   } catch (e) {
-    console.error(`Failed to write ${locale} tags.json:`, e instanceof Error ? e.message : e)
+    logError(`写入 ${locale} tags.json 失败:`, e instanceof Error ? e.message : e)
     process.exitCode = 1
   }
 }
@@ -81,13 +82,13 @@ export function checkTagsConsistency(contentDir: string): void {
   }
 
   if (zh.length !== en.length || mismatches.length) {
-    console.warn(`[Warn] 中英标签不一致: 总数 zh=${zh.length} en=${en.length}`)
-    if (mismatches.length) console.warn(`  [文章级差异] ${mismatches.join('; ')}`)
-    console.warn(
+    logWarn(`中英标签不一致: 总数 zh=${zh.length} en=${en.length}`)
+    if (mismatches.length) logWarn(`  [文章级差异] ${mismatches.join('; ')}`)
+    logWarn(
       '  提示：md frontmatter 的 tags 由 zh→en 映射翻译，数量必须守恒；请检查 -en.md 或映射文件',
     )
   } else {
-    console.log(`[OK] 中英标签一致 (${zh.length} = ${en.length})`)
+    logOk(`中英标签一致 (${zh.length} = ${en.length})`)
   }
 }
 

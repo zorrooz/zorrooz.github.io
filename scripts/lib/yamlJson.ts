@@ -7,6 +7,7 @@ import path from 'path'
 import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { readYaml, writeJsonFile } from './fs.ts'
 import { logWriteSuccess } from './cli.ts'
+import { logError, logWarn } from './log.ts'
 
 export interface YamlJsonGeneratorOptions {
   locale?: string
@@ -31,10 +32,10 @@ export function generateJsonFromYaml(options: YamlJsonGeneratorOptions): void {
     if (yamlConfig !== null && yamlConfig !== undefined) {
       raw = yamlConfig
     } else {
-      console.warn(`Warn: failed to parse YAML at ${yamlPath}, using fallback.`)
+      logWarn(`YAML 解析失败，使用回退值: ${yamlPath}`)
     }
   } else {
-    console.warn(`Warn: source YAML not found at ${yamlPath}, using fallback.`)
+    logWarn(`源 YAML 不存在，使用回退值: ${yamlPath}`)
   }
 
   const result = options.normalize(raw)
@@ -43,6 +44,6 @@ export function generateJsonFromYaml(options: YamlJsonGeneratorOptions): void {
     writeJsonFile(outputPath, result)
     logWriteSuccess(outputPath)
   } catch (error) {
-    console.error(`Failed to generate ${outputPath}:`, error)
+    logError(`生成失败: ${outputPath}:`, error)
   }
 }

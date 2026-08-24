@@ -14,6 +14,7 @@ import type { SearchDoc } from '../../src/types.ts'
 import { stripHtmlToText } from '../lib/text.ts'
 import { walkCategoryArticles, writeJsonFile } from '../lib/fs.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
+import { logWarn } from '../lib/log.ts'
 
 function loadDescriptions(locale: 'zh-CN' | 'en-US'): Map<string, string> {
   const notesPath = path.join(contentDir, `notes${localeSuffix(locale)}.json`)
@@ -30,7 +31,7 @@ function loadDescriptions(locale: 'zh-CN' | 'en-US'): Map<string, string> {
 function collectArticles(locale: 'zh-CN' | 'en-US'): SearchDoc[] {
   const categoriesPath = path.join(contentDir, `categories${localeSuffix(locale)}.json`)
   if (!fs.existsSync(categoriesPath)) {
-    console.warn(`Warn: ${categoriesPath} not found, skipping search index.`)
+    logWarn(`${categoriesPath} 不存在，跳过搜索索引`)
     return []
   }
 

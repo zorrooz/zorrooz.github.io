@@ -8,6 +8,8 @@ import fsPromises from 'fs/promises'
 import path from 'path'
 import yaml from 'js-yaml'
 
+import { logError } from './log.ts'
+
 export function ensureDirectoryExistence(filePath: string) {
   const dirname = path.dirname(filePath)
   if (!fs.existsSync(dirname)) {
@@ -179,18 +181,18 @@ export function requireJsonArray(
   hint: string,
 ): unknown[] | null {
   if (!fs.existsSync(filePath)) {
-    console.error(`${label} not found at ${filePath}. ${hint}`)
+    logError(`找不到 ${label}: ${filePath}。${hint}`)
     process.exitCode = 1
     return null
   }
   const parsed = readJson(filePath)
   if (parsed === null) {
-    console.error(`Failed to read/parse ${label}:`)
+    logError(`读取或解析 ${label} 失败:`)
     process.exitCode = 1
     return null
   }
   if (!Array.isArray(parsed)) {
-    console.error(`${label} is not an array. Abort.`)
+    logError(`${label} 不是 JSON 数组，中止。`)
     process.exitCode = 1
     return null
   }

@@ -6,6 +6,7 @@ import { contentDir, localeSuffix, srcDirFor } from '../dataConfig.ts'
 import { normalizeProjectTopicEntry } from '../lib/yamlEntries.ts'
 import { readJson, readYaml, safeArray, writeJsonFile } from '../lib/fs.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
+import { logError } from '../lib/log.ts'
 
 interface FormattedArticle {
   title: string
@@ -340,7 +341,7 @@ function generateCategoriesJson(locale = 'zh-CN') {
     writeJsonFile(targetPath, finalStructure)
     logWriteSuccess(targetPath)
   } catch (error) {
-    console.error(`Failed to generate ${paths.categoriesJsonPath}:`, error)
+    logError(`生成失败: ${paths.categoriesJsonPath}:`, error)
     process.exitCode = 1
   }
 }

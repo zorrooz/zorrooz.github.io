@@ -12,6 +12,7 @@ import yaml from 'js-yaml'
 import { contentSrcDir, cacheDir, enSrcDir, localeSuffix, EN_SUFFIX } from '../../dataConfig.ts'
 import { walk } from '../../lib/fs.ts'
 import { normalizeTags, parseFrontMatterAndBody } from '../../lib/frontmatter.ts'
+import { logFix, logInfo, logOk, logWarn } from '../../lib/log.ts'
 import { completeChat, loadLlmConfig, type LlmConfig } from '../../lib/llm.ts'
 import { rewriteFrontmatterTags } from '../../lib/frontmatter.ts'
 import { countTags } from '../../lib/tags.ts'
@@ -48,7 +49,7 @@ export function collectTags(locale: 'zh-CN' | 'en-US'): Map<string, number> {
         for (const item of arr) addTags(item?.tags)
       }
     } catch (e) {
-      console.warn(`Warn: failed to parse ${yamlPath}:`, e instanceof Error ? e.message : e)
+      logWarn(`categories yaml 解析失败: ${yamlPath}`, e instanceof Error ? e.message : e)
     }
   }
 
@@ -144,11 +145,11 @@ export async function ensureTagTranslation(
 
   const llm = await loadLlmConfig()
   if (!llm) {
-    console.warn('[Warn] tagMerger: 未找到 LLM 配置，无法生成 zh→en 标签映射（en 标签将保持中文）')
+    logWarn('tagMerger: 未找到 LLM 配置，无法生成 zh→en 标签映射（en 标签将保持中文）')
     return translation
   }
 
-  console.log(`[INFO] tagMerger: 生成 ${missing.size} 个缺失标签的 zh→en 映射...`)
+  logInfo(`tagMerger: 生成 ${missing.size} 个缺失标签的 zh→en 映射...`)
   const generated = await generateTranslationWithLlm(missing, llm)
   const merged = { ...translation, ...generated }
   const out: TagMapping = {
@@ -158,7 +159,7 @@ export async function ensureTagTranslation(
     translation: merged,
   }
   fs.writeFileSync(mappingPath, JSON.stringify(out, null, 2), 'utf-8')
-  console.log(`[INFO] tagMerger: 映射已更新 ${Object.keys(generated).length} 项 → ${mappingPath}`)
+  logOk(`tagMerger: 映射已更新 ${Object.keys(generated).length} 项 → ${mappingPath}`)
   return merged
 }
 
@@ -201,7 +202,7 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
     if (updated !== raw) {
       fs.writeFileSync(enPath, updated, 'utf-8')
       fixed++
-      console.log(`[FIX] 重写 tags: ${rel} -> ${enTags.join(', ')}`)
+      logFix(`重写 tags: ${rel} -> ${enTags.join(', ')}`)
     }
   }
 
@@ -244,19 +245,23 @@ export function fixTagConsistency(): { fixed: number; missing: number } {
       if (changed) {
         fs.writeFileSync(enYamlPath, lines.join('\n'), 'utf-8')
         fixed++
-        console.log('[FIX] 重写 tags: categories-en.yaml')
+        logFix('重写 tags: categories-en.yaml')
       }
     }
   }
 
   if (missingTags.size) {
-    console.warn(
-      `[Warn] ${missingTags.size} 个标签缺 zh→en 映射（保持中文，构建会自动补齐映射）: ${[
+    logWarn(
+      `${missingTags.size} 个标签缺 zh→en 映射（保持中文，构建会自动补齐映射）: ${[
         ...missingTags,
       ].join(', ')}`,
     )
   }
-  console.log(`[tag-consistency] 修复 ${fixed} 个文件，缺映射 ${missing} 个`)
+  if (missing > 0) {
+    logWarn(`标签一致性修复：处理 ${fixed} 个文件，缺映射 ${missing} 个`)
+  } else if (fixed > 0) {
+    logOk(`标签一致性修复：处理 ${fixed} 个文件，缺映射 0 个`)
+  }
   return { fixed, missing }
 }
 
@@ -313,7 +318,7 @@ export function applyMappingToMarkdown(
     const newTags = Array.from(new Set(oldTags.map((t) => mapping[t] || t)))
     if (newTags.join('\u0000') === oldTags.join('\u0000')) continue
     if (newTags.some((t) => /[,"[\]\n\r]/.test(t))) {
-      console.warn(`Warn: 标签含特殊字符（逗号/引号/方括号/换行），跳过文件：${mdPath}`)
+      logWarn(`标签含特殊字符（逗号/引号/方括号/换行），跳过文件：${mdPath}`)
       continue
     }
 
@@ -350,7 +355,7 @@ export function applyMappingToCategoriesYaml(
     const newTags = Array.from(new Set(tags.map((t) => mapping[t] || t)))
     if (newTags.join(',') === tags.join(',')) return line
     if (newTags.some((t) => /[,"[\]\n\r]/.test(t))) {
-      console.warn(`Warn: 标签含特殊字符（逗号/引号/方括号/换行），跳过该 tags 行：${line}`)
+      logWarn(`标签含特殊字符（逗号/引号/方括号/换行），跳过该 tags 行：${line}`)
       return line
     }
     changed = true

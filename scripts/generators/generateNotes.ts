@@ -6,6 +6,7 @@ import { mdFileFilter, toPosixRelativeNoExt, walk, writeJsonFile } from '../lib/
 import { countWordsSmart, markdownToPlain } from '../lib/text.ts'
 import { normalizeTags, parseFrontMatterAndBody } from '../lib/frontmatter.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
+import { logError, logWarn } from '../lib/log.ts'
 import type { Note as NoteItem } from '../../src/types.ts'
 
 function getFilePaths(locale = 'zh-CN') {
@@ -49,7 +50,7 @@ function generateNotesJson(locale = 'zh-CN') {
   const notesSrcDir = paths.notesSrcDir
 
   if (!fs.existsSync(notesSrcDir)) {
-    console.warn(`Warn: notes source directory not found at ${notesSrcDir}`)
+    logWarn(`notes 源目录不存在: ${notesSrcDir}`)
   }
 
   /** 目录即契约：content-src/notes 只含中文源，cache/en/notes 全部为英文 */
@@ -69,7 +70,7 @@ function generateNotesJson(locale = 'zh-CN') {
     writeJsonFile(targetPath, items)
     logWriteSuccess(targetPath, `${items.length} notes`)
   } catch (e) {
-    console.error(`Failed to write ${locale} notes.json:`, e)
+    logError(`写入 ${locale} notes.json 失败:`, e)
   }
 }
 

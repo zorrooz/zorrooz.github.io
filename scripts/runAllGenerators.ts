@@ -6,6 +6,7 @@
 
 import { contentSrcDir, contentDir } from './dataConfig.ts'
 import { isDirectRun } from './lib/cli.ts'
+import { logError, logInfo, logSection, logWarn } from './lib/log.ts'
 import { generateAboutJson } from './generators/generateAbout.ts'
 import { generateResourcesJson } from './generators/generateResources.ts'
 import { generateNotesJson } from './generators/generateNotes.ts'
@@ -22,7 +23,7 @@ async function runStep(name: string, fn: () => Promise<void> | void) {
   try {
     await fn()
   } catch (err) {
-    console.error(`[Generator][${name}] failed:`, err)
+    logError(`生成器 ${name} 失败:`, err)
     throw err
   }
 }
@@ -49,7 +50,7 @@ async function runLocaleBlock(locale: Locale) {
 }
 
 export async function runAllGenerators() {
-  console.log('== Generators: start ==')
+  logSection('Generators 开始')
 
   /* 0. 独立 YAML 源 — 中英各一次 */
   await runStep('about', () => {
@@ -71,14 +72,14 @@ export async function runAllGenerators() {
    */
   await runStep('translate', async () => {
     if (process.env.GBLOG_NO_TRANSLATE === '1') {
-      console.log('== Translators: skipped (GBLOG_NO_TRANSLATE=1) ==')
+      logInfo('翻译步骤已跳过（GBLOG_NO_TRANSLATE=1）')
       return
     }
     try {
       const { default: manager } = await import('./tools/translator/translator.ts')
       await manager.translate(contentSrcDir, { skipExisting: true })
     } catch (err) {
-      console.warn('[Warn] incremental translation failed (build continues):', err)
+      logWarn('增量翻译失败（构建继续）:', err)
     }
   })
 
@@ -89,7 +90,7 @@ export async function runAllGenerators() {
       const { ensureTagTranslation } = await import('./tools/tagMerger/tagMerger.ts')
       await ensureTagTranslation()
     } catch (err) {
-      console.warn('[Warn] tag mapping sync failed (en 标签将保持中文):', err)
+      logWarn('标签映射同步失败（en 标签将保持中文）:', err)
     }
   })
 
@@ -100,7 +101,7 @@ export async function runAllGenerators() {
       const { fixTagConsistency } = await import('./tools/tagMerger/tagMerger.ts')
       fixTagConsistency()
     } catch (err) {
-      console.warn('[Warn] tag consistency fix failed:', err)
+      logWarn('标签一致性修复失败:', err)
     }
   })
 
@@ -125,12 +126,12 @@ export async function runAllGenerators() {
     generateSearchIndex('en-US')
   })
 
-  console.log('== Generators: done ==')
+  logSection('Generators 完成')
 }
 
 if (isDirectRun(import.meta)) {
   runAllGenerators().catch((err) => {
-    console.error('Generators main failed:', err)
+    logError('生成器主流程失败:', err)
     process.exitCode = 1
   })
 }

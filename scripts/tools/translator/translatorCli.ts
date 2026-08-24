@@ -5,6 +5,7 @@ import { Command } from 'commander'
 import path from 'path'
 import fs from 'fs/promises'
 import fsSync from 'fs'
+import { logError, logInfo, logOk, logWarn } from '../../lib/log.ts'
 
 const program = new Command()
 const manager = new TranslationManager()
@@ -37,7 +38,7 @@ program
   .option('-s, --suffix <suffix>', '翻译文件后缀（默认：-en）')
   .action(async (target = TRANSLATION_TARGETS.CONTENT_SRC, options) => {
     try {
-      console.log(`[INFO] 开始翻译: ${target}`)
+      logInfo(`开始翻译: ${target}`)
 
       const translateOptions = {
         force: options.force || false,
@@ -49,12 +50,12 @@ program
       const count = results ? results.length : 0
 
       if (count === 0) {
-        console.log('[INFO] 没有需要翻译的文件（所有文件都已是最新）')
+        logInfo('没有需要翻译的文件（所有文件都已是最新）')
       } else {
-        console.log(`[INFO] 翻译完成！处理了 ${count} 个文件`)
+        logOk(`翻译完成！处理了 ${count} 个文件`)
       }
     } catch (error) {
-      console.error('[ERROR] 翻译失败:', (error as Error).message)
+      logError('翻译失败:', (error as Error).message)
       process.exit(1)
     }
   })
@@ -64,11 +65,11 @@ program
   .description('检查文件翻译状态')
   .action(async (target) => {
     try {
-      console.log('[INFO] 检查翻译状态...')
+      logInfo('检查翻译状态...')
 
       const stats = await fs.stat(target)
       if (!stats.isDirectory()) {
-        console.log('[WARN] 请提供目录路径来检查状态')
+        logWarn('请提供目录路径来检查状态')
         return
       }
 
@@ -117,17 +118,19 @@ program
 
       await checkDirectory(target)
 
-      console.log('\n[INFO] 翻译状态报告:')
-      console.log(`[INFO] 总文件数: ${totalFiles}`)
-      console.log(`[INFO] 已翻译文件: ${translatedFiles}`)
-      console.log(`[INFO] 需要更新: ${needUpdate}`)
-      console.log(`[INFO] 未翻译文件: ${totalFiles - translatedFiles}`)
+      console.log()
+      logInfo('翻译状态报告:')
+      logInfo(`总文件数: ${totalFiles}`)
+      logInfo(`已翻译文件: ${translatedFiles}`)
+      logInfo(`需要更新: ${needUpdate}`)
+      logInfo(`未翻译文件: ${totalFiles - translatedFiles}`)
 
       if (needUpdate > 0) {
-        console.log(`\n[INFO] 建议运行: translator translate "${target}" --force`)
+        console.log()
+        logInfo(`建议运行: translator translate "${target}" --force`)
       }
     } catch (error) {
-      console.error('[ERROR] 检查状态失败:', (error as Error).message)
+      logError('检查状态失败:', (error as Error).message)
       process.exit(1)
     }
   })
@@ -136,14 +139,14 @@ program
   .command('default', { isDefault: true })
   .description('默认翻译数据分支的 content-src 目录')
   .action(async () => {
-    console.log(`[INFO] 使用默认目录: ${TRANSLATION_TARGETS.CONTENT_SRC}`)
+    logInfo(`使用默认目录: ${TRANSLATION_TARGETS.CONTENT_SRC}`)
     const manager = new TranslationManager()
     try {
       const results = await manager.translate(TRANSLATION_TARGETS.CONTENT_SRC)
       const count = results ? results.length : 0
-      console.log(`[INFO] 翻译完成！成功处理了 ${count} 个文件`)
+      logOk(`翻译完成！成功处理了 ${count} 个文件`)
     } catch (error) {
-      console.error('[ERROR] 翻译失败:', (error as Error).message)
+      logError('翻译失败:', (error as Error).message)
       process.exit(1)
     }
   })

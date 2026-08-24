@@ -2,6 +2,7 @@ import path from 'path'
 import { contentDir, localeSuffix } from '../dataConfig.ts'
 import { findNotesSection, readJson, requireJsonArray, safeArray, writeJsonFile } from '../lib/fs.ts'
 import { isDirectRun, logWriteSuccess, runCliScript } from '../lib/cli.ts'
+import { logError } from '../lib/log.ts'
 
 function getFilePaths(locale = 'zh-CN') {
   const suffix = localeSuffix(locale)
@@ -125,7 +126,7 @@ function generatePostsJson(locale = 'zh-CN') {
     writeJsonFile(targetPath, posts)
     logWriteSuccess(targetPath, `${posts.length} posts`)
   } catch (e) {
-    console.error(`Failed to write ${locale} posts.json:`, e instanceof Error ? e.message : e)
+    logError(`写入 ${locale} posts.json 失败:`, e instanceof Error ? e.message : e)
     process.exitCode = 1
   }
 }
